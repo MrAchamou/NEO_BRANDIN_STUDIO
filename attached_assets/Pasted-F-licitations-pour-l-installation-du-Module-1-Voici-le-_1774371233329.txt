@@ -1,0 +1,594 @@
+Félicitations pour l'installation du Module 1 ! 🎉
+
+Voici le **prompt pour installer le Module 2 — Visual Content** dans la même architecture.
+
+---
+
+# PROMPT — INSTALLATION MODULE 02 — VISUAL CONTENT
+
+```
+Ajoute le MODULE 02 — VISUAL CONTENT au projet existant.
+
+Le Module 02 génère des prompts optimisés pour RoboNeo.com afin de créer tout le contenu visuel d'une marque: photos produit fond blanc (5 angles), photos lifestyle (3 formats), détails texture, before/after, virtual try-on (2 modèles), et carrousels (5 slides).
+
+Le module doit s'intégrer parfaitement avec le Module 01 (Brand Identity) déjà installé.
+
+## STRUCTURE À AJOUTER
+
+Ajoute ces dossiers et fichiers:
+
+```
+modules/module_02_visual_content/
+├── __init__.py
+├── orchestrator.py
+└── prompts.py
+```
+
+## 1. FICHIER modules/module_02_visual_content/__init__.py
+
+```python
+from .orchestrator import VisualContentOrchestrator
+
+__all__ = ["VisualContentOrchestrator"]
+```
+
+## 2. FICHIER modules/module_02_visual_content/prompts.py
+
+```python
+# ============================================================
+# MODULE 02 — VISUAL CONTENT — PROMPTS ROBONEO
+# ============================================================
+
+# MOD-02.1 — Product Photo Studio (5 angles)
+PRODUCT_PHOTO_PROMPTS = {
+    "bijou": {
+        "front": "Photo produit professionnelle d'un bijou de luxe, vue de face. Fond blanc pur, éclairage studio, ombre douce au sol. Détails précis des pierres et du métal. Format carré 2000x2000.",
+        "profile": "Photo produit d'un bijou, vue de profil. Fond blanc pur, éclairage latéral qui fait ressortir les reliefs. Ombre portée subtile. Format carré 2000x2000.",
+        "three_quarter": "Photo produit d'un bijou, vue en 3/4. Fond blanc, éclairage studio professionnel. Angle dynamique qui montre le volume. Format carré 2000x2000.",
+        "macro": "Photo macro d'un bijou, zoom sur le détail des pierres et du sertissage. Profondeur de champ réduite. Fond blanc, lumière douce. Format carré 2000x2000.",
+        "top": "Photo produit d'un bijou, vue de dessus. Fond blanc, éclairage studio uniforme. Composition centrée. Format carré 2000x2000."
+    },
+    
+    "vêtement": {
+        "front": "Photo produit d'un vêtement, vue de face. Mannequin invisible (hanger ou flat lay). Fond blanc pur, éclairage studio. Plis lissés, vêtement impeccable. Format carré 2000x2000.",
+        "back": "Photo produit d'un vêtement, vue de dos. Fond blanc, éclairage studio. Détails des coutures et finitions. Format carré 2000x2000.",
+        "detail_collar": "Photo macro du col d'un vêtement. Fond blanc, lumière douce. Détail des coutures, texture du tissu. Format carré 2000x2000.",
+        "detail_seam": "Photo macro des coutures d'un vêtement. Fond blanc, éclairage latéral pour faire ressortir les finitions. Format carré 2000x2000.",
+        "three_quarter": "Photo produit d'un vêtement, vue en 3/4. Fond blanc, éclairage studio. Angle dynamique. Format carré 2000x2000."
+    },
+    
+    "sac": {
+        "front": "Photo produit d'un sac à main, vue de face. Fond blanc pur, éclairage studio. Fermeture visible, forme parfaite. Format carré 2000x2000.",
+        "profile": "Photo produit d'un sac à main, vue de profil. Fond blanc, éclairage latéral. Épaisseur et volume visibles. Format carré 2000x2000.",
+        "top": "Photo produit d'un sac à main, vue de dessus. Fond blanc, éclairage studio. Format carré 2000x2000.",
+        "interior": "Photo de l'intérieur d'un sac à main, doublure visible. Fond blanc, lumière douce. Détail des poches et finitions. Format carré 2000x2000.",
+        "detail_zipper": "Photo macro de la fermeture éclair d'un sac. Fond blanc, lumière latérale. Détail des dents et du curseur. Format carré 2000x2000."
+    },
+    
+    "cosmétique": {
+        "front": "Photo produit d'un cosmétique, vue de face. Fond blanc pur, éclairage studio. Packaging net, reflets maîtrisés. Format carré 2000x2000.",
+        "top": "Photo produit d'un cosmétique, vue de dessus. Fond blanc, éclairage studio. Format carré 2000x2000.",
+        "three_quarter": "Photo produit d'un cosmétique, vue en 3/4. Fond blanc, éclairage professionnel. Format carré 2000x2000.",
+        "macro_texture": "Photo macro de la texture du produit (crème, sérum). Fond blanc, lumière douce qui fait ressortir la matière. Format carré 2000x2000.",
+        "hand_holding": "Photo produit d'un cosmétique tenu en main. Fond blanc, mains soignées, lumière naturelle. Format carré 2000x2000."
+    },
+    
+    "tech": {
+        "front": "Photo produit d'un gadget tech, vue de face. Fond blanc pur, éclairage studio. Écran éteint ou affichage épuré. Format carré 2000x2000.",
+        "profile": "Photo produit d'un gadget tech, vue de profil. Fond blanc, éclairage latéral qui fait ressortir les lignes. Format carré 2000x2000.",
+        "three_quarter": "Photo produit d'un gadget tech, vue en 3/4. Fond blanc, éclairage studio. Format carré 2000x2000.",
+        "macro_port": "Photo macro des connecteurs et ports d'un gadget tech. Fond blanc, lumière précise. Format carré 2000x2000.",
+        "bottom": "Photo produit d'un gadget tech, vue de dessous. Fond blanc, éclairage studio. Format carré 2000x2000."
+    }
+}
+
+# MOD-02.2 — Lifestyle Photo Studio (3 formats)
+LIFESTYLE_PROMPTS = {
+    "bijou": {
+        "feed": "Photo lifestyle d'une main élégante portant un bijou de luxe. Fond élégant, lumière dorée, ambiance sophistiquée. Composition carrée 1080x1080.",
+        "pinterest": "Photo lifestyle verticale d'un bijou porté. Ambiance raffinée, lumière naturelle, fond flou. Format 4:5, 1080x1350.",
+        "story": "Photo lifestyle verticale d'un bijou dans un contexte de luxe (table de restaurant chic, bouquet de fleurs). Format 9:16, 1080x1920."
+    },
+    
+    "vêtement": {
+        "feed": "Photo lifestyle d'une personne élégante portant le vêtement. Ambiance urbaine ou nature, lumière naturelle. Format carré 1080x1080.",
+        "pinterest": "Photo lifestyle verticale du vêtement porté en situation (café, promenade, bureau). Format 4:5, 1080x1350.",
+        "story": "Photo lifestyle verticale dynamique du vêtement en mouvement. Format 9:16, 1080x1920."
+    },
+    
+    "sac": {
+        "feed": "Photo lifestyle d'un sac porté à l'épaule, tenue élégante. Fond architectural ou café chic. Format carré 1080x1080.",
+        "pinterest": "Photo lifestyle verticale d'un sac posé sur une table, à côté d'un café. Ambiance lifestyle. Format 4:5, 1080x1350.",
+        "story": "Photo lifestyle verticale d'une personne avec le sac, marchant en ville. Format 9:16, 1080x1920."
+    },
+    
+    "cosmétique": {
+        "feed": "Photo lifestyle d'un cosmétique dans une salle de bain élégante, lumière naturelle. Format carré 1080x1080.",
+        "pinterest": "Photo lifestyle verticale d'une routine skincare, produits disposés harmonieusement. Format 4:5, 1080x1350.",
+        "story": "Photo lifestyle verticale d'une application de produit sur le visage, lumière douce. Format 9:16, 1080x1920."
+    },
+    
+    "tech": {
+        "feed": "Photo lifestyle d'un gadget tech sur un bureau minimaliste, lumière studio. Format carré 1080x1080.",
+        "pinterest": "Photo lifestyle verticale du gadget en situation d'utilisation (main tenant l'objet). Format 4:5, 1080x1350.",
+        "story": "Photo lifestyle verticale du gadget avec fond techno, lumières néon. Format 9:16, 1080x1920."
+    },
+    
+    "fitness": {
+        "feed": "Photo lifestyle fitness, personne athlétique portant l'équipement, fond gym ou extérieur. Format carré 1080x1080.",
+        "pinterest": "Photo lifestyle verticale dynamique d'un mouvement sportif. Format 4:5, 1080x1350.",
+        "story": "Photo lifestyle verticale en plein effort, ambiance énergique. Format 9:16, 1080x1920."
+    }
+}
+
+# MOD-02.3 — Detail & Texture Studio
+DETAIL_PROMPTS = {
+    "cuir": "Photo macro de cuir de luxe, texture naturelle visible. Éclairage latéral pour faire ressortir le grain. Fond neutre. Format carré 2000x2000.",
+    "métal": "Photo macro de métal précieux, reflets et brillance. Éclairage studio pour faire briller sans surbrillance. Fond sombre. Format carré 2000x2000.",
+    "textile": "Photo macro de tissu, fibres et trame visibles. Lumière douce, texture naturelle. Format carré 2000x2000.",
+    "verre": "Photo macro de verre, transparence et reflets. Éclairage précis, fond blanc. Format carré 2000x2000.",
+    "bois": "Photo macro de bois, veinures naturelles. Lumière naturelle, ambiance chaleureuse. Format carré 2000x2000.",
+    "pierre": "Photo macro de pierre précieuse, facettes et éclats. Éclairage qui fait briller, fond noir. Format carré 2000x2000."
+}
+
+# MOD-02.4 — Before/After Studio
+BEFORE_AFTER_PROMPTS = {
+    "skin": {
+        "before": "Portrait professionnel d'une personne avec des imperfections cutanées (rougeurs, pores dilatés). Lumière neutre, expression neutre. Format carré 1080x1080.",
+        "after": "Portrait de la même personne après traitement, peau unifiée, lumineuse, éclatante. Même lumière, expression confiante. Format carré 1080x1080."
+    },
+    "hair": {
+        "before": "Photo de cheveux secs, abîmés, ternes. Lumière neutre, fond neutre. Format carré 1080x1080.",
+        "after": "Photo de cheveux brillants, soyeux, hydratés. Même lumière, volume et mouvement. Format carré 1080x1080."
+    },
+    "body": {
+        "before": "Photo fitness avant transformation, corps non tonique, posture neutre. Format carré 1080x1080.",
+        "after": "Photo fitness après transformation, corps tonique, posture confiante. Même éclairage, même tenue. Format carré 1080x1080."
+    },
+    "object": {
+        "before": "Photo d'un objet usé, terne, abîmé. Lumière neutre, fond neutre. Format carré 1080x1080.",
+        "after": "Photo du même objet restauré, brillant, comme neuf. Même lumière, même angle. Format carré 1080x1080."
+    }
+}
+
+# MOD-02.5 — Virtual Try-On Studio
+VIRTUAL_TRYON_PROMPTS = {
+    "vêtement": {
+        "model_1": "Photo d'un mannequin féminin élancé, peau claire, cheveux bruns, âge 25-35 ans. Portant le vêtement avec élégance. Fond studio neutre, lumière professionnelle. Format portrait 1080x1350.",
+        "model_2": "Photo d'un mannequin féminin athlétique, peau mate, cheveux blonds, âge 25-35 ans. Portant le vêtement, posture confiante. Même studio. Format portrait 1080x1350.",
+        "model_3": "Photo d'un mannequin masculin élancé, peau claire, cheveux bruns, âge 25-35 ans. Portant le vêtement. Format portrait 1080x1350."
+    },
+    "bijou": {
+        "model_1": "Photo macro d'un poignet féminin élégant portant le bijou. Mains soignées, fond flou élégant. Format portrait 1080x1350.",
+        "model_2": "Photo d'un cou féminin délicat portant le collier. Épaules dénudées, lumière douce. Format portrait 1080x1350.",
+        "model_3": "Photo d'une oreille féminine portant la boucle d'oreille. Cheveux relevés, fond neutre. Format carré 1080x1080."
+    },
+    "lunettes": {
+        "model_1": "Portrait d'une femme portant des lunettes de soleil, expression confiante, fond urbain flou. Format portrait 1080x1350.",
+        "model_2": "Portrait d'un homme portant des lunettes de soleil, style décontracté, lumière naturelle. Format portrait 1080x1350."
+    },
+    "sac": {
+        "model_1": "Photo d'une femme portant un sac à l'épaule, tenue élégante, fond architectural. Format portrait 1080x1350.",
+        "model_2": "Photo d'un sac porté à la main, avec une tenue chic, fond café. Format portrait 1080x1350."
+    }
+}
+
+# MOD-02.6 — Carousel Studio (5 slides)
+CAROUSEL_PROMPTS = {
+    "probleme_solution": {
+        "slide_1": "Visuel accrocheur, produit en situation lifestyle. Texte superposé: 'Votre problème ici'. Format carré 1080x1080.",
+        "slide_2": "Visuel 'before', situation sans produit. Problème visible, expression neutre ou frustrée. Format carré 1080x1080.",
+        "slide_3": "Visuel produit mis en avant, bénéfice principal. Texte: 'La solution'. Format carré 1080x1080.",
+        "slide_4": "Visuel 'after', résultat visible. Expression confiante, transformation évidente. Format carré 1080x1080.",
+        "slide_5": "Visuel logo + produit + offre. Texte CTA: 'Acheter maintenant -20%'. Format carré 1080x1080."
+    },
+    
+    "storytelling": {
+        "slide_1": "Visuel contexte, mise en scène du besoin. Texte: 'Imaginez...'. Format carré 1080x1080.",
+        "slide_2": "Visuel découverte du produit, moment de surprise. Texte: 'Et si la solution existait?'. Format carré 1080x1080.",
+        "slide_3": "Visuel transformation, produit en action. Texte: 'La révélation'. Format carré 1080x1080.",
+        "slide_4": "Visuel résultat, satisfaction, bonheur. Texte: 'La vie a changé'. Format carré 1080x1080.",
+        "slide_5": "Visuel invitation, logo, produit, CTA. Texte: 'Votre tour maintenant'. Format carré 1080x1080."
+    },
+    
+    "education": {
+        "slide_1": "Visuel question, point d'interrogation. Texte: 'Saviez-vous que...?'. Format carré 1080x1080.",
+        "slide_2": "Visuel explication simple, schéma ou produit décomposé. Texte: 'Voici pourquoi'. Format carré 1080x1080.",
+        "slide_3": "Visuel démonstration, produit en action. Texte: 'Comment ça marche'. Format carré 1080x1080.",
+        "slide_4": "Visuel bénéfice, résultat mesurable. Texte: 'Les résultats parlent d'eux-mêmes'. Format carré 1080x1080.",
+        "slide_5": "Visuel CTA, logo, offre. Texte: 'Prêt à essayer?'. Format carré 1080x1080."
+    },
+    
+    "luxe": {
+        "slide_1": "Visuel ambiance luxe, produit mis en valeur. Texte: 'L'excellence à portée de main'. Format carré 1080x1080.",
+        "slide_2": "Visuel détail produit, matière noble. Texte: 'Des matériaux d'exception'. Format carré 1080x1080.",
+        "slide_3": "Visuel savoir-faire, artisanat. Texte: 'Un héritage de savoir-faire'. Format carré 1080x1080.",
+        "slide_4": "Visuel exclusivité, édition limitée. Texte: 'Une pièce unique'. Format carré 1080x1080.",
+        "slide_5": "Visuel logo sur fond noir, texte doré. Texte: 'L'élégance vous attend'. Format carré 1080x1080."
+    }
+}
+
+def get_product_photo_prompt(product_type: str, angle: str) -> str:
+    """Génère un prompt pour photo produit selon le type et l'angle"""
+    prompts = PRODUCT_PHOTO_PROMPTS.get(product_type, PRODUCT_PHOTO_PROMPTS["bijou"])
+    return prompts.get(angle, prompts["front"])
+
+def get_lifestyle_prompt(product_type: str, format_type: str) -> str:
+    """Génère un prompt pour photo lifestyle selon le produit et le format"""
+    prompts = LIFESTYLE_PROMPTS.get(product_type, LIFESTYLE_PROMPTS["bijou"])
+    return prompts.get(format_type, prompts["feed"])
+
+def get_detail_prompt(material: str) -> str:
+    """Génère un prompt pour photo détail selon le matériau"""
+    return DETAIL_PROMPTS.get(material, DETAIL_PROMPTS["métal"])
+
+def get_before_after_prompt(scenario: str) -> dict:
+    """Génère les prompts before/after pour un scénario donné"""
+    return BEFORE_AFTER_PROMPTS.get(scenario, BEFORE_AFTER_PROMPTS["skin"])
+
+def get_tryon_prompt(category: str, model_index: int) -> str:
+    """Génère un prompt pour virtual try-on selon la catégorie"""
+    prompts = VIRTUAL_TRYON_PROMPTS.get(category, VIRTUAL_TRYON_PROMPTS["vêtement"])
+    key = f"model_{model_index}"
+    return prompts.get(key, prompts["model_1"])
+
+def get_carousel_prompt(style: str, slide: int) -> str:
+    """Génère un prompt pour une slide de carrousel"""
+    prompts = CAROUSEL_PROMPTS.get(style, CAROUSEL_PROMPTS["probleme_solution"])
+    return prompts.get(f"slide_{slide}", prompts["slide_1"])
+```
+
+## 3. FICHIER modules/module_02_visual_content/orchestrator.py
+
+```python
+from typing import Dict, Any
+from modules.base_module import BaseModule
+from modules.module_02_visual_content.prompts import (
+    get_product_photo_prompt,
+    get_lifestyle_prompt,
+    get_detail_prompt,
+    get_before_after_prompt,
+    get_tryon_prompt,
+    get_carousel_prompt
+)
+
+class VisualContentOrchestrator(BaseModule):
+    """
+    MODULE 02 — VISUAL CONTENT
+    Génère tous les prompts pour créer le contenu visuel d'une marque
+    """
+    
+    def __init__(self):
+        super().__init__("VisualContent")
+    
+    def generate(self, brief: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Génère tous les prompts du Module 02
+        
+        Input brief attendu:
+        {
+            "brand_name": "LUXEOR",
+            "sector": "bijou",
+            "product_type": "bijou",  # bijou, vêtement, sac, cosmétique, tech, fitness
+            "product_name": "Montre Élégance",
+            "product_colors": ["or rose", "noir"],
+            "product_materials": ["acier inoxydable", "verre saphir"],
+            "target_audience": "femmes_25_45",
+            "brand_identity": {}  # du Module 01 (optionnel, pour contexte)
+        }
+        """
+        
+        # Extraire les données
+        brand_name = brief.get("brand_name", "Ma Marque")
+        sector = brief.get("sector", "general")
+        product_type = brief.get("product_type", "bijou")
+        product_name = brief.get("product_name", "notre produit")
+        product_colors = brief.get("product_colors", [])
+        product_materials = brief.get("product_materials", [])
+        target_audience = brief.get("target_audience", "mixte")
+        
+        # Déterminer les angles selon le type de produit
+        angles = self._get_angles_for_product_type(product_type)
+        
+        # Déterminer les formats lifestyle selon le secteur
+        formats = ["feed", "pinterest", "story"]
+        
+        # Déterminer les matériaux pour les photos détail
+        materials = product_materials if product_materials else ["métal"]
+        
+        # Déterminer le scénario before/after selon le secteur
+        scenario = self._get_before_after_scenario(sector)
+        
+        # Déterminer la catégorie try-on
+        tryon_category = self._get_tryon_category(product_type)
+        
+        # Déterminer le style carrousel
+        carousel_style = self._get_carousel_style(sector)
+        
+        self._log(f"Génération des prompts visuels pour {brand_name} ({product_type})")
+        
+        # 1. Photos produit (5 angles)
+        product_photos = {}
+        for angle in angles:
+            base_prompt = get_product_photo_prompt(product_type, angle)
+            custom_prompt = self._customize_product_prompt(
+                base_prompt, product_name, product_colors, product_materials
+            )
+            enhanced = self._enhance_prompt(custom_prompt, {
+                "brand": brand_name,
+                "product": product_name,
+                "type": product_type
+            })
+            product_photos[angle] = enhanced
+        
+        # 2. Photos lifestyle (3 formats)
+        lifestyle_photos = {}
+        for fmt in formats:
+            base_prompt = get_lifestyle_prompt(product_type, fmt)
+            custom_prompt = self._customize_lifestyle_prompt(
+                base_prompt, product_name, sector, target_audience
+            )
+            enhanced = self._enhance_prompt(custom_prompt, {
+                "brand": brand_name,
+                "product": product_name,
+                "format": fmt
+            })
+            lifestyle_photos[fmt] = enhanced
+        
+        # 3. Photos détail/texture (2 matériaux)
+        detail_photos = {}
+        for material in materials[:2]:
+            base_prompt = get_detail_prompt(material)
+            custom_prompt = self._customize_detail_prompt(base_prompt, material, product_name)
+            enhanced = self._enhance_prompt(custom_prompt, {
+                "material": material,
+                "product": product_name
+            })
+            detail_photos[material] = enhanced
+        
+        # 4. Before/After
+        before_after = get_before_after_prompt(scenario)
+        before_after_enhanced = {
+            "before": self._enhance_prompt(before_after["before"], {"scenario": scenario}),
+            "after": self._enhance_prompt(before_after["after"], {"scenario": scenario})
+        }
+        
+        # 5. Virtual Try-On (2 modèles)
+        tryon_photos = {}
+        for i in range(1, 3):
+            base_prompt = get_tryon_prompt(tryon_category, i)
+            custom_prompt = self._customize_tryon_prompt(
+                base_prompt, product_name, product_type, target_audience
+            )
+            enhanced = self._enhance_prompt(custom_prompt, {
+                "product": product_name,
+                "model": i
+            })
+            tryon_photos[f"model_{i}"] = enhanced
+        
+        # 6. Carousel (5 slides)
+        carousel = {}
+        for slide in range(1, 6):
+            base_prompt = get_carousel_prompt(carousel_style, slide)
+            custom_prompt = self._customize_carousel_prompt(
+                base_prompt, product_name, brand_name, sector, slide
+            )
+            enhanced = self._enhance_prompt(custom_prompt, {
+                "product": product_name,
+                "slide": slide,
+                "style": carousel_style
+            })
+            carousel[f"slide_{slide}"] = enhanced
+        
+        # Retourner tous les prompts
+        return {
+            "visual_content": {
+                "product_photos": {
+                    "agent": "Product Display Agent / Image Generation",
+                    "prompts": product_photos,
+                    "parameters": {
+                        "angles": angles,
+                        "dimensions": "2000x2000",
+                        "background": "white"
+                    }
+                },
+                "lifestyle_photos": {
+                    "agent": "Image Generation / Background Change",
+                    "prompts": lifestyle_photos,
+                    "parameters": {
+                        "formats": ["feed (1:1)", "pinterest (4:5)", "story (9:16)"],
+                        "dimensions": ["1080x1080", "1080x1350", "1080x1920"]
+                    }
+                },
+                "detail_photos": {
+                    "agent": "Image Generation",
+                    "prompts": detail_photos,
+                    "parameters": {
+                        "materials": materials[:2],
+                        "dimensions": "2000x2000"
+                    }
+                },
+                "before_after": {
+                    "agent": "Portrait Retouching Agent",
+                    "prompts": before_after_enhanced,
+                    "parameters": {
+                        "scenario": scenario,
+                        "format": "side_by_side",
+                        "dimensions": "1080x1080"
+                    }
+                },
+                "virtual_tryon": {
+                    "agent": "AI Wardrobe / Virtual Try-on",
+                    "prompts": tryon_photos,
+                    "parameters": {
+                        "models": 2,
+                        "poses": ["front", "three_quarter"],
+                        "dimensions": "1080x1350"
+                    }
+                },
+                "carousel": {
+                    "agent": "AI Poster Agent",
+                    "prompts": carousel,
+                    "parameters": {
+                        "slides": 5,
+                        "style": carousel_style,
+                        "dimensions": "1080x1080"
+                    }
+                }
+            },
+            "metadata": {
+                "module": "02_visual_content",
+                "brand_name": brand_name,
+                "product_type": product_type,
+                "angles_generated": len(angles),
+                "lifestyle_formats": len(formats),
+                "tryon_models": 2,
+                "carousel_slides": 5,
+                "llm_enhanced": bool(self._enhance_prompt("test", {}) != "test")
+            }
+        }
+    
+    def _get_angles_for_product_type(self, product_type: str) -> list:
+        """Retourne les 5 angles pour un type de produit"""
+        angles_map = {
+            "bijou": ["front", "profile", "three_quarter", "macro", "top"],
+            "vêtement": ["front", "back", "detail_collar", "detail_seam", "three_quarter"],
+            "sac": ["front", "profile", "top", "interior", "detail_zipper"],
+            "cosmétique": ["front", "top", "three_quarter", "macro_texture", "hand_holding"],
+            "tech": ["front", "profile", "three_quarter", "macro_port", "bottom"],
+            "fitness": ["front", "back", "three_quarter", "detail_fabric", "action"]
+        }
+        return angles_map.get(product_type, angles_map["bijou"])
+    
+    def _get_before_after_scenario(self, sector: str) -> str:
+        """Détermine le scénario before/after selon le secteur"""
+        mapping = {
+            "bijou": "object",
+            "cosmétique": "skin",
+            "skincare": "skin",
+            "fitness": "body",
+            "cheveux": "hair",
+            "mode": "object"
+        }
+        return mapping.get(sector, "object")
+    
+    def _get_tryon_category(self, product_type: str) -> str:
+        """Détermine la catégorie try-on"""
+        mapping = {
+            "vêtement": "vêtement",
+            "bijou": "bijou",
+            "lunettes": "lunettes",
+            "sac": "sac",
+            "chaussures": "vêtement"
+        }
+        return mapping.get(product_type, "vêtement")
+    
+    def _get_carousel_style(self, sector: str) -> str:
+        """Détermine le style de carrousel selon le secteur"""
+        mapping = {
+            "bijou": "luxe",
+            "luxe": "luxe",
+            "cosmétique": "probleme_solution",
+            "skincare": "probleme_solution",
+            "tech": "education",
+            "mode": "storytelling",
+            "streetwear": "storytelling"
+        }
+        return mapping.get(sector, "probleme_solution")
+    
+    def _customize_product_prompt(self, prompt: str, product_name: str, colors: list, materials: list) -> str:
+        """Personnalise le prompt photo produit"""
+        custom = f"{prompt}\n\nProduit: {product_name}"
+        if colors:
+            custom += f"\nCouleurs: {', '.join(colors)}"
+        if materials:
+            custom += f"\nMatériaux: {', '.join(materials)}"
+        return custom
+    
+    def _customize_lifestyle_prompt(self, prompt: str, product_name: str, sector: str, audience: str) -> str:
+        """Personnalise le prompt photo lifestyle"""
+        return f"{prompt}\n\nProduit: {product_name}\nSecteur: {sector}\nCible: {audience}"
+    
+    def _customize_detail_prompt(self, prompt: str, material: str, product_name: str) -> str:
+        """Personnalise le prompt photo détail"""
+        return f"{prompt}\n\nProduit: {product_name}\nMatériau: {material}"
+    
+    def _customize_tryon_prompt(self, prompt: str, product_name: str, product_type: str, audience: str) -> str:
+        """Personnalise le prompt virtual try-on"""
+        return f"{prompt}\n\nProduit: {product_name}\nType: {product_type}\nCible: {audience}"
+    
+    def _customize_carousel_prompt(self, prompt: str, product_name: str, brand_name: str, sector: str, slide: int) -> str:
+        """Personnalise le prompt carrousel"""
+        return f"{prompt}\n\nMarque: {brand_name}\nProduit: {product_name}\nSecteur: {sector}\nSlide: {slide}/5"
+```
+
+## 4. MISE À JOUR DU FICHIER main.py
+
+Ajoute l'import et l'intégration du Module 02 dans le main.py:
+
+```python
+# Ajouter cet import en haut du fichier
+from modules.module_02_visual_content import VisualContentOrchestrator
+
+# Dans la fonction main(), après la génération du Module 01, ajouter:
+
+# Génération des prompts Module 02
+print("\n" + "=" * 80)
+print("MODULE 02 — VISUAL CONTENT")
+print("=" * 80)
+
+visual_brief = {
+    "brand_name": brief.get("brand_name"),
+    "sector": brief.get("sector"),
+    "product_type": brief.get("product_type", "bijou"),
+    "product_name": brief.get("product_name", brief.get("brand_name")),
+    "product_colors": brief.get("product_colors", []),
+    "product_materials": brief.get("product_materials", []),
+    "target_audience": brief.get("target_audience", "mixte"),
+    "brand_identity": result.get("brand_identity", {})
+}
+
+visual_orchestrator = VisualContentOrchestrator()
+visual_result = visual_orchestrator.generate(visual_brief)
+
+# Fusionner les résultats
+result["modules"]["visual_content"] = visual_result["visual_content"]
+```
+
+## 5. MISE À JOUR DU BRIEF D'EXEMPLE
+
+Modifie le brief par défaut dans main.py pour inclure les champs du Module 02:
+
+```python
+brief = {
+    "brand_name": "LUXEOR",
+    "sector": "bijou",
+    "tone": "luxe",
+    "values": ["excellence", "prestige", "authenticité", "élégance"],
+    "style_pref": None,
+    "product_type": "bijou",
+    "product_name": "Montre Élégance Or Rose",
+    "product_colors": ["or rose", "noir"],
+    "product_materials": ["acier inoxydable", "verre saphir", "cuir"],
+    "target_audience": "femmes_35_50"
+}
+```
+
+## 6. VÉRIFICATION
+
+Une fois installé, teste avec:
+
+```bash
+python main.py
+```
+
+Le fichier output/prompts_roboneo.txt doit maintenant contenir les prompts pour:
+- Module 01: Brand Identity (logo, palette, typo, charte)
+- Module 02: Visual Content (product_photos, lifestyle, detail, before_after, tryon, carousel)
+```
+
+---
+
+**Copie et colle ce prompt dans Replit AI.** Une fois installé, tu auras les Modules 01 et 02 fonctionnels.
+
+Dis-moi quand c'est fait, et on passe au **Module 03 — Video Content** ! 🚀

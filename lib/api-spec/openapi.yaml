@@ -1,0 +1,125 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: openai
+    description: OpenAI prompt enhancement operations
+paths:
+  /openai/enhance-prompts:
+    post:
+      operationId: enhancePrompts
+      tags: [openai]
+      summary: Enhance RoboNeo prompts using AI (SSE stream)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnhancePromptsBody"
+      responses:
+        "200":
+          description: SSE stream of enhanced prompts
+          content:
+            text/event-stream:
+              schema:
+                type: string
+  /openai/enhance-prompts-visual:
+    post:
+      operationId: enhancePromptsVisual
+      tags: [openai]
+      summary: Enhance RoboNeo visual content prompts using AI (SSE stream)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnhancePromptsVisualBody"
+      responses:
+        "200":
+          description: SSE stream of enhanced visual prompts
+          content:
+            text/event-stream:
+              schema:
+                type: string
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+components:
+  schemas:
+    EnhancePromptsVisualBody:
+      type: object
+      properties:
+        brand_name:
+          type: string
+        sector:
+          type: string
+        product_type:
+          type: string
+        product_name:
+          type: string
+        product_colors:
+          type: array
+          items:
+            type: string
+        product_materials:
+          type: array
+          items:
+            type: string
+        target_audience:
+          type: string
+        carousel_style:
+          type: string
+          nullable: true
+      required:
+        - brand_name
+        - sector
+        - product_type
+        - product_name
+        - target_audience
+    EnhancePromptsBody:
+      type: object
+      properties:
+        brand_name:
+          type: string
+        sector:
+          type: string
+        tone:
+          type: string
+        values:
+          type: array
+          items:
+            type: string
+        style_pref:
+          type: string
+          nullable: true
+      required:
+        - brand_name
+        - sector
+        - tone
+        - values
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+

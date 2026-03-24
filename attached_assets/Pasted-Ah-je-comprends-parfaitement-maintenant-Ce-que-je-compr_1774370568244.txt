@@ -1,0 +1,892 @@
+Ah, je comprends parfaitement maintenant ! 🎯
+
+---
+
+## Ce que je comprends
+
+Tu veux un **logiciel qui génère des prompts** — pas qui appelle les APIs RoboNeo.
+
+```
+INPUT (brief client)
+    ↓
+[LOGICIEL — Replit AI]
+    ↓
+OUTPUT (fichier texte)
+    ↓
+Contient des PROMPTS PARFAITS
+    ↓
+MOI (humain) → je copie/colle ces prompts dans RoboNeo.com
+    ↓
+RoboNeo génère les assets
+```
+
+Le logiciel est un **générateur de prompts**, pas un orchestrateur d'API. Les APIs à connecter sont **Claude, Gemini, OpenAI** — pour améliorer les prompts si besoin.
+
+---
+
+## Architecture corrigée
+
+```
+replit_project/
+│
+├── main.py
+├── config.py
+├── requirements.txt
+├── .env
+│
+├── modules/
+│   ├── __init__.py
+│   ├── base_module.py
+│   │
+│   ├── module_01_brand_identity/
+│   │   ├── __init__.py
+│   │   ├── orchestrator.py      # Combine les prompts du module
+│   │   ├── prompts.py           # Les templates de prompts RoboNeo
+│   │   └── enhancer.py          # Optionnel: appelle Claude pour améliorer
+│   │
+│   ├── module_02_visual_content/
+│   ├── module_03_video_content/
+│   └── ... (jusqu'à 10)
+│
+├── utils/
+│   ├── llm_client.py            # Pour Claude/Gemini (optionnel)
+│   └── file_exporter.py         # Export en JSON/TXT
+│
+└── output/
+    └── prompts_roboneo.json     # Fichier final avec tous les prompts
+```
+
+---
+
+## Le prompt unique pour Replit
+
+Je te livre maintenant le prompt à donner à Replit AI pour installer **Module 01 uniquement**, avec l'architecture prévue pour les modules 02-10.
+
+---
+
+# PROMPT — INSTALLATION MODULE 01 — GÉNÉRATEUR DE PROMPTS
+
+```
+Crée un projet Python sur Replit pour un système de génération de prompts optimisés pour RoboNeo.com.
+
+Le système reçoit un brief client et génère un fichier contenant tous les prompts nécessaires pour créer une marque complète sur RoboNeo. L'utilisateur copiera ces prompts manuellement dans RoboNeo.
+
+Le système est modulaire: aujourd'hui installe uniquement le MODULE 01 — BRAND IDENTITY, avec une architecture extensible pour les modules 02 à 10 (Visual Content, Video Content, Ad Creatives, Brand Sound, Copy, Launch, Chatbot, Upsell, Performance).
+
+## ARCHITECTURE
+
+```
+replit_project/
+├── main.py
+├── config.py
+├── requirements.txt
+├── .env
+├── modules/
+│   ├── __init__.py
+│   ├── base_module.py
+│   └── module_01_brand_identity/
+│       ├── __init__.py
+│       ├── orchestrator.py
+│       └── prompts.py
+├── utils/
+│   ├── __init__.py
+│   ├── llm_client.py
+│   └── file_exporter.py
+└── output/
+    └── prompts_roboneo.json
+```
+
+## 1. FICHIER requirements.txt
+
+```
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+anthropic>=0.18.0
+google-generativeai>=0.3.0
+openai>=1.0.0
+```
+
+## 2. FICHIER .env
+
+```
+ANTHROPIC_API_KEY=your_key_here
+GEMINI_API_KEY=your_key_here
+OPENAI_API_KEY=your_key_here
+ENABLE_LLM_ENHANCEMENT=false
+```
+
+## 3. FICHIER config.py
+
+```python
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+class Config:
+    # Clés API (optionnelles pour amélioration des prompts)
+    ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+    
+    # Activer l'amélioration des prompts par LLM
+    ENABLE_LLM_ENHANCEMENT = os.getenv("ENABLE_LLM_ENHANCEMENT", "false").lower() == "true"
+    
+    # Configuration
+    DEFAULT_TONE = "professionnel"
+    DEFAULT_OUTPUT_FILE = "output/prompts_roboneo.json"
+```
+
+## 4. FICHIER utils/llm_client.py
+
+```python
+import os
+from typing import Optional
+from config import Config
+
+class LLMClient:
+    """Client pour améliorer les prompts avec Claude/Gemini/OpenAI"""
+    
+    def __init__(self):
+        self.enabled = Config.ENABLE_LLM_ENHANCEMENT
+        self.client = None
+        self.provider = None
+        
+        if self.enabled:
+            self._init_client()
+    
+    def _init_client(self):
+        if Config.ANTHROPIC_API_KEY:
+            try:
+                import anthropic
+                self.client = anthropic.Anthropic(api_key=Config.ANTHROPIC_API_KEY)
+                self.provider = "claude"
+            except ImportError:
+                pass
+        
+        elif Config.GEMINI_API_KEY and not self.client:
+            try:
+                import google.generativeai as genai
+                genai.configure(api_key=Config.GEMINI_API_KEY)
+                self.client = genai.GenerativeModel('gemini-pro')
+                self.provider = "gemini"
+            except ImportError:
+                pass
+        
+        elif Config.OPENAI_API_KEY and not self.client:
+            try:
+                from openai import OpenAI
+                self.client = OpenAI(api_key=Config.OPENAI_API_KEY)
+                self.provider = "openai"
+            except ImportError:
+                pass
+    
+    def enhance_prompt(self, base_prompt: str, context: dict) -> str:
+        """Améliore un prompt en utilisant un LLM"""
+        if not self.enabled or not self.client:
+            return base_prompt
+        
+        system = f"""
+        Tu es un expert en prompts pour RoboNeo.com, une plateforme de génération d'assets créatifs par IA.
+        Améliore le prompt ci-dessous pour qu'il soit plus précis, détaillé et efficace.
+        Garde la même structure mais ajoute des détails pertinents.
+        Ne modifie pas l'intention principale. Retourne uniquement le prompt amélioré.
+        """
+        
+        user = f"""
+        Contexte:
+        - Marque: {context.get('brand_name', 'inconnue')}
+        - Secteur: {context.get('sector', 'general')}
+        - Ton: {context.get('tone', 'professionnel')}
+        - Valeurs: {', '.join(context.get('values', []))}
+        
+        Prompt original:
+        {base_prompt}
+        
+        Prompt amélioré:
+        """
+        
+        try:
+            if self.provider == "claude":
+                response = self.client.messages.create(
+                    model="claude-3-sonnet-20240229",
+                    max_tokens=1000,
+                    system=system,
+                    messages=[{"role": "user", "content": user}]
+                )
+                return response.content[0].text.strip()
+            
+            elif self.provider == "gemini":
+                response = self.client.generate_content(f"{system}\n\n{user}")
+                return response.text.strip()
+            
+            elif self.provider == "openai":
+                response = self.client.chat.completions.create(
+                    model="gpt-4-turbo-preview",
+                    messages=[
+                        {"role": "system", "content": system},
+                        {"role": "user", "content": user}
+                    ],
+                    max_tokens=1000
+                )
+                return response.choices[0].message.content.strip()
+        
+        except Exception as e:
+            print(f"Erreur LLM: {e}")
+            return base_prompt
+        
+        return base_prompt
+
+llm = LLMClient()
+```
+
+## 5. FICHIER utils/file_exporter.py
+
+```python
+import json
+import os
+from typing import Dict, Any
+from datetime import datetime
+
+class FileExporter:
+    """Exporte les prompts générés dans un fichier"""
+    
+    def __init__(self, output_path: str = "output/prompts_roboneo.json"):
+        self.output_path = output_path
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    
+    def export(self, data: Dict[str, Any]) -> str:
+        """Exporte les données en JSON"""
+        # Ajouter métadonnées
+        output = {
+            "generated_at": datetime.now().isoformat(),
+            "version": "1.0.0",
+            "modules": data
+        }
+        
+        with open(self.output_path, 'w', encoding='utf-8') as f:
+            json.dump(output, f, ensure_ascii=False, indent=2)
+        
+        return self.output_path
+    
+    def export_txt(self, data: Dict[str, Any]) -> str:
+        """Exporte les prompts en format texte lisible"""
+        txt_path = self.output_path.replace('.json', '.txt')
+        
+        with open(txt_path, 'w', encoding='utf-8') as f:
+            f.write("=" * 80 + "\n")
+            f.write("PROMPTS POUR ROBONEO.COM\n")
+            f.write(f"Généré le: {datetime.now().isoformat()}\n")
+            f.write("=" * 80 + "\n\n")
+            
+            for module_name, module_data in data.items():
+                f.write(f"\n{'=' * 80}\n")
+                f.write(f"MODULE: {module_name}\n")
+                f.write('=' * 80 + "\n\n")
+                
+                for submodule_name, submodule_data in module_data.items():
+                    f.write(f"\n--- {submodule_name} ---\n\n")
+                    if isinstance(submodule_data, dict):
+                        for key, value in submodule_data.items():
+                            f.write(f"{key}:\n{value}\n\n")
+                    else:
+                        f.write(f"{submodule_data}\n\n")
+        
+        return txt_path
+```
+
+## 6. FICHIER modules/base_module.py
+
+```python
+from abc import ABC, abstractmethod
+from typing import Dict, Any
+from utils.llm_client import llm
+from utils.logger import logger
+
+class BaseModule(ABC):
+    """Classe de base pour tous les modules (01 à 10)"""
+    
+    def __init__(self, module_name: str):
+        self.module_name = module_name
+    
+    @abstractmethod
+    def generate(self, brief: Dict[str, Any]) -> Dict[str, Any]:
+        """Génère les prompts du module à partir du brief"""
+        pass
+    
+    def _enhance_prompt(self, base_prompt: str, context: Dict) -> str:
+        """Améliore un prompt avec LLM si activé"""
+        return llm.enhance_prompt(base_prompt, context)
+    
+    def _log(self, message: str, level: str = "info"):
+        print(f"[{self.module_name}] {message}")
+```
+
+## 7. FICHIER modules/module_01_brand_identity/prompts.py
+
+```python
+# ============================================================
+# MODULE 01 — BRAND IDENTITY — PROMPTS ROBONEO
+# ============================================================
+
+# MOD-01.1 — Logo Generator (12 styles)
+LOGO_PROMPTS = {
+    "luxe": """
+Crée un logo pour une marque de luxe.
+Style: Élégant, raffiné, intemporel.
+Typographie: Sérif fine (Playfair Display, Didot, ou équivalent).
+Symbole: Couronne, pierre précieuse stylisée, ou lettre majuscule ornée.
+Palette: Or (#D4AF37), noir profond (#1A1A1A), blanc cassé (#F5F5F5).
+Variations: 4 versions (sur fond clair, sur fond sombre, monochrome, inversé).
+Format: PNG et SVG vectoriel.
+""",
+    
+    "minimal": """
+Crée un logo minimaliste.
+Style: Épuré, géométrique, moderne.
+Typographie: Sans-serif fine (Helvetica, Inter, ou équivalent).
+Symbole: Forme géométrique simple ou monogramme.
+Palette: Monochrome ou deux tons contrastés.
+Variations: 4 versions.
+Format: PNG et SVG vectoriel.
+""",
+    
+    "street": """
+Crée un logo streetwear/urbain.
+Style: Dynamique, gras, impactant.
+Typographie: Sans-serif extra-bold, lettrage stylisé.
+Symbole: Graffiti, lettrage calligraphique, motif urbain.
+Palette: Couleurs vives, néon, ou noir et blanc contrasté.
+Variations: 4 versions.
+Format: PNG et SVG vectoriel.
+""",
+    
+    "tech": """
+Crée un logo tech/futuriste.
+Style: Angulaire, précis, innovant.
+Typographie: Sans-serif géométrique (Space Grotesk, Orbitron).
+Symbole: Circuit, pixel, onde, forme abstraite géométrique.
+Palette: Bleu électrique (#00A6FF), gris métal, blanc.
+Variations: 4 versions.
+Format: PNG et SVG vectoriel.
+""",
+    
+    "artisanal": """
+Crée un logo artisanal/authentique.
+Style: Organique, texturé, chaleureux.
+Typographie: Manuscrite, script, ou sérif organique.
+Symbole: Outils artisanaux, motifs naturels, tampon.
+Palette: Terre, beige, marron, vert sauge.
+Variations: 4 versions.
+Format: PNG et SVG vectoriel.
+""",
+    
+    "vintage": """
+Crée un logo vintage/rétro.
+Style: Badge, blason, contour épais.
+Typographie: Sérif vintage, lettrage décoré.
+Symbole: Ruban, blason, année, sceau.
+Palette: Sépia, bordeaux, vert olive, crème.
+Variations: 4 versions.
+Format: PNG et SVG vectoriel.
+""",
+    
+    "playful": """
+Crée un logo ludique et amusant.
+Style: Arrondi, dynamique, joyeux.
+Typographie: Rounded sans-serif, bouncy.
+Symbole: Sourire, étoile, nuage, forme organique.
+Palette: Couleurs vives et joyeuses.
+Variations: 4 versions.
+Format: PNG et SVG vectoriel.
+""",
+    
+    "corporate": """
+Crée un logo corporate professionnel.
+Style: Sobre, stable, confiance.
+Typographie: Sans-serif solide (Roboto, Lato).
+Symbole: Abstrait, géométrique, initiales.
+Palette: Bleu marine, gris, blanc.
+Variations: 4 versions.
+Format: PNG et SVG vectoriel.
+""",
+    
+    "nature": """
+Crée un logo inspiré de la nature.
+Style: Organique, fluide, apaisant.
+Typographie: Douce, arrondie, organique.
+Symbole: Feuille, arbre, montagne, vague.
+Palette: Vert, marron, bleu ciel, beige.
+Variations: 4 versions.
+Format: PNG et SVG vectoriel.
+""",
+    
+    "editorial": """
+Crée un logo editorial/magazine.
+Style: Raffiné, élégant, intemporel.
+Typographie: Sérif élégant (Cormorant Garamond).
+Symbole: Lettrine, trait fin, composition équilibrée.
+Palette: Noir, blanc, or.
+Variations: 4 versions.
+Format: PNG et SVG vectoriel.
+""",
+    
+    "futuristic": """
+Crée un logo futuriste et innovant.
+Style: Néon, dégradés dynamiques, formes fluides.
+Typographie: Angulaire, expérimentale.
+Symbole: Forme abstraite, lumière, mouvement.
+Palette: Violet, cyan, magenta, dégradés.
+Variations: 4 versions.
+Format: PNG et SVG vectoriel.
+""",
+    
+    "ethnic": """
+Crée un logo avec motifs ethniques/culturels.
+Style: Coloré, expressif, authentique.
+Typographie: Expressive, décorative.
+Symbole: Motifs traditionnels, tissus, artisanat.
+Palette: Rouge, orange, or, terre.
+Variations: 4 versions.
+Format: PNG et SVG vectoriel.
+"""
+}
+
+# MOD-01.2 — Palette Generator
+PALETTE_PROMPT = """
+Génère une palette de couleurs professionnelle pour la marque:
+
+1. COULEUR PRIMAIRE (dominante, 60% d'usage):
+   - Couleur principale de la marque
+   - Utilisation: logo, CTA, éléments majeurs
+
+2. COULEUR SECONDAIRE (complément, 30% d'usage):
+   - Complément harmonieux de la primaire
+   - Utilisation: éléments de support, arrière-plans
+
+3. COULEUR D'ACCENT (call to action, 10% d'usage):
+   - Couleur contrastante pour attirer l'attention
+   - Utilisation: boutons, offres, notifications
+
+4. PALETTE NEUTRE (5 nuances):
+   - Blanc (#FFFFFF)
+   - Gris clair (#F5F5F5)
+   - Gris moyen (#E0E0E0)
+   - Gris foncé (#333333)
+   - Noir (#000000)
+
+5. RAPPORT WCAG 2.1 AA:
+   - Vérifier le contraste pour chaque combinaison
+   - Indiquer les paires valides/invalides
+
+Format: HEX et RGB pour chaque couleur.
+"""
+
+# MOD-01.3 — Typography System
+TYPOGRAPHY_PROMPT = """
+Génère un système typographique complet:
+
+1. POLICE TITRES (h1, h2, h3):
+   - Nom de la police
+   - Lien Google Fonts
+   - Hiérarchie: h1 (48px), h2 (36px), h3 (24px)
+   - Graisses: Bold, SemiBold
+
+2. POLICE CORPS (body, paragraphes):
+   - Nom de la police
+   - Lien Google Fonts
+   - Taille: 16px
+   - Hauteur de ligne: 1.5
+   - Graisses: Regular, Medium
+
+3. POLICE ACCENT (CTA, boutons, captions):
+   - Nom de la police
+   - Lien Google Fonts
+   - Taille: 14px (caption), 16px (button)
+   - Graisses: Medium, Bold
+
+4. FALLBACK WEB-SAFE:
+   - Pour chaque police, proposer 2 fallbacks
+
+5. CODE CSS:
+   - Variables CSS pour toutes les polices
+   - Classes utilitaires (.heading, .body, .caption)
+"""
+
+# MOD-01.4 — Brand Guidelines (Règles R01-R10)
+GUIDELINES_PROMPT = """
+Génère une charte graphique avec les règles d'usage suivantes:
+
+R01 — USAGE DU LOGO
+Règle: Le logo doit toujours être présenté dans l'une des 4 variations autorisées. Ne jamais déformer, recolorer ou ajouter d'effets.
+Do's: Utiliser les fichiers fournis, respecter les proportions
+Don'ts: Déformer, changer les couleurs, ajouter des ombres
+
+R02 — ESPACE MINIMAL
+Règle: L'espace de protection autour du logo = hauteur du 'O' du logotype.
+Do's: Laisser cet espace libre
+Don'ts: Placer du texte ou des éléments dans cet espace
+
+R03 — TAILLE MINIMALE
+Règle: Impression: 15mm minimum. Digital: 32px minimum.
+Do's: Utiliser version monochrome en dessous
+Don'ts: Utiliser logo complexe en petit format
+
+R04 — COULEUR PRIMAIRE
+Règle: Usage réservé aux éléments principaux (CTA, titres majeurs).
+Do's: Dominante sur les éléments importants
+Don'ts: Utiliser comme couleur de fond générale
+
+R05 — COULEUR SECONDAIRE
+Règle: Usage pour les éléments de support.
+Do's: Arrière-plans, bordures, éléments décoratifs
+Don'ts: Éclipser la couleur primaire
+
+R06 — ACCESSIBILITÉ
+Règle: Ratio de contraste ≥ 4.5:1 pour tout texte sur fond coloré.
+Do's: Vérifier avec outils WCAG
+Don'ts: Utiliser des combinaisons non contrastées
+
+R07 — TYPOGRAPHIE TITRES
+Règle: Usage exclusif pour h1, h2, h3.
+Do's: Respecter la hiérarchie
+Don'ts: Utiliser pour les paragraphes
+
+R08 — TYPOGRAPHIE CORPS
+Règle: Usage pour textes longs, paragraphes.
+Do's: Maintenir une hauteur de ligne confortable
+Don'ts: Utiliser pour les titres
+
+R09 — TON ET VOIX
+Règle: Le ton de marque s'applique à toute communication.
+Do's: Adapter le vocabulaire au persona
+Don'ts: Changer de ton selon le canal
+
+R10 — VALEURS DE MARQUE
+Règle: Toute communication doit incarner les valeurs fondamentales.
+Do's: Illustrer les valeurs dans les visuels
+Don'ts: Contredire les valeurs dans les messages
+
+Pour chaque règle, fournir:
+- ID unique (R01 à R10)
+- Description détaillée
+- Do's et Don'ts
+- Conséquence en cas de non-respect
+"""
+
+def get_logo_prompt(style: str, brand_name: str, sector: str, tone: str, values: list) -> str:
+    """Génère un prompt personnalisé pour le logo"""
+    base = LOGO_PROMPTS.get(style, LOGO_PROMPTS["minimal"])
+    
+    custom = f"""
+Marque: {brand_name}
+Secteur: {sector}
+Ton: {tone}
+Valeurs: {', '.join(values)}
+
+Instructions supplémentaires:
+- Le logo doit refléter les valeurs de la marque
+- Le style doit correspondre au secteur d'activité
+- Adapter la typographie et les couleurs au ton
+
+{base}
+"""
+    return custom.strip()
+```
+
+## 8. FICHIER modules/module_01_brand_identity/orchestrator.py
+
+```python
+from typing import Dict, Any
+from modules.base_module import BaseModule
+from modules.module_01_brand_identity.prompts import (
+    get_logo_prompt,
+    PALETTE_PROMPT,
+    TYPOGRAPHY_PROMPT,
+    GUIDELINES_PROMPT
+)
+
+class BrandIdentityOrchestrator(BaseModule):
+    """
+    MODULE 01 — BRAND IDENTITY
+    Génère tous les prompts pour créer l'identité visuelle d'une marque
+    """
+    
+    def __init__(self):
+        super().__init__("BrandIdentity")
+    
+    def generate(self, brief: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Génère tous les prompts du Module 01
+        
+        Input brief attendu:
+        {
+            "brand_name": "LUXEOR",
+            "sector": "bijou",
+            "tone": "luxe",
+            "values": ["excellence", "prestige", "authenticité"],
+            "style_pref": null  # optionnel, sinon auto-détection
+        }
+        """
+        
+        # Extraire les données du brief
+        brand_name = brief.get("brand_name", "Ma Marque")
+        sector = brief.get("sector", "general")
+        tone = brief.get("tone", "professionnel")
+        values = brief.get("values", ["qualité", "confiance"])
+        style_pref = brief.get("style_pref", self._detect_style(sector))
+        
+        # Contexte pour amélioration des prompts
+        context = {
+            "brand_name": brand_name,
+            "sector": sector,
+            "tone": tone,
+            "values": values,
+            "style": style_pref
+        }
+        
+        self._log(f"Génération des prompts pour {brand_name} ({sector})")
+        
+        # 1. Logo Generator
+        logo_prompt = get_logo_prompt(style_pref, brand_name, sector, tone, values)
+        logo_prompt_enhanced = self._enhance_prompt(logo_prompt, context)
+        
+        # 2. Palette Generator
+        palette_prompt = PALETTE_PROMPT
+        palette_prompt_enhanced = self._enhance_prompt(palette_prompt, context)
+        
+        # 3. Typography System
+        typography_prompt = TYPOGRAPHY_PROMPT
+        typography_prompt_enhanced = self._enhance_prompt(typography_prompt, context)
+        
+        # 4. Brand Guidelines
+        guidelines_prompt = GUIDELINES_PROMPT
+        guidelines_prompt_enhanced = self._enhance_prompt(guidelines_prompt, context)
+        
+        # Retourner tous les prompts
+        return {
+            "brand_identity": {
+                "logo": {
+                    "agent": "Brand Design Agent / Product Display Agent",
+                    "prompt": logo_prompt_enhanced,
+                    "parameters": {
+                        "style": style_pref,
+                        "variations": 4,
+                        "formats": ["png", "svg"],
+                        "dimensions": "2000x2000"
+                    }
+                },
+                "palette": {
+                    "agent": "Brand Design Agent",
+                    "prompt": palette_prompt_enhanced,
+                    "parameters": {
+                        "colors": ["primary", "secondary", "accent", "neutrals"],
+                        "format": ["hex", "rgb"],
+                        "wcag": True
+                    }
+                },
+                "typography": {
+                    "agent": "Brand Design Agent",
+                    "prompt": typography_prompt_enhanced,
+                    "parameters": {
+                        "fonts": ["heading", "body", "accent"],
+                        "format": ["google_fonts", "css"],
+                        "fallbacks": True
+                    }
+                },
+                "guidelines": {
+                    "agent": "Brand Design Agent (PDF generation)",
+                    "prompt": guidelines_prompt_enhanced,
+                    "parameters": {
+                        "rules": [f"R{i:02d}" for i in range(1, 11)],
+                        "format": "pdf",
+                        "do_donts": True
+                    }
+                }
+            },
+            "metadata": {
+                "module": "01_brand_identity",
+                "brand_name": brand_name,
+                "sector": sector,
+                "tone": tone,
+                "style_used": style_pref,
+                "llm_enhanced": bool(self._enhance_prompt("test", {}) != "test")
+            }
+        }
+    
+    def _detect_style(self, sector: str) -> str:
+        """Détecte le style logo selon le secteur"""
+        mapping = {
+            "bijou": "luxe",
+            "luxe": "luxe",
+            "mode": "editorial",
+            "streetwear": "street",
+            "cosmétique": "minimal",
+            "skincare": "nature",
+            "tech": "tech",
+            "fitness": "playful",
+            "décoration": "artisanal",
+            "maroquinerie": "luxe",
+            "gadgets": "futuristic",
+            "montres": "luxe"
+        }
+        return mapping.get(sector, "minimal")
+```
+
+## 9. FICHIER main.py
+
+```python
+import json
+import sys
+from typing import Dict, Any
+
+from modules.module_01_brand_identity.orchestrator import BrandIdentityOrchestrator
+from utils.file_exporter import FileExporter
+from config import Config
+
+def main():
+    print("=" * 80)
+    print("GÉNÉRATEUR DE PROMPTS — ROBONEO CREATIVE PACK")
+    print("Version 1.0 — Module 01: Brand Identity")
+    print("=" * 80)
+    print()
+    
+    # Brief par défaut pour test
+    brief = {
+        "brand_name": "LUXEOR",
+        "sector": "bijou",
+        "tone": "luxe",
+        "values": ["excellence", "prestige", "authenticité", "élégance"],
+        "style_pref": None  # Auto-détection
+    }
+    
+    # Si des arguments sont passés en ligne de commande
+    if len(sys.argv) > 1:
+        try:
+            with open(sys.argv[1], 'r', encoding='utf-8') as f:
+                brief = json.load(f)
+            print(f"Brief chargé depuis {sys.argv[1]}")
+        except Exception as e:
+            print(f"Erreur de chargement: {e}")
+            print("Utilisation du brief par défaut")
+    else:
+        print("Aucun fichier brief fourni. Utilisation du brief de test.")
+        print("Pour utiliser votre propre brief: python main.py mon_brief.json")
+    
+    print()
+    print(f"Marque: {brief.get('brand_name')}")
+    print(f"Secteur: {brief.get('sector')}")
+    print(f"Ton: {brief.get('tone')}")
+    print(f"Valeurs: {', '.join(brief.get('values', []))}")
+    print()
+    
+    # Génération des prompts
+    print("Génération des prompts en cours...")
+    orchestrator = BrandIdentityOrchestrator()
+    result = orchestrator.generate(brief)
+    
+    # Export
+    exporter = FileExporter(Config.DEFAULT_OUTPUT_FILE)
+    json_path = exporter.export(result)
+    txt_path = exporter.export_txt(result)
+    
+    print()
+    print("=" * 80)
+    print("✅ GÉNÉRATION TERMINÉE")
+    print("=" * 80)
+    print()
+    print("Fichiers générés:")
+    print(f"  - {json_path}")
+    print(f"  - {txt_path}")
+    print()
+    print("Pour utiliser les prompts:")
+    print("1. Ouvrez le fichier .txt")
+    print("2. Copiez chaque prompt dans RoboNeo.com")
+    print("3. Utilisez l'agent indiqué pour chaque élément")
+    print()
+    print("Modules suivants à installer:")
+    print("  - Module 02: Visual Content")
+    print("  - Module 03: Video Content")
+    print("  - Module 04: Ad Creatives")
+    print("  - Module 05: Brand Sound")
+    print("  - Module 06: Copy & Content")
+    print("  - Module 07: Launch Ready")
+    print("  - Module 08: Chatbot Script")
+    print("  - Module 09: Upsell Kit")
+    print("  - Module 10: Performance Tracker")
+    print()
+    print("Architecture prête pour ajouter les modules 02 à 10.")
+
+if __name__ == "__main__":
+    main()
+```
+
+## 10. FICHIER output/prompts_roboneo.json (exemple de sortie)
+
+```json
+{
+  "generated_at": "2026-03-24T10:30:00",
+  "version": "1.0.0",
+  "modules": {
+    "brand_identity": {
+      "logo": {
+        "agent": "Brand Design Agent / Product Display Agent",
+        "prompt": "Marque: LUXEOR\nSecteur: bijou\nTon: luxe\nValeurs: excellence, prestige, authenticité, élégance\n\nCrée un logo pour une marque de luxe.\nStyle: Élégant, raffiné, intemporel.\nTypographie: Sérif fine (Playfair Display, Didot, ou équivalent).\nSymbole: Couronne, pierre précieuse stylisée, ou lettre majuscule ornée.\nPalette: Or (#D4AF37), noir profond (#1A1A1A), blanc cassé (#F5F5F5).\nVariations: 4 versions (sur fond clair, sur fond sombre, monochrome, inversé).\nFormat: PNG et SVG vectoriel.",
+        "parameters": {
+          "style": "luxe",
+          "variations": 4,
+          "formats": ["png", "svg"],
+          "dimensions": "2000x2000"
+        }
+      },
+      "palette": {
+        "agent": "Brand Design Agent",
+        "prompt": "Génère une palette de couleurs professionnelle pour la marque...",
+        "parameters": {
+          "colors": ["primary", "secondary", "accent", "neutrals"],
+          "format": ["hex", "rgb"],
+          "wcag": true
+        }
+      },
+      "typography": {
+        "agent": "Brand Design Agent",
+        "prompt": "Génère un système typographique complet...",
+        "parameters": {
+          "fonts": ["heading", "body", "accent"],
+          "format": ["google_fonts", "css"],
+          "fallbacks": true
+        }
+      },
+      "guidelines": {
+        "agent": "Brand Design Agent (PDF generation)",
+        "prompt": "Génère une charte graphique avec les règles d'usage...",
+        "parameters": {
+          "rules": ["R01", "R02", "R03", "R04", "R05", "R06", "R07", "R08", "R09", "R10"],
+          "format": "pdf",
+          "do_donts": true
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+## COMMANDE FINALE POUR REPLIT
+
+Copiez et collez ce prompt dans Replit AI:
+
+```
+Crée un projet Python sur Replit avec l'architecture ci-dessus. Installe uniquement le Module 01 — Brand Identity. Le système doit générer des prompts optimisés pour RoboNeo.com, pas appeler les APIs RoboNeo. Le code doit être prêt à recevoir les modules 02 à 10 ultérieurement. Tous les fichiers listés ci-dessus doivent être créés.
+```
+
+---
+
+**Une fois ce prompt exécuté sur Replit, tu auras:**
+
+1. Un système fonctionnel qui génère des prompts pour RoboNeo
+2. L'architecture prête à ajouter les modules 02 à 10
+3. Un fichier `output/prompts_roboneo.txt` avec tous les prompts prêts à copier/coller
+
+**Dis-moi quand c'est installé, et on passe au Module 02 !** 🚀

@@ -1,0 +1,746 @@
+Voici le **prompt pour installer le Module 03 — Video Content** dans l'architecture existante.
+
+---
+
+# PROMPT — INSTALLATION MODULE 03 — VIDEO CONTENT
+
+```
+Ajoute le MODULE 03 — VIDEO CONTENT au projet existant.
+
+Le Module 03 génère des prompts optimisés pour RoboNeo.com afin de créer tout le contenu vidéo d'une marque: TikTok/Reels (15s et 30s), vidéos YouTube (60s), teasers animés (5 styles), scripts complets, voix off, et miniatures optimisées.
+
+Le module doit s'intégrer avec les Modules 01 et 02 déjà installés.
+
+## STRUCTURE À AJOUTER
+
+Ajoute ce dossier et ces fichiers:
+
+```
+modules/module_03_video_content/
+├── __init__.py
+├── orchestrator.py
+└── prompts.py
+```
+
+## 1. FICHIER modules/module_03_video_content/__init__.py
+
+```python
+from .orchestrator import VideoContentOrchestrator
+
+__all__ = ["VideoContentOrchestrator"]
+```
+
+## 2. FICHIER modules/module_03_video_content/prompts.py
+
+```python
+# ============================================================
+# MODULE 03 — VIDEO CONTENT — PROMPTS ROBONEO
+# ============================================================
+
+# MOD-03.1 — Script Templates (par secteur et format)
+SCRIPT_TEMPLATES = {
+    "bijou": {
+        "15s": {
+            "hook": "Cette {product} fait tourner les têtes depuis {year}.",
+            "interest": "{material}, {detail}, gravure personnalisée.",
+            "desire": "Chaque jour, elle te rappellera ce moment unique.",
+            "cta": "Clique sur le lien, offre limitée."
+        },
+        "30s": {
+            "problem": "Tu cherches un bijou qui traverse le temps sans perdre son éclat ?",
+            "agitation": "Les bijoux ordinaires ternissent, s'abîment, perdent leur éclat.",
+            "solution": "{brand} : {material}, {detail}, fabrication française.",
+            "cta": "Collection limitée, lien en bio."
+        },
+        "60s": {
+            "hook": "Il y a 100 ans, un artisan créait le premier {product}.",
+            "context": "Aujourd'hui, cette tradition perdure. Chaque pièce est unique.",
+            "discovery": "{material}, sertissage main, finition polie à la main.",
+            "proof": "Porté par 10 000 clients satisfaits. Note 4.9/5.",
+            "cta": "Découvrez la collection sur notre site."
+        }
+    },
+    
+    "cosmétique": {
+        "15s": {
+            "hook": "Stop aux {problem} en {duration} jours.",
+            "interest": "{solution} : {ingredient}, {benefit}.",
+            "desire": "Une peau {result} sans effort.",
+            "cta": "Code {code}, lien en bio."
+        },
+        "30s": {
+            "problem": "Tu as des {problem} qui ne disparaissent pas ?",
+            "agitation": "Les crèmes classiques irritent, les dermatos coûtent cher...",
+            "solution": "{brand} : {ingredient}, {benefit}, testé dermatologiquement.",
+            "cta": "Résultats garantis ou remboursé."
+        },
+        "60s": {
+            "hook": "J'ai testé 14 sérums, un seul a changé ma peau.",
+            "context": "Après des années de rougeurs et d'imperfections...",
+            "discovery": "{ingredient}, la révolution skincare.",
+            "proof": "96% des utilisateurs voient une amélioration en 28 jours.",
+            "cta": "Offre découverte -20%."
+        }
+    },
+    
+    "tech": {
+        "15s": {
+            "hook": "Le gadget qui change ta vie quotidienne.",
+            "interest": "{feature}, {benefit}, {duration} d'autonomie.",
+            "desire": "Plus jamais de {problem}.",
+            "cta": "Préco disponible, lien en bio."
+        },
+        "30s": {
+            "problem": "Tu en as marre de {problem} ?",
+            "agitation": "Les autres produits sont chers, complexes, ou peu fiables.",
+            "solution": "{product} : {feature}, {benefit}, garanti {years} ans.",
+            "cta": "Offre lancement -30%."
+        },
+        "60s": {
+            "hook": "J'ai testé 12 chargeurs, un seul m'a bluffé.",
+            "context": "Je voyage 200 jours par an, la batterie c'est ma vie...",
+            "discovery": "Charge complète en {duration}, compact, universel.",
+            "proof": "Après 3 mois d'usage intensif, toujours comme au jour 1.",
+            "cta": "Lien description, code {code}."
+        }
+    },
+    
+    "fitness": {
+        "15s": {
+            "hook": "La {product} qui te fait brûler {calories} calories.",
+            "interest": "{benefit}, {duration}, {result}.",
+            "desire": "Des résultats visibles en {days} jours.",
+            "cta": "Équipe-toi maintenant."
+        },
+        "30s": {
+            "problem": "Tu veux des résultats sans passer 2h à la salle ?",
+            "agitation": "Le temps manque, la motivation baisse...",
+            "solution": "{product} : {benefit}, {duration} par jour suffisent.",
+            "cta": "Programme inclus, lien en bio."
+        },
+        "60s": {
+            "hook": "J'ai perdu {kg} kg sans régime ni salle de sport.",
+            "context": "Entre le travail et la famille, je n'avais plus le temps...",
+            "discovery": "{product} change tout. {duration} par jour, n'importe où.",
+            "proof": "Des milliers de transformations, la preuve en images.",
+            "cta": "Rejoins la communauté."
+        }
+    },
+    
+    "mode": {
+        "15s": {
+            "hook": "La {product} qui va faire tourner les têtes.",
+            "interest": "{material}, {color}, coupe {fit}.",
+            "desire": "Le confort d'un {material}, le style d'une pièce unique.",
+            "cta": "Collection limitée."
+        },
+        "30s": {
+            "problem": "Tu cherches LA pièce qui fait toute la différence ?",
+            "agitation": "Les tendances passent, le style reste.",
+            "solution": "{product} : intemporel, {material}, fabrication éthique.",
+            "cta": "Livraison offerte."
+        },
+        "60s": {
+            "hook": "Le secret des {audience} élégantes ?",
+            "context": "Ce n'est pas la quantité, c'est la qualité.",
+            "discovery": "{material}, coupe parfaite, finitions impeccables.",
+            "proof": "Porté par {influencers} influenceuses.",
+            "cta": "Découvrez la collection."
+        }
+    }
+}
+
+# MOD-03.2 — Teaser Animation Styles
+TEASER_STYLES = {
+    "cinematic": """
+Crée un teaser vidéo style cinématographique:
+- Durée: 15 secondes
+- Ambiance: dramatique, élégante, intemporelle
+- Mouvements: slow pan, zoom lent, profondeur de champ
+- Effets: lens flare, depth of field, film grain
+- Musique: orchestrale, crescendo
+- Transition: crossfade (0.5s)
+- Structure: 
+  0-4s: plan large produit dans son environnement
+  4-8s: macro détail, lumière dorée
+  8-12s: produit en action ou porté
+  12-15s: logo marque, fondu
+""",
+    
+    "glitch": """
+Crée un teaser vidéo style glitch/cyberpunk:
+- Durée: 15 secondes
+- Ambiance: futuriste, dynamique, électrique
+- Mouvements: fast zoom, mouvements saccadés
+- Effets: RGB split, scanlines, noise, distortion
+- Musique: électronique, beat marqué
+- Transition: glitch, quick cut
+- Structure:
+  0-3s: accroche visuelle avec effets glitch
+  3-8s: produit dévoilé par à-coups
+  8-12s: détails technologiques, circuits
+  12-15s: logo avec effet néon
+""",
+    
+    "kinetic": """
+Crée un teaser vidéo style kinetic typography:
+- Durée: 15 secondes
+- Ambiance: dynamique, énergique, moderne
+- Mouvements: mouvements rapides, typographie animée
+- Effets: motion blur, particules, transitions swift
+- Musique: électronique/EDM, tempo rapide
+- Transition: slide fast, bounce
+- Structure:
+  0-3s: typographie animée "LA RÉVOLUTION"
+  3-8s: produit en mouvement, rotations
+  8-12s: bénéfices en typographie dynamique
+  12-15s: logo + CTA animé
+""",
+    
+    "luxe": """
+Crée un teaser vidéo style luxe/premium:
+- Durée: 15 secondes
+- Ambiance: élégante, raffinée, exclusive
+- Mouvements: slow zoom, panoramique doux
+- Effets: particules dorées, soft glow, reflets
+- Musique: classique/jazz, tempo lent
+- Transition: crossfade lent, fondus
+- Structure:
+  0-4s: ambiance luxe, fond doré flou
+  4-8s: produit se dévoile lentement
+  8-12s: macro détails, matière noble
+  12-15s: logo or sur fond noir
+""",
+    
+    "minimal": """
+Crée un teaser vidéo style minimaliste:
+- Durée: 15 secondes
+- Ambiance: épurée, moderne, sophistiquée
+- Mouvements: mouvements simples, zooms subtils
+- Effets: white background, clean transitions, subtle shadows
+- Musique: ambient, piano, minimal
+- Transition: fade, cut simple
+- Structure:
+  0-4s: fond blanc, produit isolé
+  4-8s: rotation 360° du produit
+  8-12s: détails avec texte minimal
+  12-15s: logo clean, fondu
+"""
+}
+
+# MOD-03.3 — Thumbnail Prompts
+THUMBNAIL_PROMPTS = {
+    "product_focus": """
+Génère une miniature YouTube pour une vidéo produit:
+- Focus sur le produit, bien éclairé
+- Texte court et percutant (3-5 mots)
+- Palette de la marque
+- Expression faciale (si présence) confiante, surprise
+- Format 1280x720 (16:9)
+- Contraste élevé pour se démarquer
+""",
+    
+    "before_after": """
+Génère une miniature YouTube pour une vidéo transformation:
+- Split screen: gauche "avant", droite "après"
+- Texte: "AVANT / APRÈS" en gros
+- Couleurs: avant neutre/fade, après vibrant
+- Expression: avant neutre, après confiante
+- Format 1280x720 (16:9)
+""",
+    
+    "tutorial": """
+Génère une miniature YouTube pour une vidéo tutoriel:
+- Visuel principal: main tenant le produit
+- Flèches ou cercles pour indiquer l'action
+- Texte: "COMMENT FAIRE" ou astuce courte
+- Fond épuré, focus sur l'action
+- Format 1280x720 (16:9)
+""",
+    
+    "review": """
+Génère une miniature YouTube pour une vidéo test/review:
+- Visage avec expression surprise ou impressionnée
+- Produit en évidence à côté
+- Texte: "JE TESTE [PRODUIT]" ou "EST-CE QUE ÇA MARCHE ?"
+- Fond coloré, contraste élevé
+- Format 1280x720 (16:9)
+""",
+    
+    "unboxing": """
+Génère une miniature YouTube pour une vidéo unboxing:
+- Mains tenant le packaging fermé + produit sorti
+- Texte: "UNBOXING [PRODUIT]"
+- Confettis ou éléments de surprise
+- Ambiance excitante, couleurs vives
+- Format 1280x720 (16:9)
+"""
+}
+
+# MOD-03.4 — Voice-Over Voices
+VOICE_OVER_VOICES = {
+    "chaleureux": {
+        "id": "Rachel",
+        "description": "Voix féminine, chaleureuse, accessible",
+        "tone": "friendly, warm, inviting",
+        "use_for": ["cosmétique", "skincare", "mode", "lifestyle"]
+    },
+    "professionnel": {
+        "id": "Adam",
+        "description": "Voix masculine, professionnelle, confiante",
+        "tone": "professional, confident, authoritative",
+        "use_for": ["tech", "B2B", "corporate", "finance"]
+    },
+    "dynamique": {
+        "id": "Antoni",
+        "description": "Voix masculine, énergique, dynamique",
+        "tone": "energetic, enthusiastic, motivating",
+        "use_for": ["fitness", "sport", "streetwear", "jeunesse"]
+    },
+    "élégant": {
+        "id": "Bella",
+        "description": "Voix féminine, élégante, raffinée",
+        "tone": "elegant, sophisticated, refined",
+        "use_for": ["bijou", "luxe", "maroquinerie", "montres"]
+    },
+    "naturel": {
+        "id": "Emily",
+        "description": "Voix féminine, naturelle, authentique",
+        "tone": "natural, authentic, genuine",
+        "use_for": ["skincare", "bio", "nature", "bien-être"]
+    }
+}
+
+def get_script_template(sector: str, duration: str) -> dict:
+    """Retourne le template de script pour un secteur et une durée"""
+    sector_templates = SCRIPT_TEMPLATES.get(sector, SCRIPT_TEMPLATES["bijou"])
+    return sector_templates.get(duration, sector_templates["30s"])
+
+def get_teaser_style_prompt(style: str) -> str:
+    """Retourne le prompt pour un style de teaser"""
+    return TEASER_STYLES.get(style, TEASER_STYLES["cinematic"])
+
+def get_thumbnail_prompt(thumbnail_type: str) -> str:
+    """Retourne le prompt pour un type de miniature"""
+    return THUMBNAIL_PROMPTS.get(thumbnail_type, THUMBNAIL_PROMPTS["product_focus"])
+
+def get_voice_over_voice(sector: str) -> dict:
+    """Retourne la voix off recommandée pour un secteur"""
+    for voice_id, voice in VOICE_OVER_VOICES.items():
+        if sector in voice["use_for"]:
+            return voice
+    return VOICE_OVER_VOICES["professionnel"]
+```
+
+## 3. FICHIER modules/module_03_video_content/orchestrator.py
+
+```python
+from typing import Dict, Any
+from modules.base_module import BaseModule
+from modules.module_03_video_content.prompts import (
+    get_script_template,
+    get_teaser_style_prompt,
+    get_thumbnail_prompt,
+    get_voice_over_voice
+)
+
+class VideoContentOrchestrator(BaseModule):
+    """
+    MODULE 03 — VIDEO CONTENT
+    Génère tous les prompts pour créer le contenu vidéo d'une marque
+    """
+    
+    def __init__(self):
+        super().__init__("VideoContent")
+    
+    def generate(self, brief: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Génère tous les prompts du Module 03
+        
+        Input brief attendu:
+        {
+            "brand_name": "LUXEOR",
+            "sector": "bijou",
+            "product_name": "Montre Élégance",
+            "product_description": "Montre en or rose...",
+            "product_features": ["or rose", "verre saphir", "mouvement automatique"],
+            "benefits": ["élégance", "précision", "héritage"],
+            "target_audience": "femmes_35_50",
+            "visual_assets": {}  # du Module 02 (optionnel, pour contexte)
+        }
+        """
+        
+        # Extraire les données
+        brand_name = brief.get("brand_name", "Ma Marque")
+        sector = brief.get("sector", "general")
+        product_name = brief.get("product_name", "notre produit")
+        product_description = brief.get("product_description", "")
+        product_features = brief.get("product_features", [])
+        benefits = brief.get("benefits", [])
+        target_audience = brief.get("target_audience", "mixte")
+        
+        # Variables pour personnalisation des scripts
+        year = brief.get("year", "1923")
+        material = product_features[0] if product_features else "matériaux d'exception"
+        detail = product_features[1] if len(product_features) > 1 else "finitions soignées"
+        code = brief.get("promo_code", brand_name.upper()[:4])
+        duration_days = brief.get("duration_days", "7")
+        
+        # Déterminer le thumbnail_type selon le secteur
+        thumbnail_type = self._get_thumbnail_type(sector)
+        
+        # Déterminer le teaser_style selon le secteur
+        teaser_style = self._get_teaser_style(sector)
+        
+        # Déterminer la voix off recommandée
+        voice = get_voice_over_voice(sector)
+        
+        self._log(f"Génération des prompts vidéo pour {brand_name} ({sector})")
+        
+        # 1. Scripts pour chaque format (15s, 30s, 60s)
+        scripts = {}
+        durations = ["15s", "30s", "60s"]
+        
+        for duration in durations:
+            template = get_script_template(sector, duration)
+            
+            # Personnaliser chaque section du script
+            personalized = {}
+            for section, text in template.items():
+                personalized[section] = self._personalize_script(
+                    text,
+                    brand_name=brand_name,
+                    product_name=product_name,
+                    material=material,
+                    detail=detail,
+                    year=year,
+                    code=code,
+                    duration_days=duration_days,
+                    benefits=benefits,
+                    target_audience=target_audience
+                )
+            
+            # Assembler le script complet
+            full_script = " ".join(personalized.values())
+            
+            scripts[duration] = {
+                "sections": personalized,
+                "full_script": full_script,
+                "voice_over_text": full_script
+            }
+        
+        # 2. Prompts vidéo par format
+        video_prompts = {
+            "tiktok_15s": self._generate_video_prompt(
+                duration="15s",
+                format="vertical",
+                product_name=product_name,
+                sector=sector,
+                script=scripts["15s"]["full_script"]
+            ),
+            "tiktok_30s": self._generate_video_prompt(
+                duration="30s",
+                format="vertical",
+                product_name=product_name,
+                sector=sector,
+                script=scripts["30s"]["full_script"]
+            ),
+            "youtube_60s": self._generate_video_prompt(
+                duration="60s",
+                format="horizontal",
+                product_name=product_name,
+                sector=sector,
+                script=scripts["60s"]["full_script"]
+            )
+        }
+        
+        # 3. Teaser animé
+        teaser_prompt = get_teaser_style_prompt(teaser_style)
+        teaser_prompt_customized = self._customize_teaser_prompt(
+            teaser_prompt, product_name, brand_name, sector
+        )
+        
+        # 4. Miniatures
+        thumbnail_prompt = get_thumbnail_prompt(thumbnail_type)
+        thumbnail_prompt_customized = self._customize_thumbnail_prompt(
+            thumbnail_prompt, product_name, brand_name
+        )
+        
+        # 5. Voix off (recommandation)
+        voice_over = {
+            "recommended_voice": voice["id"],
+            "description": voice["description"],
+            "tone": voice["tone"],
+            "voice_prompt": f"Utilisez la voix {voice['id']} sur ElevenLabs avec le script fourni. Ton: {voice['tone']}."
+        }
+        
+        # Retourner tous les prompts
+        return {
+            "video_content": {
+                "scripts": {
+                    "agent": "Creative Ad Video Agent / Manual (pour scripts)",
+                    "prompts": scripts,
+                    "parameters": {
+                        "formats": ["15s", "30s", "60s"],
+                        "sector": sector,
+                        "personalized": True
+                    }
+                },
+                "short_videos": {
+                    "agent": "Creative Ad Video Agent",
+                    "prompts": {
+                        "tiktok_15s": video_prompts["tiktok_15s"],
+                        "tiktok_30s": video_prompts["tiktok_30s"]
+                    },
+                    "parameters": {
+                        "format": "9:16 (1080x1920)",
+                        "duration": ["15s", "30s"],
+                        "music": "à synchroniser avec Module 05"
+                    }
+                },
+                "long_video": {
+                    "agent": "Creative Ad Video Agent",
+                    "prompts": {
+                        "youtube_60s": video_prompts["youtube_60s"]
+                    },
+                    "parameters": {
+                        "format": "16:9 (1920x1080)",
+                        "duration": "60s",
+                        "thumbnail": "à générer séparément"
+                    }
+                },
+                "teaser": {
+                    "agent": "Anime Video Agent / Image-to-Video",
+                    "prompt": teaser_prompt_customized,
+                    "parameters": {
+                        "style": teaser_style,
+                        "duration": "15s",
+                        "format": "9:16 et 16:9",
+                        "effects": ["selon style sélectionné"]
+                    }
+                },
+                "thumbnails": {
+                    "agent": "AI Poster Agent",
+                    "prompt": thumbnail_prompt_customized,
+                    "parameters": {
+                        "type": thumbnail_type,
+                        "dimensions": "1280x720",
+                        "format": "jpg"
+                    }
+                },
+                "voice_over": {
+                    "agent": "ElevenLabs / AI Voice Generator",
+                    "recommendation": voice_over,
+                    "parameters": {
+                        "voices_available": list(VOICE_OVER_VOICES.keys()),
+                        "scripts": {
+                            "15s": scripts["15s"]["voice_over_text"],
+                            "30s": scripts["30s"]["voice_over_text"],
+                            "60s": scripts["60s"]["voice_over_text"]
+                        }
+                    }
+                }
+            },
+            "metadata": {
+                "module": "03_video_content",
+                "brand_name": brand_name,
+                "sector": sector,
+                "scripts_generated": 3,
+                "videos_generated": 3,
+                "teaser_style": teaser_style,
+                "thumbnail_type": thumbnail_type,
+                "recommended_voice": voice["id"],
+                "llm_enhanced": bool(self._enhance_prompt("test", {}) != "test")
+            }
+        }
+    
+    def _personalize_script(self, text: str, **kwargs) -> str:
+        """Personnalise un script avec les données de la marque"""
+        replacements = {
+            "{product}": kwargs.get("product_name", "notre produit"),
+            "{brand}": kwargs.get("brand_name", "notre marque"),
+            "{material}": kwargs.get("material", "matériaux d'exception"),
+            "{detail}": kwargs.get("detail", "finitions soignées"),
+            "{year}": kwargs.get("year", "1923"),
+            "{code}": kwargs.get("code", "BIENVENUE"),
+            "{duration}": kwargs.get("duration_days", "7"),
+            "{problem}": kwargs.get("problem", "problèmes"),
+            "{solution}": kwargs.get("solution", "solution"),
+            "{benefit}": kwargs.get("benefits", ["qualité"])[0] if kwargs.get("benefits") else "qualité",
+            "{result}": kwargs.get("result", "radieuse"),
+            "{ingredient}": kwargs.get("ingredient", "ingrédients naturels"),
+            "{feature}": kwargs.get("feature", "technologie avancée"),
+            "{calories}": kwargs.get("calories", "500"),
+            "{kg}": kwargs.get("kg", "10"),
+            "{days}": kwargs.get("days", "30"),
+            "{years}": kwargs.get("years", "5"),
+            "{fit}": kwargs.get("fit", "parfaite"),
+            "{color}": kwargs.get("color", "intemporelle"),
+            "{audience}": kwargs.get("target_audience", "femmes élégantes"),
+            "{influencers}": kwargs.get("influencers", "100+")
+        }
+        
+        for placeholder, value in replacements.items():
+            text = text.replace(placeholder, str(value))
+        
+        return text
+    
+    def _generate_video_prompt(self, duration: str, format: str, product_name: str, sector: str, script: str) -> str:
+        """Génère un prompt pour la création vidéo"""
+        aspect = "9:16 (1080x1920)" if format == "vertical" else "16:9 (1920x1080)"
+        
+        return f"""
+Crée une vidéo publicitaire pour {product_name}:
+- Durée: {duration}
+- Format: {aspect}
+- Secteur: {sector}
+- Style: professionnel, adapté au secteur
+
+Script:
+{script}
+
+Instructions:
+- Utiliser des visuels lifestyle et produit
+- Transitions dynamiques
+- Musique adaptée au rythme du script
+- Texte overlay sur les moments clés
+- Logo de la marque en fin de vidéo
+"""
+    
+    def _customize_teaser_prompt(self, prompt: str, product_name: str, brand_name: str, sector: str) -> str:
+        """Personnalise le prompt du teaser"""
+        return f"""
+{prompt}
+
+Produit: {product_name}
+Marque: {brand_name}
+Secteur: {sector}
+
+Adaptez le teaser à l'univers de la marque.
+"""
+    
+    def _customize_thumbnail_prompt(self, prompt: str, product_name: str, brand_name: str) -> str:
+        """Personnalise le prompt de la miniature"""
+        return f"""
+{prompt}
+
+Produit: {product_name}
+Marque: {brand_name}
+
+Adaptez les couleurs et le style à l'identité de la marque.
+"""
+    
+    def _get_thumbnail_type(self, sector: str) -> str:
+        """Détermine le type de miniature selon le secteur"""
+        mapping = {
+            "bijou": "product_focus",
+            "luxe": "product_focus",
+            "cosmétique": "before_after",
+            "skincare": "before_after",
+            "fitness": "before_after",
+            "tech": "review",
+            "gadgets": "unboxing",
+            "mode": "product_focus",
+            "streetwear": "review"
+        }
+        return mapping.get(sector, "product_focus")
+    
+    def _get_teaser_style(self, sector: str) -> str:
+        """Détermine le style de teaser selon le secteur"""
+        mapping = {
+            "bijou": "luxe",
+            "luxe": "luxe",
+            "maroquinerie": "luxe",
+            "montres": "luxe",
+            "cosmétique": "cinematic",
+            "skincare": "cinematic",
+            "tech": "glitch",
+            "gadgets": "glitch",
+            "fitness": "kinetic",
+            "sport": "kinetic",
+            "mode": "minimal",
+            "streetwear": "glitch"
+        }
+        return mapping.get(sector, "cinematic")
+```
+
+## 4. MISE À JOUR DU FICHIER main.py
+
+Ajoute l'import et l'intégration du Module 03 dans le main.py:
+
+```python
+# Ajouter cet import en haut du fichier
+from modules.module_03_video_content import VideoContentOrchestrator
+
+# Dans la fonction main(), après la génération du Module 02, ajouter:
+
+# Génération des prompts Module 03
+print("\n" + "=" * 80)
+print("MODULE 03 — VIDEO CONTENT")
+print("=" * 80)
+
+video_brief = {
+    "brand_name": brief.get("brand_name"),
+    "sector": brief.get("sector"),
+    "product_name": brief.get("product_name", brief.get("brand_name")),
+    "product_description": brief.get("product_description", ""),
+    "product_features": brief.get("product_features", []),
+    "benefits": brief.get("benefits", []),
+    "target_audience": brief.get("target_audience", "mixte"),
+    "year": brief.get("year", "1923"),
+    "promo_code": brief.get("promo_code", brief.get("brand_name", "BRAND")[:4].upper()),
+    "duration_days": brief.get("duration_days", "7"),
+    "visual_assets": result.get("visual_content", {})
+}
+
+video_orchestrator = VideoContentOrchestrator()
+video_result = video_orchestrator.generate(video_brief)
+
+# Fusionner les résultats
+result["modules"]["video_content"] = video_result["video_content"]
+```
+
+## 5. MISE À JOUR DU BRIEF D'EXEMPLE
+
+Modifie le brief par défaut dans main.py pour inclure les champs du Module 03:
+
+```python
+brief = {
+    "brand_name": "LUXEOR",
+    "sector": "bijou",
+    "tone": "luxe",
+    "values": ["excellence", "prestige", "authenticité", "élégance"],
+    "style_pref": None,
+    "product_type": "bijou",
+    "product_name": "Montre Élégance Or Rose",
+    "product_description": "Montre automatique en or rose avec bracelet cuir, mouvement suisse, verre saphir.",
+    "product_colors": ["or rose", "noir"],
+    "product_materials": ["acier inoxydable", "verre saphir", "cuir"],
+    "product_features": ["or rose 18 carats", "verre saphir", "mouvement automatique suisse", "bracelet cuir"],
+    "benefits": ["élégance intemporelle", "précision suisse", "héritage familial"],
+    "target_audience": "femmes_35_50",
+    "year": "1923",
+    "promo_code": "LUXEOR20",
+    "duration_days": "7"
+}
+```
+
+## 6. VÉRIFICATION
+
+Une fois installé, teste avec:
+
+```bash
+python main.py
+```
+
+Le fichier output/prompts_roboneo.txt doit maintenant contenir les prompts pour:
+- Module 01: Brand Identity (logo, palette, typo, charte)
+- Module 02: Visual Content (product_photos, lifestyle, detail, before_after, tryon, carousel)
+- Module 03: Video Content (scripts, short_videos, long_video, teaser, thumbnails, voice_over)
+```
+
+---
+
+**Copie et colle ce prompt dans Replit AI.** Une fois installé, tu auras les Modules 01, 02 et 03 fonctionnels.
+
+Dis-moi quand c'est fait, et on passe au **Module 04 — Ad Creatives** ! 🚀
