@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Sparkles, Lock, ChevronRight, Palette, Camera, Video,
   ShoppingBag, MessageSquare, BarChart2, Mail, Share2,
-  Globe, Users, Music2, Zap, FileText
+  Globe, Users, Music2, Zap, FileText, Rocket
 } from "lucide-react";
 import Module01 from "./module-01";
 import Module02 from "./module-02";
@@ -11,6 +11,7 @@ import Module03 from "./module-03";
 import Module04 from "./module-04";
 import Module05 from "./module-05";
 import Module06 from "./module-06";
+import Module07 from "./module-07";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -181,22 +182,24 @@ const MODULES: ModuleDef[] = [
     ],
   },
   {
-    id: "email-campaigns",
+    id: "launch-ready",
     number: "07",
-    title: "Email Campaigns",
-    subtitle: "Newsletters, séquences email",
-    description: "Séquences email automatisées, newsletters et subject lines optimisés.",
-    icon: <Mail className="w-5 h-5" />,
-    color: "text-orange-400",
-    bgColor: "bg-orange-400/10",
-    gradientFrom: "from-orange-500/20",
+    title: "Launch Ready",
+    subtitle: "Landing page, guide, calendrier",
+    description: "Génère tout pour lancer ta marque : landing page HTML prête à déployer, guide d'utilisation complet (quel fichier, quelle plateforme, quand publier) et calendrier de publication 30 jours optimisé.",
+    icon: <Rocket className="w-5 h-5" />,
+    color: "text-blue-400",
+    bgColor: "bg-blue-400/10",
+    gradientFrom: "from-blue-500/20",
     gradientTo: "to-transparent",
-    borderColor: "border-orange-400/30",
-    available: false,
+    borderColor: "border-blue-400/30",
+    available: true,
+    component: Module07,
+    prompts: 18,
     outputs: [
-      { label: "Newsletter", icon: "✉" },
-      { label: "Séquences", icon: "▶" },
-      { label: "Subject", icon: "✎" },
+      { label: "Landing", icon: "🌐" },
+      { label: "Guide", icon: "📖" },
+      { label: "Calendrier", icon: "📅" },
     ],
   },
   {
@@ -437,7 +440,7 @@ function MobileNav({ activeId, onSelect }: { activeId: string; onSelect: (id: st
       ))}
       <div className="flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl border border-white/5 text-muted-foreground/30 text-sm">
         <Lock className="w-3.5 h-3.5" />
-        <span>07–10</span>
+        <span>08–10</span>
       </div>
     </div>
   );
@@ -479,7 +482,7 @@ export default function Home() {
               </p>
             </div>
             <div className="hidden md:flex flex-col items-end gap-1">
-              <span className="text-xs text-muted-foreground/60 font-mono">v1.6.0</span>
+              <span className="text-xs text-muted-foreground/60 font-mono">v1.7.0</span>
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                 <span className="text-xs text-green-400">GPT-5.2 Connecté</span>
@@ -522,7 +525,7 @@ export default function Home() {
                     className="h-full rounded-full bg-gradient-to-r from-amber-400 via-primary to-violet-400"
                   />
                 </div>
-                <p className="text-[10px] text-muted-foreground/35 mt-1.5">Modules 07–10 bientôt disponibles</p>
+                <p className="text-[10px] text-muted-foreground/35 mt-1.5">Modules 08–10 bientôt disponibles</p>
               </div>
             </div>
           </div>

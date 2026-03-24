@@ -20481,27 +20481,27 @@ var require_router = __commonJS({
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var methods = METHODS.map((method) => method.toLowerCase());
-    module.exports = Router9;
+    module.exports = Router10;
     module.exports.Route = Route;
-    function Router9(options) {
-      if (!(this instanceof Router9)) {
-        return new Router9(options);
+    function Router10(options) {
+      if (!(this instanceof Router10)) {
+        return new Router10(options);
       }
       const opts = options || {};
-      function router9(req, res, next) {
-        router9.handle(req, res, next);
+      function router10(req, res, next) {
+        router10.handle(req, res, next);
       }
-      Object.setPrototypeOf(router9, this);
-      router9.caseSensitive = opts.caseSensitive;
-      router9.mergeParams = opts.mergeParams;
-      router9.params = {};
-      router9.strict = opts.strict;
-      router9.stack = [];
-      return router9;
+      Object.setPrototypeOf(router10, this);
+      router10.caseSensitive = opts.caseSensitive;
+      router10.mergeParams = opts.mergeParams;
+      router10.params = {};
+      router10.strict = opts.strict;
+      router10.stack = [];
+      return router10;
     }
-    Router9.prototype = function() {
+    Router10.prototype = function() {
     };
-    Router9.prototype.param = function param(name, fn) {
+    Router10.prototype.param = function param(name, fn) {
       if (!name) {
         throw new TypeError("argument name is required");
       }
@@ -20521,7 +20521,7 @@ var require_router = __commonJS({
       params.push(fn);
       return this;
     };
-    Router9.prototype.handle = function handle(req, res, callback) {
+    Router10.prototype.handle = function handle(req, res, callback) {
       if (!callback) {
         throw new TypeError("argument callback is required");
       }
@@ -20648,7 +20648,7 @@ var require_router = __commonJS({
         }
       }
     };
-    Router9.prototype.use = function use(handler) {
+    Router10.prototype.use = function use(handler) {
       let offset = 0;
       let path2 = "/";
       if (typeof handler !== "function") {
@@ -20681,7 +20681,7 @@ var require_router = __commonJS({
       }
       return this;
     };
-    Router9.prototype.route = function route(path2) {
+    Router10.prototype.route = function route(path2) {
       const route2 = new Route(path2);
       const layer = new Layer(path2, {
         sensitive: this.caseSensitive,
@@ -20696,7 +20696,7 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      Router9.prototype[method] = function(path2) {
+      Router10.prototype[method] = function(path2) {
         const route = this.route(path2);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
@@ -20879,13 +20879,13 @@ var require_application = __commonJS({
     var compileTrust = require_utils3().compileTrust;
     var resolve = __require("node:path").resolve;
     var once = require_once();
-    var Router9 = require_router();
+    var Router10 = require_router();
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var app2 = exports = module.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router9 = null;
+      var router10 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -20894,13 +20894,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router9 === null) {
-            router9 = new Router9({
+          if (router10 === null) {
+            router10 = new Router10({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router9;
+          return router10;
         }
       });
     };
@@ -20971,15 +20971,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router9 = this.router;
+      var router10 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router9.use(path2, fn2);
+          return router10.use(path2, fn2);
         }
         debug(".use app under %s", path2);
         fn2.mountpath = path2;
         fn2.parent = this;
-        router9.use(path2, function mounted_app(req, res, next) {
+        router10.use(path2, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -23506,7 +23506,7 @@ var require_express = __commonJS({
     var EventEmitter = __require("node:events").EventEmitter;
     var mixin = require_merge_descriptors();
     var proto = require_application();
-    var Router9 = require_router();
+    var Router10 = require_router();
     var req = require_request();
     var res = require_response();
     exports = module.exports = createApplication;
@@ -23528,8 +23528,8 @@ var require_express = __commonJS({
     exports.application = proto;
     exports.request = req;
     exports.response = res;
-    exports.Route = Router9.Route;
-    exports.Router = Router9;
+    exports.Route = Router10.Route;
+    exports.Router = Router10;
     exports.json = bodyParser.json;
     exports.raw = bodyParser.raw;
     exports.static = require_serve_static();
@@ -28388,12 +28388,12 @@ var require_logger = __commonJS({
 });
 
 // src/app.ts
-var import_express9 = __toESM(require_express2(), 1);
+var import_express10 = __toESM(require_express2(), 1);
 var import_cors = __toESM(require_lib3(), 1);
 var import_pino_http = __toESM(require_logger(), 1);
 
 // src/routes/index.ts
-var import_express8 = __toESM(require_express2(), 1);
+var import_express9 = __toESM(require_express2(), 1);
 
 // src/routes/health.ts
 var import_express = __toESM(require_express2(), 1);
@@ -41184,16 +41184,232 @@ Les 10 avis doivent:
 });
 var enhance_prompts_copy_default = router7;
 
-// src/routes/index.ts
+// src/routes/openai/enhance-prompts-launch.ts
+var import_express8 = __toESM(require_express2(), 1);
 var router8 = (0, import_express8.Router)();
-router8.use(health_default);
-router8.use(enhance_prompts_default);
-router8.use(enhance_prompts_visual_default);
-router8.use(enhance_prompts_video_default);
-router8.use(enhance_prompts_ads_default);
-router8.use(enhance_prompts_sound_default);
-router8.use(enhance_prompts_copy_default);
-var routes_default = router8;
+function sendEvent6(res, data) {
+  res.write(`data: ${JSON.stringify(data)}
+
+`);
+}
+function parseJsonSafe6(text) {
+  try {
+    const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+    return JSON.parse(clean);
+  } catch {
+    return null;
+  }
+}
+router8.post("/openai/enhance-prompts-launch", async (req, res) => {
+  const {
+    brand_name,
+    sector,
+    tone = "professionnel",
+    product_name,
+    product_description = "",
+    price = 299,
+    old_price = 399,
+    discount = 20,
+    promo_code,
+    checkout_url = "#",
+    shipping_info = "Livraison offerte d\xE8s 100\u20AC",
+    features = [],
+    benefits = [],
+    primary_color = "#D4AF37",
+    heading_font = "Playfair Display",
+    body_font = "Montserrat"
+  } = req.body;
+  if (!brand_name || !sector || !product_name) {
+    res.status(400).json({ error: "brand_name, sector et product_name sont requis" });
+    return;
+  }
+  const code = promo_code || brand_name.slice(0, 4).toUpperCase() + discount;
+  const featuresStr = Array.isArray(features) ? features.join(", ") : features;
+  const benefitsStr = Array.isArray(benefits) ? benefits.join(", ") : benefits;
+  const year = (/* @__PURE__ */ new Date()).getFullYear();
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  const systemPrompt = `Tu es un expert d\xE9veloppeur web et strat\xE8ge de lancement pour RoboNeo.com.
+Tu g\xE9n\xE8res des contenus pr\xEAts \xE0 l'emploi, ultra-professionnels, adapt\xE9s \xE0 la marque.
+Contexte:
+- Marque: ${brand_name}
+- Produit: ${product_name}
+- Secteur: ${sector}
+- Ton: ${tone}
+- Prix: ${price}\u20AC (avant: ${old_price}\u20AC, remise: ${discount}%)
+- Code promo: ${code}
+- Description: ${product_description || "produit premium"}
+- Caract\xE9ristiques: ${featuresStr || "qualit\xE9 sup\xE9rieure"}
+- B\xE9n\xE9fices: ${benefitsStr || "\xE9l\xE9gance, durabilit\xE9"}
+- URL checkout: ${checkout_url}
+- Livraison: ${shipping_info}
+- Couleur principale: ${primary_color}
+- Police titres: ${heading_font} | Police corps: ${body_font}
+- Ann\xE9e: ${year}
+
+R\xC8GLE ABSOLUE: R\xE9ponds UNIQUEMENT en JSON valide, sans texte avant ou apr\xE8s.`;
+  const sections = [
+    {
+      key: "landing_page",
+      label: "Landing Page HTML",
+      agent: "Web Design Agent / Conversion Optimizer",
+      prompt: `G\xE9n\xE8re une landing page HTML compl\xE8te et pr\xEAte \xE0 d\xE9ployer pour "${product_name}" de la marque "${brand_name}" (secteur ${sector}).
+
+La landing page doit inclure :
+- Header avec logo placeholder et nom de la marque
+- Section Hero : badge promo, titre H1 accrocheur, description courte persuasive, prix barr\xE9 + prix promo, bouton CTA
+- Section Features (3 caract\xE9ristiques avec ic\xF4ne emoji)
+- Section Testimonials (3 avis clients fictifs r\xE9alistes)
+- Section FAQ (4 questions/r\xE9ponses pertinentes pour le secteur)
+- Footer avec mentions l\xE9gales
+
+CSS int\xE9gr\xE9 utilisant : couleur principale ${primary_color}, police ${heading_font} pour les titres, ${body_font} pour le corps, fond blanc, design responsive.
+
+R\xE9ponds en JSON avec exactement cette structure:
+{
+  "html": "<!DOCTYPE html>...</html> \u2014 CODE HTML COMPLET VALIDE en une seule cha\xEEne (\xE9chapper les guillemets internes)",
+  "meta": {
+    "title": "titre SEO de la page",
+    "description": "meta description 150 caract\xE8res",
+    "sections": ["hero", "features", "testimonials", "faq", "footer"]
+  }
+}
+
+La valeur "html" doit \xEAtre le code HTML COMPLET de la page, pr\xEAt \xE0 copier-coller dans un fichier index.html.
+Code promo \xE0 afficher: ${code} (-${discount}%).
+Prix: ${old_price}\u20AC barr\xE9 \u2192 ${price}\u20AC. Livraison: ${shipping_info}.`
+    },
+    {
+      key: "user_guide",
+      label: "Guide d'Utilisation (README)",
+      agent: "Documentation Agent / Launch Strategist",
+      prompt: `G\xE9n\xE8re un guide d'utilisation complet pour le pack de lancement "${brand_name}" \u2014 "${product_name}" (secteur ${sector}).
+
+Le guide doit couvrir :
+1. Introduction et bienvenue
+2. Structure du dossier de fichiers (07 dossiers : brand_identity, visual_content, video_content, ad_creatives, brand_sound, copy_content, launch_ready)
+3. Calendrier 30 jours en 4 semaines (semaine 1: installation, semaine 2: lancement, semaine 3: amplification, semaine 4: fid\xE9lisation)
+4. Par plateforme : Instagram, TikTok, Facebook, Pinterest, Site web
+5. Conseils d'optimisation pour la conversion, le SEO et les r\xE9seaux sociaux
+
+R\xE9ponds en JSON avec exactement cette structure:
+{
+  "introduction": "texte d'introduction en 2-3 paragraphes",
+  "folder_structure": "arborescence du dossier en texte ASCII (avec les 7 dossiers modules)",
+  "calendar_summary": {
+    "week_1": {"theme": "Installation & Pr\xE9paration", "actions": ["action1", "action2", "action3", "action4", "action5", "action6", "action7"]},
+    "week_2": {"theme": "Lancement Officiel", "actions": ["action1", "action2", "action3", "action4", "action5", "action6", "action7"]},
+    "week_3": {"theme": "Amplification & Publicit\xE9", "actions": ["action1", "action2", "action3", "action4", "action5", "action6", "action7"]},
+    "week_4": {"theme": "Fid\xE9lisation & Optimisation", "actions": ["action1", "action2", "action3", "action4", "action5", "action6", "action7"]}
+  },
+  "platform_guide": {
+    "instagram": "guide Instagram en 3-4 lignes avec formats et fichiers",
+    "tiktok": "guide TikTok en 2-3 lignes",
+    "facebook": "guide Facebook en 2-3 lignes",
+    "pinterest": "guide Pinterest en 2-3 lignes",
+    "website": "guide site web / Shopify en 3-4 lignes"
+  },
+  "optimization_tips": ["conseil1", "conseil2", "conseil3", "conseil4", "conseil5", "conseil6"]
+}
+
+Personnalise tous les contenus pour la marque ${brand_name} dans le secteur ${sector} avec un ton ${tone}.`
+    },
+    {
+      key: "calendar",
+      label: "Calendrier 30 Jours (JSON)",
+      agent: "Content Calendar Agent / Social Media Planner",
+      prompt: `G\xE9n\xE8re un calendrier de publication sur 30 jours ultra-d\xE9taill\xE9 et personnalis\xE9 pour "${brand_name}" (${product_name}, secteur ${sector}).
+
+R\xE9ponds en JSON avec exactement cette structure:
+{
+  "brand": "${brand_name}",
+  "product": "${product_name}",
+  "total_days": 30,
+  "days": [
+    {
+      "day": 1,
+      "date_offset": "J+1",
+      "week": 1,
+      "theme": "th\xE8me de la semaine",
+      "action": "action pr\xE9cise \xE0 effectuer",
+      "platform": "plateforme concern\xE9e (instagram/tiktok/email/facebook/pinterest/website/ads/analytics/offline)",
+      "file_to_use": "fichier ou dossier \xE0 utiliser (ex: logos/, captions/instagram_feed[0])",
+      "content_type": "type de contenu (post/story/reel/email/pub/vid\xE9o/setup)",
+      "priority": "high/medium/low",
+      "tip": "conseil court et actionnable"
+    }
+  ]
+}
+
+G\xE9n\xE8re les 30 jours complets avec:
+- Semaine 1 (J1-J7): Installation boutique, configuration logo/couleurs/polices, fiche produit, photos, emails automatiques
+- Semaine 2 (J8-J14): LANCEMENT \u2014 post annonce, TikTok/Reels, carrousel, stories, email launch, Pinterest, YouTube
+- Semaine 3 (J15-J21): Amplification \u2014 Meta Ads, Before/After, teaser vid\xE9o, LinkedIn, email panier abandonn\xE9, TikTok trend, Google Display
+- Semaine 4 (J22-J30): Fid\xE9lisation \u2014 avis clients, email loyalty, retargeting, UGC, bilan, planification mois 2
+
+Adapte les actions et contenus sp\xE9cifiquement au secteur "${sector}" et \xE0 la marque "${brand_name}".`
+    }
+  ];
+  for (const section of sections) {
+    try {
+      sendEvent6(res, {
+        type: "section_start",
+        key: section.key,
+        label: section.label,
+        agent: section.agent
+      });
+      let fullContent = "";
+      const stream = await openai.chat.completions.create({
+        model: "gpt-5.2",
+        max_completion_tokens: 4096,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: section.prompt }
+        ],
+        stream: true
+      });
+      for await (const chunk of stream) {
+        const content = chunk.choices[0]?.delta?.content;
+        if (content) {
+          fullContent += content;
+          sendEvent6(res, { type: "chunk", key: section.key, content });
+        }
+      }
+      const parsed = parseJsonSafe6(fullContent);
+      sendEvent6(res, {
+        type: "section_done",
+        key: section.key,
+        label: section.label,
+        agent: section.agent,
+        data: parsed ?? { raw: fullContent },
+        rawContent: fullContent
+      });
+    } catch (err) {
+      req.log.error({ err, section: section.key }, "Error generating launch section");
+      sendEvent6(res, {
+        type: "section_error",
+        key: section.key,
+        message: "Erreur lors de la g\xE9n\xE9ration"
+      });
+    }
+  }
+  sendEvent6(res, { type: "done" });
+  res.end();
+});
+var enhance_prompts_launch_default = router8;
+
+// src/routes/index.ts
+var router9 = (0, import_express9.Router)();
+router9.use(health_default);
+router9.use(enhance_prompts_default);
+router9.use(enhance_prompts_visual_default);
+router9.use(enhance_prompts_video_default);
+router9.use(enhance_prompts_ads_default);
+router9.use(enhance_prompts_sound_default);
+router9.use(enhance_prompts_copy_default);
+router9.use(enhance_prompts_launch_default);
+var routes_default = router9;
 
 // src/lib/logger.ts
 var import_pino = __toESM(require_pino(), 1);
@@ -41214,7 +41430,7 @@ var logger = (0, import_pino.default)({
 });
 
 // src/app.ts
-var app = (0, import_express9.default)();
+var app = (0, import_express10.default)();
 app.use(
   (0, import_pino_http.default)({
     logger,
@@ -41235,8 +41451,8 @@ app.use(
   })
 );
 app.use((0, import_cors.default)());
-app.use(import_express9.default.json());
-app.use(import_express9.default.urlencoded({ extended: true }));
+app.use(import_express10.default.json());
+app.use(import_express10.default.urlencoded({ extended: true }));
 app.use("/api", routes_default);
 var app_default = app;
 

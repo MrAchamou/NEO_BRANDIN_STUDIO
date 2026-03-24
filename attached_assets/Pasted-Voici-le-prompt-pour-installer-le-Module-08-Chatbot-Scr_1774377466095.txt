@@ -1,0 +1,499 @@
+Voici le **prompt pour installer le Module 08 — Chatbot Script** dans l'architecture existante.
+
+---
+
+# PROMPT — INSTALLATION MODULE 08 — CHATBOT SCRIPT
+
+```
+Ajoute le MODULE 08 — CHATBOT SCRIPT au projet existant.
+
+Le Module 08 génère les scripts pour le service client automatisé: 20 questions/réponses fréquentes sur le produit, script de gestion des objections (trop cher, délai livraison, retours), et réponses aux commentaires négatifs sur les réseaux sociaux.
+
+Le module doit s'intégrer avec les Modules 01 à 07 déjà installés.
+
+## STRUCTURE À AJOUTER
+
+Ajoute ce dossier et ces fichiers:
+
+```
+modules/module_08_chatbot_script/
+├── __init__.py
+├── orchestrator.py
+└── prompts.py
+```
+
+## 1. FICHIER modules/module_08_chatbot_script/__init__.py
+
+```python
+from .orchestrator import ChatbotScriptOrchestrator
+
+__all__ = ["ChatbotScriptOrchestrator"]
+```
+
+## 2. FICHIER modules/module_08_chatbot_script/prompts.py
+
+```python
+# ============================================================
+# MODULE 08 — CHATBOT SCRIPT — PROMPTS & TEMPLATES
+# ============================================================
+
+# MOD-08.1 — FAQ Générale (20 questions)
+FAQ_TEMPLATES = {
+    "bijou": [
+        {"question": "Quels sont les matériaux utilisés pour vos bijoux ?",
+         "answer": "Nos bijoux sont fabriqués en {material} avec des finitions soignées. Nous sélectionnons des matériaux durables et hypoallergéniques pour garantir confort et longévité."},
+        
+        {"question": "Les bijoux sont-ils livrés dans un écrin ?",
+         "answer": "Oui, chaque bijou est livré dans un écrin de luxe, idéal pour offrir ou pour conserver précieusement votre pièce."},
+        
+        {"question": "Comment entretenir mes bijoux pour qu'ils conservent leur éclat ?",
+         "answer": "Nous recommandons un nettoyage doux avec un chiffon microfibre. Évitez le contact avec l'eau, les produits chimiques et les parfums. Rangez vos bijoux à l'abri de l'humidité."},
+        
+        {"question": "Quelle est la garantie sur vos produits ?",
+         "answer": "Tous nos bijoux bénéficient d'une garantie de {warranty} ans contre tout défaut de fabrication. Nous nous engageons sur la qualité de nos créations."},
+        
+        {"question": "Puis-je faire graver un bijou ?",
+         "answer": "Oui, nous proposons un service de gravure personnalisée. Vous pouvez choisir jusqu'à 20 caractères. Délai de traitement : 3-5 jours supplémentaires."},
+        
+        {"question": "Quels sont les délais de livraison ?",
+         "answer": "La livraison est assurée sous {delivery_days} jours ouvrés. La livraison express est disponible en option sous 24-48h."},
+        
+        {"question": "Comment retourner un produit ?",
+         "answer": "Vous disposez de {return_days} jours pour retourner votre produit. Contactez notre service client pour obtenir une étiquette de retour prépayée."},
+        
+        {"question": "Les bijoux sont-ils adaptés aux peaux sensibles ?",
+         "answer": "Oui, nos bijoux sont hypoallergéniques et ne contiennent pas de nickel. Ils conviennent parfaitement aux peaux sensibles."},
+        
+        {"question": "Proposez-vous des coffrets cadeaux ?",
+         "answer": "Oui, nous proposons des coffrets cadeaux premium avec emballage personnalisé. Vous pouvez ajouter un message personnalisé gratuitement."},
+        
+        {"question": "Comment connaître ma taille de bague ?",
+         "answer": "Nous mettons à disposition un guide des tailles gratuit. Vous pouvez également commander un baguier à domicile pour être sûr de votre taille."}
+    ],
+    
+    "cosmétique": [
+        {"question": "Ce produit convient-il aux peaux sensibles ?",
+         "answer": "Oui, {product} est formulé sans parfum, sans allergène et testé dermatologiquement. Il convient parfaitement aux peaux sensibles."},
+        
+        {"question": "Combien de temps avant de voir les premiers résultats ?",
+         "answer": "Les premiers résultats sont visibles dès {first_results_days} jours. Une amélioration significative est observée après {optimal_days} jours d'utilisation régulière."},
+        
+        {"question": "Peut-on utiliser ce produit enceinte ?",
+         "answer": "Consultez votre médecin avant utilisation. La formule est conçue pour être douce, mais l'avis d'un professionnel est recommandé."},
+        
+        {"question": "Le produit est-il testé sur les animaux ?",
+         "answer": "Non, {brand} est une marque cruelty-free et ne teste pas ses produits sur les animaux."},
+        
+        {"question": "Quelle est la différence avec les autres sérums ?",
+         "answer": "{product} se distingue par sa concentration en {ingredient} et sa formule brevetée qui garantit une absorption optimale."},
+        
+        {"question": "Comment utiliser le produit dans ma routine ?",
+         "answer": "Appliquez matin et soir sur peau propre et sèche. Massez doucement jusqu'à absorption complète. Complétez avec votre crème habituelle."},
+        
+        {"question": "Quel est le pourcentage d'ingrédients naturels ?",
+         "answer": "Notre formule contient {natural_percent}% d'ingrédients d'origine naturelle. Le reste est composé de conservateurs doux pour garantir la stabilité du produit."},
+        
+        {"question": "Le produit a-t-il une date de péremption ?",
+         "answer": "La date de péremption est indiquée sur l'emballage. Une fois ouvert, le produit se conserve {open_shelf_life} mois."}
+    ],
+    
+    "tech": [
+        {"question": "Le produit est-il compatible avec tous les appareils ?",
+         "answer": "{product} est compatible avec {compatibility}. Vérifiez les spécifications techniques pour plus de détails."},
+        
+        {"question": "Quelle est la durée de la batterie ?",
+         "answer": "L'autonomie de {product} est de {battery_life} en utilisation normale. La charge complète prend {charging_time}."},
+        
+        {"question": "Y a-t-il une application dédiée ?",
+         "answer": "Oui, {product} fonctionne avec l'application {app_name}, disponible gratuitement sur iOS et Android."},
+        
+        {"question": "Que faire en cas de problème technique ?",
+         "answer": "Notre service client est joignable 7j/7 par email ou chat. Une garantie de {warranty} ans couvre les défauts de fabrication."},
+        
+        {"question": "Le produit est-il livré avec tous les accessoires ?",
+         "answer": "La boîte contient {product}, un câble de charge, un guide de démarrage rapide et {accessories}."},
+        
+        {"question": "Comment mettre à jour le firmware ?",
+         "answer": "Les mises à jour se font automatiquement via l'application {app_name}. Assurez-vous d'avoir une connexion internet stable."}
+    ]
+}
+
+# MOD-08.2 — Gestion des Objections (vente)
+OBJECTION_SCRIPTS = {
+    "prix_trop_eleve": {
+        "scenario": "Le client trouve le produit trop cher",
+        "response": "Je comprends que le prix puisse sembler élevé. Cependant, {product} est fabriqué avec des matériaux de qualité {material} et bénéficie d'une garantie de {warranty} ans. C'est un investissement sur la durée. D'ailleurs, nous avons actuellement une offre spéciale : -{discount}% avec le code {code}. Cela ramène le prix à {discounted_price}€, livraison offerte.",
+        "follow_up": "Est-ce que cela correspond mieux à votre budget ?"
+    },
+    
+    "delai_livraison": {
+        "scenario": "Le client trouve les délais de livraison trop longs",
+        "response": "Je comprends votre impatience. En livraison standard, le délai est de {delivery_days} jours ouvrés. Mais nous proposons également une livraison express en {express_delivery_days} jours ouvrés pour seulement {express_price}€ supplémentaires. Voulez-vous que je vous propose cette option ?",
+        "follow_up": "Souhaitez-vous passer en livraison express ?"
+    },
+    
+    "hesitation_qualite": {
+        "scenario": "Le client doute de la qualité du produit",
+        "response": "Je comprends votre hésitation. C'est pourquoi nous proposons une garantie satisfait ou remboursé de {return_days} jours. Vous pouvez tester {product} chez vous et si vous n'êtes pas pleinement satisfait, nous vous remboursons intégralement. Cela vous rassure-t-il ?",
+        "follow_up": "Souhaitez-vous en savoir plus sur les garanties ?"
+    },
+    
+    "comparaison_concurrent": {
+        "scenario": "Le client compare avec un concurrent moins cher",
+        "response": "Je comprends que le prix puisse être un critère important. Ce qui fait la différence avec {product}, c'est {unique_feature}. De plus, nous offrons {warranty} ans de garantie contre {competitor_warranty} ans chez nos concurrents. À long terme, c'est un meilleur investissement.",
+        "follow_up": "Est-ce que cette différence vous semble importante ?"
+    },
+    
+    "pas_besoin_maintenant": {
+        "scenario": "Le client reporte l'achat à plus tard",
+        "response": "Je comprends parfaitement. Je voulais juste vous signaler que notre offre promotionnelle se termine dans {offer_end_days} jours. Si vous souhaitez profiter du code {code} pour -{discount}%, il serait dommage de le laisser passer. Je peux vous envoyer un rappel par email si vous le souhaitez ?",
+        "follow_up": "Voulez-vous que je vous envoie un rappel ?"
+    },
+    
+    "frais_port": {
+        "scenario": "Le client trouve les frais de port trop élevés",
+        "response": "Je comprends. Pour rappel, la livraison est offerte dès {free_shipping}€ d'achat. Avez-vous envisagé d'ajouter un petit article pour bénéficier de cette offre ? Je peux vous suggérer quelques produits qui pourraient vous intéresser.",
+        "follow_up": "Voulez-vous que je vous propose quelques suggestions ?"
+    },
+    
+    "taille_incertaine": {
+        "scenario": "Le client ne connaît pas sa taille",
+        "response": "C'est une question fréquente ! Nous avons un guide des tailles très détaillé disponible sur notre site. Je peux aussi vous aider à déterminer votre taille si vous me donnez vos mensurations. Quelle est votre taille habituelle ?",
+        "follow_up": "Souhaitez-vous consulter le guide des tailles ?"
+    },
+    
+    "cadeau": {
+        "scenario": "Le client achète pour offrir, hésite sur le choix",
+        "response": "Quel magnifique cadeau ! Pour vous aider à choisir, je peux vous dire que nos best-sellers sont {best_seller_1} et {best_seller_2}. Ils plaisent particulièrement car {reason_1}. Sinon, si vous me parlez un peu de la personne, je pourrai vous conseiller au mieux.",
+        "follow_up": "Pouvez-vous me décrire un peu la personne ?"
+    }
+}
+
+# MOD-08.3 — Réponses aux Commentaires Négatifs
+NEGATIVE_COMMENTS_TEMPLATES = {
+    "produit_defectueux": {
+        "type": "Défaut produit",
+        "response_public": "Bonjour {name}, nous sommes désolés d'apprendre que votre {product} ne correspond pas à vos attentes. Notre service client va vous contacter immédiatement pour trouver une solution. Pouvez-vous nous envoyer un email à {support_email} avec votre numéro de commande ? Merci de votre confiance.",
+        "response_prive": "Bonjour, nous avons bien reçu votre message. Pouvez-vous nous communiquer votre numéro de commande et une photo du défaut ? Nous ferons le nécessaire pour vous satisfaire au plus vite."
+    },
+    
+    "livraison_retard": {
+        "type": "Retard de livraison",
+        "response_public": "Bonjour {name}, nous sommes navrés pour le retard de livraison. Nous avons contacté notre transporteur et nous vous tiendrons informé dans les plus brefs délais. Merci de votre patience.",
+        "response_prive": "Bonjour, je suis désolé pour ce désagrément. Votre colis est actuellement en transit. Je vous confirme qu'il sera livré d'ici {delivery_days} jours ouvrés. Je vous offre les frais de port sur votre prochaine commande en compensation."
+    },
+    
+    "service_client": {
+        "type": "Service client insatisfaisant",
+        "response_public": "Bonjour {name}, nous sommes sincèrement désolés que votre expérience avec notre service client n'ait pas été à la hauteur de vos attentes. Nous allons immédiatement remonter votre situation à notre responsable. Pouvez-vous nous contacter par email à {support_email} ?",
+        "response_prive": "Bonjour, toutes nos excuses pour ce désagrément. Je vais personnellement prendre en charge votre dossier. Quel est votre numéro de commande ?"
+    },
+    
+    "produit_different": {
+        "type": "Produit différent de la description",
+        "response_public": "Bonjour {name}, nous sommes navrés que le produit ne corresponde pas à vos attentes. Pouvez-vous nous contacter en privé avec votre numéro de commande ? Nous étudierons ensemble la meilleure solution.",
+        "response_prive": "Bonjour, je suis désolé d'apprendre cela. Pouvez-vous me décrire en quoi le produit est différent de la description ? Nous ferons le nécessaire pour vous satisfaire."
+    },
+    
+    "prix_trop_eleve_apres_achat": {
+        "type": "Client mécontent du prix après achat",
+        "response_public": "Bonjour {name}, nous comprenons votre frustration. Contactez-nous en privé avec votre numéro de commande, nous verrons ensemble ce que nous pouvons faire.",
+        "response_prive": "Bonjour, je comprends votre mécontentement. Je vais vous faire un avoir sur votre prochaine commande pour compenser la différence. Acceptez-vous cette solution ?"
+    }
+}
+
+def get_faq(sector: str, context: dict) -> list:
+    """Génère une FAQ de 20 questions/réponses"""
+    templates = FAQ_TEMPLATES.get(sector, FAQ_TEMPLATES["bijou"])
+    faq = []
+    
+    for qa in templates:
+        question = qa["question"]
+        answer = qa["answer"]
+        for key, value in context.items():
+            question = question.replace(f"{{{key}}}", str(value))
+            answer = answer.replace(f"{{{key}}}", str(value))
+        faq.append({"question": question, "answer": answer})
+    
+    # Compléter jusqu'à 20 questions si nécessaire
+    while len(faq) < 20:
+        faq.append({
+            "question": "Puis-je contacter le service client ?",
+            "answer": f"Oui, notre service client est joignable par email à {context.get('support_email', 'support@exemple.com')} ou par chat sur notre site. Nous répondons sous 24h ouvrées."
+        })
+    
+    return faq[:20]
+
+def get_objection_script(objection_type: str, context: dict) -> dict:
+    """Génère un script de gestion d'objection"""
+    template = OBJECTION_SCRIPTS.get(objection_type, OBJECTION_SCRIPTS["prix_trop_eleve"])
+    response = template["response"]
+    follow_up = template["follow_up"]
+    
+    for key, value in context.items():
+        response = response.replace(f"{{{key}}}", str(value))
+        follow_up = follow_up.replace(f"{{{key}}}", str(value))
+    
+    return {
+        "scenario": template["scenario"],
+        "response": response,
+        "follow_up": follow_up
+    }
+
+def get_negative_comment_response(comment_type: str, context: dict) -> dict:
+    """Génère une réponse à un commentaire négatif"""
+    template = NEGATIVE_COMMENTS_TEMPLATES.get(comment_type, NEGATIVE_COMMENTS_TEMPLATES["produit_defectueux"])
+    public = template["response_public"]
+    private = template["response_prive"]
+    
+    for key, value in context.items():
+        public = public.replace(f"{{{key}}}", str(value))
+        private = private.replace(f"{{{key}}}", str(value))
+    
+    return {
+        "type": template["type"],
+        "public_response": public,
+        "private_message": private
+    }
+```
+
+## 3. FICHIER modules/module_08_chatbot_script/orchestrator.py
+
+```python
+from typing import Dict, Any, List
+from modules.base_module import BaseModule
+from modules.module_08_chatbot_script.prompts import (
+    get_faq,
+    get_objection_script,
+    get_negative_comment_response
+)
+
+class ChatbotScriptOrchestrator(BaseModule):
+    """
+    MODULE 08 — CHATBOT SCRIPT
+    Génère tous les scripts pour le service client automatisé
+    """
+    
+    def __init__(self):
+        super().__init__("ChatbotScript")
+    
+    def generate(self, brief: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Génère tous les scripts du Module 08
+        
+        Input brief attendu:
+        {
+            "brand_name": "LUXEOR",
+            "sector": "bijou",
+            "product_name": "Montre Élégance Or Rose",
+            "product_description": "...",
+            "material": "or rose 18 carats",
+            "warranty": 2,
+            "delivery_days": 3,
+            "return_days": 30,
+            "discount": 20,
+            "promo_code": "LUXEOR20",
+            "price": 299,
+            "free_shipping": 100,
+            "support_email": "contact@luxeor.com",
+            "unique_feature": "mouvement suisse",
+            "best_seller_1": "Collier Perle",
+            "best_seller_2": "Bague Solitaire"
+        }
+        """
+        
+        # Extraire les données
+        brand_name = brief.get("brand_name", "Ma Marque")
+        sector = brief.get("sector", "general")
+        product_name = brief.get("product_name", "notre produit")
+        material = brief.get("material", "matériaux d'exception")
+        warranty = brief.get("warranty", 2)
+        delivery_days = brief.get("delivery_days", 3)
+        express_delivery_days = brief.get("express_delivery_days", 1)
+        express_price = brief.get("express_price", 9.90)
+        return_days = brief.get("return_days", 30)
+        discount = brief.get("discount", 20)
+        promo_code = brief.get("promo_code", brand_name.upper()[:4])
+        price = brief.get("price", 299)
+        discounted_price = round(price * (1 - discount / 100), 2)
+        free_shipping = brief.get("free_shipping", 100)
+        support_email = brief.get("support_email", f"contact@{brand_name.lower()}.com")
+        unique_feature = brief.get("unique_feature", "fabrication artisanale")
+        competitor_warranty = brief.get("competitor_warranty", 1)
+        offer_end_days = brief.get("offer_end_days", 3)
+        best_seller_1 = brief.get("best_seller_1", "notre best-seller")
+        best_seller_2 = brief.get("best_seller_2", "notre coup de cœur")
+        reason_1 = brief.get("reason_1", "il est très polyvalent")
+        
+        # Contexte pour personnalisation
+        context = {
+            "product": product_name,
+            "brand": brand_name,
+            "material": material,
+            "warranty": warranty,
+            "delivery_days": delivery_days,
+            "express_delivery_days": express_delivery_days,
+            "express_price": express_price,
+            "return_days": return_days,
+            "discount": discount,
+            "code": promo_code,
+            "price": price,
+            "discounted_price": discounted_price,
+            "free_shipping": free_shipping,
+            "support_email": support_email,
+            "unique_feature": unique_feature,
+            "competitor_warranty": competitor_warranty,
+            "offer_end_days": offer_end_days,
+            "best_seller_1": best_seller_1,
+            "best_seller_2": best_seller_2,
+            "reason_1": reason_1
+        }
+        
+        self._log(f"Génération des scripts chatbot pour {brand_name}")
+        
+        # 1. FAQ (20 questions/réponses)
+        faq = get_faq(sector, context)
+        
+        # 2. Scripts de gestion des objections
+        objections = {}
+        objection_types = ["prix_trop_eleve", "delai_livraison", "hesitation_qualite", 
+                          "comparaison_concurrent", "pas_besoin_maintenant", "frais_port", 
+                          "taille_incertaine", "cadeau"]
+        
+        for obj_type in objection_types:
+            objections[obj_type] = get_objection_script(obj_type, context)
+        
+        # 3. Réponses aux commentaires négatifs
+        negative_responses = {}
+        negative_types = ["produit_defectueux", "livraison_retard", "service_client", 
+                         "produit_different", "prix_trop_eleve_apres_achat"]
+        
+        for neg_type in negative_types:
+            negative_responses[neg_type] = get_negative_comment_response(neg_type, context)
+        
+        # Retourner tous les scripts
+        return {
+            "chatbot_script": {
+                "faq": {
+                    "agent": "Manual (chatbot configuration)",
+                    "questions": faq,
+                    "parameters": {
+                        "total_questions": len(faq),
+                        "sector": sector,
+                        "format": "JSON pour intégration chatbot"
+                    }
+                },
+                "objection_handling": {
+                    "agent": "Manual (customer service training)",
+                    "scripts": objections,
+                    "parameters": {
+                        "scenarios": len(objections),
+                        "format": "scripts pour service client"
+                    }
+                },
+                "negative_comments": {
+                    "agent": "Manual (social media management)",
+                    "responses": negative_responses,
+                    "parameters": {
+                        "scenarios": len(negative_responses),
+                        "format": "public response + private message"
+                    }
+                }
+            },
+            "metadata": {
+                "module": "08_chatbot_script",
+                "brand_name": brand_name,
+                "sector": sector,
+                "faq_questions": len(faq),
+                "objection_scenarios": len(objections),
+                "negative_scenarios": len(negative_responses),
+                "llm_enhanced": bool(self._enhance_prompt("test", {}) != "test")
+            }
+        }
+```
+
+## 4. MISE À JOUR DU FICHIER main.py
+
+Ajoute l'import et l'intégration du Module 08:
+
+```python
+# Ajouter cet import
+from modules.module_08_chatbot_script import ChatbotScriptOrchestrator
+
+# Après la génération du Module 07, ajouter:
+
+# Génération des prompts Module 08
+print("\n" + "=" * 80)
+print("MODULE 08 — CHATBOT SCRIPT")
+print("=" * 80)
+
+chatbot_brief = {
+    "brand_name": brief.get("brand_name"),
+    "sector": brief.get("sector"),
+    "product_name": brief.get("product_name", brief.get("brand_name")),
+    "material": brief.get("product_materials", ["matériaux d'exception"])[0],
+    "warranty": brief.get("warranty", 2),
+    "delivery_days": brief.get("delivery_days", 3),
+    "express_delivery_days": brief.get("express_delivery_days", 1),
+    "express_price": brief.get("express_price", 9.90),
+    "return_days": brief.get("return_days", 30),
+    "discount": brief.get("discount", 20),
+    "promo_code": brief.get("promo_code"),
+    "price": brief.get("price", 299),
+    "free_shipping": brief.get("free_shipping", 100),
+    "support_email": f"contact@{brief.get('brand_name', 'marque').lower().replace(' ', '')}.com",
+    "unique_feature": brief.get("unique_feature", "fabrication artisanale"),
+    "competitor_warranty": brief.get("competitor_warranty", 1),
+    "offer_end_days": brief.get("offer_end_days", 3),
+    "best_seller_1": brief.get("best_seller_1", "notre best-seller"),
+    "best_seller_2": brief.get("best_seller_2", "notre coup de cœur"),
+    "reason_1": brief.get("reason_1", "il est très apprécié des clients")
+}
+
+chatbot_orchestrator = ChatbotScriptOrchestrator()
+chatbot_result = chatbot_orchestrator.generate(chatbot_brief)
+
+# Fusionner les résultats
+result["modules"]["chatbot_script"] = chatbot_result["chatbot_script"]
+```
+
+## 5. MISE À JOUR DU BRIEF D'EXEMPLE
+
+Modifie le brief par défaut pour ajouter les champs nécessaires:
+
+```python
+brief = {
+    # ... champs existants ...
+    "price": 299,
+    "express_delivery_days": 1,
+    "express_price": 9.90,
+    "support_email": "contact@luxeor.com",
+    "unique_feature": "mouvement suisse automatique",
+    "competitor_warranty": 1,
+    "offer_end_days": 3,
+    "best_seller_1": "Collier Perle Élégance",
+    "best_seller_2": "Bague Solitaire Or Rose",
+    "reason_1": "il se porte au quotidien comme pour les occasions spéciales"
+}
+```
+
+## 6. VÉRIFICATION
+
+Une fois installé, teste avec:
+
+```bash
+python main.py
+```
+
+Le fichier output/prompts_roboneo.txt doit maintenant contenir les éléments pour:
+- Modules 01 à 07 existants
+- Module 08: Chatbot Script (20 FAQ, 8 objections, 5 réponses négatives)
+```
+
+---
+
+**Copie et colle ce prompt dans Replit AI.** Une fois installé, tu auras les Modules 01 à 08 fonctionnels.
+
+Il nous reste **2 modules** : 09 (Upsell Kit), 10 (Performance Tracker).
+
+Dis-moi quand c'est fait, et on finit les deux derniers ! 🚀
