@@ -1,0 +1,540 @@
+Voici le **prompt pour installer le Module 09 — Upsell & Cross-sell Kit** dans l'architecture existante.
+
+---
+
+# PROMPT — INSTALLATION MODULE 09 — UPSELL & CROSS-SELL KIT
+
+```
+Ajoute le MODULE 09 — UPSELL & CROSS-SELL KIT au projet existant.
+
+Le Module 09 génère les stratégies et contenus pour maximiser la valeur du panier: 3 idées de produits complémentaires (avec justifications), visuels bundle déjà créés (prompts pour générer les visuels), et copy pour les offres groupées.
+
+Le module doit s'intégrer avec les Modules 01 à 08 déjà installés.
+
+## STRUCTURE À AJOUTER
+
+Ajoute ce dossier et ces fichiers:
+
+```
+modules/module_09_upsell_kit/
+├── __init__.py
+├── orchestrator.py
+└── prompts.py
+```
+
+## 1. FICHIER modules/module_09_upsell_kit/__init__.py
+
+```python
+from .orchestrator import UpsellKitOrchestrator
+
+__all__ = ["UpsellKitOrchestrator"]
+```
+
+## 2. FICHIER modules/module_09_upsell_kit/prompts.py
+
+```python
+# ============================================================
+# MODULE 09 — UPSELL & CROSS-SELL KIT — PROMPTS & TEMPLATES
+# ============================================================
+
+# MOD-09.1 — Idées de produits complémentaires (par secteur)
+CROSS_SELL_IDEAS = {
+    "bijou": [
+        {
+            "product_name": "Coffret à bijoux en velours",
+            "description": "Un écrin élégant pour ranger et protéger vos bijoux. Doublure velours, compartiments modulables.",
+            "price_range": "29-49€",
+            "justification": "Complète parfaitement l'achat d'un bijou. Idéal pour offrir ou pour protéger l'investissement.",
+            "margin": "65%",
+            "bundle_discount": 15,
+            "visual_prompt": "Photo produit d'un coffret à bijoux en velours noir, ouvert, avec une montre à l'intérieur. Éclairage studio, fond blanc, reflets subtils. Format carré 1080x1080."
+        },
+        {
+            "product_name": "Chiffon de nettoyage microfibre",
+            "description": "Chiffon doux spécial bijoux, non abrasif, pour un entretien quotidien.",
+            "price_range": "9-15€",
+            "justification": "Accessoire indispensable pour l'entretien des bijoux. Faible prix, haute valeur perçue.",
+            "margin": "70%",
+            "bundle_discount": 10,
+            "visual_prompt": "Photo macro d'un chiffon microfibre blanc plié, à côté d'une montre ou d'une bague. Fond épuré, lumière douce. Format carré 1080x1080."
+        },
+        {
+            "product_name": "Solution de nettoyage ultrasonique",
+            "description": "Nettoyeur à ultrasons professionnel pour bijoux, lunettes, montres. Résultats en 3 minutes.",
+            "price_range": "59-89€",
+            "justification": "Produit à forte marge, prolonge la durée de vie des bijoux. Upsell naturel après un achat premium.",
+            "margin": "60%",
+            "bundle_discount": 20,
+            "visual_prompt": "Photo produit d'un nettoyeur à ultrasons, avec un bijou à l'intérieur. Fond blanc, éclairage studio. Format carré 1080x1080."
+        }
+    ],
+    
+    "cosmétique": [
+        {
+            "product_name": "Spray fixateur de maquillage",
+            "description": "Fixateur longue tenue, hydratant, brume légère. Tient toute la journée.",
+            "price_range": "19-29€",
+            "justification": "Complète parfaitement la routine maquillage. Forte demande, marge élevée.",
+            "margin": "70%",
+            "bundle_discount": 15,
+            "visual_prompt": "Photo lifestyle d'un spray fixateur, main tenant le produit, fond flou. Format carré 1080x1080."
+        },
+        {
+            "product_name": "Kit d'application (pinceaux)",
+            "description": "Set de 5 pinceaux professionnels en fibres synthétiques. Étui de voyage inclus.",
+            "price_range": "25-45€",
+            "justification": "Accessoire indispensable pour une application parfaite. Augmente la valeur perçue du produit principal.",
+            "margin": "65%",
+            "bundle_discount": 15,
+            "visual_prompt": "Photo de 5 pinceaux de maquillage disposés en éventail, fond neutre, lumière douce. Format carré 1080x1080."
+        },
+        {
+            "product_name": "Masque en tissu (lot de 10)",
+            "description": "Masques hydratants enrichis en acide hyaluronique. 10 masques pour une cure complète.",
+            "price_range": "29-39€",
+            "justification": "Produit consommable, favorise la fidélisation. Idéal en bundle avec un sérum ou une crème.",
+            "margin": "75%",
+            "bundle_discount": 20,
+            "visual_prompt": "Photo de masques en tissu empilés, avec une goutte de sérum, fond épuré. Format carré 1080x1080."
+        }
+    ],
+    
+    "tech": [
+        {
+            "product_name": "Étui de protection premium",
+            "description": "Étui en cuir ou silicone, protection anti-choc, design élégant.",
+            "price_range": "19-39€",
+            "justification": "Accessoire indispensable pour protéger l'investissement. Marge élevée, taux de conversion fort.",
+            "margin": "70%",
+            "bundle_discount": 15,
+            "visual_prompt": "Photo d'un étui de protection, avec le produit à l'intérieur. Fond blanc, éclairage studio. Format carré 1080x1080."
+        },
+        {
+            "product_name": "Chargeur sans fil",
+            "description": "Chargeur rapide sans fil, compatible tous appareils. Design minimaliste.",
+            "price_range": "29-49€",
+            "justification": "Complément naturel pour tout appareil rechargeable. Forte valeur perçue.",
+            "margin": "60%",
+            "bundle_discount": 15,
+            "visual_prompt": "Photo d'un chargeur sans fil avec un appareil posé dessus. Fond épuré, lumières. Format carré 1080x1080."
+        },
+        {
+            "product_name": "Pack de câbles (3m, USB-C)",
+            "description": "Câble USB-C ultra-résistant, 3 mètres, tressé. Garantie à vie.",
+            "price_range": "15-25€",
+            "justification": "Accessoire à forte rotation, marge excellente. Facile à ajouter au panier.",
+            "margin": "75%",
+            "bundle_discount": 10,
+            "visual_prompt": "Photo d'un câble tressé enroulé, fond blanc, macro du connecteur. Format carré 1080x1080."
+        }
+    ],
+    
+    "mode": [
+        {
+            "product_name": "Ceinture coordonnée",
+            "description": "Ceinture en cuir véritable, boucle dorée, pour accompagner le vêtement.",
+            "price_range": "39-59€",
+            "justification": "Accessoire qui complète la tenue. Marge élevée, cohérence stylistique.",
+            "margin": "65%",
+            "bundle_discount": 15,
+            "visual_prompt": "Photo d'une ceinture en cuir enroulée, boucle dorée visible. Fond neutre. Format carré 1080x1080."
+        },
+        {
+            "product_name": "Écharpe en soie",
+            "description": "Écharpe en soie naturelle, motifs intemporels. Plusieurs coloris disponibles.",
+            "price_range": "49-79€",
+            "justification": "Produit à forte valeur perçue, upsell naturel. Marge confortable.",
+            "margin": "70%",
+            "bundle_discount": 15,
+            "visual_prompt": "Photo d'une écharpe en soie dépliée, avec des détails des motifs. Format carré 1080x1080."
+        },
+        {
+            "product_name": "Set de bijoux assortis",
+            "description": "Ensemble bague + bracelet assortis, pour un style coordonné.",
+            "price_range": "59-99€",
+            "justification": "Augmente la valeur du panier. Cohérence esthétique avec le vêtement principal.",
+            "margin": "60%",
+            "bundle_discount": 20,
+            "visual_prompt": "Photo d'un set de bijoux (bague + bracelet) sur un mannequin. Format carré 1080x1080."
+        }
+    ],
+    
+    "fitness": [
+        {
+            "product_name": "Bouteille isotherme",
+            "description": "Bouteille isotherme en acier inoxydable, 500ml. Garde au frais 24h.",
+            "price_range": "25-35€",
+            "justification": "Accessoire indispensable pour les sportifs. Marge élevée, très forte demande.",
+            "margin": "70%",
+            "bundle_discount": 10,
+            "visual_prompt": "Photo d'une bouteille isotherme, avec un sportif en arrière-plan flou. Format carré 1080x1080."
+        },
+        {
+            "product_name": "Tapis de yoga premium",
+            "description": "Tapis de yoga antidérapant, 6mm d'épaisseur, matériaux écologiques.",
+            "price_range": "39-69€",
+            "justification": "Complément naturel pour tout équipement fitness. Marge confortable.",
+            "margin": "65%",
+            "bundle_discount": 15,
+            "visual_prompt": "Photo d'un tapis de yoga roulé, à côté d'une tenue de sport. Format carré 1080x1080."
+        },
+        {
+            "product_name": "Bandages de résistance (set 3)",
+            "description": "Set de 3 bandages élastiques, différents niveaux de résistance. Étui de transport inclus.",
+            "price_range": "19-29€",
+            "justification": "Accessoire polyvalent, faible prix, haute marge. Idéal en cross-sell.",
+            "margin": "75%",
+            "bundle_discount": 10,
+            "visual_prompt": "Photo des 3 bandages enroulés, disposés en triangle. Format carré 1080x1080."
+        }
+    ]
+}
+
+# MOD-09.2 — Bundle Offers (offres groupées)
+BUNDLE_OFFERS = {
+    "standard": {
+        "name": "Pack Essentiel",
+        "description": "Le produit principal + l'accessoire indispensable",
+        "discount": 15,
+        "cta": "Ajouter les deux au panier",
+        "visual_prompt": "Photo du bundle avec le produit principal et l'accessoire côte à côte, fond épuré. Format carré 1080x1080."
+    },
+    "premium": {
+        "name": "Pack Complet",
+        "description": "Le produit principal + les 2 accessoires les plus populaires",
+        "discount": 20,
+        "cta": "Profitez du pack complet",
+        "visual_prompt": "Photo du bundle avec le produit principal et les 2 accessoires disposés harmonieusement, fond épuré. Format carré 1080x1080."
+    },
+    "gift": {
+        "name": "Pack Cadeau",
+        "description": "Le produit principal + écrin + emballage cadeau personnalisé",
+        "discount": 10,
+        "cta": "Offrir en toute élégance",
+        "visual_prompt": "Photo du produit dans son écrin, avec ruban et emballage cadeau. Format carré 1080x1080."
+    }
+}
+
+# MOD-09.3 — Copy pour offres groupées
+BUNDLE_COPY_TEMPLATES = {
+    "upsell_checkout": {
+        "title": "✨ Complétez votre achat avec {accessory}",
+        "description": "Ajoutez {accessory} pour seulement {price}€ supplémentaire (au lieu de {original_price}€)",
+        "cta": "Ajouter",
+        "benefit": "Parfait pour {benefit_reason}"
+    },
+    "cross_sell_cart": {
+        "title": "🎁 Vous aimerez aussi",
+        "description": "{product} se marie parfaitement avec {accessory}",
+        "cta": "Ajouter au panier",
+        "benefit": "{accessory_benefit}"
+    },
+    "bundle_page": {
+        "title": "Économisez avec nos packs",
+        "subtitle": "Choisissez le pack qui vous correspond",
+        "cta": "Choisir ce pack",
+        "saving": "Économisez {discount}%"
+    },
+    "post_purchase": {
+        "title": "Profitez de -{discount}% sur votre prochain achat",
+        "description": "Achetez {accessory} maintenant et bénéficiez de {discount}% de réduction",
+        "cta": "J'en profite",
+        "expiry": "Offre valable 24h"
+    }
+}
+
+def get_cross_sell_ideas(sector: str) -> list:
+    """Retourne 3 idées de produits complémentaires"""
+    return CROSS_SELL_IDEAS.get(sector, CROSS_SELL_IDEAS["bijou"])
+
+def get_bundle_offer(bundle_type: str) -> dict:
+    """Retourne une offre groupée"""
+    return BUNDLE_OFFERS.get(bundle_type, BUNDLE_OFFERS["standard"])
+
+def get_bundle_copy(copy_type: str, context: dict) -> dict:
+    """Génère une copy pour offre groupée"""
+    template = BUNDLE_COPY_TEMPLATES.get(copy_type, BUNDLE_COPY_TEMPLATES["upsell_checkout"])
+    copy = {}
+    for key, value in template.items():
+        text = value
+        for k, v in context.items():
+            text = text.replace(f"{{{k}}}", str(v))
+        copy[key] = text
+    return copy
+```
+
+## 3. FICHIER modules/module_09_upsell_kit/orchestrator.py
+
+```python
+from typing import Dict, Any, List
+from modules.base_module import BaseModule
+from modules.module_09_upsell_kit.prompts import (
+    get_cross_sell_ideas,
+    get_bundle_offer,
+    get_bundle_copy
+)
+
+class UpsellKitOrchestrator(BaseModule):
+    """
+    MODULE 09 — UPSELL & CROSS-SELL KIT
+    Génère les stratégies et contenus pour maximiser la valeur du panier
+    """
+    
+    def __init__(self):
+        super().__init__("UpsellKit")
+    
+    def generate(self, brief: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Génère tous les éléments du Module 09
+        
+        Input brief attendu:
+        {
+            "brand_name": "LUXEOR",
+            "sector": "bijou",
+            "product_name": "Montre Élégance Or Rose",
+            "product_price": 299,
+            "main_product_features": ["or rose", "verre saphir", "mouvement suisse"]
+        }
+        """
+        
+        # Extraire les données
+        brand_name = brief.get("brand_name", "Ma Marque")
+        sector = brief.get("sector", "general")
+        product_name = brief.get("product_name", "notre produit")
+        product_price = brief.get("product_price", 299)
+        main_features = brief.get("main_product_features", [])
+        
+        self._log(f"Génération des upsell/cross-sell pour {brand_name}")
+        
+        # 1. Idées de produits complémentaires (3)
+        cross_sell_ideas = get_cross_sell_ideas(sector)
+        
+        # Personnaliser les idées avec le contexte de la marque
+        personalized_ideas = []
+        for idea in cross_sell_ideas[:3]:
+            personalized = idea.copy()
+            personalized["product_name"] = personalized["product_name"]
+            
+            # Ajouter la justification personnalisée
+            if sector == "bijou" and "montre" in product_name.lower():
+                personalized["justification"] = f"Complète parfaitement {product_name}. Idéal pour protéger votre investissement."
+            
+            personalized_ideas.append(personalized)
+        
+        # 2. Visuels bundle (prompts pour générer les visuels)
+        bundle_visuals = []
+        for idea in personalized_ideas:
+            visual_prompt = idea.get("visual_prompt", "")
+            
+            # Personnaliser le prompt avec le produit principal
+            custom_prompt = f"""
+{visual_prompt}
+
+Style: Cohérent avec l'identité de la marque {brand_name}.
+Association avec le produit principal: {product_name}.
+"""
+            bundle_visuals.append({
+                "product": idea["product_name"],
+                "prompt": custom_prompt,
+                "agent": "Image Generation / AI Poster Agent",
+                "parameters": {
+                    "dimensions": "1080x1080",
+                    "format": "jpg/png",
+                    "style": "cohérent avec la marque"
+                }
+            })
+        
+        # 3. Bundle offers (3 types)
+        bundle_offers = []
+        bundle_types = ["standard", "premium", "gift"]
+        
+        for i, bundle_type in enumerate(bundle_types):
+            bundle = get_bundle_offer(bundle_type)
+            
+            # Prix du bundle
+            if i < len(personalized_ideas):
+                accessory_price = personalized_ideas[i].get("price_range", "29-49€").split("-")[0].replace("€", "")
+                try:
+                    accessory_price_num = int(accessory_price)
+                except:
+                    accessory_price_num = 39
+                
+                total_price = product_price + accessory_price_num
+                discounted_price = total_price * (1 - bundle["discount"] / 100)
+                
+                bundle_context = {
+                    "product": product_name,
+                    "accessory": personalized_ideas[i]["product_name"],
+                    "accessory_price": accessory_price_num,
+                    "total_price": total_price,
+                    "discounted_price": round(discounted_price, 2),
+                    "discount": bundle["discount"],
+                    "saving": round(total_price - discounted_price, 2)
+                }
+            else:
+                bundle_context = {
+                    "product": product_name,
+                    "accessory": "nos accessoires",
+                    "accessory_price": 0,
+                    "total_price": product_price,
+                    "discounted_price": product_price,
+                    "discount": bundle["discount"],
+                    "saving": 0
+                }
+            
+            # Copy pour le bundle
+            bundle_copy = get_bundle_copy("bundle_page", bundle_context)
+            
+            bundle_offers.append({
+                "name": bundle["name"],
+                "description": bundle["description"],
+                "discount": bundle["discount"],
+                "cta": bundle["cta"],
+                "products": [product_name] + [personalized_ideas[i]["product_name"] for i in range(min(len(personalized_ideas), 2))],
+                "original_price": bundle_context["total_price"],
+                "bundle_price": bundle_context["discounted_price"],
+                "saving": bundle_context["saving"],
+                "copy": bundle_copy,
+                "visual_prompt": bundle["visual_prompt"]
+            })
+        
+        # 4. Copy pour upsell/cross-sell (tous contextes)
+        upsell_copy = {}
+        
+        # Upsell page produit
+        if personalized_ideas:
+            upsell_copy["product_page"] = get_bundle_copy("upsell_checkout", {
+                "accessory": personalized_ideas[0]["product_name"],
+                "price": personalized_ideas[0].get("price_range", "29-49€").split("-")[0],
+                "original_price": personalized_ideas[0].get("price_range", "29-49€").split("-")[1] if "-" in personalized_ideas[0].get("price_range", "") else "49",
+                "benefit_reason": personalized_ideas[0].get("justification", "parfait pour compléter votre achat")[:50]
+            })
+        
+        # Cross-sell panier
+        cross_sell_copies = []
+        for idea in personalized_ideas:
+            cross_sell_copies.append(get_bundle_copy("cross_sell_cart", {
+                "product": product_name,
+                "accessory": idea["product_name"],
+                "accessory_benefit": idea.get("justification", "accessoire indispensable")[:60]
+            }))
+        upsell_copy["cart_page"] = cross_sell_copies
+        
+        # Post-achat
+        upsell_copy["post_purchase"] = get_bundle_copy("post_purchase", {
+            "discount": 15,
+            "accessory": personalized_ideas[0]["product_name"] if personalized_ideas else "nos accessoires"
+        })
+        
+        # Retourner tous les éléments
+        return {
+            "upsell_kit": {
+                "cross_sell_ideas": {
+                    "agent": "Manual (strategy)",
+                    "ideas": personalized_ideas,
+                    "parameters": {
+                        "count": len(personalized_ideas),
+                        "sector": sector,
+                        "bundle_ready": True
+                    }
+                },
+                "bundle_visuals": {
+                    "agent": "Image Generation / AI Poster Agent",
+                    "prompts": bundle_visuals,
+                    "parameters": {
+                        "dimensions": "1080x1080",
+                        "format": "jpg/png",
+                        "quantity": len(bundle_visuals)
+                    }
+                },
+                "bundle_offers": {
+                    "agent": "Manual (strategy)",
+                    "offers": bundle_offers,
+                    "parameters": {
+                        "types": bundle_types,
+                        "discount_range": "10-20%",
+                        "max_products": 3
+                    }
+                },
+                "upsell_copy": {
+                    "agent": "Manual (copywriting)",
+                    "copy": upsell_copy,
+                    "parameters": {
+                        "contexts": ["product_page", "cart_page", "post_purchase"],
+                        "variants": len(upsell_copy)
+                    }
+                }
+            },
+            "metadata": {
+                "module": "09_upsell_kit",
+                "brand_name": brand_name,
+                "sector": sector,
+                "cross_sell_ideas": len(personalized_ideas),
+                "bundle_offers": len(bundle_offers),
+                "llm_enhanced": bool(self._enhance_prompt("test", {}) != "test")
+            }
+        }
+```
+
+## 4. MISE À JOUR DU FICHIER main.py
+
+Ajoute l'import et l'intégration du Module 09:
+
+```python
+# Ajouter cet import
+from modules.module_09_upsell_kit import UpsellKitOrchestrator
+
+# Après la génération du Module 08, ajouter:
+
+# Génération des prompts Module 09
+print("\n" + "=" * 80)
+print("MODULE 09 — UPSELL & CROSS-SELL KIT")
+print("=" * 80)
+
+upsell_brief = {
+    "brand_name": brief.get("brand_name"),
+    "sector": brief.get("sector"),
+    "product_name": brief.get("product_name", brief.get("brand_name")),
+    "product_price": brief.get("price", 299),
+    "main_product_features": brief.get("product_features", [])
+}
+
+upsell_orchestrator = UpsellKitOrchestrator()
+upsell_result = upsell_orchestrator.generate(upsell_brief)
+
+# Fusionner les résultats
+result["modules"]["upsell_kit"] = upsell_result["upsell_kit"]
+```
+
+## 5. MISE À JOUR DU BRIEF D'EXEMPLE
+
+Modifie le brief par défaut pour ajouter le prix:
+
+```python
+brief = {
+    # ... champs existants ...
+    "price": 299,
+    # ... autres champs ...
+}
+```
+
+## 6. VÉRIFICATION
+
+Une fois installé, teste avec:
+
+```bash
+python main.py
+```
+
+Le fichier output/prompts_roboneo.txt doit maintenant contenir les éléments pour:
+- Modules 01 à 08 existants
+- Module 09: Upsell Kit (3 cross-sell, 3 bundles, copy, visuels)
+```
+
+---
+
+**Copie et colle ce prompt dans Replit AI.** Une fois installé, tu auras les Modules 01 à 09 fonctionnels.
+
+Il nous reste **1 dernier module** : 10 (Performance Tracker).
+
+Dis-moi quand c'est fait, et on finit avec le dernier module ! 🚀
