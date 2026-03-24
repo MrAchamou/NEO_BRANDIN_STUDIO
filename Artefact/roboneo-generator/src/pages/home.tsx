@@ -53,7 +53,9 @@ const MODULES: ModuleDef[] = [
     icon: <Video className="w-5 h-5" />,
     color: "text-purple-400",
     bgColor: "bg-purple-400/10 border-purple-400/20",
-    available: false,
+    available: true,
+    component: Module03,
+    prompts: 14,
   },
   {
     id: "product-pages",
