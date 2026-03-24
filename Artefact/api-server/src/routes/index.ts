@@ -8,6 +8,7 @@ import enhancePromptsSoundRouter from "./openai/enhance-prompts-sound";
 import enhancePromptsCopyRouter from "./openai/enhance-prompts-copy";
 import enhancePromptsLaunchRouter from "./openai/enhance-prompts-launch";
 import enhancePromptsChatbotRouter from "./openai/enhance-prompts-chatbot";
+import enhancePromptsUpsellRouter from "./openai/enhance-prompts-upsell";
 
 const router: IRouter = Router();
 
@@ -20,5 +21,6 @@ router.use(enhancePromptsSoundRouter);
 router.use(enhancePromptsCopyRouter);
 router.use(enhancePromptsLaunchRouter);
 router.use(enhancePromptsChatbotRouter);
+router.use(enhancePromptsUpsellRouter);
 
 export default router;

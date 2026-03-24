@@ -20481,27 +20481,27 @@ var require_router = __commonJS({
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var methods = METHODS.map((method) => method.toLowerCase());
-    module.exports = Router11;
+    module.exports = Router12;
     module.exports.Route = Route;
-    function Router11(options) {
-      if (!(this instanceof Router11)) {
-        return new Router11(options);
+    function Router12(options) {
+      if (!(this instanceof Router12)) {
+        return new Router12(options);
       }
       const opts = options || {};
-      function router11(req, res, next) {
-        router11.handle(req, res, next);
+      function router12(req, res, next) {
+        router12.handle(req, res, next);
       }
-      Object.setPrototypeOf(router11, this);
-      router11.caseSensitive = opts.caseSensitive;
-      router11.mergeParams = opts.mergeParams;
-      router11.params = {};
-      router11.strict = opts.strict;
-      router11.stack = [];
-      return router11;
+      Object.setPrototypeOf(router12, this);
+      router12.caseSensitive = opts.caseSensitive;
+      router12.mergeParams = opts.mergeParams;
+      router12.params = {};
+      router12.strict = opts.strict;
+      router12.stack = [];
+      return router12;
     }
-    Router11.prototype = function() {
+    Router12.prototype = function() {
     };
-    Router11.prototype.param = function param(name, fn) {
+    Router12.prototype.param = function param(name, fn) {
       if (!name) {
         throw new TypeError("argument name is required");
       }
@@ -20521,7 +20521,7 @@ var require_router = __commonJS({
       params.push(fn);
       return this;
     };
-    Router11.prototype.handle = function handle(req, res, callback) {
+    Router12.prototype.handle = function handle(req, res, callback) {
       if (!callback) {
         throw new TypeError("argument callback is required");
       }
@@ -20648,7 +20648,7 @@ var require_router = __commonJS({
         }
       }
     };
-    Router11.prototype.use = function use(handler) {
+    Router12.prototype.use = function use(handler) {
       let offset = 0;
       let path2 = "/";
       if (typeof handler !== "function") {
@@ -20681,7 +20681,7 @@ var require_router = __commonJS({
       }
       return this;
     };
-    Router11.prototype.route = function route(path2) {
+    Router12.prototype.route = function route(path2) {
       const route2 = new Route(path2);
       const layer = new Layer(path2, {
         sensitive: this.caseSensitive,
@@ -20696,7 +20696,7 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      Router11.prototype[method] = function(path2) {
+      Router12.prototype[method] = function(path2) {
         const route = this.route(path2);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
@@ -20879,13 +20879,13 @@ var require_application = __commonJS({
     var compileTrust = require_utils3().compileTrust;
     var resolve = __require("node:path").resolve;
     var once = require_once();
-    var Router11 = require_router();
+    var Router12 = require_router();
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var app2 = exports = module.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router11 = null;
+      var router12 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -20894,13 +20894,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router11 === null) {
-            router11 = new Router11({
+          if (router12 === null) {
+            router12 = new Router12({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router11;
+          return router12;
         }
       });
     };
@@ -20971,15 +20971,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router11 = this.router;
+      var router12 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router11.use(path2, fn2);
+          return router12.use(path2, fn2);
         }
         debug(".use app under %s", path2);
         fn2.mountpath = path2;
         fn2.parent = this;
-        router11.use(path2, function mounted_app(req, res, next) {
+        router12.use(path2, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -23506,7 +23506,7 @@ var require_express = __commonJS({
     var EventEmitter = __require("node:events").EventEmitter;
     var mixin = require_merge_descriptors();
     var proto = require_application();
-    var Router11 = require_router();
+    var Router12 = require_router();
     var req = require_request();
     var res = require_response();
     exports = module.exports = createApplication;
@@ -23528,8 +23528,8 @@ var require_express = __commonJS({
     exports.application = proto;
     exports.request = req;
     exports.response = res;
-    exports.Route = Router11.Route;
-    exports.Router = Router11;
+    exports.Route = Router12.Route;
+    exports.Router = Router12;
     exports.json = bodyParser.json;
     exports.raw = bodyParser.raw;
     exports.static = require_serve_static();
@@ -28388,12 +28388,12 @@ var require_logger = __commonJS({
 });
 
 // src/app.ts
-var import_express11 = __toESM(require_express2(), 1);
+var import_express12 = __toESM(require_express2(), 1);
 var import_cors = __toESM(require_lib3(), 1);
 var import_pino_http = __toESM(require_logger(), 1);
 
 // src/routes/index.ts
-var import_express10 = __toESM(require_express2(), 1);
+var import_express11 = __toESM(require_express2(), 1);
 
 // src/routes/health.ts
 var import_express = __toESM(require_express2(), 1);
@@ -41609,18 +41609,252 @@ Les gestes commerciaux peuvent inclure: remboursement, renvoi, code promo ${code
 });
 var enhance_prompts_chatbot_default = router9;
 
-// src/routes/index.ts
+// src/routes/openai/enhance-prompts-upsell.ts
+var import_express10 = __toESM(require_express2(), 1);
 var router10 = (0, import_express10.Router)();
-router10.use(health_default);
-router10.use(enhance_prompts_default);
-router10.use(enhance_prompts_visual_default);
-router10.use(enhance_prompts_video_default);
-router10.use(enhance_prompts_ads_default);
-router10.use(enhance_prompts_sound_default);
-router10.use(enhance_prompts_copy_default);
-router10.use(enhance_prompts_launch_default);
-router10.use(enhance_prompts_chatbot_default);
-var routes_default = router10;
+function sendEvent8(res, data) {
+  res.write(`data: ${JSON.stringify(data)}
+
+`);
+}
+function parseJsonSafe8(text) {
+  try {
+    const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+    return JSON.parse(clean);
+  } catch {
+    return null;
+  }
+}
+router10.post("/openai/enhance-prompts-upsell", async (req, res) => {
+  const {
+    brand_name,
+    sector,
+    tone = "professionnel",
+    product_name,
+    product_price = 299,
+    product_features = [],
+    values = []
+  } = req.body;
+  if (!brand_name || !sector || !product_name) {
+    res.status(400).json({ error: "brand_name, sector et product_name sont requis" });
+    return;
+  }
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  const featuresStr = product_features.length > 0 ? product_features.join(", ") : "non sp\xE9cifi\xE9es";
+  const valuesStr = values.length > 0 ? values.join(", ") : "qualit\xE9, confiance, \xE9l\xE9gance";
+  const systemPrompt = `Tu es un expert en strat\xE9gie e-commerce et maximisation du panier moyen pour RoboNeo.com.
+Ta mission: g\xE9n\xE9rer des strat\xE9gies d'upsell et cross-sell PR\xC9CISES et ACTIONNABLES pour augmenter le chiffre d'affaires.
+Contexte de la marque:
+- Nom: ${brand_name}
+- Secteur: ${sector}
+- Ton: ${tone}
+- Produit principal: ${product_name} (${product_price}\u20AC)
+- Caract\xE9ristiques: ${featuresStr}
+- Valeurs: ${valuesStr}
+
+Toutes tes r\xE9ponses doivent \xEAtre en JSON valide, directement exploitables.`;
+  const sections = [
+    {
+      key: "cross_sell",
+      label: "Produits Compl\xE9mentaires",
+      agent: "Manual (strategy)",
+      userPrompt: `G\xE9n\xE8re exactement 3 id\xE9es de produits compl\xE9mentaires (cross-sell) pour ${brand_name} dans le secteur ${sector}.
+Le produit principal est: ${product_name} \xE0 ${product_price}\u20AC.
+
+R\xE9ponds UNIQUEMENT avec un JSON valide, sans texte avant ou apr\xE8s:
+{
+  "ideas": [
+    {
+      "id": 1,
+      "product_name": "Nom du produit compl\xE9mentaire",
+      "description": "Description courte et percutante (1 phrase)",
+      "price_range": "XX-XX\u20AC",
+      "justification": "Pourquoi ce produit compl\xE8te parfaitement ${product_name}",
+      "margin": "XX%",
+      "bundle_discount": 15,
+      "placement": "Page produit / Panier / Post-achat",
+      "visual_prompt": "Prompt d\xE9taill\xE9 pour g\xE9n\xE9rer le visuel produit sur RoboNeo. Format carr\xE9 1080x1080px, fond \xE9pur\xE9, style coh\xE9rent avec ${brand_name}."
+    }
+  ]
+}`
+    },
+    {
+      key: "bundles",
+      label: "Offres Group\xE9es",
+      agent: "Manual (strategy)",
+      userPrompt: `G\xE9n\xE8re 3 offres group\xE9es (bundles) pour ${brand_name} autour de ${product_name} (${product_price}\u20AC).
+
+R\xE9ponds UNIQUEMENT avec un JSON valide, sans texte avant ou apr\xE8s:
+{
+  "offers": [
+    {
+      "id": 1,
+      "type": "standard",
+      "name": "Nom du pack (ex: Pack Essentiel)",
+      "tagline": "Accroche courte et vendeuse",
+      "products": ["${product_name}", "Nom accessoire 1"],
+      "original_price": 0,
+      "bundle_price": 0,
+      "discount_percent": 15,
+      "savings": 0,
+      "cta": "Texte du bouton d'achat",
+      "best_for": "Pour qui ce bundle est id\xE9al",
+      "visual_prompt": "Prompt pour cr\xE9er le visuel bundle sur RoboNeo. Fond \xE9pur\xE9, produits c\xF4te \xE0 c\xF4te, format 1080x1080px."
+    }
+  ]
+}
+
+Les 3 types: standard (Pack Essentiel, -15%), premium (Pack Complet, -20%), gift (Pack Cadeau, -10%).
+Calcule les prix r\xE9els bas\xE9s sur ${product_price}\u20AC pour le produit principal.`
+    },
+    {
+      key: "upsell_copy",
+      label: "Copy Upsell/Cross-sell",
+      agent: "Manual (copywriting)",
+      userPrompt: `G\xE9n\xE8re toute la copy pour les strat\xE9gies upsell et cross-sell de ${brand_name} pour ${product_name}.
+
+R\xE9ponds UNIQUEMENT avec un JSON valide, sans texte avant ou apr\xE8s:
+{
+  "product_page": {
+    "title": "Titre upsell sur la page produit",
+    "subtitle": "Sous-titre engageant",
+    "cta": "Texte du bouton",
+    "badge": "Texte du badge (ex: Populaire, Recommand\xE9)",
+    "benefit": "B\xE9n\xE9fice principal mis en avant"
+  },
+  "cart_page": [
+    {
+      "title": "Titre cross-sell dans le panier",
+      "description": "Description courte (1 phrase)",
+      "cta": "Bouton d'ajout",
+      "urgency": "\xC9l\xE9ment d'urgence ou raret\xE9"
+    },
+    {
+      "title": "2\xE8me suggestion cross-sell",
+      "description": "Description courte (1 phrase)",
+      "cta": "Bouton d'ajout",
+      "urgency": "\xC9l\xE9ment d'urgence ou raret\xE9"
+    }
+  ],
+  "post_purchase": {
+    "title": "Offre post-achat exclusive",
+    "description": "Description de l'offre (2 phrases max)",
+    "discount": 15,
+    "cta": "Bouton d'action",
+    "expiry": "Dur\xE9e de validit\xE9",
+    "subject_email": "Objet de l'email post-achat"
+  },
+  "checkout_bump": {
+    "title": "Bump d'ordre dans le tunnel de vente",
+    "description": "Description courte et urgente",
+    "price_display": "Affichage du prix (ex: Ajoutez-le pour seulement +X\u20AC)",
+    "cta": "Oui, j'ajoute \xE7a !",
+    "not_interested": "Non merci, je refuse cette offre exceptionnelle"
+  }
+}`
+    },
+    {
+      key: "email_sequences",
+      label: "S\xE9quences Email",
+      agent: "Manual (copywriting)",
+      userPrompt: `G\xE9n\xE8re une s\xE9quence d'emails upsell/cross-sell pour ${brand_name} apr\xE8s l'achat de ${product_name}.
+
+R\xE9ponds UNIQUEMENT avec un JSON valide, sans texte avant ou apr\xE8s:
+{
+  "sequences": [
+    {
+      "id": 1,
+      "timing": "J+1 (24h apr\xE8s achat)",
+      "trigger": "D\xE9clencheur de l'envoi",
+      "subject": "Objet de l'email",
+      "preview": "Texte de pr\xE9visualisation",
+      "headline": "Titre principal de l'email",
+      "body": "Corps de l'email (3-4 phrases percutantes)",
+      "cta": "Texte du bouton principal",
+      "secondary_cta": "Texte du lien secondaire",
+      "goal": "Objectif de cet email"
+    },
+    {
+      "id": 2,
+      "timing": "J+3",
+      "trigger": "D\xE9clencheur",
+      "subject": "Objet",
+      "preview": "Pr\xE9visualisation",
+      "headline": "Titre",
+      "body": "Corps (3-4 phrases)",
+      "cta": "Bouton",
+      "secondary_cta": "Lien secondaire",
+      "goal": "Objectif"
+    },
+    {
+      "id": 3,
+      "timing": "J+7",
+      "trigger": "D\xE9clencheur",
+      "subject": "Objet",
+      "preview": "Pr\xE9visualisation",
+      "headline": "Titre",
+      "body": "Corps (3-4 phrases)",
+      "cta": "Bouton",
+      "secondary_cta": "Lien secondaire",
+      "goal": "Objectif"
+    }
+  ]
+}`
+    }
+  ];
+  for (const section of sections) {
+    try {
+      sendEvent8(res, { type: "section_start", key: section.key });
+      let fullContent = "";
+      const stream = await openai.chat.completions.create({
+        model: "gpt-5.2",
+        max_completion_tokens: 4096,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: section.userPrompt }
+        ],
+        stream: true
+      });
+      for await (const chunk of stream) {
+        const content = chunk.choices[0]?.delta?.content;
+        if (content) {
+          fullContent += content;
+          sendEvent8(res, { type: "chunk", key: section.key, content });
+        }
+      }
+      const parsed = parseJsonSafe8(fullContent);
+      sendEvent8(res, {
+        type: "section_done",
+        key: section.key,
+        agent: section.agent,
+        fullContent,
+        data: parsed ?? {}
+      });
+    } catch (err) {
+      req.log.error({ err, section: section.key }, "Error generating upsell section");
+      sendEvent8(res, { type: "error", key: section.key, message: "Erreur lors de la g\xE9n\xE9ration" });
+    }
+  }
+  sendEvent8(res, { type: "done" });
+  res.end();
+});
+var enhance_prompts_upsell_default = router10;
+
+// src/routes/index.ts
+var router11 = (0, import_express11.Router)();
+router11.use(health_default);
+router11.use(enhance_prompts_default);
+router11.use(enhance_prompts_visual_default);
+router11.use(enhance_prompts_video_default);
+router11.use(enhance_prompts_ads_default);
+router11.use(enhance_prompts_sound_default);
+router11.use(enhance_prompts_copy_default);
+router11.use(enhance_prompts_launch_default);
+router11.use(enhance_prompts_chatbot_default);
+router11.use(enhance_prompts_upsell_default);
+var routes_default = router11;
 
 // src/lib/logger.ts
 var import_pino = __toESM(require_pino(), 1);
@@ -41641,7 +41875,7 @@ var logger = (0, import_pino.default)({
 });
 
 // src/app.ts
-var app = (0, import_express11.default)();
+var app = (0, import_express12.default)();
 app.use(
   (0, import_pino_http.default)({
     logger,
@@ -41662,8 +41896,8 @@ app.use(
   })
 );
 app.use((0, import_cors.default)());
-app.use(import_express11.default.json());
-app.use(import_express11.default.urlencoded({ extended: true }));
+app.use(import_express12.default.json());
+app.use(import_express12.default.urlencoded({ extended: true }));
 app.use("/api", routes_default);
 var app_default = app;
 

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Sparkles, Lock, ChevronRight, Palette, Camera, Video,
   ShoppingBag, MessageSquare, BarChart2, Mail, Share2,
-  Globe, Users, Music2, Zap, FileText, Rocket, MessageCircle
+  Globe, Users, Music2, Zap, FileText, Rocket, MessageCircle, ShoppingCart
 } from "lucide-react";
 import Module01 from "./module-01";
 import Module02 from "./module-02";
@@ -13,6 +13,7 @@ import Module05 from "./module-05";
 import Module06 from "./module-06";
 import Module07 from "./module-07";
 import Module08 from "./module-08";
+import Module09 from "./module-09";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -225,22 +226,25 @@ const MODULES: ModuleDef[] = [
     ],
   },
   {
-    id: "web-landing",
+    id: "upsell-kit",
     number: "09",
-    title: "Web & Landing",
-    subtitle: "Pages de vente, hero sections",
-    description: "Pages de vente haute conversion, hero sections et textes web.",
-    icon: <Globe className="w-5 h-5" />,
-    color: "text-indigo-400",
-    bgColor: "bg-indigo-400/10",
-    gradientFrom: "from-indigo-500/20",
+    title: "Upsell & Cross-sell Kit",
+    subtitle: "Cross-sell, bundles, copy, emails",
+    description: "Génère toutes les stratégies pour maximiser la valeur du panier : 3 produits complémentaires, offres groupées, copy upsell et séquences email post-achat.",
+    icon: <ShoppingCart className="w-5 h-5" />,
+    color: "text-green-400",
+    bgColor: "bg-green-400/10",
+    gradientFrom: "from-green-500/20",
     gradientTo: "to-transparent",
-    borderColor: "border-indigo-400/30",
-    available: false,
+    borderColor: "border-green-400/30",
+    available: true,
+    component: Module09,
+    prompts: 14,
     outputs: [
-      { label: "Landing", icon: "▣" },
-      { label: "Hero", icon: "✦" },
-      { label: "CTA", icon: "▶" },
+      { label: "Cross-sell", icon: "🛍" },
+      { label: "Bundles", icon: "📦" },
+      { label: "Copy", icon: "✎" },
+      { label: "Emails", icon: "✉" },
     ],
   },
   {
@@ -443,7 +447,7 @@ function MobileNav({ activeId, onSelect }: { activeId: string; onSelect: (id: st
       ))}
       <div className="flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl border border-white/5 text-muted-foreground/30 text-sm">
         <Lock className="w-3.5 h-3.5" />
-        <span>09–10</span>
+        <span>10</span>
       </div>
     </div>
   );
@@ -528,7 +532,7 @@ export default function Home() {
                     className="h-full rounded-full bg-gradient-to-r from-amber-400 via-primary to-violet-400"
                   />
                 </div>
-                <p className="text-[10px] text-muted-foreground/35 mt-1.5">Modules 09–10 bientôt disponibles</p>
+                <p className="text-[10px] text-muted-foreground/35 mt-1.5">Module 10 bientôt disponible</p>
               </div>
             </div>
           </div>
