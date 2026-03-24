@@ -2,7 +2,7 @@
 
 ## Overview
 
-AI-powered prompt generator for creating brand assets via RoboNeo.com. Users fill out a brand brief, and the AI generates precise creative prompts in real-time via streaming (SSE), section by section.
+Générateur de prompts IA pour RoboNeo.com. L'utilisateur remplit un brief de marque et l'IA génère des prompts créatifs précis en temps réel via streaming SSE (Server-Sent Events), section par section. 8 modules disponibles sur 10.
 
 ## Stack
 
@@ -12,70 +12,123 @@ AI-powered prompt generator for creating brand assets via RoboNeo.com. Users fil
 - **TypeScript version**: 5.9
 - **Frontend**: React + Vite + TypeScript + Tailwind CSS + shadcn/ui + Framer Motion
 - **Backend**: Express 5 (API server)
-- **AI**: OpenAI via Replit AI Integrations (GPT model, SSE streaming)
-- **Database**: PostgreSQL + Drizzle ORM
-- **Validation**: Zod (`zod/v4`), `drizzle-zod`
-- **API codegen**: Orval (from OpenAPI spec)
+- **AI**: OpenAI GPT-5.2 via Replit AI Integrations — streaming SSE
+- **Validation**: Zod (`zod/v4`), React Hook Form + Zod resolver
 - **Build**: esbuild (ESM bundle)
 
 ## Structure
 
 ```text
 workspace/
-├── Artefact/               # Deployable applications
-│   ├── roboneo-generator/  # React frontend (Vite, port 5000)
-│   └── api-server/         # Express API server (port 3000)
-├── lib/                    # Shared libraries
-│   ├── api-spec/           # OpenAPI spec + Orval codegen config
-│   ├── api-client-react/   # Generated React Query hooks
-│   ├── api-zod/            # Generated Zod schemas from OpenAPI
-│   ├── db/                 # Drizzle ORM schema + DB connection
-│   ├── integrations-openai-ai-server/  # OpenAI server integration
-│   └── integrations-openai-ai-react/   # OpenAI React integration
-├── scripts/                # Utility scripts
-├── pnpm-workspace.yaml     # pnpm workspace config (Artefact/*, lib/*, etc.)
-├── tsconfig.base.json      # Shared TS options
-├── tsconfig.json           # Root TS project references
-└── package.json            # Root package with hoisted devDeps
+├── Artefact/
+│   ├── roboneo-generator/          # Frontend React/Vite (port 5000)
+│   │   └── src/pages/
+│   │       ├── home.tsx            # Dashboard principal avec MODULES[]
+│   │       ├── module-01.tsx       # Brand Identity
+│   │       ├── module-02.tsx       # Visual Content
+│   │       ├── module-03.tsx       # Video Content
+│   │       ├── module-04.tsx       # Ad Creatives
+│   │       ├── module-05.tsx       # Brand Sound
+│   │       ├── module-06.tsx       # Copy & Content
+│   │       ├── module-07.tsx       # Launch Ready
+│   │       └── module-08.tsx       # Chatbot Script
+│   └── api-server/
+│       └── src/routes/openai/
+│           ├── enhance-prompts.ts           # Module 01
+│           ├── enhance-prompts-visual.ts    # Module 02
+│           ├── enhance-prompts-video.ts     # Module 03
+│           ├── enhance-prompts-ads.ts       # Module 04
+│           ├── enhance-prompts-sound.ts     # Module 05
+│           ├── enhance-prompts-copy.ts      # Module 06
+│           ├── enhance-prompts-launch.ts    # Module 07
+│           └── enhance-prompts-chatbot.ts   # Module 08
+├── lib/
+│   ├── integrations-openai-ai-server/  # Client OpenAI serveur
+│   └── integrations-openai-ai-react/   # Client OpenAI React
+├── pnpm-workspace.yaml
+├── tsconfig.base.json
+└── package.json
 ```
 
 ## Running the App
 
-The workflow runs both services:
-- **Backend**: `PORT=3000 pnpm --filter @workspace/api-server run dev` (builds then starts)
+Le workflow démarre les deux services en parallèle :
+- **Backend**: `PORT=3000 BASE_PATH=/ pnpm --filter @workspace/api-server run dev`
 - **Frontend**: `PORT=5000 BASE_PATH=/ pnpm --filter @workspace/roboneo-generator run dev`
 
-The Vite dev server proxies `/api` requests to `http://localhost:3000`.
+Le serveur Vite proxie les requêtes `/api` vers `http://localhost:3000`.
 
 ## Key Environment Variables
 
-- `AI_INTEGRATIONS_OPENAI_BASE_URL` — Replit AI Integration base URL
-- `AI_INTEGRATIONS_OPENAI_API_KEY` — Replit AI Integration key
-- `DATABASE_URL` — PostgreSQL connection string (provided by Replit)
-- `PORT` — Port for each service
-- `BASE_PATH` — Base URL path for the frontend
+- `AI_INTEGRATIONS_OPENAI_BASE_URL` — URL de base de l'intégration Replit AI
+- `AI_INTEGRATIONS_OPENAI_API_KEY` — Clé API de l'intégration Replit AI
+- `PORT` — Port de chaque service
+- `BASE_PATH` — Chemin de base pour le frontend
 
-## Modules Available
+## Modules
 
-| # | Module | Status |
-|---|--------|--------|
-| 01 | Brand Identity (Logo, Palette, Typography, Brand Guidelines) | Available |
-| 02 | Visual Content (Product, Lifestyle, Detail, Before/After, Try-On, Carousel) | Available |
-| 03 | Video Content (Reels, TikTok, YouTube Shorts) | Coming Soon |
-| 04-10 | Additional modules | Coming Soon |
+| # | Module | Couleur | Sections générées | Status |
+|---|--------|---------|-------------------|--------|
+| 01 | **Brand Identity** | amber | Logo, Palette, Typographie, Charte graphique | Disponible |
+| 02 | **Visual Content** | violet | Photo produit, Lifestyle, Détail, Before/After, Try-On, Carrousel | Disponible |
+| 03 | **Video Content** | pink | Script TikTok/Reels, YouTube, Teaser, Voix off, Beat Sync | Disponible |
+| 04 | **Ad Creatives** | yellow | Meta Ads, Google Display, TikTok Ads, Carrousel Ads | Disponible |
+| 05 | **Brand Sound** | green | Jingle, Musiques 15/30/60s, Effets sonores, Playlist | Disponible |
+| 06 | **Copy & Content** | emerald | Fiche produit, Captions, Hashtags, Emails (3), Reviews (10) | Disponible |
+| 07 | **Launch Ready** | blue | Landing page HTML, Guide d'utilisation, Calendrier 30 jours | Disponible |
+| 08 | **Chatbot Script** | cyan | FAQ (20 Q/R), Objections (8 scripts), Commentaires négatifs (5) | Disponible |
+| 09 | Upsell Kit | — | — | À venir |
+| 10 | Performance Tracker | — | — | À venir |
 
-## Database
+## Architecture SSE (Streaming)
 
-Schema in `lib/db/src/schema/`:
-- `conversations` table
-- `messages` table
+Chaque route backend suit le même pattern :
+1. `section_start` → indique le début d'une section avec `key`, `label`, `agent`
+2. `chunk` → fragments de texte streamés par GPT-5.2
+3. `section_done` → JSON parsé complet de la section (`data`, `rawContent`)
+4. `done` → fin de toutes les sections
 
-Push schema changes: `pnpm --filter @workspace/db run push`
+Le frontend consomme le stream et met à jour l'UI section par section en temps réel.
 
 ## API Routes
 
-All routes mounted at `/api`:
-- `GET /api/health`
-- `POST /api/openai/enhance-prompts` — Module 01 Brand Identity (SSE)
-- `POST /api/openai/enhance-prompts-visual` — Module 02 Visual Content (SSE)
-- `POST /api/openai/enhance-prompts-video` — Module 03 Video Content (SSE)
+Toutes les routes sont montées sous `/api` :
+
+| Route | Module | Paramètres clés |
+|-------|--------|-----------------|
+| `GET /api/health` | — | — |
+| `POST /api/openai/enhance-prompts` | 01 Brand Identity | brand_name, sector, tone, values, colors |
+| `POST /api/openai/enhance-prompts-visual` | 02 Visual Content | brand_name, sector, product_name, colors, style |
+| `POST /api/openai/enhance-prompts-video` | 03 Video Content | brand_name, sector, product_name, tone, target |
+| `POST /api/openai/enhance-prompts-ads` | 04 Ad Creatives | brand_name, sector, product_name, discount, promo_code |
+| `POST /api/openai/enhance-prompts-sound` | 05 Brand Sound | brand_name, sector, tone, tempo, instruments |
+| `POST /api/openai/enhance-prompts-copy` | 06 Copy & Content | brand_name, product_name, sector, tone, discount |
+| `POST /api/openai/enhance-prompts-launch` | 07 Launch Ready | brand_name, product_name, price, primary_color, fonts |
+| `POST /api/openai/enhance-prompts-chatbot` | 08 Chatbot Script | brand_name, product_name, sector, warranty, delivery_days |
+
+## Ajout d'un Nouveau Module
+
+Pour ajouter un module (ex: Module 09) :
+
+1. **Backend** — Créer `Artefact/api-server/src/routes/openai/enhance-prompts-[nom].ts`
+   - Même structure SSE : `section_start` → `chunk` → `section_done` → `done`
+   - Modèle : `gpt-5.2`, `max_completion_tokens: 4096`
+
+2. **Routes** — Ajouter dans `Artefact/api-server/src/routes/index.ts`
+
+3. **Frontend** — Créer `Artefact/roboneo-generator/src/pages/module-0X.tsx`
+   - Formulaire avec React Hook Form + Zod
+   - Consommation SSE avec `response.body.getReader()`
+   - Vues spécialisées par type de contenu
+
+4. **Home** — Mettre à jour `Artefact/roboneo-generator/src/pages/home.tsx`
+   - Importer le nouveau composant
+   - Modifier l'entrée dans le tableau `MODULES[]` : `available: true`, `component: ModuleXX`
+   - Mettre à jour le compteur dans la mobile nav et le footer sidebar
+   - Incrémenter la version `vX.X.0`
+
+5. **Redémarrer** le workflow pour rebuilder le backend.
+
+## Version
+
+**v1.8.0** — 8 modules disponibles sur 10
