@@ -3,13 +3,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Sparkles, Lock, ChevronRight, Palette, Camera, Video,
   ShoppingBag, MessageSquare, BarChart2, Mail, Share2,
-  Globe, Users, Music2, Zap
+  Globe, Users, Music2, Zap, FileText
 } from "lucide-react";
 import Module01 from "./module-01";
 import Module02 from "./module-02";
 import Module03 from "./module-03";
 import Module04 from "./module-04";
 import Module05 from "./module-05";
+import Module06 from "./module-06";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -157,22 +158,26 @@ const MODULES: ModuleDef[] = [
     ],
   },
   {
-    id: "analytics-reports",
+    id: "copy-content",
     number: "06",
-    title: "Analytics Reports",
-    subtitle: "Rapports visuels, dashboards",
-    description: "Génère des rapports de performance visuels et des dashboards de marque.",
-    icon: <BarChart2 className="w-5 h-5" />,
-    color: "text-sky-400",
-    bgColor: "bg-sky-400/10",
-    gradientFrom: "from-sky-500/20",
+    title: "Copy & Content",
+    subtitle: "Fiche produit, captions, emails",
+    description: "Génère tout le contenu textuel de ta marque — fiche produit complète, captions multi-plateformes, hashtags optimisés, séquence d'emails et reviews clients réalistes.",
+    icon: <FileText className="w-5 h-5" />,
+    color: "text-emerald-400",
+    bgColor: "bg-emerald-400/10",
+    gradientFrom: "from-emerald-500/20",
     gradientTo: "to-transparent",
-    borderColor: "border-sky-400/30",
-    available: false,
+    borderColor: "border-emerald-400/30",
+    available: true,
+    component: Module06,
+    prompts: 22,
     outputs: [
-      { label: "Dashboard", icon: "▤" },
-      { label: "Rapports", icon: "📊" },
-      { label: "KPIs", icon: "◉" },
+      { label: "Fiche", icon: "📄" },
+      { label: "Captions", icon: "✍" },
+      { label: "Hashtags", icon: "#" },
+      { label: "Emails", icon: "✉" },
+      { label: "Reviews", icon: "⭐" },
     ],
   },
   {
@@ -432,7 +437,7 @@ function MobileNav({ activeId, onSelect }: { activeId: string; onSelect: (id: st
       ))}
       <div className="flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl border border-white/5 text-muted-foreground/30 text-sm">
         <Lock className="w-3.5 h-3.5" />
-        <span>06–10</span>
+        <span>07–10</span>
       </div>
     </div>
   );
@@ -474,7 +479,7 @@ export default function Home() {
               </p>
             </div>
             <div className="hidden md:flex flex-col items-end gap-1">
-              <span className="text-xs text-muted-foreground/60 font-mono">v1.5.0</span>
+              <span className="text-xs text-muted-foreground/60 font-mono">v1.6.0</span>
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                 <span className="text-xs text-green-400">GPT-5.2 Connecté</span>
@@ -517,7 +522,7 @@ export default function Home() {
                     className="h-full rounded-full bg-gradient-to-r from-amber-400 via-primary to-violet-400"
                   />
                 </div>
-                <p className="text-[10px] text-muted-foreground/35 mt-1.5">Modules 06–10 bientôt disponibles</p>
+                <p className="text-[10px] text-muted-foreground/35 mt-1.5">Modules 07–10 bientôt disponibles</p>
               </div>
             </div>
           </div>

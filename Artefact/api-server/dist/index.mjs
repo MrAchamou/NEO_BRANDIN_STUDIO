@@ -20481,27 +20481,27 @@ var require_router = __commonJS({
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var methods = METHODS.map((method) => method.toLowerCase());
-    module.exports = Router8;
+    module.exports = Router9;
     module.exports.Route = Route;
-    function Router8(options) {
-      if (!(this instanceof Router8)) {
-        return new Router8(options);
+    function Router9(options) {
+      if (!(this instanceof Router9)) {
+        return new Router9(options);
       }
       const opts = options || {};
-      function router8(req, res, next) {
-        router8.handle(req, res, next);
+      function router9(req, res, next) {
+        router9.handle(req, res, next);
       }
-      Object.setPrototypeOf(router8, this);
-      router8.caseSensitive = opts.caseSensitive;
-      router8.mergeParams = opts.mergeParams;
-      router8.params = {};
-      router8.strict = opts.strict;
-      router8.stack = [];
-      return router8;
+      Object.setPrototypeOf(router9, this);
+      router9.caseSensitive = opts.caseSensitive;
+      router9.mergeParams = opts.mergeParams;
+      router9.params = {};
+      router9.strict = opts.strict;
+      router9.stack = [];
+      return router9;
     }
-    Router8.prototype = function() {
+    Router9.prototype = function() {
     };
-    Router8.prototype.param = function param(name, fn) {
+    Router9.prototype.param = function param(name, fn) {
       if (!name) {
         throw new TypeError("argument name is required");
       }
@@ -20521,7 +20521,7 @@ var require_router = __commonJS({
       params.push(fn);
       return this;
     };
-    Router8.prototype.handle = function handle(req, res, callback) {
+    Router9.prototype.handle = function handle(req, res, callback) {
       if (!callback) {
         throw new TypeError("argument callback is required");
       }
@@ -20648,7 +20648,7 @@ var require_router = __commonJS({
         }
       }
     };
-    Router8.prototype.use = function use(handler) {
+    Router9.prototype.use = function use(handler) {
       let offset = 0;
       let path2 = "/";
       if (typeof handler !== "function") {
@@ -20681,7 +20681,7 @@ var require_router = __commonJS({
       }
       return this;
     };
-    Router8.prototype.route = function route(path2) {
+    Router9.prototype.route = function route(path2) {
       const route2 = new Route(path2);
       const layer = new Layer(path2, {
         sensitive: this.caseSensitive,
@@ -20696,7 +20696,7 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      Router8.prototype[method] = function(path2) {
+      Router9.prototype[method] = function(path2) {
         const route = this.route(path2);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
@@ -20879,13 +20879,13 @@ var require_application = __commonJS({
     var compileTrust = require_utils3().compileTrust;
     var resolve = __require("node:path").resolve;
     var once = require_once();
-    var Router8 = require_router();
+    var Router9 = require_router();
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var app2 = exports = module.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router8 = null;
+      var router9 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -20894,13 +20894,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router8 === null) {
-            router8 = new Router8({
+          if (router9 === null) {
+            router9 = new Router9({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router8;
+          return router9;
         }
       });
     };
@@ -20971,15 +20971,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router8 = this.router;
+      var router9 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router8.use(path2, fn2);
+          return router9.use(path2, fn2);
         }
         debug(".use app under %s", path2);
         fn2.mountpath = path2;
         fn2.parent = this;
-        router8.use(path2, function mounted_app(req, res, next) {
+        router9.use(path2, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -23506,7 +23506,7 @@ var require_express = __commonJS({
     var EventEmitter = __require("node:events").EventEmitter;
     var mixin = require_merge_descriptors();
     var proto = require_application();
-    var Router8 = require_router();
+    var Router9 = require_router();
     var req = require_request();
     var res = require_response();
     exports = module.exports = createApplication;
@@ -23528,8 +23528,8 @@ var require_express = __commonJS({
     exports.application = proto;
     exports.request = req;
     exports.response = res;
-    exports.Route = Router8.Route;
-    exports.Router = Router8;
+    exports.Route = Router9.Route;
+    exports.Router = Router9;
     exports.json = bodyParser.json;
     exports.raw = bodyParser.raw;
     exports.static = require_serve_static();
@@ -28388,12 +28388,12 @@ var require_logger = __commonJS({
 });
 
 // src/app.ts
-var import_express8 = __toESM(require_express2(), 1);
+var import_express9 = __toESM(require_express2(), 1);
 var import_cors = __toESM(require_lib3(), 1);
 var import_pino_http = __toESM(require_logger(), 1);
 
 // src/routes/index.ts
-var import_express7 = __toESM(require_express2(), 1);
+var import_express8 = __toESM(require_express2(), 1);
 
 // src/routes/health.ts
 var import_express = __toESM(require_express2(), 1);
@@ -40953,15 +40953,247 @@ Retourne UNIQUEMENT ce JSON:
 });
 var enhance_prompts_sound_default = router6;
 
-// src/routes/index.ts
+// src/routes/openai/enhance-prompts-copy.ts
+var import_express7 = __toESM(require_express2(), 1);
 var router7 = (0, import_express7.Router)();
-router7.use(health_default);
-router7.use(enhance_prompts_default);
-router7.use(enhance_prompts_visual_default);
-router7.use(enhance_prompts_video_default);
-router7.use(enhance_prompts_ads_default);
-router7.use(enhance_prompts_sound_default);
-var routes_default = router7;
+function sendEvent5(res, data) {
+  res.write(`data: ${JSON.stringify(data)}
+
+`);
+}
+function parseJsonSafe5(text) {
+  try {
+    const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+    return JSON.parse(clean);
+  } catch {
+    return null;
+  }
+}
+router7.post("/openai/enhance-prompts-copy", async (req, res) => {
+  const {
+    brand_name,
+    sector,
+    tone = "professionnel",
+    values = [],
+    product_name,
+    product_description = "",
+    product_features = [],
+    benefits = [],
+    target_audience = "mixte",
+    discount = 20,
+    promo_code
+  } = req.body;
+  if (!brand_name || !sector || !product_name) {
+    res.status(400).json({ error: "brand_name, sector et product_name sont requis" });
+    return;
+  }
+  const code = promo_code || brand_name.slice(0, 4).toUpperCase() + discount;
+  const valuesStr = Array.isArray(values) ? values.join(", ") : values;
+  const featuresStr = Array.isArray(product_features) ? product_features.join(", ") : product_features;
+  const benefitsStr = Array.isArray(benefits) ? benefits.join(", ") : benefits;
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  const systemPrompt = `Tu es un expert copywriter et strat\xE8ge de contenu pour RoboNeo.com.
+Tu g\xE9n\xE8res du contenu textuel ultra-professionnel, optimis\xE9 conversion, en fran\xE7ais.
+Contexte de la marque:
+- Marque: ${brand_name}
+- Produit: ${product_name}
+- Secteur: ${sector}
+- Ton: ${tone}
+- Valeurs: ${valuesStr || "excellence, qualit\xE9"}
+- Description produit: ${product_description || "produit premium"}
+- Caract\xE9ristiques: ${featuresStr || "qualit\xE9 sup\xE9rieure"}
+- B\xE9n\xE9fices: ${benefitsStr || "\xE9l\xE9gance, durabilit\xE9"}
+- Audience cible: ${target_audience}
+- Remise promo: ${discount}%
+- Code promo: ${code}
+
+R\xC8GLE ABSOLUE: R\xE9ponds UNIQUEMENT en JSON valide, sans texte avant ou apr\xE8s.`;
+  const sections = [
+    {
+      key: "product_sheet",
+      label: "Fiche Produit Compl\xE8te",
+      agent: "Copywriting Agent / E-commerce Optimizer",
+      prompt: `G\xE9n\xE8re une fiche produit e-commerce compl\xE8te pour "${product_name}" de la marque "${brand_name}" (secteur ${sector}, ton ${tone}).
+
+R\xE9ponds en JSON avec exactement cette structure:
+{
+  "titles": ["titre1", "titre2", "titre3", "titre4"],
+  "description": "description longue et persuasive de 120-150 mots avec storytelling",
+  "bullet_points": ["point1", "point2", "point3", "point4", "point5"],
+  "faq": [
+    {"question": "Q1", "answer": "R1"},
+    {"question": "Q2", "answer": "R2"},
+    {"question": "Q3", "answer": "R3"},
+    {"question": "Q4", "answer": "R4"},
+    {"question": "Q5", "answer": "R5"}
+  ]
+}
+
+Les 4 titres doivent \xEAtre diff\xE9rents : accrocheur SEO, b\xE9n\xE9fice principal, storytelling, \xE9dition limit\xE9e.
+Les bullet points doivent commencer par une emoji pertinente.
+La description doit int\xE9grer les caract\xE9ristiques: ${featuresStr || "qualit\xE9 sup\xE9rieure"}.`
+    },
+    {
+      key: "captions",
+      label: "Captions par Plateforme",
+      agent: "Social Media Agent / Content Creator",
+      prompt: `G\xE9n\xE8re des captions optimis\xE9es pour chaque plateforme sociale pour "${product_name}" de "${brand_name}" (secteur ${sector}).
+
+R\xE9ponds en JSON avec exactement cette structure:
+{
+  "instagram_feed": ["caption1", "caption2", "caption3"],
+  "instagram_story": ["caption1", "caption2", "caption3"],
+  "tiktok": ["caption1", "caption2", "caption3"],
+  "pinterest": ["caption1", "caption2"],
+  "facebook": ["caption1", "caption2"]
+}
+
+Chaque caption doit:
+- Instagram feed: 150-200 caract\xE8res + hashtags int\xE9gr\xE9s + emoji
+- Instagram story: court, punch, call-to-action
+- TikTok: hook viral, POV ou question rh\xE9torique + hashtags
+- Pinterest: descriptif, riche en mots-cl\xE9s, intemporel
+- Facebook: conversationnel, engagement-driven
+
+Code promo \xE0 int\xE9grer (dans certaines captions): ${code}`
+    },
+    {
+      key: "hashtags",
+      label: "Hashtags Optimis\xE9s",
+      agent: "SEO Social Agent / Hashtag Optimizer",
+      prompt: `G\xE9n\xE8re des sets de hashtags ultra-optimis\xE9s pour "${brand_name}" dans le secteur "${sector}".
+
+R\xE9ponds en JSON avec exactement cette structure:
+{
+  "instagram": ["#hashtag1", "#hashtag2", "#hashtag3", "#hashtag4", "#hashtag5", "#hashtag6", "#hashtag7", "#hashtag8", "#hashtag9", "#hashtag10", "#hashtag11", "#hashtag12", "#hashtag13", "#hashtag14", "#hashtag15"],
+  "tiktok": ["#hashtag1", "#hashtag2", "#hashtag3", "#hashtag4", "#hashtag5", "#hashtag6", "#hashtag7", "#hashtag8"],
+  "pinterest": ["#hashtag1", "#hashtag2", "#hashtag3", "#hashtag4", "#hashtag5", "#hashtag6", "#hashtag7", "#hashtag8", "#hashtag9", "#hashtag10", "#hashtag11", "#hashtag12", "#hashtag13", "#hashtag14", "#hashtag15", "#hashtag16", "#hashtag17", "#hashtag18", "#hashtag19", "#hashtag20"],
+  "strategy": "explication courte de la strat\xE9gie hashtag pour ce secteur"
+}
+
+Mix: 30% hashtags de niche (500k-2M posts), 50% secteur (2M-10M), 20% trending.
+Inclure: #${brand_name.toLowerCase()}, des hashtags fran\xE7ais ET anglais pertinents pour le secteur ${sector}.`
+    },
+    {
+      key: "email_sequence",
+      label: "S\xE9quence Emails (3 emails)",
+      agent: "Email Marketing Agent / CRM Specialist",
+      prompt: `G\xE9n\xE8re une s\xE9quence de 3 emails marketing pour "${brand_name}" autour du produit "${product_name}" (${sector}, ton ${tone}).
+
+R\xE9ponds en JSON avec exactement cette structure:
+{
+  "launch": {
+    "subject": "objet de l'email de lancement (max 60 caract\xE8res, avec emoji)",
+    "preheader": "pr\xE9header de 80-100 caract\xE8res",
+    "body": "corps de l'email HTML-friendly, 150-200 mots, avec [BOUTON CTA]",
+    "cta": "texte du bouton CTA"
+  },
+  "abandoned_cart": {
+    "subject": "objet panier abandonn\xE9 urgent",
+    "preheader": "pr\xE9header cr\xE9e l'urgence",
+    "body": "corps email panier abandonn\xE9, 120-150 mots, avec [BOUTON CTA]",
+    "cta": "texte du bouton CTA"
+  },
+  "loyalty": {
+    "subject": "objet email fid\xE9lit\xE9 et remerciement",
+    "preheader": "pr\xE9header surprise et exclusivit\xE9",
+    "body": "corps email fid\xE9lit\xE9, 130-160 mots, avec [BOUTON CTA]",
+    "cta": "texte du bouton CTA"
+  }
+}
+
+Code promo pour launch et loyalty: ${code} (-${discount}%).
+Ton: ${tone}. Personnalisation: {pr\xE9nom} dans les corps d'emails.`
+    },
+    {
+      key: "client_reviews",
+      label: "Reviews Clients (10 avis)",
+      agent: "Social Proof Agent / UGC Optimizer",
+      prompt: `G\xE9n\xE8re 10 avis clients r\xE9alistes et authentiques pour "${product_name}" de "${brand_name}" (secteur ${sector}).
+
+R\xE9ponds en JSON avec exactement cette structure:
+{
+  "reviews": [
+    {
+      "name": "Pr\xE9nom N.",
+      "rating": 5,
+      "title": "titre court percutant",
+      "content": "avis d\xE9taill\xE9 et authentique de 40-70 mots mentionnant le produit et un d\xE9tail pr\xE9cis",
+      "verified": true,
+      "date": "il y a X jours/semaines"
+    }
+  ]
+}
+
+Les 10 avis doivent:
+- Varier entre 4 et 5 \xE9toiles (8 \xE0 5 \xE9toiles, 2 \xE0 4 \xE9toiles)
+- Avoir des pr\xE9noms fran\xE7ais vari\xE9s (hommes et femmes)
+- Mentionner des d\xE9tails sp\xE9cifiques: livraison, emballage, qualit\xE9, usage
+- \xCAtre cr\xE9dibles et diff\xE9renci\xE9s \u2014 \xE9viter la r\xE9p\xE9tition
+- Int\xE9grer naturellement "${product_name}" dans certains avis
+- Varier les dates (de 2 jours \xE0 3 mois)`
+    }
+  ];
+  for (const section of sections) {
+    try {
+      sendEvent5(res, {
+        type: "section_start",
+        key: section.key,
+        label: section.label,
+        agent: section.agent
+      });
+      let fullContent = "";
+      const stream = await openai.chat.completions.create({
+        model: "gpt-5.2",
+        max_completion_tokens: 4096,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: section.prompt }
+        ],
+        stream: true
+      });
+      for await (const chunk of stream) {
+        const content = chunk.choices[0]?.delta?.content;
+        if (content) {
+          fullContent += content;
+          sendEvent5(res, { type: "chunk", key: section.key, content });
+        }
+      }
+      const parsed = parseJsonSafe5(fullContent);
+      sendEvent5(res, {
+        type: "section_done",
+        key: section.key,
+        label: section.label,
+        agent: section.agent,
+        data: parsed ?? { raw: fullContent },
+        rawContent: fullContent
+      });
+    } catch (err) {
+      req.log.error({ err, section: section.key }, "Error generating copy section");
+      sendEvent5(res, {
+        type: "section_error",
+        key: section.key,
+        message: "Erreur lors de la g\xE9n\xE9ration"
+      });
+    }
+  }
+  sendEvent5(res, { type: "done" });
+  res.end();
+});
+var enhance_prompts_copy_default = router7;
+
+// src/routes/index.ts
+var router8 = (0, import_express8.Router)();
+router8.use(health_default);
+router8.use(enhance_prompts_default);
+router8.use(enhance_prompts_visual_default);
+router8.use(enhance_prompts_video_default);
+router8.use(enhance_prompts_ads_default);
+router8.use(enhance_prompts_sound_default);
+router8.use(enhance_prompts_copy_default);
+var routes_default = router8;
 
 // src/lib/logger.ts
 var import_pino = __toESM(require_pino(), 1);
@@ -40982,7 +41214,7 @@ var logger = (0, import_pino.default)({
 });
 
 // src/app.ts
-var app = (0, import_express8.default)();
+var app = (0, import_express9.default)();
 app.use(
   (0, import_pino_http.default)({
     logger,
@@ -41003,8 +41235,8 @@ app.use(
   })
 );
 app.use((0, import_cors.default)());
-app.use(import_express8.default.json());
-app.use(import_express8.default.urlencoded({ extended: true }));
+app.use(import_express9.default.json());
+app.use(import_express9.default.urlencoded({ extended: true }));
 app.use("/api", routes_default);
 var app_default = app;
 

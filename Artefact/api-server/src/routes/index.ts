@@ -5,6 +5,7 @@ import enhancePromptsVisualRouter from "./openai/enhance-prompts-visual";
 import enhancePromptsVideoRouter from "./openai/enhance-prompts-video";
 import enhancePromptsAdsRouter from "./openai/enhance-prompts-ads";
 import enhancePromptsSoundRouter from "./openai/enhance-prompts-sound";
+import enhancePromptsCopyRouter from "./openai/enhance-prompts-copy";
 
 const router: IRouter = Router();
 
@@ -14,5 +15,6 @@ router.use(enhancePromptsVisualRouter);
 router.use(enhancePromptsVideoRouter);
 router.use(enhancePromptsAdsRouter);
 router.use(enhancePromptsSoundRouter);
+router.use(enhancePromptsCopyRouter);
 
 export default router;
