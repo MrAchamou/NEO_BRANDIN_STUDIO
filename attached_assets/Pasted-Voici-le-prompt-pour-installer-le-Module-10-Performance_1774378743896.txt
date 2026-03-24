@@ -1,0 +1,676 @@
+Voici le **prompt pour installer le Module 10 — Performance Tracker** — le dernier module de la suite.
+
+---
+
+# PROMPT — INSTALLATION MODULE 10 — PERFORMANCE TRACKER
+
+```
+Ajoute le MODULE 10 — PERFORMANCE TRACKER au projet existant.
+
+Le Module 10 génère les outils et guides pour suivre les performances: tableau de bord Google Sheets prêt à l'emploi, KPIs à suivre par plateforme, guide "quand arrêter une pub, quand la scaler", et template d'analyse hebdomadaire.
+
+Le module finalise l'ensemble des 10 modules du Complete Brand Universe.
+
+## STRUCTURE À AJOUTER
+
+Ajoute ce dossier et ces fichiers:
+
+```
+modules/module_10_performance_tracker/
+├── __init__.py
+├── orchestrator.py
+└── prompts.py
+```
+
+## 1. FICHIER modules/module_10_performance_tracker/__init__.py
+
+```python
+from .orchestrator import PerformanceTrackerOrchestrator
+
+__all__ = ["PerformanceTrackerOrchestrator"]
+```
+
+## 2. FICHIER modules/module_10_performance_tracker/prompts.py
+
+```python
+# ============================================================
+# MODULE 10 — PERFORMANCE TRACKER — PROMPTS & TEMPLATES
+# ============================================================
+
+# MOD-10.1 — Google Sheets Dashboard Template
+DASHBOARD_TEMPLATE = """
+# 📊 TABLEAU DE BORD PERFORMANCE — {brand_name}
+
+## INSTRUCTIONS D'UTILISATION
+1. Copiez ce template dans votre Google Sheets
+2. Remplissez les données chaque semaine
+3. Les formules calculent automatiquement les KPIs
+4. Utilisez l'onglet "Alertes" pour les décisions
+
+---
+
+## ONGLET 1: SYNTHÈSE GLOBALE
+
+| Métrique | Semaine 1 | Semaine 2 | Semaine 3 | Semaine 4 | Objectif | Statut |
+|----------|-----------|-----------|-----------|-----------|----------|--------|
+| Chiffre d'affaires | | | | | {ca_target} | |
+| Nombre de commandes | | | | | | |
+| Panier moyen | | | | | {basket_target} | |
+| Taux de conversion | | | | | {conv_target}% | |
+| Coût d'acquisition | | | | | {cac_target} | |
+| ROAS | | | | | {roas_target} | |
+
+---
+
+## ONGLET 2: META ADS (Facebook/Instagram)
+
+| Campagne | Impressions | Clics | CTR | CPC | Conversions | CPA | Dépenses | CA | ROAS | Statut |
+|----------|-------------|-------|-----|-----|-------------|-----|----------|----|------|--------|
+| Brand Awareness | | | | | | | | | | |
+| Retargeting | | | | | | | | | | |
+| Prospection | | | | | | | | | | |
+| **TOTAL** | | | | | | | | | | |
+
+**Formules automatiques:**
+- CTR = Clics / Impressions
+- CPC = Dépenses / Clics
+- CPA = Dépenses / Conversions
+- ROAS = CA / Dépenses
+
+---
+
+## ONGLET 3: GOOGLE ADS
+
+| Campagne | Impressions | Clics | CTR | CPC | Conversions | CPA | Dépenses | CA | ROAS | Statut |
+|----------|-------------|-------|-----|-----|-------------|-----|----------|----|------|--------|
+| Display | | | | | | | | | | |
+| Search | | | | | | | | | | |
+| Shopping | | | | | | | | | | |
+| **TOTAL** | | | | | | | | | | |
+
+---
+
+## ONGLET 4: TIKTOK ADS
+
+| Campagne | Impressions | Clics | CTR | CPC | Conversions | CPA | Dépenses | CA | ROAS | Statut |
+|----------|-------------|-------|-----|-----|-------------|-----|----------|----|------|--------|
+| In-Feed | | | | | | | | | | |
+| Spark Ads | | | | | | | | | | |
+| **TOTAL** | | | | | | | | | | |
+
+---
+
+## ONGLET 5: ORGANIQUE & EMAIL
+
+| Canal | Visiteurs | Taux conv. | CA | Objectif | Statut |
+|-------|-----------|------------|----|----------|--------|
+| Instagram | | | | | |
+| TikTok | | | | | |
+| Pinterest | | | | | |
+| Email | | | | | |
+| SEO | | | | | |
+| Direct | | | | | |
+| **TOTAL** | | | | | |
+
+---
+
+## ONGLET 6: ALERTES & DÉCISIONS
+
+| Métrique | Seuil d'alerte | Action à prendre |
+|----------|----------------|------------------|
+| ROAS < 2.0 | 🔴 ROUGE | Arrêter ou optimiser la campagne |
+| ROAS 2.0-3.0 | 🟡 ORANGE | Surveiller, optimiser si possible |
+| ROAS > 3.0 | 🟢 VERT | Scalable, augmenter le budget |
+| CPA > {cac_target} | 🔴 ROUGE | Revoir le ciblage ou la créative |
+| CTR < 1% | 🔴 ROUGE | Tester de nouvelles créatives |
+| CTR 1-2% | 🟡 ORANGE | A/B tester pour améliorer |
+| CTR > 2% | 🟢 VERT | Excellent, maintenir |
+
+---
+
+## ONGLET 7: CALCULS AUTOMATIQUES
+
+| Formule | Valeur |
+|---------|--------|
+| CA Total | =SOMME(CA_Meta; CA_Google; CA_TikTok; CA_Organique) |
+| Dépenses Total | =SOMME(Dépenses_Meta; Dépenses_Google; Dépenses_TikTok) |
+| ROAS Global | =CA_Total / Dépenses_Total |
+| CAC Global | =Dépenses_Total / Conversions_Total |
+| Marge brute (est.) | =CA_Total * {margin_percent} |
+| Bénéfice net (est.) | =Marge_brute - Dépenses_Total |
+"""
+
+# MOD-10.2 — KPIs par plateforme
+KPI_GUIDE = """
+# 📈 INDICATEURS CLÉS PAR PLATEFORME
+
+## META ADS (Facebook/Instagram)
+
+| KPI | Formule | Bon | Très bon | Excellent |
+|-----|---------|-----|----------|-----------|
+| CTR (Click-Through Rate) | Clics / Impressions | 1-2% | 2-3% | >3% |
+| CPC (Cost Per Click) | Dépenses / Clics | <1€ | <0.80€ | <0.50€ |
+| CPA (Cost Per Acquisition) | Dépenses / Conversions | <15€ | <10€ | <7€ |
+| ROAS (Return on Ad Spend) | CA / Dépenses | 2-3x | 3-4x | >4x |
+| Fréquence | Impressions / Personnes | 1-2 | 2-3 | >3 (attention) |
+
+## GOOGLE ADS
+
+| KPI | Formule | Bon | Très bon | Excellent |
+|-----|---------|-----|----------|-----------|
+| CTR (Display) | Clics / Impressions | 0.5-1% | 1-1.5% | >1.5% |
+| CTR (Search) | Clics / Impressions | 3-5% | 5-8% | >8% |
+| CPC | Dépenses / Clics | <1.50€ | <1€ | <0.70€ |
+| CPA | Dépenses / Conversions | <20€ | <15€ | <10€ |
+| ROAS | CA / Dépenses | 2-3x | 3-4x | >4x |
+
+## TIKTOK ADS
+
+| KPI | Formule | Bon | Très bon | Excellent |
+|-----|---------|-----|----------|-----------|
+| CTR | Clics / Impressions | 0.5-1% | 1-1.5% | >1.5% |
+| CPC | Dépenses / Clics | <1.20€ | <0.80€ | <0.50€ |
+| CPA | Dépenses / Conversions | <15€ | <10€ | <7€ |
+| ROAS | CA / Dépenses | 2-2.5x | 2.5-3.5x | >3.5x |
+
+## ORGANIQUE
+
+| KPI | Formule | Bon | Très bon | Excellent |
+|-----|---------|-----|----------|-----------|
+| Taux engagement | Interactions / Impressions | 2-4% | 4-6% | >6% |
+| Croissance followers | (Nouveaux / Total) ×100 | 5-10% | 10-15% | >15% |
+| Taux conversion organique | Conversions / Visiteurs | 1-2% | 2-3% | >3% |
+
+## EMAIL MARKETING
+
+| KPI | Formule | Bon | Très bon | Excellent |
+|-----|---------|-----|----------|-----------|
+| Taux ouverture | Ouvertures / Envoyés | 20-30% | 30-40% | >40% |
+| Taux clic | Clics / Ouvertures | 5-10% | 10-15% | >15% |
+| Taux conversion | Conversions / Clics | 2-5% | 5-8% | >8% |
+| Désabonnement | Désabonnements / Envoyés | <0.5% | <0.3% | <0.1% |
+"""
+
+# MOD-10.3 — Guide Scaling & Stop
+SCALING_GUIDE = """
+# 🎯 GUIDE D'OPTIMISATION — QUAND ARRÊTER, QUAND SCALER
+
+## QUAND ARRÊTER UNE CAMPAGNE 🔴
+
+### Critères d'arrêt immédiat
+| Condition | Action |
+|-----------|--------|
+| ROAS < 1.5 après 3 jours | ARRÊT IMMÉDIAT |
+| ROAS < 2.0 après 7 jours | ARRÊT |
+| CPA > {max_cpa} | ARRÊT |
+| CTR < 0.5% après 3 jours | ARRÊT (mauvaise créative) |
+| 0 conversion après 10€ dépensés | ARRÊT (mauvais ciblage) |
+
+### Avant d'arrêter, toujours:
+1. Vérifier que l'audience n'est pas trop petite (< 10 000 personnes)
+2. Tester une nouvelle créative avant d'arrêter définitivement
+3. Analyser les données par appareil (mobile vs desktop)
+
+---
+
+## QUAND SCALER UNE CAMPAGNE 🟢
+
+### Critères de scaling
+| Condition | Action |
+|-----------|--------|
+| ROAS > 3.0 depuis 3 jours | Augmenter budget +20-30% |
+| ROAS > 4.0 | Augmenter budget +50% |
+| CPA < {target_cpa} | Double budget |
+| CTR > 2% | Dupliquer la campagne avec budget plus élevé |
+
+### Règles de scaling
+1. **Augmentation progressive**: jamais plus de 30% par jour
+2. **Duplication**: dupliquer une campagne gagnante plutôt qu'augmenter trop vite
+3. **Séparation**: séparer les audiences froides des audiences chaudes
+4. **Surveillance 24h**: surveiller pendant 24h après scaling
+
+---
+
+## STRATÉGIE PAR ÉTAPE DE MATURITÉ
+
+### Phase 1: Lancement (Semaines 1-2)
+| Action | Budget | Objectif |
+|--------|--------|----------|
+| Tester 3-5 créatives | 20€/jour/campagne | Identifier les gagnantes |
+| 2 audiences par créative | - | Trouver le bon ciblage |
+| ROAS cible | 1.5-2.0 | Seuil de rentabilité |
+
+### Phase 2: Scaling (Semaines 3-4)
+| Action | Budget | Objectif |
+|--------|--------|----------|
+| Dupliquer campagnes gagnantes | ×2 | Augmenter volume |
+| Retargeting | 20% du budget | Fidéliser |
+| ROAS cible | 2.5-3.0 | Rentabilité confortable |
+
+### Phase 3: Maturité (Semaines 5+)
+| Action | Budget | Objectif |
+|--------|--------|----------|
+| Scaling progressif | +20% par semaine | Croissance contrôlée |
+| Lookalike audiences | 30% du budget | Acquisition |
+| ROAS cible | 3.0+ | Maximiser profits |
+
+---
+
+## ALGORITHME DE DÉCISION
+
+```
+SI ROAS > 3.0 ET CPA < {target_cpa}:
+    → AUGMENTER BUDGET +30%
+    → DUPLIQUER CAMPAGNE
+
+SI ROAS ENTRE 2.0 ET 3.0:
+    → MAINTENIR BUDGET
+    → OPTIMISER CRÉATIVES
+
+SI ROAS ENTRE 1.5 ET 2.0:
+    → RÉDUIRE BUDGET -20%
+    → TESTER NOUVELLES CRÉATIVES
+
+SI ROAS < 1.5:
+    → ARRÊTER CAMPAGNE
+    → CONSERVER DONNÉES POUR ANALYSE
+```
+"""
+
+# MOD-10.4 — Analyse Hebdomadaire Template
+WEEKLY_REVIEW_TEMPLATE = """
+# 📋 ANALYSE HEBDOMADAIRE — SEMAINE {week_number}
+
+## 📊 RÉSUMÉ GLOBAL
+| Métrique | Cette semaine | Semaine dernière | Évolution | Objectif |
+|----------|---------------|------------------|-----------|----------|
+| CA | {ca_this_week} | {ca_last_week} | {ca_evolution} | {ca_target} |
+| Commandes | {orders_this_week} | {orders_last_week} | {orders_evolution} | - |
+| Panier moyen | {basket_this_week} | {basket_last_week} | {basket_evolution} | {basket_target} |
+| Taux conversion | {conv_this_week}% | {conv_last_week}% | {conv_evolution} | {conv_target}% |
+| Dépenses pubs | {spend_this_week} | {spend_last_week} | {spend_evolution} | - |
+| ROAS | {roas_this_week} | {roas_last_week} | {roas_evolution} | {roas_target} |
+
+---
+
+## 🎯 PERFORMANCE PAR CANAL
+
+### META ADS
+| Campagne | Dépenses | CA | ROAS | CPA | Statut | Action |
+|----------|----------|----|------|-----|--------|--------|
+| | | | | | | |
+
+**Points clés:**
+- Campagne gagnante: __________________
+- Créative à arrêter: __________________
+- Optimisation à faire: __________________
+
+### GOOGLE ADS
+| Campagne | Dépenses | CA | ROAS | CPA | Statut | Action |
+|----------|----------|----|------|-----|--------|--------|
+| | | | | | | |
+
+### TIKTOK ADS
+| Campagne | Dépenses | CA | ROAS | CPA | Statut | Action |
+|----------|----------|----|------|-----|--------|--------|
+| | | | | | | |
+
+### ORGANIQUE
+| Canal | Visiteurs | Taux conv. | CA | Objectif | Statut |
+|-------|-----------|------------|----|----------|--------|
+| | | | | | |
+
+---
+
+## 🔥 TOP 3 DES CRÉATIVES
+
+| Rang | Créative | Plateforme | CTR | CPA | ROAS |
+|------|----------|------------|-----|-----|------|
+| 1 | | | | | |
+| 2 | | | | | |
+| 3 | | | | | |
+
+---
+
+## 📉 BOTTOM 3 DES CRÉATIVES (À ARRÊTER)
+
+| Rang | Créative | Plateforme | CTR | CPA | ROAS |
+|------|----------|------------|-----|-----|------|
+| 1 | | | | | |
+| 2 | | | | | |
+| 3 | | | | | |
+
+---
+
+## 💡 ACTIONS À PRENDRE POUR LA SEMAINE PROCHAINE
+
+### À SCALER
+1. __________________
+2. __________________
+3. __________________
+
+### À OPTIMISER
+1. __________________
+2. __________________
+3. __________________
+
+### À ARRÊTER
+1. __________________
+2. __________________
+3. __________________
+
+### NOUVEAUX TESTS
+1. __________________
+2. __________________
+3. __________________
+
+---
+
+## 🎯 OBJECTIFS SEMAINE PROCHAINE
+
+| Objectif | Cible | Statut (N+1) |
+|----------|-------|--------------|
+| CA | | |
+| ROAS | | |
+| Nouvelles créatives | | |
+| Tests d'audiences | | |
+
+---
+
+## 📝 NOTES & OBSERVATIONS
+
+_________________________________________________________________
+
+_________________________________________________________________
+
+_________________________________________________________________
+
+_________________________________________________________________
+
+_________________________________________________________________
+
+_________________________________________________________________
+
+---
+
+*Prochaine analyse: SEMAINE {next_week_number}*
+"""
+
+def get_dashboard_template(brand_name: str, context: dict) -> str:
+    """Génère le template du tableau de bord Google Sheets"""
+    dashboard = DASHBOARD_TEMPLATE
+    for key, value in context.items():
+        dashboard = dashboard.replace(f"{{{key}}}", str(value))
+    dashboard = dashboard.replace("{brand_name}", brand_name)
+    return dashboard
+
+def get_kpi_guide(context: dict) -> str:
+    """Génère le guide des KPIs"""
+    guide = KPI_GUIDE
+    for key, value in context.items():
+        guide = guide.replace(f"{{{key}}}", str(value))
+    return guide
+
+def get_scaling_guide(context: dict) -> str:
+    """Génère le guide de scaling"""
+    guide = SCALING_GUIDE
+    for key, value in context.items():
+        guide = guide.replace(f"{{{key}}}", str(value))
+    return guide
+
+def get_weekly_review_template(week_number: int, context: dict) -> str:
+    """Génère le template d'analyse hebdomadaire"""
+    template = WEEKLY_REVIEW_TEMPLATE
+    template = template.replace("{week_number}", str(week_number))
+    template = template.replace("{next_week_number}", str(week_number + 1))
+    for key, value in context.items():
+        template = template.replace(f"{{{key}}}", str(value))
+    return template
+```
+
+## 3. FICHIER modules/module_10_performance_tracker/orchestrator.py
+
+```python
+from typing import Dict, Any
+from modules.base_module import BaseModule
+from modules.module_10_performance_tracker.prompts import (
+    get_dashboard_template,
+    get_kpi_guide,
+    get_scaling_guide,
+    get_weekly_review_template
+)
+
+class PerformanceTrackerOrchestrator(BaseModule):
+    """
+    MODULE 10 — PERFORMANCE TRACKER
+    Génère tous les outils pour suivre et optimiser les performances
+    """
+    
+    def __init__(self):
+        super().__init__("PerformanceTracker")
+    
+    def generate(self, brief: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Génère tous les éléments du Module 10
+        
+        Input brief attendu:
+        {
+            "brand_name": "LUXEOR",
+            "sector": "bijou",
+            "ca_target": 10000,
+            "basket_target": 150,
+            "conv_target": 2.5,
+            "cac_target": 30,
+            "roas_target": 3.0,
+            "margin_percent": 65,
+            "max_cpa": 25,
+            "target_cpa": 15
+        }
+        """
+        
+        # Extraire les données
+        brand_name = brief.get("brand_name", "Ma Marque")
+        sector = brief.get("sector", "general")
+        
+        # Objectifs par défaut selon secteur
+        defaults = {
+            "bijou": {"ca_target": 10000, "basket_target": 150, "conv_target": 2.5, "cac_target": 30, "roas_target": 3.0, "margin_percent": 65, "max_cpa": 25, "target_cpa": 15},
+            "cosmétique": {"ca_target": 8000, "basket_target": 60, "conv_target": 3.0, "cac_target": 20, "roas_target": 3.5, "margin_percent": 70, "max_cpa": 18, "target_cpa": 12},
+            "tech": {"ca_target": 15000, "basket_target": 200, "conv_target": 2.0, "cac_target": 40, "roas_target": 2.5, "margin_percent": 55, "max_cpa": 35, "target_cpa": 20},
+            "mode": {"ca_target": 12000, "basket_target": 100, "conv_target": 2.2, "cac_target": 35, "roas_target": 2.8, "margin_percent": 60, "max_cpa": 30, "target_cpa": 18},
+            "fitness": {"ca_target": 10000, "basket_target": 80, "conv_target": 2.5, "cac_target": 25, "roas_target": 3.0, "margin_percent": 65, "max_cpa": 22, "target_cpa": 14}
+        }
+        
+        default = defaults.get(sector, defaults["bijou"])
+        
+        ca_target = brief.get("ca_target", default["ca_target"])
+        basket_target = brief.get("basket_target", default["basket_target"])
+        conv_target = brief.get("conv_target", default["conv_target"])
+        cac_target = brief.get("cac_target", default["cac_target"])
+        roas_target = brief.get("roas_target", default["roas_target"])
+        margin_percent = brief.get("margin_percent", default["margin_percent"])
+        max_cpa = brief.get("max_cpa", default["max_cpa"])
+        target_cpa = brief.get("target_cpa", default["target_cpa"])
+        
+        context = {
+            "ca_target": ca_target,
+            "basket_target": basket_target,
+            "conv_target": conv_target,
+            "cac_target": cac_target,
+            "roas_target": roas_target,
+            "margin_percent": margin_percent,
+            "max_cpa": max_cpa,
+            "target_cpa": target_cpa
+        }
+        
+        self._log(f"Génération des outils performance pour {brand_name}")
+        
+        # 1. Dashboard Google Sheets
+        dashboard = get_dashboard_template(brand_name, context)
+        
+        # 2. Guide des KPIs
+        kpi_guide = get_kpi_guide(context)
+        
+        # 3. Guide Scaling & Stop
+        scaling_guide = get_scaling_guide(context)
+        
+        # 4. Templates d'analyse hebdomadaire (4 semaines)
+        weekly_reviews = {}
+        for week in range(1, 5):
+            weekly_reviews[f"week_{week}"] = get_weekly_review_template(week, context)
+        
+        # Retourner tous les éléments
+        return {
+            "performance_tracker": {
+                "dashboard": {
+                    "agent": "Manual (Google Sheets)",
+                    "content": dashboard,
+                    "parameters": {
+                        "format": "Google Sheets Template",
+                        "tabs": 7,
+                        "formulas": "automatiques",
+                        "alert_system": True
+                    }
+                },
+                "kpi_guide": {
+                    "agent": "Manual (PDF)",
+                    "content": kpi_guide,
+                    "parameters": {
+                        "platforms": ["Meta Ads", "Google Ads", "TikTok Ads", "Organique", "Email"],
+                        "kpis_count": 20,
+                        "thresholds": ["bon", "très bon", "excellent"]
+                    }
+                },
+                "scaling_guide": {
+                    "agent": "Manual (PDF)",
+                    "content": scaling_guide,
+                    "parameters": {
+                        "sections": ["stop_criteria", "scale_criteria", "strategy_by_phase", "decision_algorithm"],
+                        "phases": 3
+                    }
+                },
+                "weekly_reviews": {
+                    "agent": "Manual (Google Docs)",
+                    "templates": weekly_reviews,
+                    "parameters": {
+                        "weeks": 4,
+                        "sections": ["global", "by_channel", "top_creatives", "actions", "objectives"]
+                    }
+                }
+            },
+            "metadata": {
+                "module": "10_performance_tracker",
+                "brand_name": brand_name,
+                "sector": sector,
+                "dashboard_ready": True,
+                "kpi_guide_ready": True,
+                "scaling_guide_ready": True,
+                "weekly_reviews": 4,
+                "llm_enhanced": bool(self._enhance_prompt("test", {}) != "test")
+            }
+        }
+```
+
+## 4. MISE À JOUR DU FICHIER main.py
+
+Ajoute l'import et l'intégration du Module 10:
+
+```python
+# Ajouter cet import
+from modules.module_10_performance_tracker import PerformanceTrackerOrchestrator
+
+# Après la génération du Module 09, ajouter:
+
+# Génération des prompts Module 10
+print("\n" + "=" * 80)
+print("MODULE 10 — PERFORMANCE TRACKER")
+print("=" * 80)
+
+perf_brief = {
+    "brand_name": brief.get("brand_name"),
+    "sector": brief.get("sector"),
+    "ca_target": brief.get("ca_target", None),
+    "basket_target": brief.get("basket_target", None),
+    "conv_target": brief.get("conv_target", None),
+    "cac_target": brief.get("cac_target", None),
+    "roas_target": brief.get("roas_target", None),
+    "margin_percent": brief.get("margin_percent", None),
+    "max_cpa": brief.get("max_cpa", None),
+    "target_cpa": brief.get("target_cpa", None)
+}
+
+perf_orchestrator = PerformanceTrackerOrchestrator()
+perf_result = perf_orchestrator.generate(perf_brief)
+
+# Fusionner les résultats
+result["modules"]["performance_tracker"] = perf_result["performance_tracker"]
+```
+
+## 5. MISE À JOUR DU FICHIER output/prompts_roboneo.txt
+
+Le fichier d'export doit maintenant inclure tous les modules. À la fin de main.py, ajoute:
+
+```python
+# À la fin de la fonction main(), après toutes les générations:
+
+# Export final
+exporter = FileExporter(Config.DEFAULT_OUTPUT_FILE)
+json_path = exporter.export(result)
+txt_path = exporter.export_txt(result)
+
+print("\n" + "=" * 80)
+print("🎉 GÉNÉRATION TERMINÉE — 10 MODULES COMPLETS")
+print("=" * 80)
+print()
+print(f"Fichiers générés:")
+print(f"  - {json_path}")
+print(f"  - {txt_path}")
+print()
+print("Modules installés:")
+print("  ✅ Module 01 — Brand Identity")
+print("  ✅ Module 02 — Visual Content")
+print("  ✅ Module 03 — Video Content")
+print("  ✅ Module 04 — Ad Creatives")
+print("  ✅ Module 05 — Brand Sound")
+print("  ✅ Module 06 — Copy & Content")
+print("  ✅ Module 07 — Launch Ready")
+print("  ✅ Module 08 — Chatbot Script")
+print("  ✅ Module 09 — Upsell & Cross-sell Kit")
+print("  ✅ Module 10 — Performance Tracker")
+print()
+print("Le Complete Brand Universe est prêt !")
+print("Copiez les prompts dans RoboNeo.com pour générer tous les assets.")
+```
+
+## 6. VÉRIFICATION FINALE
+
+Une fois installé, teste avec:
+
+```bash
+python main.py
+```
+
+Le fichier output/prompts_roboneo.txt doit maintenant contenir les éléments pour TOUS les 10 modules.
+
+---
+
+## 🎉 FÉLICITATIONS !
+
+Vous avez maintenant installé les **10 modules complets** du **Complete Brand Universe**:
+
+| Module | Nom | Contenu |
+|--------|-----|---------|
+| 01 | Brand Identity | Logo, palette, typo, charte |
+| 02 | Visual Content | Photos, lifestyle, try-on, carrousel |
+| 03 | Video Content | TikTok, Reels, YouTube, teasers |
+| 04 | Ad Creatives | Meta, Google, TikTok, carrousel ads |
+| 05 | Brand Sound | Jingle, BGM, effets, voix off |
+| 06 | Copy & Content | Fiche produit, captions, emails, reviews |
+| 07 | Launch Ready | Landing page, guide, calendrier |
+| 08 | Chatbot Script | FAQ, objections, réponses négatives |
+| 09 | Upsell Kit | Cross-sell, bundles, copy |
+| 10 | Performance Tracker | Dashboard, KPIs, scaling guide |
+
+---
+
+**Copie et colle ce prompt dans Replit AI pour finaliser l'installation.** Une fois terminé, ton système génère un fichier complet avec TOUS les prompts nécessaires pour créer une marque complète sur RoboNeo.com ! 🚀

@@ -20481,27 +20481,27 @@ var require_router = __commonJS({
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var methods = METHODS.map((method) => method.toLowerCase());
-    module.exports = Router12;
+    module.exports = Router13;
     module.exports.Route = Route;
-    function Router12(options) {
-      if (!(this instanceof Router12)) {
-        return new Router12(options);
+    function Router13(options) {
+      if (!(this instanceof Router13)) {
+        return new Router13(options);
       }
       const opts = options || {};
-      function router12(req, res, next) {
-        router12.handle(req, res, next);
+      function router13(req, res, next) {
+        router13.handle(req, res, next);
       }
-      Object.setPrototypeOf(router12, this);
-      router12.caseSensitive = opts.caseSensitive;
-      router12.mergeParams = opts.mergeParams;
-      router12.params = {};
-      router12.strict = opts.strict;
-      router12.stack = [];
-      return router12;
+      Object.setPrototypeOf(router13, this);
+      router13.caseSensitive = opts.caseSensitive;
+      router13.mergeParams = opts.mergeParams;
+      router13.params = {};
+      router13.strict = opts.strict;
+      router13.stack = [];
+      return router13;
     }
-    Router12.prototype = function() {
+    Router13.prototype = function() {
     };
-    Router12.prototype.param = function param(name, fn) {
+    Router13.prototype.param = function param(name, fn) {
       if (!name) {
         throw new TypeError("argument name is required");
       }
@@ -20521,7 +20521,7 @@ var require_router = __commonJS({
       params.push(fn);
       return this;
     };
-    Router12.prototype.handle = function handle(req, res, callback) {
+    Router13.prototype.handle = function handle(req, res, callback) {
       if (!callback) {
         throw new TypeError("argument callback is required");
       }
@@ -20648,7 +20648,7 @@ var require_router = __commonJS({
         }
       }
     };
-    Router12.prototype.use = function use(handler) {
+    Router13.prototype.use = function use(handler) {
       let offset = 0;
       let path2 = "/";
       if (typeof handler !== "function") {
@@ -20681,7 +20681,7 @@ var require_router = __commonJS({
       }
       return this;
     };
-    Router12.prototype.route = function route(path2) {
+    Router13.prototype.route = function route(path2) {
       const route2 = new Route(path2);
       const layer = new Layer(path2, {
         sensitive: this.caseSensitive,
@@ -20696,7 +20696,7 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      Router12.prototype[method] = function(path2) {
+      Router13.prototype[method] = function(path2) {
         const route = this.route(path2);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
@@ -20879,13 +20879,13 @@ var require_application = __commonJS({
     var compileTrust = require_utils3().compileTrust;
     var resolve = __require("node:path").resolve;
     var once = require_once();
-    var Router12 = require_router();
+    var Router13 = require_router();
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var app2 = exports = module.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router12 = null;
+      var router13 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -20894,13 +20894,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router12 === null) {
-            router12 = new Router12({
+          if (router13 === null) {
+            router13 = new Router13({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router12;
+          return router13;
         }
       });
     };
@@ -20971,15 +20971,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router12 = this.router;
+      var router13 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router12.use(path2, fn2);
+          return router13.use(path2, fn2);
         }
         debug(".use app under %s", path2);
         fn2.mountpath = path2;
         fn2.parent = this;
-        router12.use(path2, function mounted_app(req, res, next) {
+        router13.use(path2, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -23506,7 +23506,7 @@ var require_express = __commonJS({
     var EventEmitter = __require("node:events").EventEmitter;
     var mixin = require_merge_descriptors();
     var proto = require_application();
-    var Router12 = require_router();
+    var Router13 = require_router();
     var req = require_request();
     var res = require_response();
     exports = module.exports = createApplication;
@@ -23528,8 +23528,8 @@ var require_express = __commonJS({
     exports.application = proto;
     exports.request = req;
     exports.response = res;
-    exports.Route = Router12.Route;
-    exports.Router = Router12;
+    exports.Route = Router13.Route;
+    exports.Router = Router13;
     exports.json = bodyParser.json;
     exports.raw = bodyParser.raw;
     exports.static = require_serve_static();
@@ -28388,12 +28388,12 @@ var require_logger = __commonJS({
 });
 
 // src/app.ts
-var import_express12 = __toESM(require_express2(), 1);
+var import_express13 = __toESM(require_express2(), 1);
 var import_cors = __toESM(require_lib3(), 1);
 var import_pino_http = __toESM(require_logger(), 1);
 
 // src/routes/index.ts
-var import_express11 = __toESM(require_express2(), 1);
+var import_express12 = __toESM(require_express2(), 1);
 
 // src/routes/health.ts
 var import_express = __toESM(require_express2(), 1);
@@ -41842,19 +41842,295 @@ R\xE9ponds UNIQUEMENT avec un JSON valide, sans texte avant ou apr\xE8s:
 });
 var enhance_prompts_upsell_default = router10;
 
-// src/routes/index.ts
+// src/routes/openai/enhance-prompts-performance.ts
+var import_express11 = __toESM(require_express2(), 1);
 var router11 = (0, import_express11.Router)();
-router11.use(health_default);
-router11.use(enhance_prompts_default);
-router11.use(enhance_prompts_visual_default);
-router11.use(enhance_prompts_video_default);
-router11.use(enhance_prompts_ads_default);
-router11.use(enhance_prompts_sound_default);
-router11.use(enhance_prompts_copy_default);
-router11.use(enhance_prompts_launch_default);
-router11.use(enhance_prompts_chatbot_default);
-router11.use(enhance_prompts_upsell_default);
-var routes_default = router11;
+function sendEvent9(res, data) {
+  res.write(`data: ${JSON.stringify(data)}
+
+`);
+}
+function parseJsonSafe9(text) {
+  try {
+    const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+    return JSON.parse(clean);
+  } catch {
+    return null;
+  }
+}
+var SECTOR_DEFAULTS = {
+  bijou: { ca_target: 1e4, basket_target: 150, conv_target: 2.5, cac_target: 30, roas_target: 3, margin_percent: 65, max_cpa: 25, target_cpa: 15 },
+  luxe: { ca_target: 15e3, basket_target: 300, conv_target: 2, cac_target: 50, roas_target: 3.5, margin_percent: 70, max_cpa: 45, target_cpa: 25 },
+  cosm\u00E9tique: { ca_target: 8e3, basket_target: 60, conv_target: 3, cac_target: 20, roas_target: 3.5, margin_percent: 70, max_cpa: 18, target_cpa: 12 },
+  tech: { ca_target: 15e3, basket_target: 200, conv_target: 2, cac_target: 40, roas_target: 2.5, margin_percent: 55, max_cpa: 35, target_cpa: 20 },
+  mode: { ca_target: 12e3, basket_target: 100, conv_target: 2.2, cac_target: 35, roas_target: 2.8, margin_percent: 60, max_cpa: 30, target_cpa: 18 },
+  fitness: { ca_target: 1e4, basket_target: 80, conv_target: 2.5, cac_target: 25, roas_target: 3, margin_percent: 65, max_cpa: 22, target_cpa: 14 },
+  d\u00E9coration: { ca_target: 9e3, basket_target: 120, conv_target: 2, cac_target: 28, roas_target: 2.8, margin_percent: 58, max_cpa: 24, target_cpa: 16 },
+  maroquinerie: { ca_target: 12e3, basket_target: 180, conv_target: 2.2, cac_target: 38, roas_target: 3, margin_percent: 62, max_cpa: 33, target_cpa: 19 }
+};
+router11.post("/openai/enhance-prompts-performance", async (req, res) => {
+  const {
+    brand_name,
+    sector,
+    tone = "professionnel",
+    ca_target,
+    basket_target,
+    conv_target,
+    cac_target,
+    roas_target,
+    margin_percent,
+    max_cpa,
+    target_cpa
+  } = req.body;
+  if (!brand_name || !sector) {
+    res.status(400).json({ error: "brand_name et sector sont requis" });
+    return;
+  }
+  const defaults2 = SECTOR_DEFAULTS[sector] ?? SECTOR_DEFAULTS["bijou"];
+  const ctx = {
+    ca_target: ca_target ?? defaults2.ca_target,
+    basket_target: basket_target ?? defaults2.basket_target,
+    conv_target: conv_target ?? defaults2.conv_target,
+    cac_target: cac_target ?? defaults2.cac_target,
+    roas_target: roas_target ?? defaults2.roas_target,
+    margin_percent: margin_percent ?? defaults2.margin_percent,
+    max_cpa: max_cpa ?? defaults2.max_cpa,
+    target_cpa: target_cpa ?? defaults2.target_cpa
+  };
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  const systemPrompt = `Tu es un expert en performance marketing e-commerce et analyse de donn\xE9es pour RoboNeo.com.
+Ta mission: cr\xE9er des outils de tracking et d'optimisation PR\xC9CIS et ACTIONNABLES pour maximiser le ROI.
+Contexte de la marque:
+- Nom: ${brand_name}
+- Secteur: ${sector}
+- Objectifs: CA cible ${ctx.ca_target}\u20AC, ROAS cible ${ctx.roas_target}x, CPA cible ${ctx.target_cpa}\u20AC
+Toutes tes r\xE9ponses doivent \xEAtre en JSON valide, directement exploitables.`;
+  const sections = [
+    {
+      key: "dashboard",
+      label: "Dashboard Google Sheets",
+      agent: "Manual (Google Sheets)",
+      userPrompt: `G\xE9n\xE8re un tableau de bord Google Sheets complet pour ${brand_name} dans le secteur ${sector}.
+Objectifs: CA cible ${ctx.ca_target}\u20AC/mois, panier moyen ${ctx.basket_target}\u20AC, taux conversion ${ctx.conv_target}%, ROAS cible ${ctx.roas_target}x, CAC max ${ctx.cac_target}\u20AC.
+
+R\xE9ponds UNIQUEMENT avec un JSON valide:
+{
+  "tabs": [
+    {
+      "name": "Nom de l'onglet",
+      "description": "Ce que cet onglet contient",
+      "columns": ["Colonne 1", "Colonne 2", "..."],
+      "sample_rows": [["valeur exemple", "valeur exemple", "..."]],
+      "formulas": ["=FORMULE1", "=FORMULE2"],
+      "notes": "Conseil d'utilisation"
+    }
+  ],
+  "alert_system": [
+    {
+      "metric": "Nom de la m\xE9trique",
+      "red_threshold": "Condition \u{1F534}",
+      "orange_threshold": "Condition \u{1F7E1}",
+      "green_threshold": "Condition \u{1F7E2}",
+      "action_red": "Action \xE0 prendre si rouge",
+      "action_green": "Action \xE0 prendre si vert"
+    }
+  ],
+  "setup_instructions": ["\xC9tape 1...", "\xC9tape 2...", "\xC9tape 3..."]
+}
+
+Inclus 5 onglets: Synth\xE8se, Meta Ads, Google Ads, TikTok Ads, Organique/Email. Syst\xE8me d'alertes avec ROAS, CPA, CTR.`
+    },
+    {
+      key: "kpi_guide",
+      label: "Guide KPIs par Plateforme",
+      agent: "Manual (PDF)",
+      userPrompt: `G\xE9n\xE8re un guide complet des KPIs de performance pour ${brand_name} (secteur ${sector}).
+Adapte les seuils au secteur ${sector} et aux objectifs: ROAS ${ctx.roas_target}x, CPA ${ctx.target_cpa}\u20AC.
+
+R\xE9ponds UNIQUEMENT avec un JSON valide:
+{
+  "platforms": [
+    {
+      "name": "Nom de la plateforme",
+      "kpis": [
+        {
+          "name": "Nom du KPI",
+          "formula": "Formule de calcul",
+          "unit": "\u20AC ou % ou x",
+          "good": "Valeur consid\xE9r\xE9e bonne",
+          "very_good": "Valeur tr\xE8s bonne",
+          "excellent": "Valeur excellente",
+          "warning": "Quand s'inqui\xE9ter",
+          "tip": "Conseil pour am\xE9liorer ce KPI"
+        }
+      ],
+      "priority_kpi": "Le KPI le plus important sur cette plateforme",
+      "common_mistakes": ["Erreur 1", "Erreur 2"]
+    }
+  ],
+  "global_rules": ["R\xE8gle globale 1", "R\xE8gle globale 2", "R\xE8gle globale 3"]
+}
+
+Couvre: Meta Ads, Google Ads, TikTok Ads, Organique, Email Marketing.`
+    },
+    {
+      key: "scaling_guide",
+      label: "Guide Scaling & Stop",
+      agent: "Manual (PDF)",
+      userPrompt: `G\xE9n\xE8re un guide d'optimisation complet pour ${brand_name} (secteur ${sector}).
+Seuils: ROAS cible ${ctx.roas_target}x, CPA max ${ctx.max_cpa}\u20AC, CPA cible ${ctx.target_cpa}\u20AC.
+
+R\xE9ponds UNIQUEMENT avec un JSON valide:
+{
+  "stop_criteria": [
+    {
+      "condition": "Condition d'arr\xEAt",
+      "delay": "Apr\xE8s combien de temps",
+      "action": "Action pr\xE9cise \xE0 prendre",
+      "severity": "imm\xE9diat | urgent | \xE0 surveiller"
+    }
+  ],
+  "scale_criteria": [
+    {
+      "condition": "Condition de scaling",
+      "action": "Action pr\xE9cise",
+      "increase_percent": 30,
+      "monitoring": "Quoi surveiller apr\xE8s scaling"
+    }
+  ],
+  "phases": [
+    {
+      "name": "Phase 1: Lancement",
+      "duration": "Semaines 1-2",
+      "budget_per_campaign": "20\u20AC/jour",
+      "roas_target": 1.5,
+      "actions": ["Action 1", "Action 2"],
+      "kpis_to_watch": ["KPI 1", "KPI 2"]
+    },
+    {
+      "name": "Phase 2: Scaling",
+      "duration": "Semaines 3-4",
+      "budget_per_campaign": "50\u20AC/jour",
+      "roas_target": 2.5,
+      "actions": ["Action 1", "Action 2"],
+      "kpis_to_watch": ["KPI 1", "KPI 2"]
+    },
+    {
+      "name": "Phase 3: Maturit\xE9",
+      "duration": "Semaine 5+",
+      "budget_per_campaign": "100\u20AC+/jour",
+      "roas_target": ${ctx.roas_target},
+      "actions": ["Action 1", "Action 2"],
+      "kpis_to_watch": ["KPI 1", "KPI 2"]
+    }
+  ],
+  "decision_algorithm": [
+    { "if": "ROAS > ${ctx.roas_target}", "then": "Action \xE0 prendre", "priority": "haute" },
+    { "if": "ROAS entre 2.0 et ${ctx.roas_target}", "then": "Action \xE0 prendre", "priority": "normale" },
+    { "if": "ROAS < 2.0", "then": "Action \xE0 prendre", "priority": "critique" }
+  ],
+  "quick_wins": ["Conseil rapide 1", "Conseil rapide 2", "Conseil rapide 3"]
+}`
+    },
+    {
+      key: "weekly_review",
+      label: "Template Analyse Hebdomadaire",
+      agent: "Manual (Google Docs)",
+      userPrompt: `G\xE9n\xE8re un template d'analyse hebdomadaire complet pour ${brand_name} (secteur ${sector}).
+Objectifs semaine: CA ${Math.round(ctx.ca_target / 4)}\u20AC, ROAS ${ctx.roas_target}x, CPA ${ctx.target_cpa}\u20AC.
+
+R\xE9ponds UNIQUEMENT avec un JSON valide:
+{
+  "sections": [
+    {
+      "title": "Titre de la section",
+      "type": "summary | table | checklist | textarea",
+      "fields": [
+        {
+          "label": "Nom du champ",
+          "placeholder": "Valeur exemple ou instruction",
+          "formula": "Formule si applicable",
+          "insight_prompt": "Question \xE0 se poser pour analyser ce champ"
+        }
+      ]
+    }
+  ],
+  "questions_of_the_week": [
+    "Question strat\xE9gique 1 \xE0 se poser chaque semaine ?",
+    "Question strat\xE9gique 2 ?",
+    "Question strat\xE9gique 3 ?"
+  ],
+  "checklist_actions": {
+    "monday": ["Action lundi 1", "Action lundi 2"],
+    "wednesday": ["Action mercredi 1"],
+    "friday": ["Action vendredi 1", "Action vendredi 2"],
+    "sunday": ["Action dimanche 1 (bilan)"]
+  },
+  "kpi_targets": {
+    "ca_weekly": ${Math.round(ctx.ca_target / 4)},
+    "roas_min": ${ctx.roas_target},
+    "cpa_max": ${ctx.max_cpa},
+    "cpa_target": ${ctx.target_cpa},
+    "conv_rate_min": ${ctx.conv_target}
+  }
+}`
+    }
+  ];
+  for (const section of sections) {
+    try {
+      sendEvent9(res, { type: "section_start", key: section.key });
+      let fullContent = "";
+      const stream = await openai.chat.completions.create({
+        model: "gpt-5.2",
+        max_completion_tokens: 4096,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: section.userPrompt }
+        ],
+        stream: true
+      });
+      for await (const chunk of stream) {
+        const content = chunk.choices[0]?.delta?.content;
+        if (content) {
+          fullContent += content;
+          sendEvent9(res, { type: "chunk", key: section.key, content });
+        }
+      }
+      const parsed = parseJsonSafe9(fullContent);
+      sendEvent9(res, {
+        type: "section_done",
+        key: section.key,
+        agent: section.agent,
+        fullContent,
+        data: parsed ?? {},
+        context: ctx
+      });
+    } catch (err) {
+      req.log.error({ err, section: section.key }, "Error generating performance section");
+      sendEvent9(res, { type: "error", key: section.key, message: "Erreur lors de la g\xE9n\xE9ration" });
+    }
+  }
+  sendEvent9(res, { type: "done" });
+  res.end();
+});
+var enhance_prompts_performance_default = router11;
+
+// src/routes/index.ts
+var router12 = (0, import_express12.Router)();
+router12.use(health_default);
+router12.use(enhance_prompts_default);
+router12.use(enhance_prompts_visual_default);
+router12.use(enhance_prompts_video_default);
+router12.use(enhance_prompts_ads_default);
+router12.use(enhance_prompts_sound_default);
+router12.use(enhance_prompts_copy_default);
+router12.use(enhance_prompts_launch_default);
+router12.use(enhance_prompts_chatbot_default);
+router12.use(enhance_prompts_upsell_default);
+router12.use(enhance_prompts_performance_default);
+var routes_default = router12;
 
 // src/lib/logger.ts
 var import_pino = __toESM(require_pino(), 1);
@@ -41875,7 +42151,7 @@ var logger = (0, import_pino.default)({
 });
 
 // src/app.ts
-var app = (0, import_express12.default)();
+var app = (0, import_express13.default)();
 app.use(
   (0, import_pino_http.default)({
     logger,
@@ -41896,8 +42172,8 @@ app.use(
   })
 );
 app.use((0, import_cors.default)());
-app.use(import_express12.default.json());
-app.use(import_express12.default.urlencoded({ extended: true }));
+app.use(import_express13.default.json());
+app.use(import_express13.default.urlencoded({ extended: true }));
 app.use("/api", routes_default);
 var app_default = app;
 

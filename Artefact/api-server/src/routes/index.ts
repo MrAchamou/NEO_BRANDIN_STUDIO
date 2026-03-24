@@ -9,6 +9,7 @@ import enhancePromptsCopyRouter from "./openai/enhance-prompts-copy";
 import enhancePromptsLaunchRouter from "./openai/enhance-prompts-launch";
 import enhancePromptsChatbotRouter from "./openai/enhance-prompts-chatbot";
 import enhancePromptsUpsellRouter from "./openai/enhance-prompts-upsell";
+import enhancePromptsPerformanceRouter from "./openai/enhance-prompts-performance";
 
 const router: IRouter = Router();
 
@@ -22,5 +23,6 @@ router.use(enhancePromptsCopyRouter);
 router.use(enhancePromptsLaunchRouter);
 router.use(enhancePromptsChatbotRouter);
 router.use(enhancePromptsUpsellRouter);
+router.use(enhancePromptsPerformanceRouter);
 
 export default router;

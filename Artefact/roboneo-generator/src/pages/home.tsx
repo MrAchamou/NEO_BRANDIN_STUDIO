@@ -14,6 +14,7 @@ import Module06 from "./module-06";
 import Module07 from "./module-07";
 import Module08 from "./module-08";
 import Module09 from "./module-09";
+import Module10 from "./module-10";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -248,22 +249,25 @@ const MODULES: ModuleDef[] = [
     ],
   },
   {
-    id: "influencer",
+    id: "performance-tracker",
     number: "10",
-    title: "Influencer Kit",
-    subtitle: "Media kit, pitch decks",
-    description: "Media kit créateurs, pitch decks et briefs influenceurs complets.",
-    icon: <Users className="w-5 h-5" />,
-    color: "text-yellow-400",
-    bgColor: "bg-yellow-400/10",
-    gradientFrom: "from-yellow-500/20",
+    title: "Performance Tracker",
+    subtitle: "Dashboard, KPIs, scaling guide",
+    description: "Génère tous les outils pour suivre et optimiser vos performances : dashboard Google Sheets, guide KPIs, guide scaling & stop, et template d'analyse hebdomadaire.",
+    icon: <BarChart2 className="w-5 h-5" />,
+    color: "text-blue-400",
+    bgColor: "bg-blue-400/10",
+    gradientFrom: "from-blue-500/20",
     gradientTo: "to-transparent",
-    borderColor: "border-yellow-400/30",
-    available: false,
+    borderColor: "border-blue-400/30",
+    available: true,
+    component: Module10,
+    prompts: 16,
     outputs: [
-      { label: "Media Kit", icon: "▤" },
-      { label: "Pitch", icon: "✎" },
-      { label: "Bio", icon: "◉" },
+      { label: "Dashboard", icon: "📊" },
+      { label: "KPIs", icon: "🎯" },
+      { label: "Scaling", icon: "📈" },
+      { label: "Analyse", icon: "📋" },
     ],
   },
 ];
@@ -445,10 +449,6 @@ function MobileNav({ activeId, onSelect }: { activeId: string; onSelect: (id: st
           <span>MOD-{mod.number}</span>
         </button>
       ))}
-      <div className="flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl border border-white/5 text-muted-foreground/30 text-sm">
-        <Lock className="w-3.5 h-3.5" />
-        <span>10</span>
-      </div>
     </div>
   );
 }
@@ -489,7 +489,7 @@ export default function Home() {
               </p>
             </div>
             <div className="hidden md:flex flex-col items-end gap-1">
-              <span className="text-xs text-muted-foreground/60 font-mono">v1.8.0</span>
+              <span className="text-xs text-muted-foreground/60 font-mono">v2.0.0</span>
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                 <span className="text-xs text-green-400">GPT-5.2 Connecté</span>
@@ -532,7 +532,7 @@ export default function Home() {
                     className="h-full rounded-full bg-gradient-to-r from-amber-400 via-primary to-violet-400"
                   />
                 </div>
-                <p className="text-[10px] text-muted-foreground/35 mt-1.5">Module 10 bientôt disponible</p>
+                <p className="text-[10px] text-muted-foreground/35 mt-1.5">Complete Brand Universe — 10/10</p>
               </div>
             </div>
           </div>

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Générateur de prompts IA pour RoboNeo.com. L'utilisateur remplit un brief de marque et l'IA génère des prompts créatifs précis en temps réel via streaming SSE (Server-Sent Events), section par section. 8 modules disponibles sur 10.
+Générateur de prompts IA pour RoboNeo.com. L'utilisateur remplit un brief de marque et l'IA génère des prompts créatifs précis en temps réel via streaming SSE (Server-Sent Events), section par section. **10 modules disponibles sur 10 — suite complète.**
 
 ## Stack
 
@@ -31,17 +31,21 @@ workspace/
 │   │       ├── module-05.tsx       # Brand Sound
 │   │       ├── module-06.tsx       # Copy & Content
 │   │       ├── module-07.tsx       # Launch Ready
-│   │       └── module-08.tsx       # Chatbot Script
+│   │       ├── module-08.tsx       # Chatbot Script
+│   │       ├── module-09.tsx       # Upsell & Cross-sell Kit
+│   │       └── module-10.tsx       # Performance Tracker
 │   └── api-server/
 │       └── src/routes/openai/
-│           ├── enhance-prompts.ts           # Module 01
-│           ├── enhance-prompts-visual.ts    # Module 02
-│           ├── enhance-prompts-video.ts     # Module 03
-│           ├── enhance-prompts-ads.ts       # Module 04
-│           ├── enhance-prompts-sound.ts     # Module 05
-│           ├── enhance-prompts-copy.ts      # Module 06
-│           ├── enhance-prompts-launch.ts    # Module 07
-│           └── enhance-prompts-chatbot.ts   # Module 08
+│           ├── enhance-prompts.ts              # Module 01
+│           ├── enhance-prompts-visual.ts       # Module 02
+│           ├── enhance-prompts-video.ts        # Module 03
+│           ├── enhance-prompts-ads.ts          # Module 04
+│           ├── enhance-prompts-sound.ts        # Module 05
+│           ├── enhance-prompts-copy.ts         # Module 06
+│           ├── enhance-prompts-launch.ts       # Module 07
+│           ├── enhance-prompts-chatbot.ts      # Module 08
+│           ├── enhance-prompts-upsell.ts       # Module 09
+│           └── enhance-prompts-performance.ts  # Module 10
 ├── lib/
 │   ├── integrations-openai-ai-server/  # Client OpenAI serveur
 │   └── integrations-openai-ai-react/   # Client OpenAI React
@@ -69,16 +73,16 @@ Le serveur Vite proxie les requêtes `/api` vers `http://localhost:3000`.
 
 | # | Module | Couleur | Sections générées | Status |
 |---|--------|---------|-------------------|--------|
-| 01 | **Brand Identity** | amber | Logo, Palette, Typographie, Charte graphique | Disponible |
-| 02 | **Visual Content** | violet | Photo produit, Lifestyle, Détail, Before/After, Try-On, Carrousel | Disponible |
-| 03 | **Video Content** | pink | Script TikTok/Reels, YouTube, Teaser, Voix off, Beat Sync | Disponible |
-| 04 | **Ad Creatives** | yellow | Meta Ads, Google Display, TikTok Ads, Carrousel Ads | Disponible |
-| 05 | **Brand Sound** | green | Jingle, Musiques 15/30/60s, Effets sonores, Playlist | Disponible |
-| 06 | **Copy & Content** | emerald | Fiche produit, Captions, Hashtags, Emails (3), Reviews (10) | Disponible |
-| 07 | **Launch Ready** | blue | Landing page HTML, Guide d'utilisation, Calendrier 30 jours | Disponible |
-| 08 | **Chatbot Script** | cyan | FAQ (20 Q/R), Objections (8 scripts), Commentaires négatifs (5) | Disponible |
-| 09 | Upsell Kit | — | — | À venir |
-| 10 | Performance Tracker | — | — | À venir |
+| 01 | **Brand Identity** | amber | Logo, Palette, Typographie, Charte graphique | ✅ Disponible |
+| 02 | **Visual Content** | violet | Photo produit, Lifestyle, Détail, Before/After, Try-On, Carrousel | ✅ Disponible |
+| 03 | **Video Content** | pink | Script TikTok/Reels, YouTube, Teaser, Voix off, Beat Sync | ✅ Disponible |
+| 04 | **Ad Creatives** | yellow | Meta Ads, Google Display, TikTok Ads, Carrousel Ads | ✅ Disponible |
+| 05 | **Brand Sound** | green | Jingle, Musiques 15/30/60s, Effets sonores, Playlist | ✅ Disponible |
+| 06 | **Copy & Content** | emerald | Fiche produit, Captions, Hashtags, Emails (3), Reviews (10) | ✅ Disponible |
+| 07 | **Launch Ready** | blue | Landing page HTML, Guide d'utilisation, Calendrier 30 jours | ✅ Disponible |
+| 08 | **Chatbot Script** | cyan | FAQ (20 Q/R), Objections (8 scripts), Commentaires négatifs (5) | ✅ Disponible |
+| 09 | **Upsell & Cross-sell Kit** | green | Cross-sell (3), Bundles (3), Copy upsell (4 contextes), Emails post-achat (3) | ✅ Disponible |
+| 10 | **Performance Tracker** | blue | Dashboard Google Sheets, KPIs par plateforme, Guide Scaling/Stop, Analyse hebdo | ✅ Disponible |
 
 ## Architecture SSE (Streaming)
 
@@ -105,16 +109,18 @@ Toutes les routes sont montées sous `/api` :
 | `POST /api/openai/enhance-prompts-copy` | 06 Copy & Content | brand_name, product_name, sector, tone, discount |
 | `POST /api/openai/enhance-prompts-launch` | 07 Launch Ready | brand_name, product_name, price, primary_color, fonts |
 | `POST /api/openai/enhance-prompts-chatbot` | 08 Chatbot Script | brand_name, product_name, sector, warranty, delivery_days |
+| `POST /api/openai/enhance-prompts-upsell` | 09 Upsell Kit | brand_name, sector, product_name, product_price, margin_percent |
+| `POST /api/openai/enhance-prompts-performance` | 10 Performance Tracker | brand_name, sector, ca_target, basket_target, conv_target, roas_target, target_cpa |
 
 ## Ajout d'un Nouveau Module
 
-Pour ajouter un module (ex: Module 09) :
+Pour ajouter un module :
 
 1. **Backend** — Créer `Artefact/api-server/src/routes/openai/enhance-prompts-[nom].ts`
    - Même structure SSE : `section_start` → `chunk` → `section_done` → `done`
    - Modèle : `gpt-5.2`, `max_completion_tokens: 4096`
 
-2. **Routes** — Ajouter dans `Artefact/api-server/src/routes/index.ts`
+2. **Routes** — Ajouter import + `router.use(...)` dans `Artefact/api-server/src/routes/index.ts`
 
 3. **Frontend** — Créer `Artefact/roboneo-generator/src/pages/module-0X.tsx`
    - Formulaire avec React Hook Form + Zod
@@ -124,11 +130,10 @@ Pour ajouter un module (ex: Module 09) :
 4. **Home** — Mettre à jour `Artefact/roboneo-generator/src/pages/home.tsx`
    - Importer le nouveau composant
    - Modifier l'entrée dans le tableau `MODULES[]` : `available: true`, `component: ModuleXX`
-   - Mettre à jour le compteur dans la mobile nav et le footer sidebar
-   - Incrémenter la version `vX.X.0`
+   - Incrémenter la version
 
 5. **Redémarrer** le workflow pour rebuilder le backend.
 
 ## Version
 
-**v1.8.0** — 8 modules disponibles sur 10
+**v2.0.0** — 10/10 modules disponibles — Complete Brand Universe
