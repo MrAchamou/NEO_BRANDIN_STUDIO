@@ -1,0 +1,17 @@
+packages:
+  "framer-motion": "Animations and page transitions for a premium luxury feel"
+  "react-hook-form": "Form state management"
+  "@hookform/resolvers": "Zod validation integration"
+  "zod": "Schema validation for form"
+  "clsx": "Class merging"
+  "tailwind-merge": "Class merging"
+  "lucide-react": "Icons"
+  "date-fns": "Date formatting for exports"
+
+images:
+  - path: "artifacts/roboneo-generator/public/images/luxury-bg.png"
+    description: "Abstract dark luxury background with subtle dark gray and deep charcoal tones, very soft glowing golden dust particles and thin elegant gold lines, minimal, sophisticated, professional"
+    aspect_ratio: "16:9"
+
+notes:
+  - No backend required. All prompt generation logic is executed client-side.
