@@ -1,0 +1,809 @@
+Voici le **prompt pour installer le Module 05 — Brand Sound** dans l'architecture existante.
+
+---
+
+# PROMPT — INSTALLATION MODULE 05 — BRAND SOUND
+
+```
+Ajoute le MODULE 05 — BRAND SOUND au projet existant.
+
+Le Module 05 génère des prompts optimisés pour RoboNeo.com et ElevenLabs afin de créer l'identité sonore d'une marque: jingle (5-10s), musiques de fond (15/30/60s), beat detection pour synchronisation, vocal separation, UGC audio enhancement, et sound effects.
+
+Le module doit s'intégrer avec les Modules 01, 02, 03 et 04 déjà installés.
+
+## STRUCTURE À AJOUTER
+
+Ajoute ce dossier et ces fichiers:
+
+```
+modules/module_05_brand_sound/
+├── __init__.py
+├── orchestrator.py
+└── prompts.py
+```
+
+## 1. FICHIER modules/module_05_brand_sound/__init__.py
+
+```python
+from .orchestrator import BrandSoundOrchestrator
+
+__all__ = ["BrandSoundOrchestrator"]
+```
+
+## 2. FICHIER modules/module_05_brand_sound/prompts.py
+
+```python
+# ============================================================
+# MODULE 05 — BRAND SOUND — PROMPTS ROBONEO & ELEVENLABS
+# ============================================================
+
+# MOD-05.1 — Jingle Templates (par secteur)
+JINGLE_TEMPLATES = {
+    "bijou": """
+Crée un jingle de marque pour une bijouterie de luxe:
+- Durée: 7 secondes
+- Style: orchestral, élégant, intemporel
+- Instruments: harpe, cordes, piano, célesta
+- Tempo: 80-90 BPM
+- Ambiance: raffinée, précieuse, lumineuse
+- Structure: intro (harpe) → mélodie (cordes) → résolution (piano) → fade out
+- Éléments: nom de la marque prononcé en voix off élégante
+- Format: MP3, WAV
+""",
+
+    "cosmétique": """
+Crée un jingle de marque pour une marque de cosmétiques:
+- Durée: 5 secondes
+- Style: pop, frais, lumineux
+- Instruments: piano, guitare acoustique, clochettes
+- Tempo: 100-110 BPM
+- Ambiance: fraîche, naturelle, apaisante
+- Structure: accroche (piano) → mélodie joyeuse → fin douce
+- Éléments: son de goutte d'eau, respiration
+- Format: MP3, WAV
+""",
+
+    "tech": """
+Crée un jingle de marque pour une marque tech:
+- Durée: 5 secondes
+- Style: électronique, futuriste, minimal
+- Instruments: synthé, beats électroniques, glitch
+- Tempo: 110-120 BPM
+- Ambiance: moderne, dynamique, précise
+- Structure: son d'interface → beat → synthé signature → silence
+- Éléments: son de notification, bruit de clic
+- Format: MP3, WAV
+""",
+
+    "fitness": """
+Crée un jingle de marque pour une marque fitness:
+- Durée: 7 secondes
+- Style: EDM, énergique, motivant
+- Instruments: batterie électronique, synthé, basse
+- Tempo: 130-140 BPM
+- Ambiance: puissante, dynamique, motivante
+- Structure: build up → drop → outro courte
+- Éléments: battement de cœur, souffle
+- Format: MP3, WAV
+""",
+
+    "mode": """
+Crée un jingle de marque pour une marque de mode:
+- Durée: 5 secondes
+- Style: pop urbaine, trendy, moderne
+- Instruments: beat, basse, synthé
+- Tempo: 100-110 BPM
+- Ambiance: cool, tendance, dynamique
+- Structure: intro beat → mélodie → fin
+- Éléments: flash d'appareil photo, froissement de tissu
+- Format: MP3, WAV
+""",
+
+    "streetwear": """
+Crée un jingle de marque pour une marque streetwear:
+- Durée: 5 secondes
+- Style: hip-hop, trap, urbain
+- Instruments: 808, basse, synthé, vocal chop
+- Tempo: 120-130 BPM
+- Ambiance: urbaine, cool, authentique
+- Structure: beat → vocal chop → drop → silence
+- Éléments: spray de peinture, scratch
+- Format: MP3, WAV
+""",
+
+    "luxe": """
+Crée un jingle de marque pour une marque de luxe:
+- Durée: 8 secondes
+- Style: orchestral, classique, majestueux
+- Instruments: cordes, cuivres, harpe, timbales
+- Tempo: 70-80 BPM
+- Ambiance: prestigieuse, intemporelle, exclusive
+- Structure: cordes → cuivres → harpe → résonance
+- Éléments: tintement de cristal, souffle
+- Format: MP3, WAV
+"""
+}
+
+# MOD-05.2 — Background Music Templates (par secteur et durée)
+BACKGROUND_MUSIC_TEMPLATES = {
+    "bijou": {
+        "15s": """
+Crée une musique de fond pour vidéo publicitaire:
+- Durée: 15 secondes
+- Genre: orchestral pop
+- Instruments: cordes, piano, harpe
+- Tempo: 100-110 BPM
+- Structure: intro (2s) → hook (8s) → outro (5s)
+- Ambiance: élégante, lumineuse, raffinée
+- Format: MP3, WAV, loopable
+""",
+        "30s": """
+Crée une musique de fond pour vidéo publicitaire:
+- Durée: 30 secondes
+- Genre: orchestral
+- Instruments: cordes, piano, harpe, bois
+- Tempo: 90-100 BPM
+- Structure: intro (4s) → verse (8s) → chorus (10s) → outro (8s)
+- Ambiance: élégante, intemporelle, émouvante
+- Format: MP3, WAV, loopable
+""",
+        "60s": """
+Crée une musique de fond pour vidéo publicitaire:
+- Durée: 60 secondes
+- Genre: orchestral cinématique
+- Instruments: orchestre complet, harpe, célesta
+- Tempo: 80-90 BPM
+- Structure: intro (8s) → verse (12s) → chorus (15s) → bridge (10s) → outro (15s)
+- Ambiance: majestueuse, émouvante, grandiose
+- Format: MP3, WAV, loopable
+"""
+    },
+    
+    "cosmétique": {
+        "15s": """
+Crée une musique de fond pour vidéo publicitaire:
+- Durée: 15 secondes
+- Genre: pop acoustique
+- Instruments: guitare acoustique, piano, clochettes
+- Tempo: 110-120 BPM
+- Structure: intro (2s) → hook (8s) → outro (5s)
+- Ambiance: fraîche, lumineuse, naturelle
+- Format: MP3, WAV, loopable
+""",
+        "30s": """
+Crée une musique de fond pour vidéo publicitaire:
+- Durée: 30 secondes
+- Genre: pop
+- Instruments: guitare, piano, batterie légère
+- Tempo: 100-110 BPM
+- Structure: intro (4s) → verse (8s) → chorus (10s) → outro (8s)
+- Ambiance: joyeuse, naturelle, apaisante
+- Format: MP3, WAV, loopable
+""",
+        "60s": """
+Crée une musique de fond pour vidéo publicitaire:
+- Durée: 60 secondes
+- Genre: ambient pop
+- Instruments: piano, nappes, guitare acoustique
+- Tempo: 80-90 BPM
+- Structure: intro (8s) → verse (12s) → chorus (15s) → bridge (10s) → outro (15s)
+- Ambiance: relaxante, naturelle, méditative
+- Format: MP3, WAV, loopable
+"""
+    },
+    
+    "tech": {
+        "15s": """
+Crée une musique de fond pour vidéo publicitaire:
+- Durée: 15 secondes
+- Genre: électronique
+- Instruments: synthé, beats électroniques
+- Tempo: 120-130 BPM
+- Structure: intro (2s) → hook (8s) → outro (5s)
+- Ambiance: moderne, dynamique, futuriste
+- Format: MP3, WAV, loopable
+""",
+        "30s": """
+Crée une musique de fond pour vidéo publicitaire:
+- Durée: 30 secondes
+- Genre: techno minimal
+- Instruments: synthé, beats, basse électronique
+- Tempo: 110-120 BPM
+- Structure: intro (4s) → verse (8s) → chorus (10s) → outro (8s)
+- Ambiance: précise, dynamique, innovante
+- Format: MP3, WAV, loopable
+""",
+        "60s": """
+Crée une musique de fond pour vidéo publicitaire:
+- Durée: 60 secondes
+- Genre: électronique cinématique
+- Instruments: synthé, beats, nappes, basse
+- Tempo: 100-110 BPM
+- Structure: intro (8s) → verse (12s) → chorus (15s) → bridge (10s) → outro (15s)
+- Ambiance: futuriste, immersive, puissante
+- Format: MP3, WAV, loopable
+"""
+    },
+    
+    "fitness": {
+        "15s": """
+Crée une musique de fond pour vidéo publicitaire:
+- Durée: 15 secondes
+- Genre: EDM
+- Instruments: synthé, batterie électronique
+- Tempo: 130-140 BPM
+- Structure: intro (2s) → build up (4s) → drop (6s) → outro (3s)
+- Ambiance: énergique, motivante, puissante
+- Format: MP3, WAV, loopable
+""",
+        "30s": """
+Crée une musique de fond pour vidéo publicitaire:
+- Durée: 30 secondes
+- Genre: EDM
+- Instruments: synthé, batterie, basse
+- Tempo: 125-135 BPM
+- Structure: intro (4s) → build up (6s) → drop (12s) → outro (8s)
+- Ambiance: dynamique, motivante, intense
+- Format: MP3, WAV, loopable
+""",
+        "60s": """
+Crée une musique de fond pour vidéo publicitaire:
+- Durée: 60 secondes
+- Genre: EDM progressif
+- Instruments: synthé, batterie, basse, arpèges
+- Tempo: 120-130 BPM
+- Structure: intro (8s) → build up (12s) → drop (20s) → breakdown (10s) → outro (10s)
+- Ambiance: énergique, motivante, épique
+- Format: MP3, WAV, loopable
+"""
+    },
+    
+    "streetwear": {
+        "15s": """
+Crée une musique de fond pour vidéo publicitaire:
+- Durée: 15 secondes
+- Genre: hip-hop
+- Instruments: 808, basse, beat, synthé
+- Tempo: 120-130 BPM
+- Structure: intro (2s) → beat (8s) → outro (5s)
+- Ambiance: urbaine, cool, dynamique
+- Format: MP3, WAV, loopable
+""",
+        "30s": """
+Crée une musique de fond pour vidéo publicitaire:
+- Durée: 30 secondes
+- Genre: trap
+- Instruments: 808, basse, beat, vocal chop
+- Tempo: 110-120 BPM
+- Structure: intro (4s) → verse (8s) → chorus (10s) → outro (8s)
+- Ambiance: urbaine, authentique, énergique
+- Format: MP3, WAV, loopable
+""",
+        "60s": """
+Crée une musique de fond pour vidéo publicitaire:
+- Durée: 60 secondes
+- Genre: hip-hop orchestral
+- Instruments: 808, basse, cordes, beat, vocal chop
+- Tempo: 100-110 BPM
+- Structure: intro (8s) → verse (12s) → chorus (15s) → bridge (10s) → outro (15s)
+- Ambiance: épique, urbaine, puissante
+- Format: MP3, WAV, loopable
+"""
+    },
+    
+    "luxe": {
+        "15s": """
+Crée une musique de fond pour vidéo publicitaire:
+- Durée: 15 secondes
+- Genre: orchestral
+- Instruments: cordes, piano, harpe
+- Tempo: 80-90 BPM
+- Structure: intro (2s) → hook (8s) → outro (5s)
+- Ambiance: élégante, prestigieuse, intemporelle
+- Format: MP3, WAV, loopable
+""",
+        "30s": """
+Crée une musique de fond pour vidéo publicitaire:
+- Durée: 30 secondes
+- Genre: orchestral
+- Instruments: orchestre de chambre, piano
+- Tempo: 70-80 BPM
+- Structure: intro (4s) → verse (8s) → chorus (10s) → outro (8s)
+- Ambiance: majestueuse, raffinée, exclusive
+- Format: MP3, WAV, loopable
+""",
+        "60s": """
+Crée une musique de fond pour vidéo publicitaire:
+- Durée: 60 secondes
+- Genre: orchestral cinématique
+- Instruments: orchestre symphonique, chœur
+- Tempo: 60-70 BPM
+- Structure: intro (8s) → verse (12s) → chorus (15s) → bridge (10s) → outro (15s)
+- Ambiance: grandiose, épique, intemporelle
+- Format: MP3, WAV, loopable
+"""
+    }
+}
+
+# MOD-05.3 — Sound Effects Library
+SOUND_EFFECTS = {
+    "ui_click": "Son de clic UI, court, net, satisfaisant. Durée 0.3s. Format MP3.",
+    "ui_notification": "Son de notification, doux, agréable, non intrusif. Durée 1s. Format MP3.",
+    "ui_success": "Son de succès, joyeux, positif, avec résonance. Durée 1.5s. Format MP3.",
+    "ui_error": "Son d'erreur, doux mais clair, non agressif. Durée 1s. Format MP3.",
+    "transition_whoosh": "Son de transition whoosh, dynamique, pour passage entre scènes. Durée 0.8s. Format MP3.",
+    "transition_sweep": "Son de sweep, élégant, pour transitions fluides. Durée 1s. Format MP3.",
+    "transition_glitch": "Son de glitch, pour effets numériques. Durée 0.5s. Format MP3.",
+    "ambient_nature": "Ambiance nature, oiseaux, vent léger. Durée 30s, loopable. Format MP3.",
+    "ambient_urban": "Ambiance urbaine, ville, trafic lointain. Durée 30s, loopable. Format MP3.",
+    "ambient_interior": "Ambiance intérieure, café, vaisselle, conversation légère. Durée 30s, loopable. Format MP3.",
+    "impact_soft": "Impact doux, pour apparition de texte ou logo. Durée 0.5s. Format MP3.",
+    "impact_strong": "Impact fort, pour révélation de produit. Durée 1s. Format MP3.",
+    "magic_sparkle": "Son magique, étincelles, pour effet spécial. Durée 1s. Format MP3."
+}
+
+# MOD-05.4 — Voice-Over Voices (ElevenLabs)
+VOICE_OVER_VOICES = {
+    "chaleureux": {
+        "id": "21m00Tcm4TlvDq8ikWAM",
+        "name": "Rachel",
+        "description": "Voix féminine, chaleureuse, accessible",
+        "tone": "friendly, warm, inviting",
+        "stability": 0.5,
+        "similarity": 0.75,
+        "use_for": ["cosmétique", "skincare", "mode", "lifestyle", "bien-être"]
+    },
+    "professionnel": {
+        "id": "pNInz6obpgDQGcFmaJgB",
+        "name": "Adam",
+        "description": "Voix masculine, professionnelle, confiante",
+        "tone": "professional, confident, authoritative",
+        "stability": 0.7,
+        "similarity": 0.8,
+        "use_for": ["tech", "B2B", "corporate", "finance", "gadgets"]
+    },
+    "dynamique": {
+        "id": "IKne3meq5aSn9XLyUdCD",
+        "name": "Antoni",
+        "description": "Voix masculine, énergique, dynamique",
+        "tone": "energetic, enthusiastic, motivating",
+        "stability": 0.4,
+        "similarity": 0.7,
+        "use_for": ["fitness", "sport", "streetwear", "jeunesse", "action"]
+    },
+    "élégant": {
+        "id": "EXAVITQu4L4MjE1Gz0Fp",
+        "name": "Bella",
+        "description": "Voix féminine, élégante, raffinée",
+        "tone": "elegant, sophisticated, refined",
+        "stability": 0.6,
+        "similarity": 0.85,
+        "use_for": ["bijou", "luxe", "maroquinerie", "montres", "parfums"]
+    },
+    "naturel": {
+        "id": "MF3mGyEYCl7XYWbV9V6O",
+        "name": "Emily",
+        "description": "Voix féminine, naturelle, authentique",
+        "tone": "natural, authentic, genuine",
+        "stability": 0.5,
+        "similarity": 0.7,
+        "use_for": ["skincare", "bio", "nature", "bien-être", "alimentaire"]
+    },
+    "sérieux": {
+        "id": "AZnzlk1XvdvUeBnXmlld",
+        "name": "James",
+        "description": "Voix masculine, sérieuse, confiance",
+        "tone": "serious, trustworthy, calm",
+        "stability": 0.8,
+        "similarity": 0.75,
+        "use_for": ["finance", "assurance", "sécurité", "institutionnel"]
+    }
+}
+
+# MOD-05.5 — Audio Processing Prompts
+AUDIO_PROCESSING_PROMPTS = {
+    "denoise": """
+Nettoie l'audio fourni:
+- Supprimer le bruit de fond
+- Réduire les souffles et clics
+- Normaliser le volume à -14 LUFS
+- Conserver la qualité vocale
+- Format sortie: MP3, 44.1kHz
+""",
+    
+    "vocal_separation": """
+Sépare l'audio en stems:
+- Stem vocal: voix seule
+- Stem instrumental: musique seule
+- Stem basse: ligne de basse seule
+- Stem batterie: batterie seule
+- Stem autre: autres instruments
+- Format sortie: MP3 pour chaque stem
+""",
+    
+    "mastering": """
+Masterise l'audio:
+- Normalisation LUFS: -14
+- Compression douce (ratio 2:1)
+- Limiteur: -1dB peak
+- Égalisation: adaptée au genre
+- Format sortie: MP3, WAV
+"""
+}
+
+def get_jingle_prompt(sector: str, brand_name: str) -> str:
+    """Génère un prompt pour le jingle"""
+    prompt = JINGLE_TEMPLATES.get(sector, JINGLE_TEMPLATES["luxe"])
+    return f"{prompt}\n\nNom de la marque: {brand_name}"
+
+def get_background_music_prompt(sector: str, duration: str) -> str:
+    """Génère un prompt pour la musique de fond"""
+    sector_templates = BACKGROUND_MUSIC_TEMPLATES.get(sector, BACKGROUND_MUSIC_TEMPLATES["luxe"])
+    return sector_templates.get(duration, sector_templates["30s"])
+
+def get_sound_effect_prompt(effect_name: str) -> str:
+    """Génère un prompt pour un effet sonore"""
+    return SOUND_EFFECTS.get(effect_name, SOUND_EFFECTS["ui_click"])
+
+def get_voice_over_voice(sector: str) -> dict:
+    """Retourne la voix recommandée pour un secteur"""
+    for voice_id, voice in VOICE_OVER_VOICES.items():
+        if sector in voice["use_for"]:
+            return voice
+    return VOICE_OVER_VOICES["professionnel"]
+
+def get_audio_processing_prompt(process_type: str) -> str:
+    """Génère un prompt pour le traitement audio"""
+    return AUDIO_PROCESSING_PROMPTS.get(process_type, AUDIO_PROCESSING_PROMPTS["denoise"])
+```
+
+## 3. FICHIER modules/module_05_brand_sound/orchestrator.py
+
+```python
+from typing import Dict, Any, List
+from modules.base_module import BaseModule
+from modules.module_05_brand_sound.prompts import (
+    get_jingle_prompt,
+    get_background_music_prompt,
+    get_sound_effect_prompt,
+    get_voice_over_voice,
+    get_audio_processing_prompt
+)
+
+class BrandSoundOrchestrator(BaseModule):
+    """
+    MODULE 05 — BRAND SOUND
+    Génère tous les prompts pour créer l'identité sonore d'une marque
+    """
+    
+    def __init__(self):
+        super().__init__("BrandSound")
+    
+    def generate(self, brief: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Génère tous les prompts du Module 05
+        
+        Input brief attendu:
+        {
+            "brand_name": "LUXEOR",
+            "sector": "bijou",
+            "tone": "luxe",
+            "values": ["excellence", "prestige"],
+            "target_audience": "femmes_35_50",
+            "has_ugc_audio": False,  # si l'utilisateur a des audios UGC à nettoyer
+            "needs_vocal_separation": False
+        }
+        """
+        
+        # Extraire les données
+        brand_name = brief.get("brand_name", "Ma Marque")
+        sector = brief.get("sector", "general")
+        tone = brief.get("tone", "professionnel")
+        values = brief.get("values", ["qualité", "confiance"])
+        target_audience = brief.get("target_audience", "mixte")
+        has_ugc_audio = brief.get("has_ugc_audio", False)
+        needs_vocal_separation = brief.get("needs_vocal_separation", False)
+        
+        self._log(f"Génération des prompts sonores pour {brand_name} ({sector})")
+        
+        # 1. Jingle (5-10s)
+        jingle_prompt = get_jingle_prompt(sector, brand_name)
+        jingle_enhanced = self._enhance_prompt(jingle_prompt, {
+            "brand": brand_name,
+            "sector": sector,
+            "tone": tone
+        })
+        
+        jingle = {
+            "prompt": jingle_enhanced,
+            "parameters": {
+                "duration": "5-10s",
+                "format": ["MP3", "WAV"],
+                "use_for": ["intros vidéo", "notifications", "podcasts"]
+            }
+        }
+        
+        # 2. Background Music (15s, 30s, 60s)
+        bgm = {}
+        durations = ["15s", "30s", "60s"]
+        
+        for duration in durations:
+            prompt = get_background_music_prompt(sector, duration)
+            personalized = self._personalize_prompt(prompt, {
+                "brand": brand_name,
+                "sector": sector
+            })
+            enhanced = self._enhance_prompt(personalized, {
+                "brand": brand_name,
+                "duration": duration
+            })
+            
+            bgm[duration] = {
+                "prompt": enhanced,
+                "parameters": {
+                    "duration": duration,
+                    "format": ["MP3", "WAV"],
+                    "loopable": True,
+                    "use_for": self._get_bgm_use_for(duration)
+                }
+            }
+        
+        # 3. Sound Effects Library
+        sound_effects = {}
+        effect_names = ["ui_click", "ui_notification", "ui_success", "transition_whoosh", "transition_sweep", "impact_soft"]
+        
+        for effect_name in effect_names:
+            prompt = get_sound_effect_prompt(effect_name)
+            enhanced = self._enhance_prompt(prompt, {"brand": brand_name})
+            
+            sound_effects[effect_name] = {
+                "prompt": enhanced,
+                "parameters": {
+                    "duration": self._get_effect_duration(effect_name),
+                    "format": "MP3",
+                    "use_for": self._get_effect_use_for(effect_name)
+                }
+            }
+        
+        # 4. Voice-Over Recommendation
+        voice = get_voice_over_voice(sector)
+        
+        voice_over = {
+            "recommended_voice": {
+                "id": voice["id"],
+                "name": voice["name"],
+                "description": voice["description"],
+                "tone": voice["tone"]
+            },
+            "parameters": {
+                "stability": voice["stability"],
+                "similarity_boost": voice["similarity"],
+                "format": "MP3",
+                "sample_rate": 44100
+            },
+            "prompt_template": f"Utilisez la voix {voice['name']} sur ElevenLabs. Ton: {voice['tone']}. Script fourni dans les modules 03 (Video Content) et 06 (Copy & Content)."
+        }
+        
+        # 5. Audio Processing (si UGC à nettoyer)
+        audio_processing = {}
+        
+        if has_ugc_audio:
+            audio_processing["denoise"] = {
+                "prompt": get_audio_processing_prompt("denoise"),
+                "parameters": {
+                    "input": "audio UGC fourni par le client",
+                    "output_format": "MP3",
+                    "target_lufs": -14
+                }
+            }
+        
+        if needs_vocal_separation:
+            audio_processing["vocal_separation"] = {
+                "prompt": get_audio_processing_prompt("vocal_separation"),
+                "parameters": {
+                    "input": "audio source",
+                    "output_stems": ["vocal", "instrumental", "bass", "drums", "other"],
+                    "format": "MP3"
+                }
+            }
+        
+        # 6. Beat Detection & Sync (pour synchronisation vidéo)
+        beat_detection = {
+            "prompt": """
+Analyse l'audio fourni et génère:
+- BPM détecté
+- Position des beats (timestamps)
+- Downbeats (premiers temps des mesures)
+- Points de coupe recommandés pour montage vidéo
+- Format sortie: JSON avec timestamps
+""",
+            "parameters": {
+                "input": "fichier audio (MP3/WAV)",
+                "output": "beat_timestamps.json",
+                "use_for": "synchronisation vidéo avec Module 03"
+            }
+        }
+        
+        # Retourner tous les prompts
+        return {
+            "brand_sound": {
+                "jingle": {
+                    "agent": "AI Music Generator / AI Background Music Generator",
+                    "prompts": jingle,
+                    "parameters": {
+                        "sector": sector,
+                        "duration": "5-10s",
+                        "brand_name_integration": True
+                    }
+                },
+                "background_music": {
+                    "agent": "AI Background Music Generator",
+                    "prompts": bgm,
+                    "parameters": {
+                        "durations": ["15s", "30s", "60s"],
+                        "sector": sector,
+                        "loopable": True
+                    }
+                },
+                "sound_effects": {
+                    "agent": "AI Music Generator / Sound Library",
+                    "effects": sound_effects,
+                    "parameters": {
+                        "effects_count": len(effect_names),
+                        "formats": ["MP3"],
+                        "categories": ["UI", "transitions", "impacts"]
+                    }
+                },
+                "voice_over": {
+                    "agent": "ElevenLabs / AI Voice Generator",
+                    "recommendation": voice_over,
+                    "available_voices": [
+                        {"name": v["name"], "description": v["description"], "tone": v["tone"]}
+                        for v in [get_voice_over_voice(s) for s in ["chaleureux", "professionnel", "dynamique", "élégant", "naturel"]]
+                    ]
+                },
+                "audio_processing": audio_processing if (has_ugc_audio or needs_vocal_separation) else None,
+                "beat_detection": {
+                    "agent": "Audio Analysis (librosa)",
+                    "prompt": beat_detection["prompt"],
+                    "parameters": beat_detection["parameters"]
+                }
+            },
+            "metadata": {
+                "module": "05_brand_sound",
+                "brand_name": brand_name,
+                "sector": sector,
+                "jingle_generated": True,
+                "bgm_durations": 3,
+                "sound_effects": len(effect_names),
+                "recommended_voice": voice["name"],
+                "has_ugc_processing": has_ugc_audio or needs_vocal_separation,
+                "llm_enhanced": bool(self._enhance_prompt("test", {}) != "test")
+            }
+        }
+    
+    def _personalize_prompt(self, prompt: str, context: Dict) -> str:
+        """Personnalise un prompt avec le contexte"""
+        for key, value in context.items():
+            prompt = prompt.replace(f"{{{key}}}", str(value))
+        return prompt
+    
+    def _get_bgm_use_for(self, duration: str) -> str:
+        """Retourne l'usage recommandé pour une durée de BGM"""
+        mapping = {
+            "15s": "TikTok, Reels, vidéos courtes",
+            "30s": "Meta Ads, publicités Instagram",
+            "60s": "YouTube, vidéos explicatives, podcasts"
+        }
+        return mapping.get(duration, "vidéos publicitaires")
+    
+    def _get_effect_duration(self, effect_name: str) -> str:
+        """Retourne la durée approximative d'un effet sonore"""
+        mapping = {
+            "ui_click": "0.3s",
+            "ui_notification": "1s",
+            "ui_success": "1.5s",
+            "transition_whoosh": "0.8s",
+            "transition_sweep": "1s",
+            "impact_soft": "0.5s"
+        }
+        return mapping.get(effect_name, "0.5-1s")
+    
+    def _get_effect_use_for(self, effect_name: str) -> str:
+        """Retourne l'usage recommandé pour un effet sonore"""
+        mapping = {
+            "ui_click": "boutons, interactions UI",
+            "ui_notification": "notifications push, alertes",
+            "ui_success": "validation, succès",
+            "transition_whoosh": "transitions vidéo",
+            "transition_sweep": "transitions élégantes",
+            "impact_soft": "apparition logo, texte"
+        }
+        return mapping.get(effect_name, "effets sonores")
+```
+
+## 4. MISE À JOUR DU FICHIER main.py
+
+Ajoute l'import et l'intégration du Module 05 dans le main.py:
+
+```python
+# Ajouter cet import en haut du fichier
+from modules.module_05_brand_sound import BrandSoundOrchestrator
+
+# Dans la fonction main(), après la génération du Module 04, ajouter:
+
+# Génération des prompts Module 05
+print("\n" + "=" * 80)
+print("MODULE 05 — BRAND SOUND")
+print("=" * 80)
+
+sound_brief = {
+    "brand_name": brief.get("brand_name"),
+    "sector": brief.get("sector"),
+    "tone": brief.get("tone", "professionnel"),
+    "values": brief.get("values", []),
+    "target_audience": brief.get("target_audience", "mixte"),
+    "has_ugc_audio": False,  # Mettre à True si le client a des audios à nettoyer
+    "needs_vocal_separation": False
+}
+
+sound_orchestrator = BrandSoundOrchestrator()
+sound_result = sound_orchestrator.generate(sound_brief)
+
+# Fusionner les résultats
+result["modules"]["brand_sound"] = sound_result["brand_sound"]
+```
+
+## 5. MISE À JOUR DU BRIEF D'EXEMPLE
+
+Modifie le brief par défaut dans main.py pour inclure les champs du Module 05:
+
+```python
+brief = {
+    "brand_name": "LUXEOR",
+    "sector": "bijou",
+    "tone": "luxe",
+    "values": ["excellence", "prestige", "authenticité", "élégance"],
+    "style_pref": None,
+    "product_type": "bijou",
+    "product_name": "Montre Élégance Or Rose",
+    "product_description": "Montre automatique en or rose avec bracelet cuir, mouvement suisse, verre saphir.",
+    "product_colors": ["or rose", "noir"],
+    "product_materials": ["acier inoxydable", "verre saphir", "cuir"],
+    "product_features": ["or rose 18 carats", "verre saphir", "mouvement automatique suisse", "bracelet cuir"],
+    "benefits": ["élégance intemporelle", "précision suisse", "héritage familial"],
+    "target_audience": "femmes_35_50",
+    "year": "1923",
+    "promo_code": "LUXEOR20",
+    "duration_days": "7",
+    "discount": 20,
+    "free_shipping": 100,
+    "stock": 50,
+    "has_ugc_audio": False,
+    "needs_vocal_separation": False
+}
+```
+
+## 6. VÉRIFICATION
+
+Une fois installé, teste avec:
+
+```bash
+python main.py
+```
+
+Le fichier output/prompts_roboneo.txt doit maintenant contenir les prompts pour:
+- Module 01: Brand Identity
+- Module 02: Visual Content
+- Module 03: Video Content
+- Module 04: Ad Creatives
+- Module 05: Brand Sound (jingle, BGM, sound effects, voice-over, audio processing, beat detection)
+```
+
+---
+
+**Copie et colle ce prompt dans Replit AI.** Une fois installé, tu auras les Modules 01 à 05 fonctionnels.
+
+Il nous reste **5 modules** : 06 (Copy & Content), 07 (Launch Ready), 08 (Chatbot Script), 09 (Upsell Kit), 10 (Performance Tracker).
+
+Dis-moi quand c'est fait, et on continue ! 🚀

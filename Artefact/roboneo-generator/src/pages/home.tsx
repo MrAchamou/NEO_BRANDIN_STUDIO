@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Lock, ChevronRight, Palette, Camera, Video, ShoppingBag, MessageSquare, BarChart2, Mail, Share2, Globe, Users } from "lucide-react";
+import { Sparkles, Lock, ChevronRight, Palette, Camera, Video, ShoppingBag, MessageSquare, BarChart2, Mail, Share2, Globe, Users, Music2 } from "lucide-react";
 import Module01 from "./module-01";
 import Module02 from "./module-02";
 import Module03 from "./module-03";
 import Module04 from "./module-04";
+import Module05 from "./module-05";
 
 // ─── Définition des modules ──────────────────────────────────────────────────
 
@@ -71,14 +72,16 @@ const MODULES: ModuleDef[] = [
     prompts: 18,
   },
   {
-    id: "copywriting",
+    id: "brand-sound",
     number: "05",
-    title: "Copywriting",
-    subtitle: "Accroches, slogans, taglines",
-    icon: <MessageSquare className="w-5 h-5" />,
-    color: "text-green-400",
-    bgColor: "bg-green-400/10 border-green-400/20",
-    available: false,
+    title: "Brand Sound",
+    subtitle: "Jingle, BGM, Voix Off ElevenLabs",
+    icon: <Music2 className="w-5 h-5" />,
+    color: "text-violet-400",
+    bgColor: "bg-violet-400/10 border-violet-400/20",
+    available: true,
+    component: Module05,
+    prompts: 16,
   },
   {
     id: "analytics-reports",

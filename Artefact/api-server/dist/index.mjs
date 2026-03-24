@@ -20481,27 +20481,27 @@ var require_router = __commonJS({
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var methods = METHODS.map((method) => method.toLowerCase());
-    module.exports = Router7;
+    module.exports = Router8;
     module.exports.Route = Route;
-    function Router7(options) {
-      if (!(this instanceof Router7)) {
-        return new Router7(options);
+    function Router8(options) {
+      if (!(this instanceof Router8)) {
+        return new Router8(options);
       }
       const opts = options || {};
-      function router7(req, res, next) {
-        router7.handle(req, res, next);
+      function router8(req, res, next) {
+        router8.handle(req, res, next);
       }
-      Object.setPrototypeOf(router7, this);
-      router7.caseSensitive = opts.caseSensitive;
-      router7.mergeParams = opts.mergeParams;
-      router7.params = {};
-      router7.strict = opts.strict;
-      router7.stack = [];
-      return router7;
+      Object.setPrototypeOf(router8, this);
+      router8.caseSensitive = opts.caseSensitive;
+      router8.mergeParams = opts.mergeParams;
+      router8.params = {};
+      router8.strict = opts.strict;
+      router8.stack = [];
+      return router8;
     }
-    Router7.prototype = function() {
+    Router8.prototype = function() {
     };
-    Router7.prototype.param = function param(name, fn) {
+    Router8.prototype.param = function param(name, fn) {
       if (!name) {
         throw new TypeError("argument name is required");
       }
@@ -20521,7 +20521,7 @@ var require_router = __commonJS({
       params.push(fn);
       return this;
     };
-    Router7.prototype.handle = function handle(req, res, callback) {
+    Router8.prototype.handle = function handle(req, res, callback) {
       if (!callback) {
         throw new TypeError("argument callback is required");
       }
@@ -20648,7 +20648,7 @@ var require_router = __commonJS({
         }
       }
     };
-    Router7.prototype.use = function use(handler) {
+    Router8.prototype.use = function use(handler) {
       let offset = 0;
       let path2 = "/";
       if (typeof handler !== "function") {
@@ -20681,7 +20681,7 @@ var require_router = __commonJS({
       }
       return this;
     };
-    Router7.prototype.route = function route(path2) {
+    Router8.prototype.route = function route(path2) {
       const route2 = new Route(path2);
       const layer = new Layer(path2, {
         sensitive: this.caseSensitive,
@@ -20696,7 +20696,7 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      Router7.prototype[method] = function(path2) {
+      Router8.prototype[method] = function(path2) {
         const route = this.route(path2);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
@@ -20879,13 +20879,13 @@ var require_application = __commonJS({
     var compileTrust = require_utils3().compileTrust;
     var resolve = __require("node:path").resolve;
     var once = require_once();
-    var Router7 = require_router();
+    var Router8 = require_router();
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var app2 = exports = module.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router7 = null;
+      var router8 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -20894,13 +20894,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router7 === null) {
-            router7 = new Router7({
+          if (router8 === null) {
+            router8 = new Router8({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router7;
+          return router8;
         }
       });
     };
@@ -20971,15 +20971,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router7 = this.router;
+      var router8 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router7.use(path2, fn2);
+          return router8.use(path2, fn2);
         }
         debug(".use app under %s", path2);
         fn2.mountpath = path2;
         fn2.parent = this;
-        router7.use(path2, function mounted_app(req, res, next) {
+        router8.use(path2, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -23506,7 +23506,7 @@ var require_express = __commonJS({
     var EventEmitter = __require("node:events").EventEmitter;
     var mixin = require_merge_descriptors();
     var proto = require_application();
-    var Router7 = require_router();
+    var Router8 = require_router();
     var req = require_request();
     var res = require_response();
     exports = module.exports = createApplication;
@@ -23528,8 +23528,8 @@ var require_express = __commonJS({
     exports.application = proto;
     exports.request = req;
     exports.response = res;
-    exports.Route = Router7.Route;
-    exports.Router = Router7;
+    exports.Route = Router8.Route;
+    exports.Router = Router8;
     exports.json = bodyParser.json;
     exports.raw = bodyParser.raw;
     exports.static = require_serve_static();
@@ -28388,12 +28388,12 @@ var require_logger = __commonJS({
 });
 
 // src/app.ts
-var import_express7 = __toESM(require_express2(), 1);
+var import_express8 = __toESM(require_express2(), 1);
 var import_cors = __toESM(require_lib3(), 1);
 var import_pino_http = __toESM(require_logger(), 1);
 
 // src/routes/index.ts
-var import_express6 = __toESM(require_express2(), 1);
+var import_express7 = __toESM(require_express2(), 1);
 
 // src/routes/health.ts
 var import_express = __toESM(require_express2(), 1);
@@ -40598,14 +40598,370 @@ Retourne UNIQUEMENT ce JSON:
 });
 var enhance_prompts_ads_default = router5;
 
-// src/routes/index.ts
+// src/routes/openai/enhance-prompts-sound.ts
+var import_express6 = __toESM(require_express2(), 1);
 var router6 = (0, import_express6.Router)();
-router6.use(health_default);
-router6.use(enhance_prompts_default);
-router6.use(enhance_prompts_visual_default);
-router6.use(enhance_prompts_video_default);
-router6.use(enhance_prompts_ads_default);
-var routes_default = router6;
+var JINGLE_STYLE_MAP = {
+  bijou: "orchestral \xE9l\xE9gant \u2014 harpe, cordes, piano, 80-90 BPM, intemporel",
+  luxe: "orchestral majestueux \u2014 cordes, cuivres, harpe, timbales, 70-80 BPM",
+  maroquinerie: "orchestral artisanal \u2014 cordes, piano, guitare classique, 85-95 BPM",
+  montres: "m\xE9canique pr\xE9cis \u2014 tic-tac stylis\xE9, cordes, piano, 90-100 BPM",
+  cosm\u00E9tique: "pop frais \u2014 piano, guitare acoustique, clochettes, 100-110 BPM",
+  skincare: "ambient doux \u2014 piano, nappes, sons nature, 80-90 BPM",
+  tech: "\xE9lectronique minimal \u2014 synth\xE9, beats \xE9lectroniques, glitch, 110-120 BPM",
+  gadgets: "pop \xE9lectronique \u2014 beats, synth\xE9, sons UI, 115-125 BPM",
+  fitness: "EDM \xE9nergique \u2014 batterie \xE9lectronique, synth\xE9, basse, 130-140 BPM",
+  sport: "\xE9pique motivant \u2014 orchestre + \xE9lectronique, batterie, 125-135 BPM",
+  mode: "pop urbaine tendance \u2014 beat, basse, synth\xE9, 100-110 BPM",
+  streetwear: "hip-hop trap \u2014 808, basse, vocal chop, 120-130 BPM",
+  d\u00E9coration: "ambient cosy \u2014 guitare acoustique, piano, sons int\xE9rieur, 80-90 BPM"
+};
+var BGM_STYLE_MAP = {
+  bijou: "orchestral pop \u2014 cordes, piano, harpe \u2014 \xE9l\xE9gant, lumineux",
+  luxe: "orchestral cin\xE9matique \u2014 orchestre complet, harpe \u2014 majestueux, intemporel",
+  cosm\u00E9tique: "pop acoustique \u2014 guitare, piano, clochettes \u2014 frais, naturel",
+  skincare: "ambient pop \u2014 piano, nappes \u2014 relaxant, apaisant",
+  tech: "\xE9lectronique \u2014 synth\xE9, beats \u2014 moderne, dynamique",
+  gadgets: "\xE9lectronique pop \u2014 synth\xE9, beats, basse \u2014 pratique, fun",
+  fitness: "EDM \u2014 synth\xE9, batterie, basse \u2014 \xE9nergique, motivant",
+  sport: "\xE9pique \u2014 orchestre + \xE9lectronique \u2014 puissant, motivant",
+  mode: "pop urbaine \u2014 beat, basse \u2014 tendance, cool",
+  streetwear: "hip-hop/trap \u2014 808, basse, beat \u2014 urbain, authentique",
+  d\u00E9coration: "ambient \u2014 guitare, piano \u2014 cosy, apaisant",
+  maroquinerie: "orchestral artisanal \u2014 cordes, piano \u2014 qualit\xE9, \xE9l\xE9gance"
+};
+var ELEVENLABS_VOICES = {
+  Rachel: { name: "Rachel", description: "Voix f\xE9minine, chaleureuse, accessible", tone: "friendly, warm, inviting", use_for: ["cosm\xE9tique", "skincare", "mode", "lifestyle"] },
+  Adam: { name: "Adam", description: "Voix masculine, professionnelle, confiante", tone: "professional, confident, authoritative", use_for: ["tech", "gadgets", "finance", "B2B"] },
+  Antoni: { name: "Antoni", description: "Voix masculine, \xE9nergique, dynamique", tone: "energetic, enthusiastic, motivating", use_for: ["fitness", "sport", "streetwear"] },
+  Bella: { name: "Bella", description: "Voix f\xE9minine, \xE9l\xE9gante, raffin\xE9e", tone: "elegant, sophisticated, refined", use_for: ["bijou", "luxe", "maroquinerie", "montres"] },
+  Emily: { name: "Emily", description: "Voix f\xE9minine, naturelle, authentique", tone: "natural, authentic, genuine", use_for: ["skincare", "d\xE9coration", "bio", "nature"] }
+};
+function pickVoice(sector) {
+  for (const [, voice] of Object.entries(ELEVENLABS_VOICES)) {
+    if (voice.use_for.includes(sector)) return voice;
+  }
+  return ELEVENLABS_VOICES["Adam"];
+}
+function parseJsonSafe4(text) {
+  try {
+    const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+    return JSON.parse(clean);
+  } catch {
+    return null;
+  }
+}
+function sendEvent4(res, data) {
+  res.write(`data: ${JSON.stringify(data)}
+
+`);
+}
+router6.post("/openai/enhance-prompts-sound", async (req, res) => {
+  const {
+    brand_name,
+    sector,
+    tone = "professionnel",
+    values = [],
+    target_audience = "mixte",
+    has_ugc_audio = false,
+    needs_vocal_separation = false
+  } = req.body;
+  if (!brand_name || !sector) {
+    res.status(400).json({ error: "Champs requis manquants" });
+    return;
+  }
+  const jingleStyle = JINGLE_STYLE_MAP[sector] ?? "orchestral, moderne, professionnel";
+  const bgmStyle = BGM_STYLE_MAP[sector] ?? "moderne, professionnel";
+  const recommendedVoice = pickVoice(sector);
+  const valuesStr = values.length > 0 ? values.join(", ") : "qualit\xE9, confiance, excellence";
+  const contextBlock = `Marque: ${brand_name} | Secteur: ${sector} | Ton: ${tone}
+Valeurs: ${valuesStr} | Cible: ${target_audience}
+Style sonore jingle: ${jingleStyle}
+Style musiques de fond: ${bgmStyle}`;
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  res.setHeader("X-Accel-Buffering", "no");
+  const systemPrompt = `Tu es un directeur artistique sonore expert en identit\xE9 sonore de marque et en g\xE9n\xE9ration de prompts pour des outils de cr\xE9ation audio (Suno, Udio, ElevenLabs, Adobe Podcast).
+Tu g\xE9n\xE8res des prompts audio ultra-pr\xE9cis et des briefs cr\xE9atifs complets pour chaque actif sonore d'une marque.
+Tu retournes TOUJOURS du JSON valide uniquement, sans markdown, sans texte avant ou apr\xE8s.
+Tous les textes sont en fran\xE7ais, cr\xE9atifs, adapt\xE9s au secteur ${sector} et au style ${tone}.`;
+  const SECTIONS = [
+    {
+      key: "jingle",
+      label: "Jingle de Marque \u2014 5-10 secondes",
+      agent: "AI Music Generator (Suno / Udio)",
+      buildPrompt: () => `${contextBlock}
+
+G\xE9n\xE8re un prompt ultra-pr\xE9cis pour cr\xE9er le JINGLE de marque de ${brand_name} (secteur: ${sector}).
+
+BRIEF CR\xC9ATIF COMPLET:
+\u2022 Style musical: ${jingleStyle}
+\u2022 Dur\xE9e cible: 7 secondes (max 10s)
+\u2022 Structure musicale: intro (1s) \u2192 m\xE9lodie signature (4s) \u2192 r\xE9solution (2s)
+\u2022 Instruments: liste pr\xE9cise avec r\xF4le de chaque instrument
+\u2022 Arrangement: description de la progression harmonique, du rythme, de la dynamique
+\u2022 Ambiance: 5 adjectifs sonores pr\xE9cis
+\u2022 \xC9l\xE9ments distinctifs: sons caract\xE9ristiques du secteur ${sector}
+\u2022 Int\xE9gration du nom: comment et o\xF9 ${brand_name} est prononc\xE9 (voix off, chant\xE9, humming)
+\u2022 Variations recommand\xE9es: version longue (10s), version courte (3s), version notification (1s)
+\u2022 Notes de r\xE9alisation pour le producteur
+
+PROMPT TECHNIQUE:
+\u2022 BPM pr\xE9cis
+\u2022 Tonalit\xE9 recommand\xE9e (Do majeur, La mineur...)
+\u2022 Format de sortie: MP3 320kbps + WAV 44.1kHz
+\u2022 Notes de mastering: niveau -14 LUFS, limiteur -1dB
+
+Retourne UNIQUEMENT ce JSON:
+{
+  "creative_brief": "description cr\xE9ative compl\xE8te et inspirante du jingle",
+  "technical_prompt": "prompt technique ultra-pr\xE9cis pour l'outil de g\xE9n\xE9ration audio",
+  "variations": {
+    "version_longue_10s": "brief variation longue",
+    "version_courte_3s": "brief version courte",
+    "version_notification_1s": "brief notification"
+  },
+  "vocal_integration": "comment int\xE9grer le nom ${brand_name} dans le jingle",
+  "usage_recommandations": "o\xF9 utiliser chaque variation (intros vid\xE9o, notifications app, podcasts...)"
+}`
+    },
+    {
+      key: "background_music",
+      label: "Musiques de Fond \u2014 15s / 30s / 60s",
+      agent: "AI Background Music Generator (Suno / Udio)",
+      buildPrompt: () => `${contextBlock}
+
+G\xE9n\xE8re 3 prompts de musique de fond pour ${brand_name} (${sector}), un par dur\xE9e.
+
+STYLE MUSICAL: ${bgmStyle}
+R\xC8GLES COMMUNES: loopable, adapt\xE9e \xE0 la publicit\xE9, non intrusive, sans paroles, libre de droits
+
+FORMAT 15 SECONDES \u2014 TikTok, Reels, vid\xE9os courtes:
+\u2022 Structure: intro courte (2s) \u2192 hook principal (9s) \u2192 outro (4s)
+\u2022 \xC9nergie: adapt\xE9e aux formats courts dynamiques
+\u2022 Instruments: version \xE9pur\xE9e, percussion claire
+\u2022 Points de sync: indiquer o\xF9 placer les cuts de montage vid\xE9o
+
+FORMAT 30 SECONDES \u2014 Meta Ads, publicit\xE9s Instagram/Facebook:
+\u2022 Structure: intro (4s) \u2192 verse (8s) \u2192 chorus (10s) \u2192 outro (8s)
+\u2022 \xC9nergie: crescendo progressif vers le chorus
+\u2022 Instruments: version plus compl\xE8te, harmonie riche
+\u2022 Moments cl\xE9s: build-up avant le CTA de la pub
+
+FORMAT 60 SECONDES \u2014 YouTube, vid\xE9os explicatives:
+\u2022 Structure: intro (8s) \u2192 verse (12s) \u2192 chorus (15s) \u2192 bridge (10s) \u2192 outro (15s)
+\u2022 \xC9nergie: dynamique compl\xE8te avec variations
+\u2022 Instruments: arrangement complet, couches multiples
+\u2022 Arc \xE9motionnel: d\xE9crire l'\xE9volution de l'ambiance sur 60s
+
+Retourne UNIQUEMENT ce JSON:
+{
+  "15s": {
+    "prompt": "prompt technique complet pour g\xE9n\xE9ration 15s",
+    "usage": "TikTok, Reels, vid\xE9os courtes",
+    "sync_points": "timestamps des moments cl\xE9s pour montage"
+  },
+  "30s": {
+    "prompt": "prompt technique complet pour g\xE9n\xE9ration 30s",
+    "usage": "Meta Ads, publicit\xE9s Instagram",
+    "sync_points": "timestamps des moments cl\xE9s pour montage"
+  },
+  "60s": {
+    "prompt": "prompt technique complet pour g\xE9n\xE9ration 60s",
+    "usage": "YouTube, vid\xE9os de marque",
+    "sync_points": "timestamps des moments cl\xE9s pour montage"
+  }
+}`
+    },
+    {
+      key: "sound_effects",
+      label: "Biblioth\xE8que d'Effets Sonores",
+      agent: "AI Sound Design / Suno",
+      buildPrompt: () => `${contextBlock}
+
+G\xE9n\xE8re 6 prompts d'effets sonores de marque pour ${brand_name} (${sector}).
+
+Pour CHAQUE effet, fournis un prompt de cr\xE9ation pr\xE9cis adapt\xE9 \xE0 l'univers de la marque:
+
+EFFET 1 \u2014 "ui_click": clic interface UI, 0.3s
+\u2022 Adapt\xE9 au secteur ${sector}, ton ${tone}
+\u2022 Caract\xE8re: [d\xE9cris l'ambiance du clic pour cette marque]
+
+EFFET 2 \u2014 "ui_notification": notification push, 1s
+\u2022 M\xE9morable, non intrusif, reconnaissable en tant que ${brand_name}
+\u2022 Caract\xE8re: [d\xE9cris le son de notification id\xE9al]
+
+EFFET 3 \u2014 "ui_success": validation/succ\xE8s, 1.5s
+\u2022 Positif, satisfaisant, coh\xE9rent avec l'identit\xE9 sonore
+\u2022 Caract\xE8re: [d\xE9cris la sensation de succ\xE8s pour ce secteur]
+
+EFFET 4 \u2014 "transition_whoosh": transition vid\xE9o, 0.8s
+\u2022 Pour transitions entre sc\xE8nes dans les vid\xE9os ${brand_name}
+\u2022 Caract\xE8re: [d\xE9cris le whoosh adapt\xE9 au style de la marque]
+
+EFFET 5 \u2014 "transition_sweep": sweep \xE9l\xE9gant, 1s
+\u2022 Pour transitions fluides, entr\xE9es de texte \xE0 l'\xE9cran
+\u2022 Caract\xE8re: [d\xE9cris le sweep id\xE9al]
+
+EFFET 6 \u2014 "impact_soft": impact pour apparition logo/texte, 0.5s
+\u2022 Pour r\xE9v\xE9lation du logo ${brand_name}, apparition de texte cl\xE9
+\u2022 Caract\xE8re: [d\xE9cris l'impact adapt\xE9 \xE0 la marque]
+
+Retourne UNIQUEMENT ce JSON:
+{
+  "ui_click": {"prompt": "prompt cr\xE9ation son", "duree": "0.3s", "caractere": "description"},
+  "ui_notification": {"prompt": "prompt cr\xE9ation son", "duree": "1s", "caractere": "description"},
+  "ui_success": {"prompt": "prompt cr\xE9ation son", "duree": "1.5s", "caractere": "description"},
+  "transition_whoosh": {"prompt": "prompt cr\xE9ation son", "duree": "0.8s", "caractere": "description"},
+  "transition_sweep": {"prompt": "prompt cr\xE9ation son", "duree": "1s", "caractere": "description"},
+  "impact_soft": {"prompt": "prompt cr\xE9ation son", "duree": "0.5s", "caractere": "description"}
+}`
+    },
+    {
+      key: "voice_over",
+      label: "Voix Off \u2014 Recommandation ElevenLabs",
+      agent: "ElevenLabs / AI Voice Generator",
+      buildPrompt: () => `${contextBlock}
+Voix recommand\xE9e pour ce secteur: ${recommendedVoice.name} (${recommendedVoice.description}) \u2014 Ton: ${recommendedVoice.tone}
+
+G\xE9n\xE8re une recommandation compl\xE8te de voix off ElevenLabs pour ${brand_name}.
+
+ANALYSE DU PROFIL VOCAL ID\xC9AL:
+\u2022 Ton de la marque ${brand_name}: ${tone}
+\u2022 Valeurs \xE0 incarner: ${valuesStr}
+\u2022 Cible ${target_audience}: quelle voix r\xE9sonne avec elle ?
+\u2022 \xC9motion principale \xE0 transmettre
+
+RECOMMANDATION PRIMAIRE:
+\u2022 Voix recommand\xE9e pour ce secteur (parmi: Rachel, Adam, Antoni, Bella, Emily)
+\u2022 Param\xE8tres ElevenLabs optimaux: stability, similarity_boost, style
+\u2022 Ton de jeu conseill\xE9 pour les spots de ${brand_name}
+
+SCRIPT TEMPLATE:
+\u2022 Template de script g\xE9n\xE9rique pour une publicit\xE9 30s de ${brand_name}
+\u2022 Instructions de jeu pour le com\xE9dien
+\u2022 Points d'emphase \xE0 placer
+
+RECOMMANDATION SECONDAIRE (voix alternative):
+\u2022 Voix alternative pour des tonalit\xE9s diff\xE9rentes
+\u2022 Quand l'utiliser (event, offre promotionnelle, contenu \xE9ducatif)
+
+Retourne UNIQUEMENT ce JSON:
+{
+  "primary_voice": {
+    "name": "nom voix ElevenLabs",
+    "rationale": "pourquoi cette voix est parfaite pour ${brand_name}",
+    "parameters": {"stability": 0.6, "similarity_boost": 0.8, "style": 0.3},
+    "direction": "instructions de jeu pour le com\xE9dien"
+  },
+  "secondary_voice": {
+    "name": "nom voix alternative",
+    "use_case": "quand utiliser cette voix",
+    "direction": "ton et style d'interpr\xE9tation"
+  },
+  "script_template_30s": "script g\xE9n\xE9rique 30s pour ${brand_name} avec balises d'emphase [EMPHASE: mot] et pauses [PAUSE 0.5s]",
+  "script_directions": "instructions compl\xE8tes pour le directeur artistique"
+}`
+    },
+    {
+      key: "beat_sync",
+      label: `Audio Processing & Beat Sync${has_ugc_audio || needs_vocal_separation ? " \u2014 UGC inclus" : ""}`,
+      agent: "Adobe Podcast / Audioshake / librosa",
+      buildPrompt: () => `${contextBlock}
+Options activ\xE9es: UGC Audio: ${has_ugc_audio ? "OUI" : "NON"} | S\xE9paration vocale: ${needs_vocal_separation ? "OUI" : "NON"}
+
+G\xE9n\xE8re les prompts de traitement audio pour ${brand_name}.
+
+1. BEAT DETECTION & SYNCHRONISATION VID\xC9O:
+Cr\xE9e un guide complet pour synchroniser les musiques de fond de ${brand_name} avec les vid\xE9os (Module 03).
+\u2022 Comment rep\xE9rer les downbeats pour placer les cuts de montage
+\u2022 Comment aligner les transitions visuelles sur les temps forts
+\u2022 Recommandations BPM pour chaque format (TikTok 15s, Reels 30s, YouTube 60s)
+\u2022 Outils recommand\xE9s (Premiere Pro, CapCut, DaVinci Resolve)
+
+${has_ugc_audio ? `2. NETTOYAGE AUDIO UGC:
+Brief pour purifier les audios UGC clients de ${brand_name}:
+\u2022 Processus de d\xE9bruitage (Adobe Podcast ou Auphonic)
+\u2022 Normalisation \xE0 -14 LUFS (standard streaming)
+\u2022 Gestion des clics, souffles, bruits de fond
+\u2022 R\xE9glages recommand\xE9s par contexte (int\xE9rieur, ext\xE9rieur, t\xE9l\xE9phone)` : "2. NETTOYAGE AUDIO UGC: Non activ\xE9 pour cette session."}
+
+${needs_vocal_separation ? `3. S\xC9PARATION VOCALE (STEM EXTRACTION):
+Brief pour s\xE9parer les stems audio:
+\u2022 Outil recommand\xE9 (Audioshake, Lalal.ai, Moises)
+\u2022 Workflow: vocal seul, instrumental seul, basse, batterie
+\u2022 Comment r\xE9utiliser les stems dans les cr\xE9ations ${brand_name}
+\u2022 Export et nommage des fichiers` : "3. S\xC9PARATION VOCALE: Non activ\xE9e pour cette session."}
+
+4. MASTERING FINAL:
+\u2022 Param\xE8tres de normalisation pour chaque plateforme (Spotify -14 LUFS, YouTube -14 LUFS, TikTok -14 LUFS, Meta Ads -16 LUFS)
+\u2022 Cha\xEEne de traitement recommand\xE9e
+\u2022 Checklist de validation audio avant diffusion
+
+Retourne UNIQUEMENT ce JSON:
+{
+  "beat_detection": {
+    "guide": "guide complet synchronisation vid\xE9o/musique",
+    "tools": ["outil1", "outil2"],
+    "bpm_recommendations": {"tiktok_15s": "X-Y BPM", "instagram_30s": "X-Y BPM", "youtube_60s": "X-Y BPM"}
+  },
+  "ugc_cleaning": ${has_ugc_audio ? '{"prompt": "brief d\xE9bruitage complet", "tools": ["outil1", "outil2"], "steps": ["\xE9tape1", "\xE9tape2", "\xE9tape3"]}' : "null"},
+  "vocal_separation": ${needs_vocal_separation ? '{"prompt": "brief s\xE9paration vocale", "tools": ["outil1", "outil2"], "stems": ["vocal", "instrumental", "bass", "drums"]}' : "null"},
+  "mastering": {
+    "lufs_by_platform": {"spotify": "-14", "youtube": "-14", "tiktok": "-14", "meta": "-16"},
+    "checklist": ["item1", "item2", "item3", "item4", "item5"]
+  }
+}`
+    }
+  ];
+  for (const section of SECTIONS) {
+    sendEvent4(res, { type: "section_start", key: section.key, label: section.label, agent: section.agent });
+    let fullContent = "";
+    try {
+      const stream = await openai.chat.completions.create({
+        model: "gpt-5.2",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: section.buildPrompt() }
+        ],
+        max_completion_tokens: 2e3,
+        stream: true
+      });
+      for await (const chunk of stream) {
+        const content = chunk.choices[0]?.delta?.content ?? "";
+        if (content) {
+          fullContent += content;
+          sendEvent4(res, { type: "chunk", key: section.key, content });
+        }
+      }
+      const parsed = parseJsonSafe4(fullContent);
+      sendEvent4(res, {
+        type: "section_done",
+        key: section.key,
+        label: section.label,
+        agent: section.agent,
+        data: parsed ?? {},
+        rawContent: fullContent
+      });
+    } catch (err) {
+      sendEvent4(res, { type: "section_error", key: section.key, error: err instanceof Error ? err.message : "Erreur inconnue" });
+    }
+  }
+  sendEvent4(res, { type: "done" });
+  res.end();
+});
+var enhance_prompts_sound_default = router6;
+
+// src/routes/index.ts
+var router7 = (0, import_express7.Router)();
+router7.use(health_default);
+router7.use(enhance_prompts_default);
+router7.use(enhance_prompts_visual_default);
+router7.use(enhance_prompts_video_default);
+router7.use(enhance_prompts_ads_default);
+router7.use(enhance_prompts_sound_default);
+var routes_default = router7;
 
 // src/lib/logger.ts
 var import_pino = __toESM(require_pino(), 1);
@@ -40626,7 +40982,7 @@ var logger = (0, import_pino.default)({
 });
 
 // src/app.ts
-var app = (0, import_express7.default)();
+var app = (0, import_express8.default)();
 app.use(
   (0, import_pino_http.default)({
     logger,
@@ -40647,8 +41003,8 @@ app.use(
   })
 );
 app.use((0, import_cors.default)());
-app.use(import_express7.default.json());
-app.use(import_express7.default.urlencoded({ extended: true }));
+app.use(import_express8.default.json());
+app.use(import_express8.default.urlencoded({ extended: true }));
 app.use("/api", routes_default);
 var app_default = app;
 
