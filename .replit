@@ -48,3 +48,4 @@ build = ["bash", "-c", "pnpm --filter @workspace/api-server run build && BASE_PA
 [userenv.shared]
 PORT = "5000"
 BASE_PATH = "/"
+SERPER_API_KEY = "bfa34b52df8a359fafd1b091886a1f3e183a3978"

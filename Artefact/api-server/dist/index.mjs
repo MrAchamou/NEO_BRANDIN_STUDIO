@@ -20481,27 +20481,27 @@ var require_router = __commonJS({
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var methods = METHODS.map((method) => method.toLowerCase());
-    module.exports = Router13;
+    module.exports = Router14;
     module.exports.Route = Route;
-    function Router13(options) {
-      if (!(this instanceof Router13)) {
-        return new Router13(options);
+    function Router14(options) {
+      if (!(this instanceof Router14)) {
+        return new Router14(options);
       }
       const opts = options || {};
-      function router13(req, res, next) {
-        router13.handle(req, res, next);
+      function router14(req, res, next) {
+        router14.handle(req, res, next);
       }
-      Object.setPrototypeOf(router13, this);
-      router13.caseSensitive = opts.caseSensitive;
-      router13.mergeParams = opts.mergeParams;
-      router13.params = {};
-      router13.strict = opts.strict;
-      router13.stack = [];
-      return router13;
+      Object.setPrototypeOf(router14, this);
+      router14.caseSensitive = opts.caseSensitive;
+      router14.mergeParams = opts.mergeParams;
+      router14.params = {};
+      router14.strict = opts.strict;
+      router14.stack = [];
+      return router14;
     }
-    Router13.prototype = function() {
+    Router14.prototype = function() {
     };
-    Router13.prototype.param = function param(name, fn) {
+    Router14.prototype.param = function param(name, fn) {
       if (!name) {
         throw new TypeError("argument name is required");
       }
@@ -20521,7 +20521,7 @@ var require_router = __commonJS({
       params.push(fn);
       return this;
     };
-    Router13.prototype.handle = function handle(req, res, callback) {
+    Router14.prototype.handle = function handle(req, res, callback) {
       if (!callback) {
         throw new TypeError("argument callback is required");
       }
@@ -20648,7 +20648,7 @@ var require_router = __commonJS({
         }
       }
     };
-    Router13.prototype.use = function use(handler) {
+    Router14.prototype.use = function use(handler) {
       let offset = 0;
       let path2 = "/";
       if (typeof handler !== "function") {
@@ -20681,7 +20681,7 @@ var require_router = __commonJS({
       }
       return this;
     };
-    Router13.prototype.route = function route(path2) {
+    Router14.prototype.route = function route(path2) {
       const route2 = new Route(path2);
       const layer = new Layer(path2, {
         sensitive: this.caseSensitive,
@@ -20696,7 +20696,7 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      Router13.prototype[method] = function(path2) {
+      Router14.prototype[method] = function(path2) {
         const route = this.route(path2);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
@@ -20879,13 +20879,13 @@ var require_application = __commonJS({
     var compileTrust = require_utils3().compileTrust;
     var resolve = __require("node:path").resolve;
     var once = require_once();
-    var Router13 = require_router();
+    var Router14 = require_router();
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var app2 = exports = module.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router13 = null;
+      var router14 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -20894,13 +20894,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router13 === null) {
-            router13 = new Router13({
+          if (router14 === null) {
+            router14 = new Router14({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router13;
+          return router14;
         }
       });
     };
@@ -20971,15 +20971,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router13 = this.router;
+      var router14 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router13.use(path2, fn2);
+          return router14.use(path2, fn2);
         }
         debug(".use app under %s", path2);
         fn2.mountpath = path2;
         fn2.parent = this;
-        router13.use(path2, function mounted_app(req, res, next) {
+        router14.use(path2, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -23506,7 +23506,7 @@ var require_express = __commonJS({
     var EventEmitter = __require("node:events").EventEmitter;
     var mixin = require_merge_descriptors();
     var proto = require_application();
-    var Router13 = require_router();
+    var Router14 = require_router();
     var req = require_request();
     var res = require_response();
     exports = module.exports = createApplication;
@@ -23528,8 +23528,8 @@ var require_express = __commonJS({
     exports.application = proto;
     exports.request = req;
     exports.response = res;
-    exports.Route = Router13.Route;
-    exports.Router = Router13;
+    exports.Route = Router14.Route;
+    exports.Router = Router14;
     exports.json = bodyParser.json;
     exports.raw = bodyParser.raw;
     exports.static = require_serve_static();
@@ -28388,12 +28388,12 @@ var require_logger = __commonJS({
 });
 
 // src/app.ts
-var import_express13 = __toESM(require_express2(), 1);
+var import_express14 = __toESM(require_express2(), 1);
 var import_cors = __toESM(require_lib3(), 1);
 var import_pino_http = __toESM(require_logger(), 1);
 
 // src/routes/index.ts
-var import_express12 = __toESM(require_express2(), 1);
+var import_express13 = __toESM(require_express2(), 1);
 
 // src/routes/health.ts
 var import_express = __toESM(require_express2(), 1);
@@ -32294,7 +32294,7 @@ router.get("/healthz", (_req, res) => {
 });
 var health_default = router;
 
-// src/routes/openai/enhance-prompts.ts
+// src/routes/scrape-gmb.ts
 var import_express2 = __toESM(require_express2(), 1);
 
 // ../../node_modules/.pnpm/openai@6.32.0_zod@4.3.6/node_modules/openai/internal/tslib.mjs
@@ -39320,8 +39320,146 @@ var openai2 = new OpenAI({
   baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL
 });
 
-// src/routes/openai/enhance-prompts.ts
+// src/routes/scrape-gmb.ts
 var router2 = (0, import_express2.Router)();
+async function resolveGmbUrl(url) {
+  try {
+    const res = await fetch(url, {
+      method: "HEAD",
+      redirect: "follow",
+      signal: AbortSignal.timeout(1e4)
+    });
+    return res.url || url;
+  } catch {
+    return url;
+  }
+}
+function extractSearchQuery(resolvedUrl, rawUrl) {
+  try {
+    const u = new URL(resolvedUrl);
+    const placeMatch = u.pathname.match(/\/maps\/place\/([^/@]+)/);
+    if (placeMatch) {
+      return decodeURIComponent(placeMatch[1].replace(/\+/g, " "));
+    }
+    const qParam = u.searchParams.get("q");
+    if (qParam) return qParam;
+    const queryParam = u.searchParams.get("query");
+    if (queryParam) return queryParam;
+  } catch {
+  }
+  return rawUrl;
+}
+async function fetchSerperMaps(query) {
+  const apiKey = process.env.SERPER_API_KEY;
+  if (!apiKey) throw new Error("SERPER_API_KEY non configur\xE9e");
+  const res = await fetch("https://google.serper.dev/maps", {
+    method: "POST",
+    headers: {
+      "X-API-KEY": apiKey,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ q: query, gl: "fr", hl: "fr" }),
+    signal: AbortSignal.timeout(12e3)
+  });
+  if (!res.ok) {
+    const txt = await res.text();
+    throw new Error(`Serper Maps API error ${res.status}: ${txt}`);
+  }
+  const data = await res.json();
+  return data.places?.[0] ?? null;
+}
+async function mapToBrandBrief(place) {
+  const reviewSnippets = place.reviews?.slice(0, 3).map((r) => r.snippet).filter(Boolean).join(" | ") ?? "";
+  const context = `
+\xC9tablissement: ${place.title ?? ""}
+Cat\xE9gorie: ${place.category ?? ""}
+Adresse: ${place.address ?? ""}
+Note: ${place.rating ?? ""}/5 (${place.ratingCount ?? 0} avis)
+T\xE9l\xE9phone: ${place.phoneNumber ?? ""}
+Site web: ${place.website ?? ""}
+Description: ${place.description ?? ""}
+Attributs: ${JSON.stringify(place.attributes ?? {})}
+Extraits d'avis clients: ${reviewSnippets}
+  `.trim();
+  const systemPrompt = `Tu es un expert en branding et marketing. 
+\xC0 partir des informations d'un \xE9tablissement Google My Business, tu dois extraire et d\xE9duire les champs d'un brief de marque.
+R\xE9ponds UNIQUEMENT en JSON valide, sans markdown, sans explication.
+Pour les champs que tu ne peux pas d\xE9duire, retourne une cha\xEEne vide "".
+Les secteurs disponibles sont : bijou, luxe, cosm\xE9tique, mode, tech, fitness, d\xE9coration, maroquinerie.
+Les tons disponibles sont : luxe, premium, moderne, minimaliste, chaleureux, professionnel, streetwear, \xE9cologique.`;
+  const userPrompt = `Informations GMB :
+${context}
+
+G\xE9n\xE8re un objet JSON avec ces champs :
+- brand_name: nom exact de l'\xE9tablissement
+- sector: le secteur le plus proche parmi les options disponibles
+- tone: le ton de communication d\xE9duit
+- values: 3-5 valeurs de marque s\xE9par\xE9es par des virgules (ex: "qualit\xE9, service, excellence")
+- product_name: produit ou service phare si identifiable
+- product_description: description courte du produit/service principal
+- benefits: b\xE9n\xE9fices client d\xE9duits des avis et de la description
+- target_audience: audience cible d\xE9duite (format libre, ex: "Femmes 30-50 ans passionn\xE9es de bijoux")
+- product_features: caract\xE9ristiques cl\xE9s du produit/service
+- support_email: email de contact si disponible
+- shipping_info: infos de livraison si disponibles`;
+  const response = await openai.chat.completions.create({
+    model: "gpt-5.2",
+    messages: [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userPrompt }
+    ],
+    max_completion_tokens: 1024
+  });
+  const content = response.choices[0]?.message?.content ?? "{}";
+  const cleanJson = content.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+  return JSON.parse(cleanJson);
+}
+router2.post("/scrape-gmb", async (req, res) => {
+  const { url } = req.body;
+  if (!url || typeof url !== "string" || url.trim() === "") {
+    return res.status(400).json({ error: "Un lien GMB est requis." });
+  }
+  const rawUrl = url.trim();
+  const isGmb = rawUrl.includes("google.com/maps") || rawUrl.includes("maps.app.goo.gl") || rawUrl.includes("goo.gl/maps") || rawUrl.includes("maps.google.com");
+  if (!isGmb) {
+    return res.status(400).json({
+      error: "Veuillez fournir un lien Google My Business valide (google.com/maps, maps.app.goo.gl\u2026)"
+    });
+  }
+  try {
+    const resolvedUrl = await resolveGmbUrl(rawUrl);
+    const searchQuery = extractSearchQuery(resolvedUrl, rawUrl);
+    const place = await fetchSerperMaps(searchQuery);
+    if (!place) {
+      return res.status(404).json({
+        error: "Aucun \xE9tablissement trouv\xE9 pour ce lien GMB. V\xE9rifiez que le lien est correct."
+      });
+    }
+    const briefData = await mapToBrandBrief(place);
+    return res.json({
+      success: true,
+      place: {
+        name: place.title,
+        address: place.address,
+        rating: place.rating,
+        ratingCount: place.ratingCount,
+        category: place.category,
+        website: place.website,
+        phoneNumber: place.phoneNumber
+      },
+      brief: briefData
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Erreur inconnue";
+    console.error("[scrape-gmb] Error:", message);
+    return res.status(500).json({ error: `Erreur lors du scraping : ${message}` });
+  }
+});
+var scrape_gmb_default = router2;
+
+// src/routes/openai/enhance-prompts.ts
+var import_express3 = __toESM(require_express2(), 1);
+var router3 = (0, import_express3.Router)();
 var LOGO_STYLE_MAP = {
   bijou: "luxe",
   luxe: "luxe",
@@ -39350,7 +39488,7 @@ var LOGO_STYLE_DESCRIPTIONS = {
   futuristic: "N\xE9on, d\xE9grad\xE9s dynamiques. Typographie angulaire. Palette violet, cyan, magenta.",
   ethnic: "Color\xE9, expressif, authentique. Motifs traditionnels. Palette rouge, orange, or, terre."
 };
-router2.post("/openai/enhance-prompts", async (req, res) => {
+router3.post("/openai/enhance-prompts", async (req, res) => {
   const parsed = EnhancePromptsBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "Invalid request body", details: parsed.error.errors });
@@ -39458,11 +39596,11 @@ Commence directement par "G\xE9n\xE8re une charte graphique compl\xE8te pour ${b
 `);
   res.end();
 });
-var enhance_prompts_default = router2;
+var enhance_prompts_default = router3;
 
 // src/routes/openai/enhance-prompts-visual.ts
-var import_express3 = __toESM(require_express2(), 1);
-var router3 = (0, import_express3.Router)();
+var import_express4 = __toESM(require_express2(), 1);
+var router4 = (0, import_express4.Router)();
 var PRODUCT_ANGLES = {
   bijou: { front: "Vue de face", profile: "Vue de profil", three_quarter: "Vue en 3/4", macro: "Macro sertissage/pierres", top: "Vue de dessus" },
   v\u00EAtement: { front: "Vue de face", back: "Vue de dos", detail_collar: "D\xE9tail col", detail_seam: "D\xE9tail coutures", three_quarter: "Vue en 3/4" },
@@ -39580,7 +39718,7 @@ function sendEvent(res, data) {
 
 `);
 }
-router3.post("/openai/enhance-prompts-visual", async (req, res) => {
+router4.post("/openai/enhance-prompts-visual", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -39828,11 +39966,11 @@ Tu r\xE9ponds TOUJOURS en fran\xE7ais. Tu retournes UNIQUEMENT du JSON valide, s
   sendEvent(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_visual_default = router3;
+var enhance_prompts_visual_default = router4;
 
 // src/routes/openai/enhance-prompts-video.ts
-var import_express4 = __toESM(require_express2(), 1);
-var router4 = (0, import_express4.Router)();
+var import_express5 = __toESM(require_express2(), 1);
+var router5 = (0, import_express5.Router)();
 var TEASER_STYLE_MAP = {
   bijou: "luxe",
   luxe: "luxe",
@@ -39902,7 +40040,7 @@ function sendEvent2(res, data) {
 
 `);
 }
-router4.post("/openai/enhance-prompts-video", async (req, res) => {
+router5.post("/openai/enhance-prompts-video", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -40203,11 +40341,11 @@ Retourne UNIQUEMENT ce JSON:
   sendEvent2(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_video_default = router4;
+var enhance_prompts_video_default = router5;
 
 // src/routes/openai/enhance-prompts-ads.ts
-var import_express5 = __toESM(require_express2(), 1);
-var router5 = (0, import_express5.Router)();
+var import_express6 = __toESM(require_express2(), 1);
+var router6 = (0, import_express6.Router)();
 var STYLE_MAP = {
   bijou: "luxueux, \xE9l\xE9gant, raffin\xE9, intemporel",
   luxe: "premium, exclusif, sophistiqu\xE9",
@@ -40236,7 +40374,7 @@ function sendEvent3(res, data) {
 
 `);
 }
-router5.post("/openai/enhance-prompts-ads", async (req, res) => {
+router6.post("/openai/enhance-prompts-ads", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -40596,11 +40734,11 @@ Retourne UNIQUEMENT ce JSON:
   sendEvent3(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_ads_default = router5;
+var enhance_prompts_ads_default = router6;
 
 // src/routes/openai/enhance-prompts-sound.ts
-var import_express6 = __toESM(require_express2(), 1);
-var router6 = (0, import_express6.Router)();
+var import_express7 = __toESM(require_express2(), 1);
+var router7 = (0, import_express7.Router)();
 var JINGLE_STYLE_MAP = {
   bijou: "orchestral \xE9l\xE9gant \u2014 harpe, cordes, piano, 80-90 BPM, intemporel",
   luxe: "orchestral majestueux \u2014 cordes, cuivres, harpe, timbales, 70-80 BPM",
@@ -40656,7 +40794,7 @@ function sendEvent4(res, data) {
 
 `);
 }
-router6.post("/openai/enhance-prompts-sound", async (req, res) => {
+router7.post("/openai/enhance-prompts-sound", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -40951,11 +41089,11 @@ Retourne UNIQUEMENT ce JSON:
   sendEvent4(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_sound_default = router6;
+var enhance_prompts_sound_default = router7;
 
 // src/routes/openai/enhance-prompts-copy.ts
-var import_express7 = __toESM(require_express2(), 1);
-var router7 = (0, import_express7.Router)();
+var import_express8 = __toESM(require_express2(), 1);
+var router8 = (0, import_express8.Router)();
 function sendEvent5(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -40969,7 +41107,7 @@ function parseJsonSafe5(text) {
     return null;
   }
 }
-router7.post("/openai/enhance-prompts-copy", async (req, res) => {
+router8.post("/openai/enhance-prompts-copy", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -41182,11 +41320,11 @@ Les 10 avis doivent:
   sendEvent5(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_copy_default = router7;
+var enhance_prompts_copy_default = router8;
 
 // src/routes/openai/enhance-prompts-launch.ts
-var import_express8 = __toESM(require_express2(), 1);
-var router8 = (0, import_express8.Router)();
+var import_express9 = __toESM(require_express2(), 1);
+var router9 = (0, import_express9.Router)();
 function sendEvent6(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -41200,7 +41338,7 @@ function parseJsonSafe6(text) {
     return null;
   }
 }
-router8.post("/openai/enhance-prompts-launch", async (req, res) => {
+router9.post("/openai/enhance-prompts-launch", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -41397,11 +41535,11 @@ Adapte les actions et contenus sp\xE9cifiquement au secteur "${sector}" et \xE0 
   sendEvent6(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_launch_default = router8;
+var enhance_prompts_launch_default = router9;
 
 // src/routes/openai/enhance-prompts-chatbot.ts
-var import_express9 = __toESM(require_express2(), 1);
-var router9 = (0, import_express9.Router)();
+var import_express10 = __toESM(require_express2(), 1);
+var router10 = (0, import_express10.Router)();
 function sendEvent7(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -41415,7 +41553,7 @@ function parseJsonSafe7(text) {
     return null;
   }
 }
-router9.post("/openai/enhance-prompts-chatbot", async (req, res) => {
+router10.post("/openai/enhance-prompts-chatbot", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -41607,11 +41745,11 @@ Les gestes commerciaux peuvent inclure: remboursement, renvoi, code promo ${code
   sendEvent7(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_chatbot_default = router9;
+var enhance_prompts_chatbot_default = router10;
 
 // src/routes/openai/enhance-prompts-upsell.ts
-var import_express10 = __toESM(require_express2(), 1);
-var router10 = (0, import_express10.Router)();
+var import_express11 = __toESM(require_express2(), 1);
+var router11 = (0, import_express11.Router)();
 function sendEvent8(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -41625,7 +41763,7 @@ function parseJsonSafe8(text) {
     return null;
   }
 }
-router10.post("/openai/enhance-prompts-upsell", async (req, res) => {
+router11.post("/openai/enhance-prompts-upsell", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -41840,11 +41978,11 @@ R\xE9ponds UNIQUEMENT avec un JSON valide, sans texte avant ou apr\xE8s:
   sendEvent8(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_upsell_default = router10;
+var enhance_prompts_upsell_default = router11;
 
 // src/routes/openai/enhance-prompts-performance.ts
-var import_express11 = __toESM(require_express2(), 1);
-var router11 = (0, import_express11.Router)();
+var import_express12 = __toESM(require_express2(), 1);
+var router12 = (0, import_express12.Router)();
 function sendEvent9(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -41868,7 +42006,7 @@ var SECTOR_DEFAULTS = {
   d\u00E9coration: { ca_target: 9e3, basket_target: 120, conv_target: 2, cac_target: 28, roas_target: 2.8, margin_percent: 58, max_cpa: 24, target_cpa: 16 },
   maroquinerie: { ca_target: 12e3, basket_target: 180, conv_target: 2.2, cac_target: 38, roas_target: 3, margin_percent: 62, max_cpa: 33, target_cpa: 19 }
 };
-router11.post("/openai/enhance-prompts-performance", async (req, res) => {
+router12.post("/openai/enhance-prompts-performance", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -42115,22 +42253,23 @@ R\xE9ponds UNIQUEMENT avec un JSON valide:
   sendEvent9(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_performance_default = router11;
+var enhance_prompts_performance_default = router12;
 
 // src/routes/index.ts
-var router12 = (0, import_express12.Router)();
-router12.use(health_default);
-router12.use(enhance_prompts_default);
-router12.use(enhance_prompts_visual_default);
-router12.use(enhance_prompts_video_default);
-router12.use(enhance_prompts_ads_default);
-router12.use(enhance_prompts_sound_default);
-router12.use(enhance_prompts_copy_default);
-router12.use(enhance_prompts_launch_default);
-router12.use(enhance_prompts_chatbot_default);
-router12.use(enhance_prompts_upsell_default);
-router12.use(enhance_prompts_performance_default);
-var routes_default = router12;
+var router13 = (0, import_express13.Router)();
+router13.use(health_default);
+router13.use(scrape_gmb_default);
+router13.use(enhance_prompts_default);
+router13.use(enhance_prompts_visual_default);
+router13.use(enhance_prompts_video_default);
+router13.use(enhance_prompts_ads_default);
+router13.use(enhance_prompts_sound_default);
+router13.use(enhance_prompts_copy_default);
+router13.use(enhance_prompts_launch_default);
+router13.use(enhance_prompts_chatbot_default);
+router13.use(enhance_prompts_upsell_default);
+router13.use(enhance_prompts_performance_default);
+var routes_default = router13;
 
 // src/lib/logger.ts
 var import_pino = __toESM(require_pino(), 1);
@@ -42151,7 +42290,7 @@ var logger = (0, import_pino.default)({
 });
 
 // src/app.ts
-var app = (0, import_express13.default)();
+var app = (0, import_express14.default)();
 app.use(
   (0, import_pino_http.default)({
     logger,
@@ -42172,8 +42311,8 @@ app.use(
   })
 );
 app.use((0, import_cors.default)());
-app.use(import_express13.default.json());
-app.use(import_express13.default.urlencoded({ extended: true }));
+app.use(import_express14.default.json());
+app.use(import_express14.default.urlencoded({ extended: true }));
 app.use("/api", routes_default);
 var app_default = app;
 

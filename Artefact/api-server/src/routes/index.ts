@@ -1,5 +1,6 @@
 import { Router, type IRouter } from "express";
 import healthRouter from "./health";
+import scrapeGmbRouter from "./scrape-gmb";
 import enhancePromptsRouter from "./openai/enhance-prompts";
 import enhancePromptsVisualRouter from "./openai/enhance-prompts-visual";
 import enhancePromptsVideoRouter from "./openai/enhance-prompts-video";
@@ -14,6 +15,7 @@ import enhancePromptsPerformanceRouter from "./openai/enhance-prompts-performanc
 const router: IRouter = Router();
 
 router.use(healthRouter);
+router.use(scrapeGmbRouter);
 router.use(enhancePromptsRouter);
 router.use(enhancePromptsVisualRouter);
 router.use(enhancePromptsVideoRouter);

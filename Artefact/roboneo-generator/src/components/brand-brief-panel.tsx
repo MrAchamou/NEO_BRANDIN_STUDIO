@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import {
   ChevronDown, ChevronUp, Sparkles, RotateCcw, Check, AlertCircle,
+  MapPin, Loader2, Star, ExternalLink,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -221,6 +222,147 @@ function PerformanceSection({ form }: { form: any }) {
   );
 }
 
+// ─── GMB Import Block ──────────────────────────────────────────────────────────
+
+interface GmbPlace {
+  name?: string;
+  address?: string;
+  rating?: number;
+  ratingCount?: number;
+  category?: string;
+  website?: string;
+  phoneNumber?: string;
+}
+
+interface GmbImportProps {
+  onImport: (brief: Partial<BrandBrief>) => void;
+}
+
+function GmbImportBlock({ onImport }: GmbImportProps) {
+  const [url, setUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [place, setPlace] = useState<GmbPlace | null>(null);
+
+  const handleImport = async () => {
+    if (!url.trim()) return;
+    setLoading(true);
+    setError(null);
+    setPlace(null);
+
+    try {
+      const res = await fetch("/api/scrape-gmb", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: url.trim() }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error ?? "Erreur lors du scraping.");
+        return;
+      }
+
+      setPlace(data.place);
+      onImport(data.brief);
+    } catch {
+      setError("Impossible de contacter le serveur. Vérifiez votre connexion.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="mx-5 my-4 rounded-xl border border-amber-400/20 bg-amber-400/5 overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-amber-400/10">
+        <MapPin className="w-4 h-4 text-amber-400 flex-shrink-0" />
+        <div>
+          <p className="text-xs font-semibold text-amber-400">Importer depuis Google My Business</p>
+          <p className="text-[10px] text-muted-foreground">Collez votre lien GMB pour remplir le brief automatiquement</p>
+        </div>
+      </div>
+
+      {/* Input row */}
+      <div className="flex gap-2 px-4 py-3">
+        <Input
+          value={url}
+          onChange={(e) => { setUrl(e.target.value); setError(null); }}
+          placeholder="https://maps.app.goo.gl/... ou https://www.google.com/maps/place/..."
+          className="bg-black/30 h-9 text-xs border-white/10 flex-1"
+          onKeyDown={(e) => e.key === "Enter" && !loading && handleImport()}
+        />
+        <Button
+          onClick={handleImport}
+          disabled={loading || !url.trim()}
+          size="sm"
+          className="h-9 px-3 text-xs gap-1.5 bg-amber-500 hover:bg-amber-400 text-black font-semibold shrink-0"
+        >
+          {loading ? (
+            <><Loader2 className="w-3.5 h-3.5 animate-spin" />Analyse…</>
+          ) : (
+            <><Sparkles className="w-3.5 h-3.5" />Importer</>
+          )}
+        </Button>
+      </div>
+
+      {/* Error */}
+      {error && (
+        <div className="flex items-start gap-2 mx-4 mb-3 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20">
+          <AlertCircle className="w-3.5 h-3.5 text-red-400 mt-0.5 flex-shrink-0" />
+          <p className="text-[11px] text-red-400">{error}</p>
+        </div>
+      )}
+
+      {/* Success card */}
+      {place && (
+        <motion.div
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mx-4 mb-3 px-3 py-2.5 rounded-lg bg-green-500/10 border border-green-500/20"
+        >
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <Check className="w-3.5 h-3.5 text-green-400 flex-shrink-0" />
+                <p className="text-xs font-semibold text-green-400 truncate">{place.name}</p>
+              </div>
+              <div className="flex items-center gap-3 flex-wrap">
+                {place.category && (
+                  <span className="text-[10px] text-muted-foreground">{place.category}</span>
+                )}
+                {place.rating && (
+                  <span className="flex items-center gap-0.5 text-[10px] text-amber-400">
+                    <Star className="w-2.5 h-2.5 fill-amber-400" />
+                    {place.rating} ({place.ratingCount} avis)
+                  </span>
+                )}
+                {place.address && (
+                  <span className="text-[10px] text-muted-foreground truncate">{place.address}</span>
+                )}
+              </div>
+            </div>
+            {place.website && (
+              <a
+                href={place.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            )}
+          </div>
+          <p className="text-[10px] text-green-400/70 mt-1.5">
+            ✓ Brief pré-rempli — vérifiez et ajustez les champs ci-dessous
+          </p>
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
 // ─── Main Component ────────────────────────────────────────────────────────────
 
 export default function BrandBriefPanel() {
@@ -243,6 +385,17 @@ export default function BrandBriefPanel() {
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   });
+
+  const handleGmbImport = (imported: Partial<BrandBrief>) => {
+    // Merge imported fields into the form (only non-empty values)
+    Object.entries(imported).forEach(([key, value]) => {
+      if (value && typeof value === "string" && value.trim() !== "") {
+        form.setValue(key as keyof BrandBrief, value, { shouldDirty: true });
+      }
+    });
+    // Switch to identity tab so user sees what was filled
+    setActiveSection("identity");
+  };
 
   const isComplete = completionPct >= 80;
 
@@ -305,8 +458,11 @@ export default function BrandBriefPanel() {
             className="overflow-hidden"
           >
             <div className="border-t border-white/5">
+              {/* GMB Import */}
+              <GmbImportBlock onImport={handleGmbImport} />
+
               {/* Section tabs */}
-              <div className="flex gap-0.5 px-5 pt-4 pb-2 overflow-x-auto scrollbar-none">
+              <div className="flex gap-0.5 px-5 pt-2 pb-2 overflow-x-auto scrollbar-none border-t border-white/5">
                 {SECTIONS.map((s) => (
                   <button
                     key={s.key}
