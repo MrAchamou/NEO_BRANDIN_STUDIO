@@ -1,5 +1,6 @@
 import { Router, type IRouter } from "express";
 import { openai } from "@workspace/integrations-openai-ai-server";
+import { buildSystemPrompt, buildNegativePrompt } from "../../lib/prompt-utils";
 
 const router: IRouter = Router();
 

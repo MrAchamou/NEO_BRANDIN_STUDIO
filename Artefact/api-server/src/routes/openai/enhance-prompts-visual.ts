@@ -1,5 +1,6 @@
 import { Router, type IRouter } from "express";
 import { openai } from "@workspace/integrations-openai-ai-server";
+import { buildSystemPrompt, buildNegativePrompt } from "../../lib/prompt-utils";
 
 const router: IRouter = Router();
 
@@ -319,9 +320,23 @@ Retourne UNIQUEMENT un JSON valide:
     },
   ] as const;
 
-  const systemPrompt = `Tu es un expert senior en génération de prompts visuels pour RoboNeo.com.
-Tu génères des prompts précis, professionnels, adaptés au secteur ${sector} et à la marque ${brand_name}.
-Tu réponds TOUJOURS en français. Tu retournes UNIQUEMENT du JSON valide, sans aucun markdown, sans aucun texte avant ou après le JSON.`;
+  const body = req.body as any;
+  const sectorTone = body.tone ?? "professionnel";
+  const sectorValues = body.values ?? sector;
+  const negativePart = buildNegativePrompt(sector, sectorTone);
+  const baseSysPrompt = buildSystemPrompt(
+    { brand_name, sector, tone: sectorTone, values: sectorValues,
+      target_demographic: body.target_demographic ?? undefined,
+      competitors: body.competitors ?? undefined,
+      forbidden_keywords: body.forbidden_keywords ?? undefined,
+    },
+    "MODULE 02 — Visual Content (Photos Produit, Lifestyle, Détail, Before/After, Try-On, Carrousel)"
+  );
+  const systemPrompt = `${baseSysPrompt}
+
+IMPORTANT: Tu retournes UNIQUEMENT du JSON valide, sans aucun markdown, sans texte avant ou après le JSON.
+Chaque prompt visuel doit inclure un champ "negative_prompt" avec les éléments à éviter: "${negativePart}"`;
+
 
   for (const section of SECTIONS) {
     sendEvent(res, { type: "section_start", key: section.key, label: section.label, agent: section.agent });
