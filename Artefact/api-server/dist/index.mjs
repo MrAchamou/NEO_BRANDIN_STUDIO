@@ -20481,27 +20481,27 @@ var require_router = __commonJS({
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var methods = METHODS.map((method) => method.toLowerCase());
-    module.exports = Router14;
+    module.exports = Router15;
     module.exports.Route = Route;
-    function Router14(options) {
-      if (!(this instanceof Router14)) {
-        return new Router14(options);
+    function Router15(options) {
+      if (!(this instanceof Router15)) {
+        return new Router15(options);
       }
       const opts = options || {};
-      function router14(req, res, next) {
-        router14.handle(req, res, next);
+      function router15(req, res, next) {
+        router15.handle(req, res, next);
       }
-      Object.setPrototypeOf(router14, this);
-      router14.caseSensitive = opts.caseSensitive;
-      router14.mergeParams = opts.mergeParams;
-      router14.params = {};
-      router14.strict = opts.strict;
-      router14.stack = [];
-      return router14;
+      Object.setPrototypeOf(router15, this);
+      router15.caseSensitive = opts.caseSensitive;
+      router15.mergeParams = opts.mergeParams;
+      router15.params = {};
+      router15.strict = opts.strict;
+      router15.stack = [];
+      return router15;
     }
-    Router14.prototype = function() {
+    Router15.prototype = function() {
     };
-    Router14.prototype.param = function param(name, fn) {
+    Router15.prototype.param = function param(name, fn) {
       if (!name) {
         throw new TypeError("argument name is required");
       }
@@ -20521,7 +20521,7 @@ var require_router = __commonJS({
       params.push(fn);
       return this;
     };
-    Router14.prototype.handle = function handle(req, res, callback) {
+    Router15.prototype.handle = function handle(req, res, callback) {
       if (!callback) {
         throw new TypeError("argument callback is required");
       }
@@ -20648,7 +20648,7 @@ var require_router = __commonJS({
         }
       }
     };
-    Router14.prototype.use = function use(handler) {
+    Router15.prototype.use = function use(handler) {
       let offset = 0;
       let path2 = "/";
       if (typeof handler !== "function") {
@@ -20681,7 +20681,7 @@ var require_router = __commonJS({
       }
       return this;
     };
-    Router14.prototype.route = function route(path2) {
+    Router15.prototype.route = function route(path2) {
       const route2 = new Route(path2);
       const layer = new Layer(path2, {
         sensitive: this.caseSensitive,
@@ -20696,7 +20696,7 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      Router14.prototype[method] = function(path2) {
+      Router15.prototype[method] = function(path2) {
         const route = this.route(path2);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
@@ -20879,13 +20879,13 @@ var require_application = __commonJS({
     var compileTrust = require_utils3().compileTrust;
     var resolve = __require("node:path").resolve;
     var once = require_once();
-    var Router14 = require_router();
+    var Router15 = require_router();
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var app2 = exports = module.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router14 = null;
+      var router15 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -20894,13 +20894,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router14 === null) {
-            router14 = new Router14({
+          if (router15 === null) {
+            router15 = new Router15({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router14;
+          return router15;
         }
       });
     };
@@ -20971,15 +20971,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router14 = this.router;
+      var router15 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router14.use(path2, fn2);
+          return router15.use(path2, fn2);
         }
         debug(".use app under %s", path2);
         fn2.mountpath = path2;
         fn2.parent = this;
-        router14.use(path2, function mounted_app(req, res, next) {
+        router15.use(path2, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -23506,7 +23506,7 @@ var require_express = __commonJS({
     var EventEmitter = __require("node:events").EventEmitter;
     var mixin = require_merge_descriptors();
     var proto = require_application();
-    var Router14 = require_router();
+    var Router15 = require_router();
     var req = require_request();
     var res = require_response();
     exports = module.exports = createApplication;
@@ -23528,8 +23528,8 @@ var require_express = __commonJS({
     exports.application = proto;
     exports.request = req;
     exports.response = res;
-    exports.Route = Router14.Route;
-    exports.Router = Router14;
+    exports.Route = Router15.Route;
+    exports.Router = Router15;
     exports.json = bodyParser.json;
     exports.raw = bodyParser.raw;
     exports.static = require_serve_static();
@@ -28388,12 +28388,12 @@ var require_logger = __commonJS({
 });
 
 // src/app.ts
-var import_express14 = __toESM(require_express2(), 1);
+var import_express15 = __toESM(require_express2(), 1);
 var import_cors = __toESM(require_lib3(), 1);
 var import_pino_http = __toESM(require_logger(), 1);
 
 // src/routes/index.ts
-var import_express13 = __toESM(require_express2(), 1);
+var import_express14 = __toESM(require_express2(), 1);
 
 // src/routes/health.ts
 var import_express = __toESM(require_express2(), 1);
@@ -39566,6 +39566,35 @@ R\xE9ponds en JSON valide uniquement:
     return { score: 7, refined: content, improvements: [] };
   }
 }
+async function generatePersonaVariants(basePrompt, brief) {
+  const response = await openai.chat.completions.create({
+    model: "gpt-5.2",
+    messages: [
+      {
+        role: "system",
+        content: `Tu es expert en segmentation marketing pour la marque ${brief.brand_name} (secteur: ${brief.sector}).`
+      },
+      {
+        role: "user",
+        content: `\xC0 partir de ce prompt de base:
+"""
+${basePrompt}
+"""
+
+G\xE9n\xE8re 3 variantes calibr\xE9es pour 3 personas diff\xE9rents (adapte le ton, les mots-cl\xE9s, l'angle \xE9motionnel).
+R\xE9ponds en JSON: [{"persona": "nom du persona", "variant": "prompt adapt\xE9"}]`
+      }
+    ],
+    max_completion_tokens: 2048
+  });
+  try {
+    const text = response.choices[0]?.message?.content ?? "[]";
+    const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+    return JSON.parse(clean);
+  } catch {
+    return [];
+  }
+}
 
 // src/routes/openai/enhance-prompts.ts
 var router3 = (0, import_express3.Router)();
@@ -42485,21 +42514,57 @@ R\xE9ponds UNIQUEMENT avec un JSON valide:
 });
 var enhance_prompts_performance_default = router12;
 
-// src/routes/index.ts
+// src/routes/openai/persona-variants.ts
+var import_express13 = __toESM(require_express2(), 1);
 var router13 = (0, import_express13.Router)();
-router13.use(health_default);
-router13.use(scrape_gmb_default);
-router13.use(enhance_prompts_default);
-router13.use(enhance_prompts_visual_default);
-router13.use(enhance_prompts_video_default);
-router13.use(enhance_prompts_ads_default);
-router13.use(enhance_prompts_sound_default);
-router13.use(enhance_prompts_copy_default);
-router13.use(enhance_prompts_launch_default);
-router13.use(enhance_prompts_chatbot_default);
-router13.use(enhance_prompts_upsell_default);
-router13.use(enhance_prompts_performance_default);
-var routes_default = router13;
+var PersonaVariantsBody = objectType({
+  base_prompt: stringType().min(10),
+  brand_name: stringType().min(1),
+  sector: stringType().min(1),
+  tone: stringType().min(1),
+  values: arrayType(stringType()).default([]),
+  target_demographic: stringType().nullish()
+});
+router13.post("/openai/persona-variants", async (req, res) => {
+  const parsed = PersonaVariantsBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: "Invalid request body", details: parsed.error.errors });
+    return;
+  }
+  const { base_prompt, brand_name, sector, tone, values, target_demographic } = parsed.data;
+  const brief = {
+    brand_name,
+    sector,
+    tone,
+    values,
+    target_demographic: target_demographic ?? void 0
+  };
+  try {
+    const variants = await generatePersonaVariants(base_prompt, brief);
+    res.json({ variants });
+  } catch (err) {
+    req.log.error({ err }, "Error generating persona variants");
+    res.status(500).json({ error: "Erreur lors de la g\xE9n\xE9ration des variantes personas" });
+  }
+});
+var persona_variants_default = router13;
+
+// src/routes/index.ts
+var router14 = (0, import_express14.Router)();
+router14.use(health_default);
+router14.use(scrape_gmb_default);
+router14.use(enhance_prompts_default);
+router14.use(enhance_prompts_visual_default);
+router14.use(enhance_prompts_video_default);
+router14.use(enhance_prompts_ads_default);
+router14.use(enhance_prompts_sound_default);
+router14.use(enhance_prompts_copy_default);
+router14.use(enhance_prompts_launch_default);
+router14.use(enhance_prompts_chatbot_default);
+router14.use(enhance_prompts_upsell_default);
+router14.use(enhance_prompts_performance_default);
+router14.use(persona_variants_default);
+var routes_default = router14;
 
 // src/lib/logger.ts
 var import_pino = __toESM(require_pino(), 1);
@@ -42520,7 +42585,7 @@ var logger = (0, import_pino.default)({
 });
 
 // src/app.ts
-var app = (0, import_express14.default)();
+var app = (0, import_express15.default)();
 app.use(
   (0, import_pino_http.default)({
     logger,
@@ -42541,8 +42606,8 @@ app.use(
   })
 );
 app.use((0, import_cors.default)());
-app.use(import_express14.default.json());
-app.use(import_express14.default.urlencoded({ extended: true }));
+app.use(import_express15.default.json());
+app.use(import_express15.default.urlencoded({ extended: true }));
 app.use("/api", routes_default);
 var app_default = app;
 
