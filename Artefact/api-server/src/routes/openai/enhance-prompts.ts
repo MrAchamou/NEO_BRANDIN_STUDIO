@@ -3,6 +3,7 @@ import { openai } from "@workspace/integrations-openai-ai-server";
 import { EnhancePromptsBody } from "@workspace/api-zod";
 import { buildSystemPrompt, buildNegativePrompt, reviewPromptQuality, type EnhancedBrief } from "../../lib/prompt-utils";
 import { buildLogoPrompt } from "../../prompts/modules/module-01-1-logo/prompt-builder";
+import { buildPalettePrompt } from "../../prompts/modules/module-01-2-palette/prompt-builder";
 import * as zod from "zod";
 
 const router: IRouter = Router();
@@ -95,6 +96,13 @@ router.post("/openai/enhance-prompts", async (req, res) => {
     logoStyle: style_pref ?? undefined,
   });
 
+  const paletteOptimizedPrompt = buildPalettePrompt({
+    brandName: brand_name,
+    sector,
+    tone,
+    values,
+  });
+
   const sections = [
     {
       key: "logo",
@@ -105,22 +113,8 @@ router.post("/openai/enhance-prompts", async (req, res) => {
     {
       key: "palette",
       agent: "Brand Design Agent",
-      userPrompt: `MODULE 01.2 — PALETTE GENERATOR
-
-Génère un prompt RoboNeo ULTRA-PRÉCIS pour créer la palette chromatique complète de ${brand_name}.
-
-STRUCTURE DU PROMPT À GÉNÉRER:
-1. Couleur primaire (60% usage) — code HEX + RGB + signification psychologique
-2. Couleur secondaire (30% usage) — code HEX + RGB + accord avec la primaire
-3. Couleur accent/CTA (10% usage) — code HEX + RGB + émotion générée
-4. 5 nuances neutres (codes HEX exacts)
-5. Validation WCAG 2.1 AA (paires valides/invalides sur fond blanc et fond sombre)
-6. Applications recommandées (boutons, fonds, textes, icônes)
-7. Palette saisonnière ou mood board optionnel
-
-${negativeBlock}
-
-Commence directement par: "Génère la palette de couleurs complète pour ${brand_name}..."`,
+      systemPrompt: `Tu es un expert en design system et accessibilité des couleurs. À partir de la structure de référence fournie, génère une palette de couleurs complète, structurée, avec tableaux WCAG et JSON. Respecte EXACTEMENT les 7 sections + tableaux récapitulatifs + JSON final. Calcule les contrast ratios précisément selon la formule WCAG 2.1. Ne résume pas, ne raccourcis pas — remplis chaque section aussi précisément que le modèle.`,
+      userPrompt: paletteOptimizedPrompt,
     },
     {
       key: "typography",

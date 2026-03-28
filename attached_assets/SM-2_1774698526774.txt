@@ -1,0 +1,551 @@
+Parfait. Voici le document d'instruction pour Replit concernant le **sous-module MOD-01.2 — Palette Generator**.
+
+---
+
+# INSTRUCTION POUR REPLIT AI
+
+## Module 01.2 — Palette Generator
+
+### Objectif
+
+Modifier l'application Neo Branding Studio pour implémenter un système de génération de palettes de couleurs **ultra-précises** pour le sous-module Palette Generator, en utilisant l'exemple parfait fourni comme **golden reference**.
+
+L'objectif est de garantir que **chaque génération** respecte exactement la structure, le format de sortie (tableaux + JSON), les calculs WCAG et les contraintes d'accessibilité de l'exemple, quels que soient les paramètres d'entrée.
+
+---
+
+## 1. Contexte
+
+**Fichier actuel à modifier** :  
+`api-server/src/routes/openai/enhance-prompts.ts` (section Module 01)
+
+**Données d'entrée du formulaire** :
+```typescript
+interface BrandBrief {
+  brandName: string;      // ex: "Theravectys"
+  sector: string;         // ex: "tech", "luxury", "streetwear", "fitness", "cosmetic"
+  tone: string;           // ex: "professionnel", "audacieux", "minimaliste"
+  values: string[];       // ex: ["innovation", "rigueur", "fiabilité"]
+  primaryColorHint?: string;  // optionnel: si l'utilisateur propose une couleur
+}
+```
+
+**Sortie attendue** : Un prompt structuré qui générera une palette complète avec tableaux WCAG et JSON.
+
+---
+
+## 2. Ce qu'il faut créer
+
+### 2.1. Fichier : `api-server/src/prompts/modules/module-01-2-palette/golden-example.json`
+
+Copier exactement l'exemple parfait fourni ci-dessous. Ce fichier sert de **référence absolue** pour la structure et le niveau de qualité attendu.
+
+```json
+{
+  "module": "MOD-01.2 — Palette Generator",
+  "agent": "Brand Design Agent",
+  "goldenExample": "Génère la palette de couleurs complète pour Theravectys (secteur tech), ton professionnel, valeurs: innovation, rigueur scientifique, fiabilité, expertise, engagement. Livre une palette \"brand-ready\" structurée pour UI/UX, web et print, avec usages 60/30/10, neutres, et contrôles d'accessibilité. Style visuel: moderne, précis, premium, sans effet \"gadget\". ZÉRO élément obsolète, ZÉRO interface confuse, ZÉRO watermark, ZÉRO texte illisible, ZÉRO artefacts IA.\n\nFORMAT DE SORTIE (obligatoire)\n- Réponse en TABLEAUX + une section JSON finale (machine-readable).\n- Aucun blabla marketing: uniquement décisions justifiées et actionnables.\n- Color space: sRGB, illuminant D65.\n- Précision: HEX exact (#RRGGBB) + RGB (0–255) + contrast ratios (2 decimals).\n- Accessibilité: WCAG 2.1 AA. Les contrast ratios DOIVENT être calculés via luminance relative sRGB + formule WCAG (pas d'estimation).\n\n1) Couleur primaire (60% usage)\n- Propose 1 couleur primaire \"scientific tech\" (bleu/bleu-vert ou équivalent crédible) avec code HEX + RGB.\n- Donne sa signification psychologique (fiabilité, rigueur, maîtrise, confiance) et son rôle (fonds UI, header, blocs de marque).\n\n2) Couleur secondaire (30% usage)\n- Propose 1 couleur secondaire complémentaire/harmonique avec code HEX + RGB.\n- Explique l'accord colorimétrique avec la primaire (relation de teinte, balance de saturation, contraste, usage en surfaces).\n\n3) Couleur accent / CTA (10% usage)\n- Propose 1 couleur accent orientée conversion (CTA) avec code HEX + RGB.\n- Décris l'émotion générée (énergie contrôlée, action, clarté) tout en restant corporate tech.\n- Doit ressortir sur la primaire + sur fond blanc.\n\n4) 5 nuances neutres (HEX exacts)\n- Fournis exactement 5 neutres, du plus clair au plus sombre, avec HEX:\n  - Neutral-01 (background très clair)\n  - Neutral-02 (surface / cards)\n  - Neutral-03 (bordures / separators)\n  - Neutral-04 (texte secondaire)\n  - Neutral-05 (texte principal / fond sombre)\n\n5) Validation WCAG 2.1 AA (calculée)\n- Calcule et affiche les contrast ratios (min 4.5:1 pour texte normal, 3:1 pour large).\n- Donne un tableau clair \"VALIDES / INVALIDES\" pour les paires suivantes, sur fond blanc (#FFFFFF) et sur fond sombre (Neutral-05):\n  - Texte Neutral-05 sur blanc, texte Neutral-04 sur blanc, CTA sur blanc\n  - Texte #FFFFFF sur primaire, texte #FFFFFF sur secondaire, texte #FFFFFF sur CTA\n  - Texte Neutral-04 sur Neutral-02, texte Neutral-01 sur Neutral-05\n- Si une paire est invalide: propose un ajustement en itérations (max 3) en lightening/darkening (indiquer X%), en préservant la teinte (hue) ±3° et en limitant la variation de saturation (±10%). Fournis le NOUVEAU HEX + RGB + nouveau ratio.\n\n6) Applications recommandées (règles d'usage)\n- Indique précisément où utiliser chaque couleur: boutons (primary/secondary/ghost), hover/active states, liens, fonds, textes (H1/H2/body), icônes, badges \"success/info/warning/error\" (cohérents avec Theravectys).\n- Ajoute des recommandations print (CMYK approx) uniquement si pertinent.\n\n7) Palette saisonnière / mood board (optionnel mais recommandé)\n- Propose 1 mini-variation \"Winter / Conference / Lab\" (3 couleurs max) dérivée de la palette principale (tints/shades), avec HEX, usage, cohérence.\n\nContraintes de rendu:\n- Fournis: (1) tableaux récapitulatifs palette + usages, (2) tableau WCAG, (3) JSON final exploitable (tokens: primary, secondary, accent, neutrals array, wcag report).\n\n[PARAMÈTRES TECHNIQUES]\n- Output format: \"Structured palette spec + WCAG table + JSON recap\".\n- Negative constraints: old/obsolete look, confusing UI, casual tone, slang, watermark, illegible text, visible errors/bugs, JPEG artifacts, AI artefacts.\n\n(Option RoboNeo si support images: générer en plus deux assets PNG)\n- \"palette swatches grid\" 1920x1080px, fond transparent, sans artefacts de compression.\n- \"UI sample card\" 1600x900px, mise en page sobre (header, buttons, card, typography), sans texte illisible.\n- Si la génération d'images n'est pas supportée, ignorer cette section et ne produire que les tableaux + JSON.",
+  "structure": {
+    "sections": [
+      "1) Couleur primaire",
+      "2) Couleur secondaire",
+      "3) Couleur accent / CTA",
+      "4) 5 nuances neutres",
+      "5) Validation WCAG 2.1 AA",
+      "6) Applications recommandées",
+      "7) Palette saisonnière",
+      "Tableaux récapitulatifs",
+      "JSON final"
+    ],
+    "requiredElements": [
+      "HEX + RGB pour chaque couleur",
+      "5 neutres exactement (Neutral-01 à Neutral-05)",
+      "Tableau WCAG avec ratios calculés",
+      "JSON final avec tokens",
+      "Contrast ratios ≥ 4.5:1 pour texte normal"
+    ]
+  }
+}
+```
+
+---
+
+### 2.2. Fichier : `api-server/src/prompts/modules/module-01-2-palette/mapping-rules.json`
+
+Ce fichier définit les palettes par défaut selon le secteur et les règles d'adaptation.
+
+```json
+{
+  "sectorPalettes": {
+    "tech": {
+      "primary": {
+        "hex": "#003087",
+        "rgb": "0,48,135",
+        "meaning": "fiabilité, confiance, rigueur scientifique",
+        "role": "fonds UI, header, blocs de marque"
+      },
+      "secondary": {
+        "hex": "#6C757D",
+        "rgb": "108,117,125",
+        "meaning": "neutralité technique, support, sobriété",
+        "harmony": "gris neutre complémentaire au bleu profond, apporte équilibre et lisibilité"
+      },
+      "accent": {
+        "hex": "#2F80ED",
+        "rgb": "47,128,237",
+        "meaning": "énergie contrôlée, action technologique, clarté"
+      },
+      "neutrals": {
+        "01": "#F8F9FA",
+        "02": "#E9ECEF",
+        "03": "#DEE2E6",
+        "04": "#6C757D",
+        "05": "#212529"
+      }
+    },
+    "luxury": {
+      "primary": {
+        "hex": "#1A2C3E",
+        "rgb": "26,44,62",
+        "meaning": "prestige, profondeur, élégance intemporelle",
+        "role": "fonds premium, en-têtes, éléments d'autorité"
+      },
+      "secondary": {
+        "hex": "#C5A572",
+        "rgb": "197,165,114",
+        "meaning": "richesse, raffinement, héritage",
+        "harmony": "contraste chaud-froid, élégance dorée sur fond profond"
+      },
+      "accent": {
+        "hex": "#D4AF37",
+        "rgb": "212,175,55",
+        "meaning": "luxe, exclusivité, excellence"
+      },
+      "neutrals": {
+        "01": "#F5F3F0",
+        "02": "#E8E4DD",
+        "03": "#D4CDBC",
+        "04": "#8B7A6B",
+        "05": "#2C2418"
+      }
+    },
+    "streetwear": {
+      "primary": {
+        "hex": "#1A1A1A",
+        "rgb": "26,26,26",
+        "meaning": "authenticité, puissance, attitude urbaine",
+        "role": "fonds, éléments dominants, identité forte"
+      },
+      "secondary": {
+        "hex": "#E63946",
+        "rgb": "230,57,70",
+        "meaning": "énergie, audace, rébellion maîtrisée",
+        "harmony": "contraste maximal, tension visuelle dynamique"
+      },
+      "accent": {
+        "hex": "#F4A261",
+        "rgb": "244,162,97",
+        "meaning": "chaleur urbaine, signal fort, singularité"
+      },
+      "neutrals": {
+        "01": "#F5F5F5",
+        "02": "#E0E0E0",
+        "03": "#BDBDBD",
+        "04": "#757575",
+        "05": "#212121"
+      }
+    },
+    "fitness": {
+      "primary": {
+        "hex": "#1E3A8A",
+        "rgb": "30,58,138",
+        "meaning": "performance, discipline, puissance maîtrisée",
+        "role": "fonds dynamiques, éléments structurants"
+      },
+      "secondary": {
+        "hex": "#EF4444",
+        "rgb": "239,68,68",
+        "meaning": "énergie, effort, motivation intense",
+        "harmony": "complémentaire contrastée, tension action/repos"
+      },
+      "accent": {
+        "hex": "#22C55E",
+        "rgb": "34,197,94",
+        "meaning": "progression, résultat, vitalité"
+      },
+      "neutrals": {
+        "01": "#FAFAFA",
+        "02": "#F0F0F0",
+        "03": "#D4D4D4",
+        "04": "#737373",
+        "05": "#0A0A0A"
+      }
+    },
+    "cosmetic": {
+      "primary": {
+        "hex": "#F5E6D3",
+        "rgb": "245,230,211",
+        "meaning": "douceur, pureté, naturel",
+        "role": "fonds apaisants, surfaces principales"
+      },
+      "secondary": {
+        "hex": "#D4A5A5",
+        "rgb": "212,165,165",
+        "meaning": "douceur rose, bien-être, délicatesse",
+        "harmony": "harmonie ton sur ton, continuité apaisante"
+      },
+      "accent": {
+        "hex": "#A7C7B9",
+        "rgb": "167,199,185",
+        "meaning": "fraîcheur, nature, efficacité douce"
+      },
+      "neutrals": {
+        "01": "#FFFFFF",
+        "02": "#F9F7F5",
+        "03": "#E8E2DA",
+        "04": "#B8A99A",
+        "05": "#5C4E3D"
+      }
+    }
+  },
+  "wcagRequirements": {
+    "normalText": 4.5,
+    "largeText": 3.0,
+    "formula": "contrastRatio = (L1 + 0.05) / (L2 + 0.05) where L = 0.2126 * R + 0.7152 * G + 0.0722 * B, with RGB values normalized to 0-1 and gamma corrected"
+  }
+}
+```
+
+---
+
+### 2.3. Fichier : `api-server/src/prompts/modules/module-01-2-palette/prompt-builder.ts`
+
+Ce fichier construit le prompt final en remplaçant les parties variables de l'exemple parfait.
+
+```typescript
+import { goldenExample } from './golden-example.json';
+import { sectorPalettes, wcagRequirements } from './mapping-rules.json';
+
+interface BrandBrief {
+  brandName: string;
+  sector: string;
+  tone: string;
+  values: string[];
+  primaryColorHint?: string;
+}
+
+interface ColorPalette {
+  primary: { hex: string; rgb: string; meaning: string; role: string };
+  secondary: { hex: string; rgb: string; meaning: string; harmony: string };
+  accent: { hex: string; rgb: string; meaning: string };
+  neutrals: {
+    '01': string;
+    '02': string;
+    '03': string;
+    '04': string;
+    '05': string;
+  };
+}
+
+export function buildPalettePrompt(brief: BrandBrief): string {
+  // Récupérer la palette selon le secteur
+  const sectorPalette = sectorPalettes[brief.sector] || sectorPalettes.tech;
+  
+  // Adapter la palette si l'utilisateur a fourni une couleur primaire
+  let primaryColor = sectorPalette.primary;
+  if (brief.primaryColorHint) {
+    primaryColor = {
+      ...primaryColor,
+      hex: brief.primaryColorHint,
+      rgb: hexToRgb(brief.primaryColorHint)
+    };
+  }
+  
+  // Construire la description des valeurs
+  const valuesText = brief.values.join(', ');
+  
+  // Adapter la signification psychologique selon le ton
+  const toneModifier = getToneModifier(brief.tone);
+  
+  // Construire le prompt final
+  let prompt = goldenExample.goldenExample;
+  
+  // Remplacer les variables de base
+  prompt = prompt.replace(/Theravectys/g, brief.brandName);
+  prompt = prompt.replace(/secteur tech/g, `secteur ${brief.sector}`);
+  prompt = prompt.replace(/ton professionnel/g, `ton ${brief.tone}`);
+  prompt = prompt.replace(/innovation, rigueur scientifique, fiabilité, expertise, engagement/g, valuesText);
+  
+  // Remplacer la section Couleur primaire
+  const primarySection = `
+1) Couleur primaire (60% usage)
+- Propose 1 couleur primaire "${getSectorColorDescription(brief.sector)}" avec code HEX + RGB.
+- Donne sa signification psychologique (${primaryColor.meaning}${toneModifier}) et son rôle (${primaryColor.role}).
+- HEX: ${primaryColor.hex} | RGB: ${primaryColor.rgb}
+`;
+  
+  // Remplacer la section Couleur secondaire
+  const secondarySection = `
+2) Couleur secondaire (30% usage)
+- Propose 1 couleur secondaire complémentaire/harmonique avec code HEX + RGB.
+- HEX: ${sectorPalette.secondary.hex} | RGB: ${sectorPalette.secondary.rgb}
+- Explique l'accord colorimétrique: ${sectorPalette.secondary.harmony}
+`;
+  
+  // Remplacer la section Couleur accent
+  const accentSection = `
+3) Couleur accent / CTA (10% usage)
+- Propose 1 couleur accent orientée conversion (CTA) avec code HEX + RGB.
+- HEX: ${sectorPalette.accent.hex} | RGB: ${sectorPalette.accent.rgb}
+- Décris l'émotion générée: ${sectorPalette.accent.meaning}
+- Doit ressortir sur la primaire + sur fond blanc.
+`;
+  
+  // Remplacer la section Neutres
+  const neutralsSection = `
+4) 5 nuances neutres (HEX exacts)
+- Neutral-01 (background très clair): ${sectorPalette.neutrals['01']}
+- Neutral-02 (surface / cards): ${sectorPalette.neutrals['02']}
+- Neutral-03 (bordures / separators): ${sectorPalette.neutrals['03']}
+- Neutral-04 (texte secondaire): ${sectorPalette.neutrals['04']}
+- Neutral-05 (texte principal / fond sombre): ${sectorPalette.neutrals['05']}
+`;
+  
+  // Remplacer la section WCAG avec calculs précis
+  const wcagSection = `
+5) Validation WCAG 2.1 AA (calculée)
+- Calcule et affiche les contrast ratios (min ${wcagRequirements.normalText}:1 pour texte normal, ${wcagRequirements.largeText}:1 pour large).
+- Utilise la formule: ${wcagRequirements.formula}
+- Donne un tableau clair "VALIDES / INVALIDES" pour les paires suivantes:
+
+| Paire | Ratio | Statut |
+|-------|-------|--------|
+| Texte Neutral-05 sur blanc | [calculer] | [valider] |
+| Texte Neutral-04 sur blanc | [calculer] | [valider] |
+| CTA (${sectorPalette.accent.hex}) sur blanc | [calculer] | [valider] |
+| Texte #FFFFFF sur primaire (${primaryColor.hex}) | [calculer] | [valider] |
+| Texte #FFFFFF sur secondaire (${sectorPalette.secondary.hex}) | [calculer] | [valider] |
+| Texte #FFFFFF sur CTA (${sectorPalette.accent.hex}) | [calculer] | [valider] |
+| Texte Neutral-04 sur Neutral-02 (${sectorPalette.neutrals['04']} sur ${sectorPalette.neutrals['02']}) | [calculer] | [valider] |
+| Texte Neutral-01 sur Neutral-05 (${sectorPalette.neutrals['01']} sur ${sectorPalette.neutrals['05']}) | [calculer] | [valider] |
+
+- Si une paire est invalide: propose un ajustement en itérations (max 3) en lightening/darkening (indiquer X%), en préservant la teinte (hue) ±3° et en limitant la variation de saturation (±10%). Fournis le NOUVEAU HEX + RGB + nouveau ratio.
+`;
+  
+  // Remplacer la section Applications
+  const applicationsSection = `
+6) Applications recommandées (règles d'usage)
+- Boutons: primary = ${primaryColor.hex}, secondary = ${sectorPalette.secondary.hex}, ghost = transparent avec bordure ${sectorPalette.neutrals['03']}
+- Hover states: primary darken 10%, secondary lighten 10%
+- Liens: ${sectorPalette.accent.hex} avec underline on hover
+- Fonds: Neutral-01 pour fond principal, Neutral-02 pour cards
+- Textes: H1/H2 = ${primaryColor.hex} sur fond clair, body = Neutral-05
+- Icônes: ${sectorPalette.secondary.hex} pour les actions secondaires
+- Badges: success = #10B981, info = ${sectorPalette.accent.hex}, warning = #F59E0B, error = #EF4444
+- Print (CMYK approx): ${hexToCmyk(primaryColor.hex)}, ${hexToCmyk(sectorPalette.secondary.hex)}
+`;
+  
+  // Remplacer la section Palette saisonnière
+  const seasonalSection = `
+7) Palette saisonnière / mood board
+- Propose 1 mini-variation "Conference / Lab" dérivée de la palette principale:
+  * ${adjustColor(sectorPalette.primary.hex, -20)} (primary plus profond)
+  * ${adjustColor(sectorPalette.accent.hex, 15)} (accent plus lumineux)
+  * ${sectorPalette.neutrals['03']} (neutral intermédiaire)
+- Usage: supports de conférence, présentations, documents institutionnels
+- Cohérence: conserve l'identité de marque tout en apportant de la profondeur
+`;
+  
+  // Assembler le prompt final
+  prompt = prompt.replace(/1\) Couleur primaire \(60% usage\).*?(?=2\) Couleur secondaire)/s, primarySection);
+  prompt = prompt.replace(/2\) Couleur secondaire \(30% usage\).*?(?=3\) Couleur accent)/s, secondarySection);
+  prompt = prompt.replace(/3\) Couleur accent \/ CTA \(10% usage\).*?(?=4\) 5 nuances neutres)/s, accentSection);
+  prompt = prompt.replace(/4\) 5 nuances neutres \(HEX exacts\).*?(?=5\) Validation WCAG)/s, neutralsSection);
+  prompt = prompt.replace(/5\) Validation WCAG 2\.1 AA \(calculée\).*?(?=6\) Applications recommandées)/s, wcagSection);
+  prompt = prompt.replace(/6\) Applications recommandées.*?(?=7\) Palette saisonnière)/s, applicationsSection);
+  prompt = prompt.replace(/7\) Palette saisonnière.*?(?=\[PARAMÈTRES TECHNIQUES\])/s, seasonalSection);
+  
+  // Ajouter l'instruction JSON final
+  prompt += `
+
+**JSON FINAL OBLIGATOIRE** (machine-readable):
+\`\`\`json
+{
+  "brand": "${brief.brandName}",
+  "sector": "${brief.sector}",
+  "palette": {
+    "primary": { "hex": "${primaryColor.hex}", "rgb": "${primaryColor.rgb}", "usage": "60%" },
+    "secondary": { "hex": "${sectorPalette.secondary.hex}", "rgb": "${sectorPalette.secondary.rgb}", "usage": "30%" },
+    "accent": { "hex": "${sectorPalette.accent.hex}", "rgb": "${sectorPalette.accent.rgb}", "usage": "10%" },
+    "neutrals": {
+      "neutral-01": "${sectorPalette.neutrals['01']}",
+      "neutral-02": "${sectorPalette.neutrals['02']}",
+      "neutral-03": "${sectorPalette.neutrals['03']}",
+      "neutral-04": "${sectorPalette.neutrals['04']}",
+      "neutral-05": "${sectorPalette.neutrals['05']}"
+    }
+  },
+  "wcag": {
+    "standard": "WCAG 2.1 AA",
+    "normalTextMinRatio": ${wcagRequirements.normalText},
+    "largeTextMinRatio": ${wcagRequirements.largeText}
+  }
+}
+\`\`\`
+`;
+  
+  return prompt;
+}
+
+// Fonctions utilitaires
+function hexToRgb(hex: string): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `${r},${g},${b}`;
+}
+
+function hexToCmyk(hex: string): string {
+  // Conversion simplifiée pour le prompt
+  const r = parseInt(hex.slice(1, 3), 16) / 255;
+  const g = parseInt(hex.slice(3, 5), 16) / 255;
+  const b = parseInt(hex.slice(5, 7), 16) / 255;
+  
+  const k = 1 - Math.max(r, g, b);
+  const c = (1 - r - k) / (1 - k);
+  const m = (1 - g - k) / (1 - k);
+  const y = (1 - b - k) / (1 - k);
+  
+  return `${Math.round(c * 100)}%, ${Math.round(m * 100)}%, ${Math.round(y * 100)}%, ${Math.round(k * 100)}%`;
+}
+
+function adjustColor(hex: string, percent: number): string {
+  // Simplifié pour le prompt - la vraie implémentation serait plus complexe
+  return percent > 0 ? `${hex} (${percent}% plus clair)` : `${hex} (${Math.abs(percent)}% plus foncé)`;
+}
+
+function getSectorColorDescription(sector: string): string {
+  const descriptions: Record<string, string> = {
+    tech: "scientific tech (bleu/bleu-vert ou équivalent crédible)",
+    luxury: "premium heritage (bleu profond, or, tons nobles)",
+    streetwear: "urban authentic (noir profond, rouge audacieux)",
+    fitness: "performance energy (bleu électrique, rouge dynamique)",
+    cosmetic: "natural elegance (tons doux, organiques)"
+  };
+  return descriptions[sector] || descriptions.tech;
+}
+
+function getToneModifier(tone: string): string {
+  const modifiers: Record<string, string> = {
+    professionnel: ", avec une approche maîtrisée et experte",
+    audacieux: ", avec une touche d'innovation disruptive",
+    minimaliste: ", dans une approche épurée et essentielle"
+  };
+  return modifiers[tone] || "";
+}
+```
+
+---
+
+### 2.4. Modifier : `api-server/src/routes/openai/enhance-prompts.ts`
+
+Ajouter la nouvelle logique pour le sous-module Palette Generator.
+
+```typescript
+// Ajouter l'import
+import { buildPalettePrompt } from '../../prompts/modules/module-01-2-palette/prompt-builder';
+
+// Dans la route du Module 01, ajouter le cas pour la palette
+app.post('/api/openai/enhance-prompts', async (req, res) => {
+  const { brief, module, subModule } = req.body;
+  
+  // Si c'est le sous-module Logo Generator (déjà fait)
+  if (module === '01' && subModule === 'logo') {
+    // ... code existant
+  }
+  
+  // Si c'est le sous-module Palette Generator
+  else if (module === '01' && subModule === 'palette') {
+    // Construire le prompt optimisé
+    const optimizedPrompt = buildPalettePrompt(brief);
+    
+    // Appeler GPT-5.2 avec ce prompt
+    const stream = await openai.chat.completions.create({
+      model: 'gpt-5.2',
+      messages: [
+        {
+          role: 'system',
+          content: `Tu es un expert en design system et accessibilité des couleurs. Tu dois générer une palette de couleurs complète, structurée, avec tableaux WCAG et JSON. Respecte EXACTEMENT la structure de l'exemple fourni. Calcule les contrast ratios précisément selon la formule WCAG.`
+        },
+        {
+          role: 'user',
+          content: optimizedPrompt
+        }
+      ],
+      stream: true,
+    });
+    
+    // Streamer la réponse comme avant
+    // ...
+  }
+  
+  // Garder l'ancienne logique pour les autres sous-modules
+  // ...
+});
+```
+
+---
+
+## 3. Instructions pour Replit
+
+**Voici ce que tu dois faire :**
+
+1. **Créer le dossier** `api-server/src/prompts/modules/module-01-2-palette/`
+
+2. **Créer les 3 fichiers** exactement comme décrits ci-dessus :
+   - `golden-example.json` (copier le contenu fourni)
+   - `mapping-rules.json` (copier le contenu fourni)
+   - `prompt-builder.ts` (copier le code TypeScript)
+
+3. **Modifier** `api-server/src/routes/openai/enhance-prompts.ts` pour intégrer le nouveau système pour le sous-module Palette Generator.
+
+4. **Tester** que le système fonctionne :
+   - Envoyer un brief avec `module: "01"`, `subModule: "palette"`
+   - Vérifier que le prompt généré respecte la structure de l'exemple
+   - Vérifier que les couleurs sont adaptées au secteur
+   - Vérifier que les 5 neutres sont présents
+   - Vérifier que la section WCAG inclut les calculs de ratios
+   - Vérifier que le JSON final est présent
+
+5. **Ne pas casser** les autres sous-modules (Logo, Typo, Guidelines) qui continuent à utiliser l'ancienne logique pour l'instant.
+
+---
+
+## 4. Critères de validation
+
+Le nouveau système est validé si :
+
+✅ Le prompt généré a exactement la **même structure** que l'exemple parfait  
+✅ Toutes les **sections** sont présentes (1 à 7 + tableaux + JSON)  
+✅ Les **5 neutres** sont exactement 5 (Neutral-01 à Neutral-05)  
+✅ Les **couleurs** sont adaptées au secteur (tech → bleu marine, luxe → or et bleu profond, etc.)  
+✅ La section **WCAG** inclut un tableau avec les 8 paires de contraste  
+✅ Les **ratios de contraste** sont calculés (pas d'estimation)  
+✅ Le **JSON final** est valide et contient tous les tokens  
+✅ Le **nom de la marque** est correctement injecté partout  
+✅ Les **valeurs** sont correctement injectées  
+✅ Le **streaming SSE** continue de fonctionner normalement
+
+---
+
+## 5. Résultat attendu
+
+Une fois implémenté, le système pourra générer des palettes de couleurs de **qualité identique à l'exemple parfait** pour n'importe quelle marque, avec :
+- Des couleurs adaptées au secteur
+- Des calculs WCAG précis
+- Un format de sortie structuré (tableaux + JSON)
+- Des recommandations d'usage détaillées
+
+---
+
+**Replit, implémente cette structure exactement comme décrit.**

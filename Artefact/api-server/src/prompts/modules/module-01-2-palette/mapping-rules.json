@@ -1,0 +1,139 @@
+{
+  "sectorPalettes": {
+    "tech": {
+      "primary": {
+        "hex": "#003087",
+        "rgb": "0,48,135",
+        "meaning": "fiabilité, confiance, rigueur scientifique",
+        "role": "fonds UI, header, blocs de marque"
+      },
+      "secondary": {
+        "hex": "#6C757D",
+        "rgb": "108,117,125",
+        "meaning": "neutralité technique, support, sobriété",
+        "harmony": "gris neutre complémentaire au bleu profond, apporte équilibre et lisibilité"
+      },
+      "accent": {
+        "hex": "#2F80ED",
+        "rgb": "47,128,237",
+        "meaning": "énergie contrôlée, action technologique, clarté"
+      },
+      "neutrals": {
+        "01": "#F8F9FA",
+        "02": "#E9ECEF",
+        "03": "#DEE2E6",
+        "04": "#6C757D",
+        "05": "#212529"
+      }
+    },
+    "luxury": {
+      "primary": {
+        "hex": "#1A2C3E",
+        "rgb": "26,44,62",
+        "meaning": "prestige, profondeur, élégance intemporelle",
+        "role": "fonds premium, en-têtes, éléments d'autorité"
+      },
+      "secondary": {
+        "hex": "#C5A572",
+        "rgb": "197,165,114",
+        "meaning": "richesse, raffinement, héritage",
+        "harmony": "contraste chaud-froid, élégance dorée sur fond profond"
+      },
+      "accent": {
+        "hex": "#D4AF37",
+        "rgb": "212,175,55",
+        "meaning": "luxe, exclusivité, excellence"
+      },
+      "neutrals": {
+        "01": "#F5F3F0",
+        "02": "#E8E4DD",
+        "03": "#D4CDBC",
+        "04": "#8B7A6B",
+        "05": "#2C2418"
+      }
+    },
+    "streetwear": {
+      "primary": {
+        "hex": "#1A1A1A",
+        "rgb": "26,26,26",
+        "meaning": "authenticité, puissance, attitude urbaine",
+        "role": "fonds, éléments dominants, identité forte"
+      },
+      "secondary": {
+        "hex": "#E63946",
+        "rgb": "230,57,70",
+        "meaning": "énergie, audace, rébellion maîtrisée",
+        "harmony": "contraste maximal, tension visuelle dynamique"
+      },
+      "accent": {
+        "hex": "#F4A261",
+        "rgb": "244,162,97",
+        "meaning": "chaleur urbaine, signal fort, singularité"
+      },
+      "neutrals": {
+        "01": "#F5F5F5",
+        "02": "#E0E0E0",
+        "03": "#BDBDBD",
+        "04": "#757575",
+        "05": "#212121"
+      }
+    },
+    "fitness": {
+      "primary": {
+        "hex": "#1E3A8A",
+        "rgb": "30,58,138",
+        "meaning": "performance, discipline, puissance maîtrisée",
+        "role": "fonds dynamiques, éléments structurants"
+      },
+      "secondary": {
+        "hex": "#EF4444",
+        "rgb": "239,68,68",
+        "meaning": "énergie, effort, motivation intense",
+        "harmony": "complémentaire contrastée, tension action/repos"
+      },
+      "accent": {
+        "hex": "#22C55E",
+        "rgb": "34,197,94",
+        "meaning": "progression, résultat, vitalité"
+      },
+      "neutrals": {
+        "01": "#FAFAFA",
+        "02": "#F0F0F0",
+        "03": "#D4D4D4",
+        "04": "#737373",
+        "05": "#0A0A0A"
+      }
+    },
+    "cosmetic": {
+      "primary": {
+        "hex": "#F5E6D3",
+        "rgb": "245,230,211",
+        "meaning": "douceur, pureté, naturel",
+        "role": "fonds apaisants, surfaces principales"
+      },
+      "secondary": {
+        "hex": "#D4A5A5",
+        "rgb": "212,165,165",
+        "meaning": "douceur rose, bien-être, délicatesse",
+        "harmony": "harmonie ton sur ton, continuité apaisante"
+      },
+      "accent": {
+        "hex": "#A7C7B9",
+        "rgb": "167,199,185",
+        "meaning": "fraîcheur, nature, efficacité douce"
+      },
+      "neutrals": {
+        "01": "#FFFFFF",
+        "02": "#F9F7F5",
+        "03": "#E8E2DA",
+        "04": "#B8A99A",
+        "05": "#5C4E3D"
+      }
+    }
+  },
+  "wcagRequirements": {
+    "normalText": 4.5,
+    "largeText": 3.0,
+    "formula": "contrastRatio = (L1 + 0.05) / (L2 + 0.05) where L = 0.2126 * R + 0.7152 * G + 0.0722 * B, with RGB values normalized to 0-1 and gamma corrected"
+  }
+}
