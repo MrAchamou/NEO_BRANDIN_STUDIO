@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import {
   ChevronDown, ChevronUp, Sparkles, RotateCcw, Check, AlertCircle,
-  MapPin, Loader2, Star, ExternalLink, History, Trash2, Clock,
+  MapPin, Loader2, Star, ExternalLink, History, Trash2, Clock, X,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -132,17 +132,82 @@ function FieldRow({ label, children }: { label: string; children: React.ReactNod
   );
 }
 
+function MarketMultiSelect({ form }: { form: any }) {
+  const [open, setOpen] = useState(false);
+  const raw: string = form.watch("market") || "international";
+  const selected = raw.split(",").map(v => v.trim()).filter(Boolean);
+
+  function toggle(value: string) {
+    let next: string[];
+    if (selected.includes(value)) {
+      next = selected.filter(v => v !== value);
+      if (next.length === 0) next = ["international"];
+    } else {
+      next = [...selected.filter(v => v !== "international"), value];
+      if (next.length === 0) next = ["international"];
+    }
+    form.setValue("market", next.join(","), { shouldDirty: true });
+  }
+
+  const selectedItems = selected.map(v => MARKETS.find(m => m.value === v)).filter(Boolean) as typeof MARKETS;
+  const currencies = [...new Set(selectedItems.map(m => m.currency))];
+
+  return (
+    <div className="space-y-2">
+      <div
+        className="flex min-h-10 w-full cursor-pointer flex-wrap gap-1.5 rounded-md border border-white/10 bg-neutral-900 px-2 py-1.5"
+        onClick={() => setOpen(o => !o)}
+      >
+        {selectedItems.map(m => (
+          <span
+            key={m.value}
+            className="inline-flex items-center gap-1 rounded bg-primary/20 px-2 py-0.5 text-xs text-primary"
+            onClick={e => { e.stopPropagation(); toggle(m.value); }}
+          >
+            {m.label}
+            <X size={10} className="opacity-60 hover:opacity-100" />
+          </span>
+        ))}
+        <span className="ml-auto flex items-center text-white/30 text-xs">
+          {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+        </span>
+      </div>
+      {open && (
+        <div className="rounded-md border border-white/10 bg-neutral-950 p-2 shadow-xl">
+          <div className="grid grid-cols-2 gap-1">
+            {MARKETS.map(m => {
+              const isActive = selected.includes(m.value);
+              return (
+                <button
+                  key={m.value}
+                  type="button"
+                  onClick={() => toggle(m.value)}
+                  className={`flex items-center gap-2 rounded px-2 py-1.5 text-left text-xs transition-colors ${
+                    isActive
+                      ? "bg-primary/20 text-primary"
+                      : "text-white/70 hover:bg-white/5 hover:text-white"
+                  }`}
+                >
+                  <span className="flex-1">{m.label}</span>
+                  {isActive && <Check size={10} />}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+      <div className="flex h-9 items-center px-3 rounded-md border border-white/10 bg-primary/10 text-xs text-primary font-mono">
+        {currencies.join(" · ")} — devise{currencies.length > 1 ? "s" : ""} des marchés sélectionnés
+      </div>
+    </div>
+  );
+}
+
 function IdentitySection({ form }: { form: any }) {
-  const selectedMarket = MARKETS.find(m => m.value === form.watch("market")) ?? MARKETS[0];
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
       <FieldRow label="Nom de la marque *">
         <Input {...form.register("brand_name")} placeholder="ex: LUXEOR" className="bg-black/20 h-9 text-sm" />
-      </FieldRow>
-      <FieldRow label="Marché / Pays cible *">
-        <select {...form.register("market")} className={selectCls()}>
-          {MARKETS.map((m) => <option key={m.value} value={m.value}>{m.label}</option>)}
-        </select>
       </FieldRow>
       <FieldRow label="Secteur *">
         <select {...form.register("sector")} className={selectCls()}>
@@ -157,11 +222,11 @@ function IdentitySection({ form }: { form: any }) {
       <FieldRow label="Valeurs de marque">
         <Input {...form.register("values")} placeholder="ex: excellence, prestige, authenticité" className="bg-black/20 h-9 text-sm" />
       </FieldRow>
-      <FieldRow label={`Devise locale (${selectedMarket.currency})`}>
-        <div className="flex h-10 items-center px-3 rounded-md border border-white/10 bg-primary/10 text-sm text-primary font-mono">
-          {selectedMarket.currency} — auto-détectée selon le marché
-        </div>
-      </FieldRow>
+      <div className="sm:col-span-2">
+        <FieldRow label="Marché / Pays cible *">
+          <MarketMultiSelect form={form} />
+        </FieldRow>
+      </div>
       <div className="sm:col-span-2">
         <FieldRow label="Couleurs de marque (HEX ou description)">
           <Input {...form.register("colors")} placeholder="ex: #D4AF37, #1A1A1A, #FFFFFF — ou: or, noir profond, blanc" className="bg-black/20 h-9 text-sm" />
