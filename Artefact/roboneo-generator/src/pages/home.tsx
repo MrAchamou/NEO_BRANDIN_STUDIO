@@ -486,14 +486,27 @@ export default function Home() {
                 Neo Branding Studio
               </h1>
               <p className="text-muted-foreground text-sm mt-1.5 max-w-xl">
-                Génère des prompts chirurgicaux pour créer tous les assets de ta marque — 10 modules, GPT-5.2 temps réel.
+                Génère des prompts chirurgicaux pour créer tous les assets de ta marque — 10 modules, 3 IA en temps réel.
               </p>
             </div>
-            <div className="hidden md:flex flex-col items-end gap-1">
+            <div className="hidden md:flex flex-col items-end gap-2">
               <span className="text-xs text-muted-foreground/60 font-mono">v2.0.0</span>
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-xs text-green-400">GPT-5.2 Connecté</span>
+              <div className="flex flex-col items-end gap-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-[11px] text-green-400 font-mono">Qwen-3 235B</span>
+                  <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">génération</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                  <span className="text-[11px] text-blue-400 font-mono">GPT-5.2</span>
+                  <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">review</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
+                  <span className="text-[11px] text-orange-400 font-mono">Claude Sonnet</span>
+                  <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">débat</span>
+                </div>
               </div>
             </div>
           </div>
