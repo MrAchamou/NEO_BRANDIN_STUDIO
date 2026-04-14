@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Copy, Download, Check, Brain,
-  Rocket, Globe, BookOpen, CalendarDays, ExternalLink,
+  Rocket, Globe, BookOpen, CalendarDays,
+  Sparkles, ChevronDown, ChevronUp, Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -48,25 +49,37 @@ const SECTION_COLORS: Record<string, string> = {
 };
 
 const SECTION_LABELS: Record<string, string> = {
-  landing_page: "Landing Page HTML",
+  landing_page: "Landing Page — Prompt IA + Cahier des Charges",
   user_guide: "Guide d'Utilisation",
   calendar: "Calendrier 30 Jours",
 };
 
 // ─── Rendu spécialisé par section ────────────────────────────────────────────
 
-function LandingPageView({ data, streamBuffer, streaming, isActive }: {
+function LandingPageView({ data, streamBuffer, streaming, isActive, brief }: {
   data: Record<string, unknown>;
   streamBuffer: string;
   streaming: boolean;
   isActive: boolean;
+  brief: Record<string, unknown>;
 }) {
-  const [copied, setCopied] = useState(false);
+  const [copiedPrompt, setCopiedPrompt] = useState(false);
+  const [copiedCdc, setCopiedCdc] = useState(false);
+  const [expandedCdc, setExpandedCdc] = useState(false);
+  const [isImproving, setIsImproving] = useState(false);
+  const [improvedData, setImprovedData] = useState<{
+    refined: string;
+    score: number;
+    winner: "gpt" | "claude" | "tie";
+    improvements: string[];
+  } | null>(null);
   const { toast } = useToast();
-  const html = (data.html as string) ?? "";
+
+  const aiPrompt = (data.ai_prompt as string) ?? "";
+  const cahier = data.cahier_des_charges as Record<string, unknown> | undefined;
   const meta = data.meta as Record<string, unknown> | undefined;
 
-  if (streaming && isActive && !html) {
+  if (streaming && isActive && !aiPrompt) {
     return (
       <div className="bg-black/30 rounded-md p-4 h-44 overflow-y-auto font-mono text-xs text-foreground/80 leading-relaxed border border-white/5 whitespace-pre-wrap">
         {streamBuffer}
@@ -75,7 +88,7 @@ function LandingPageView({ data, streamBuffer, streaming, isActive }: {
     );
   }
 
-  if (!html) {
+  if (!aiPrompt && !cahier) {
     return (
       <div className="bg-black/30 rounded-md p-4 h-32 flex items-center justify-center border border-white/5">
         <span className="text-muted-foreground/40 italic text-sm">En attente de génération...</span>
@@ -83,28 +96,79 @@ function LandingPageView({ data, streamBuffer, streaming, isActive }: {
     );
   }
 
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(html);
-    setCopied(true);
-    toast({ title: "HTML copié !" });
-    setTimeout(() => setCopied(false), 2000);
+  const activePrompt = improvedData?.refined ?? aiPrompt;
+
+  const handleCopyPrompt = async () => {
+    await navigator.clipboard.writeText(activePrompt);
+    setCopiedPrompt(true);
+    toast({ title: "Prompt IA copié !" });
+    setTimeout(() => setCopiedPrompt(false), 2000);
   };
 
-  const handlePreview = () => {
-    const blob = new Blob([html], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    window.open(url, "_blank");
+  const handleCopyCdc = async () => {
+    const txt = cahier ? JSON.stringify(cahier, null, 2) : "";
+    await navigator.clipboard.writeText(txt);
+    setCopiedCdc(true);
+    toast({ title: "Cahier des charges copié !" });
+    setTimeout(() => setCopiedCdc(false), 2000);
   };
 
   const handleDownload = () => {
+    const content = `# LANDING PAGE — PROMPT IA + CAHIER DES CHARGES\n# ${brief.brand_name ?? ""} — ${brief.product_name ?? ""}\n\n${"=".repeat(70)}\n## PROMPT IA (coller dans v0.dev / Cursor / Claude Artifacts)\n${"=".repeat(70)}\n\n${activePrompt}\n\n${"=".repeat(70)}\n## CAHIER DES CHARGES COMPLET\n${"=".repeat(70)}\n\n${cahier ? JSON.stringify(cahier, null, 2) : ""}`;
     const a = document.createElement("a");
-    a.href = "data:text/html;charset=utf-8," + encodeURIComponent(html);
-    a.download = "landing_page.html";
+    a.href = "data:text/plain;charset=utf-8," + encodeURIComponent(content);
+    a.download = `landing_page_cahier_charges_${String(brief.brand_name ?? "brand").toLowerCase().replace(/\s+/g, "_")}.txt`;
     a.click();
   };
 
+  const handleImprove = async () => {
+    if (!aiPrompt) return;
+    setIsImproving(true);
+    try {
+      const res = await fetch(`${import.meta.env.BASE_URL}api/openai/review-prompt`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content: activePrompt,
+          section_key: "landing_page_cahier_des_charges",
+          brand_name: brief.brand_name,
+          sector: brief.sector,
+          tone: brief.tone,
+          values: brief.values,
+          target_demographic: brief.target_demographic,
+          competitors: brief.competitors,
+          forbidden_keywords: brief.forbidden_keywords,
+          colors: brief.primary_color,
+        }),
+      });
+      if (!res.ok) throw new Error("Erreur API amélioration");
+      const result = await res.json() as {
+        refined: string;
+        score: number;
+        winner: "gpt" | "claude" | "tie";
+        improvements: string[];
+      };
+      setImprovedData(result);
+      toast({
+        title: `✨ Amélioré par ${result.winner === "gpt" ? "GPT" : result.winner === "claude" ? "Claude" : "GPT + Claude"} — Score ${result.score}/10`,
+        description: `${result.improvements.length} améliorations appliquées`,
+      });
+    } catch {
+      toast({ title: "Erreur amélioration", description: "GPT et Claude n'ont pas pu améliorer le prompt.", variant: "destructive" });
+    } finally {
+      setIsImproving(false);
+    }
+  };
+
+  const winnerColor = improvedData?.winner === "gpt"
+    ? "text-green-400 border-green-500/30 bg-green-500/10"
+    : improvedData?.winner === "claude"
+    ? "text-purple-400 border-purple-500/30 bg-purple-500/10"
+    : "text-blue-400 border-blue-500/30 bg-blue-500/10";
+
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
+      {/* Meta SEO */}
       {meta && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {meta.title && (
@@ -121,20 +185,179 @@ function LandingPageView({ data, streamBuffer, streaming, isActive }: {
           )}
         </div>
       )}
-      <div className="relative">
-        <div className="bg-black/30 rounded-md p-4 h-48 overflow-y-auto font-mono text-xs text-foreground/70 leading-relaxed border border-blue-500/10 whitespace-pre-wrap pr-10">
-          {html.slice(0, 2000)}{html.length > 2000 ? "\n\n... [code tronqué — cliquer Télécharger pour le fichier complet]" : ""}
+
+      {/* Outils recommandés */}
+      {(meta?.recommended_tools as string[] | undefined) && (
+        <div className="flex flex-wrap gap-1.5 items-center">
+          <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Outils IA :</span>
+          {(meta!.recommended_tools as string[]).map((tool) => (
+            <span key={tool} className="text-[11px] bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded-full font-medium">
+              {tool}
+            </span>
+          ))}
         </div>
-        <Button variant="ghost" size="icon" onClick={handleCopy} className="absolute top-2 right-2 text-muted-foreground hover:text-blue-400">
-          {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
-        </Button>
+      )}
+
+      {/* Badge winner si amélioré */}
+      {improvedData && (
+        <div className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium ${winnerColor}`}>
+          <Sparkles className="w-4 h-4" />
+          <span>
+            GOD TIER — Amélioré par {improvedData.winner === "gpt" ? "🤖 GPT Challenger" : improvedData.winner === "claude" ? "🟣 Claude Critique" : "🤖 GPT + 🟣 Claude"} — Score {improvedData.score}/10
+          </span>
+        </div>
+      )}
+
+      {/* Améliorations appliquées */}
+      {improvedData && improvedData.improvements.length > 0 && (
+        <div className="bg-black/20 rounded-lg p-3 border border-white/5 space-y-1">
+          <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2">Améliorations appliquées</p>
+          {improvedData.improvements.map((imp, i) => (
+            <p key={i} className="text-xs text-foreground/70 flex gap-2">
+              <span className="text-green-400 flex-shrink-0">✓</span>
+              <span>{imp}</span>
+            </p>
+          ))}
+        </div>
+      )}
+
+      {/* Prompt IA */}
+      <div>
+        <div className="flex items-center justify-between mb-1.5">
+          <p className="text-xs font-semibold text-blue-400 uppercase tracking-wider flex items-center gap-1.5">
+            <Zap className="w-3.5 h-3.5" /> Prompt IA — Prêt à coller
+          </p>
+          <Button variant="ghost" size="sm" onClick={handleCopyPrompt} className="h-7 text-xs text-muted-foreground hover:text-blue-400">
+            {copiedPrompt ? <Check className="w-3.5 h-3.5 mr-1 text-green-500" /> : <Copy className="w-3.5 h-3.5 mr-1" />}
+            Copier prompt
+          </Button>
+        </div>
+        <div className="bg-black/40 rounded-lg p-4 h-40 overflow-y-auto text-sm text-foreground/80 leading-relaxed border border-blue-500/10 whitespace-pre-wrap font-mono">
+          {activePrompt}
+        </div>
       </div>
-      <div className="flex gap-2">
-        <Button variant="outline" size="sm" onClick={handlePreview} className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10">
-          <ExternalLink className="w-3.5 h-3.5 mr-1.5" /> Prévisualiser
+
+      {/* Cahier des charges */}
+      {cahier && (
+        <div>
+          <button
+            onClick={() => setExpandedCdc(!expandedCdc)}
+            className="w-full flex items-center justify-between text-xs font-semibold text-foreground/70 uppercase tracking-wider hover:text-foreground transition-colors py-1.5"
+          >
+            <span className="flex items-center gap-1.5">
+              <BookOpen className="w-3.5 h-3.5 text-blue-400" />
+              Cahier des charges complet
+            </span>
+            {expandedCdc ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
+
+          {expandedCdc && (
+            <div className="mt-2 space-y-3">
+              {/* Objectif stratégique */}
+              {cahier.objectif_strategique && (
+                <div className="bg-black/20 rounded-lg p-3 border border-white/5">
+                  <p className="text-[10px] text-blue-400 uppercase tracking-wider mb-1">🎯 Objectif stratégique</p>
+                  <p className="text-sm text-foreground/80">{cahier.objectif_strategique as string}</p>
+                </div>
+              )}
+
+              {/* Architecture */}
+              {cahier.architecture_page && (
+                <div className="bg-black/20 rounded-lg p-3 border border-white/5">
+                  <p className="text-[10px] text-blue-400 uppercase tracking-wider mb-2">🏗 Architecture de la page</p>
+                  {(cahier.architecture_page as Record<string, unknown>).above_fold && (
+                    <div className="mb-2">
+                      <p className="text-[10px] text-muted-foreground mb-0.5">Above the fold</p>
+                      <p className="text-xs text-foreground/70">{(cahier.architecture_page as any).above_fold}</p>
+                    </div>
+                  )}
+                  {Array.isArray((cahier.architecture_page as any).sections_ordonnees) && (
+                    <div className="space-y-0.5 mt-2">
+                      {((cahier.architecture_page as any).sections_ordonnees as string[]).map((s, i) => (
+                        <p key={i} className="text-xs text-foreground/70 border-l-2 border-blue-500/30 pl-2">{s}</p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Copywriting */}
+              {cahier.copywriting_exact && (
+                <div className="bg-black/20 rounded-lg p-3 border border-white/5">
+                  <p className="text-[10px] text-blue-400 uppercase tracking-wider mb-2">✍️ Copywriting exact</p>
+                  {Object.entries(cahier.copywriting_exact as Record<string, string>).map(([k, v]) => (
+                    <div key={k} className="mb-1.5">
+                      <p className="text-[10px] text-muted-foreground capitalize">{k.replace(/_/g, " ")}</p>
+                      <p className="text-xs text-foreground/80 font-medium">"{v}"</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Design system */}
+              {cahier.design_system && (
+                <div className="bg-black/20 rounded-lg p-3 border border-white/5">
+                  <p className="text-[10px] text-blue-400 uppercase tracking-wider mb-2">🎨 Design System</p>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {Object.entries(cahier.design_system as Record<string, string>).map(([k, v]) => (
+                      <div key={k}>
+                        <p className="text-[10px] text-muted-foreground capitalize">{k.replace(/_/g, " ")}</p>
+                        <p className="text-xs text-foreground/70 font-mono">{v}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Éléments de conversion */}
+              {cahier.elements_conversion && (
+                <div className="bg-black/20 rounded-lg p-3 border border-white/5">
+                  <p className="text-[10px] text-blue-400 uppercase tracking-wider mb-2">🔥 Éléments de conversion</p>
+                  {Object.entries(cahier.elements_conversion as Record<string, string>).map(([k, v]) => (
+                    <div key={k} className="mb-1.5">
+                      <p className="text-[10px] text-muted-foreground capitalize">{k.replace(/_/g, " ")}</p>
+                      <p className="text-xs text-foreground/70">{v}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Checklist lancement */}
+              {Array.isArray(cahier.checklist_lancement) && (
+                <div className="bg-black/20 rounded-lg p-3 border border-white/5">
+                  <p className="text-[10px] text-blue-400 uppercase tracking-wider mb-2">✅ Checklist de lancement</p>
+                  <div className="space-y-0.5">
+                    {(cahier.checklist_lancement as string[]).map((item, i) => (
+                      <p key={i} className="text-xs text-foreground/70">{item}</p>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Actions */}
+      <div className="flex flex-wrap gap-2 pt-1">
+        <Button
+          onClick={handleImprove}
+          disabled={isImproving || !aiPrompt}
+          size="sm"
+          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white border-0 font-semibold"
+        >
+          {isImproving ? (
+            <><Brain className="w-3.5 h-3.5 mr-1.5 animate-pulse" /> GPT + Claude améliorent...</>
+          ) : (
+            <><Sparkles className="w-3.5 h-3.5 mr-1.5" /> Améliorer — GOD TIER</>
+          )}
+        </Button>
+        <Button variant="outline" size="sm" onClick={handleCopyCdc} className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10">
+          {copiedCdc ? <Check className="w-3.5 h-3.5 mr-1.5 text-green-500" /> : <Copy className="w-3.5 h-3.5 mr-1.5" />}
+          Copier CDC
         </Button>
         <Button variant="outline" size="sm" onClick={handleDownload} className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10">
-          <Download className="w-3.5 h-3.5 mr-1.5" /> Télécharger index.html
+          <Download className="w-3.5 h-3.5 mr-1.5" /> Télécharger .txt
         </Button>
       </div>
     </div>
@@ -524,7 +747,7 @@ export default function Module07() {
             <CardHeader>
               <CardTitle className="text-2xl text-foreground">Launch Ready</CardTitle>
               <CardDescription>
-                Génère une landing page HTML complète prête à déployer, un guide avec calendrier 30 jours, et un plan de publication à partir de votre Brief Global.
+                Génère un <strong>Prompt IA + Cahier des Charges GOD-TIER</strong> pour votre landing page (prêt pour v0.dev, Cursor AI, Framer…), un guide stratégique et un calendrier 30 jours personnalisé. Bouton "Améliorer" pour optimiser le CDC avec GPT + Claude jusqu'au niveau parfait.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -607,6 +830,7 @@ export default function Module07() {
                     streamBuffer={sec?.buffer ?? ""}
                     streaming={isGenerating}
                     isActive={isActive}
+                    brief={brief as unknown as Record<string, unknown>}
                   />
                 )}
                 {key === "user_guide" && (

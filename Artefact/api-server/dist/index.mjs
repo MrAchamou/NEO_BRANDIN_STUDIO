@@ -48756,45 +48756,114 @@ R\xC8GLES ABSOLUES:
   const sections = [
     {
       key: "landing_page",
-      label: "Landing Page HTML",
-      agent: "Web Design Agent / Conversion Optimizer",
-      prompt: `G\xE9n\xE8re une landing page HTML compl\xE8te et pr\xEAte \xE0 d\xE9ployer pour "${product_name}" de la marque "${brand_name}" (secteur ${sector}).
+      label: "Landing Page \u2014 Prompt IA + Cahier des Charges",
+      agent: "Landing Page Architect / GOD-TIER Conversion Strategist",
+      prompt: `Tu es un expert senior en architecture de landing pages haute conversion et en r\xE9daction de cahiers des charges pour IA g\xE9n\xE9rative.
 
-La landing page doit inclure :
-- Header avec logo placeholder et nom de la marque
-- Section Hero : badge promo, titre H1 accrocheur, description courte persuasive, prix barr\xE9 + prix promo, bouton CTA
-- Section Features (3 caract\xE9ristiques avec ic\xF4ne emoji)
-- Section Testimonials (3 avis clients fictifs r\xE9alistes)
-- Section FAQ (4 questions/r\xE9ponses pertinentes pour le secteur)
-- Footer avec mentions l\xE9gales
+Tu dois produire un PROMPT IA COMPLET + CAHIER DES CHARGES ULTRA-D\xC9TAILL\xC9 pour cr\xE9er une landing page GOD-TIER pour "${product_name}" de la marque "${brand_name}" (secteur ${sector}, ton ${tone}).
 
-CSS int\xE9gr\xE9 utilisant EXACTEMENT:
-- Couleur principale: ${primary_color} (OBLIGATOIRE \u2014 ne pas substituer par #D4AF37 ou toute autre teinte)
-- Couleur hover: calculer ${primary_color} \xE0 -10% de luminosit\xE9 (ex: si #C8A96E \u2192 hover: #B49455)
-- Police titres: ${heading_font} (import Google Fonts)
-- Police corps: ${body_font} (import Google Fonts \u2014 OBLIGATOIRE pour tous les paragraphes, ne pas utiliser Montserrat)
-- Fond blanc, design responsive mobile-first
-- Transitions CSS fluides sur TOUS les boutons et liens: transition: all 0.3s ease;
-- Effets hover subtils: transform: translateY(-2px) sur les boutons CTA
+CONTEXTE PRODUIT:
+- Marque: ${brand_name} | Produit: ${product_name}
+- Prix: ${priceDisplay} (avant: ${oldPriceDisplay}, -${discount}%) | Code promo: ${code}
+- Description: ${product_description || "produit premium"}
+- Caract\xE9ristiques: ${featuresStr || "qualit\xE9 sup\xE9rieure, durabilit\xE9, \xE9l\xE9gance"}
+- B\xE9n\xE9fices: ${benefitsStr || "style, performance, satisfaction garantie"}
+- URL checkout: ${checkout_url} | Livraison: ${shipping_info}
+- Couleur principale: ${primary_color} | Polices: ${heading_font} (titres) / ${body_font} (corps)
+- March\xE9: ${marketCfg.country} \u2014 Paiements locaux: ${marketCfg.payment_methods.slice(0, 3).join(", ")}
 
-R\xC8GLES HTML STRICTES:
-- Toutes les balises DOIVENT \xEAtre correctement ferm\xE9es \u2014 jamais de balise tronqu\xE9e ou corrompue
-- Le nom "${brand_name}" doit appara\xEEtre EN ENTIER, jamais abr\xE9g\xE9
-- Les prix: afficher ${old_price}\u20AC barr\xE9 \u2192 ${price}\u20AC avec la mention "(Prix indicatif \u2014 paiement en FCFA disponible)"
-
-R\xE9ponds en JSON avec exactement cette structure:
+R\xE9ponds en JSON avec EXACTEMENT cette structure (tous les champs obligatoires, rien ne doit \xEAtre vide ou g\xE9n\xE9rique):
 {
-  "html": "<!DOCTYPE html>...</html> \u2014 CODE HTML COMPLET VALIDE en une seule cha\xEEne (\xE9chapper les guillemets internes)",
-  "meta": {
-    "title": "titre SEO de la page",
-    "description": "meta description 150 caract\xE8res",
-    "sections": ["hero", "features", "testimonials", "faq", "footer"]
-  }
-}
+  "ai_prompt": "PROMPT IA COMPLET pr\xEAt \xE0 coller dans v0.dev / Cursor AI / Claude Artifacts / Webflow AI / Framer AI \u2014 en anglais, ultra-d\xE9taill\xE9, avec toutes les sp\xE9cifications techniques exactes de couleurs HEX, polices, dimensions, animations, micro-interactions, copywriting inclus mot pour mot, structure de sections, call-to-action, \xE9l\xE9ments de preuve sociale. Ce prompt doit permettre \xE0 n'importe quelle IA de g\xE9n\xE9rer la landing page parfaite sans poser de question.",
 
-La valeur "html" doit \xEAtre le code HTML COMPLET de la page, pr\xEAt \xE0 copier-coller dans un fichier index.html.
-Code promo \xE0 afficher: ${code} (-${discount}%).
-Prix: ${old_price}\u20AC barr\xE9 \u2192 ${price}\u20AC. Livraison: ${shipping_info}.`
+  "cahier_des_charges": {
+    "objectif_strategique": "objectif pr\xE9cis de conversion (ex: transformer 8-12% des visiteurs en acheteurs en moins de 90 secondes) avec KPIs mesurables",
+
+    "architecture_page": {
+      "above_fold": "description ultra-pr\xE9cise de ce qui appara\xEEt sans scroll: headline, sous-titre, visuel hero, CTA primaire, badge urgence/preuve sociale",
+      "sections_ordonnees": [
+        "1. HERO \u2014 [d\xE9tail exact: headline H1 word-for-word, sous-titre, visuel, CTA bouton texte + couleur, badge promo]",
+        "2. SOCIAL PROOF BAR \u2014 [logos partenaires ou nombre clients ou note \xE9toiles]",
+        "3. PROBL\xC8ME \u2192 SOLUTION \u2014 [pr\xE9sentation du probl\xE8me avant/apr\xE8s]",
+        "4. FEATURES \u2014 [3-5 caract\xE9ristiques avec ic\xF4ne, titre, description courte]",
+        "5. B\xC9N\xC9FICES \xC9MOTIONNELS \u2014 [section storytelling ou t\xE9moignage vid\xE9o]",
+        "6. TESTIMONIALS \u2014 [3 avis d\xE9taill\xE9s avec nom, photo placeholder, note, texte]",
+        "7. OFFRE IRR\xC9SISTIBLE \u2014 [prix barr\xE9, prix promo, code promo, countdown timer, garantie]",
+        "8. FAQ \u2014 [5 questions/r\xE9ponses qui l\xE8vent les objections principales]",
+        "9. CTA FINAL \u2014 [r\xE9p\xE9tition de l'offre + bouton achat + r\xE9assurance livraison/paiement]",
+        "10. FOOTER \u2014 [mentions l\xE9gales, liens, m\xE9thodes de paiement]"
+      ],
+      "navigation": "sticky header avec logo + CTA 'Acheter maintenant' toujours visible"
+    },
+
+    "design_system": {
+      "couleur_principale": "${primary_color}",
+      "couleur_hover": "calculer ${primary_color} \xE0 -10% luminosit\xE9",
+      "couleur_fond": "#FFFFFF avec sections altern\xE9es #F9F9F9",
+      "couleur_texte_principal": "#1A1A1A",
+      "couleur_texte_secondaire": "#666666",
+      "couleur_accentuation_urgence": "#E53E3E (rouge pour badge 'Offre limit\xE9e')",
+      "police_titres": "${heading_font} \u2014 weights 700 et 900",
+      "police_corps": "${body_font} \u2014 weight 400 et 500",
+      "taille_texte_base": "18px desktop / 16px mobile",
+      "border_radius": "12px cards / 8px boutons / 50px badges",
+      "ombres": "box-shadow: 0 8px 32px rgba(0,0,0,0.08) sur les cards",
+      "animations": "fade-in-up au scroll (100ms delay, 0.4s duration), pulse sur le bouton CTA principal toutes les 3s"
+    },
+
+    "copywriting_exact": {
+      "headline_h1": "headline H1 percutant word-for-word pour ${brand_name} \u2014 ${product_name} (max 8 mots, orient\xE9 b\xE9n\xE9fice, pas de g\xE9n\xE9rique)",
+      "sous_titre": "sous-titre explicatif 1 phrase (20-25 mots max) qui compl\xE8te le H1",
+      "cta_principal": "texte exact du bouton CTA principal (ex: 'Obtenir ${product_name} maintenant \u2192')",
+      "badge_urgence": "texte badge urgence (ex: '\u{1F525} Offre -${discount}% \u2014 ${code} \u2014 Expire ce soir')",
+      "proposition_valeur": "1 phrase de valeur unique sous le CTA (ex: 'Livraison offerte \u2022 Satisfait ou rembours\xE9 30 jours \u2022 Paiement s\xE9curis\xE9')"
+    },
+
+    "elements_conversion": {
+      "urgence": "countdown timer 24h sous le prix, badge 'Stock limit\xE9', mentions '${code} valable aujourd'hui seulement'",
+      "confiance": "badges paiement s\xE9curis\xE9 (${marketCfg.payment_methods.slice(0, 3).join(", ")}), garantie satisfait ou rembours\xE9, nombre de clients satisfaits",
+      "preuve_sociale": "3 t\xE9moignages avec \xE9toiles 5/5, noms r\xE9alistes pour march\xE9 ${marketCfg.country}, photos avatars, dates r\xE9centes",
+      "ancrage_prix": "prix barr\xE9 ${oldPriceDisplay} visible, prix actuel ${priceDisplay} en ${primary_color} gras, \xE9conomie en badge vert '-${discount}%'"
+    },
+
+    "specifications_techniques": {
+      "responsive": "mobile-first, breakpoints: 375px / 768px / 1280px",
+      "performance": "LCP < 2.5s, images WebP/AVIF, lazy loading, CSS critique inlin\xE9",
+      "seo": {
+        "title_tag": "titre SEO 60 chars max pour ${brand_name} ${product_name}",
+        "meta_description": "meta description 155 chars avec CTA et mot-cl\xE9 principal",
+        "og_image": "1200\xD7630px \u2014 fond ${primary_color} avec produit centr\xE9 et texte blanc"
+      },
+      "tracking": "Google Analytics GA4 + Meta Pixel (placeholders \xE0 remplacer), events: page_view, add_to_cart, purchase, scroll_depth_50, scroll_depth_90",
+      "accessibilite": "WCAG 2.1 AA \u2014 contrastes v\xE9rifi\xE9s, alt texts, aria-labels, navigation clavier"
+    },
+
+    "outils_recommandes": [
+      "v0.dev \u2014 coller le ai_prompt directement pour g\xE9n\xE9rer le code React/Next.js",
+      "Cursor AI + Claude \u2014 coller le ai_prompt pour g\xE9n\xE9rer HTML/CSS/JS complet",
+      "Framer AI \u2014 pour une version no-code anim\xE9e",
+      "Webflow AI \u2014 pour une version CMS professionnelle",
+      "Builder.io \u2014 pour int\xE9gration e-commerce Shopify/WooCommerce"
+    ],
+
+    "checklist_lancement": [
+      "\u2705 Remplacer les placeholders photos par les vraies images produit (format WebP, min 800px)",
+      "\u2705 Configurer l'URL checkout r\xE9elle: ${checkout_url}",
+      "\u2705 Activer le countdown timer sur le serveur (pas c\xF4t\xE9 client)",
+      "\u2705 Tester le code promo ${code} dans le syst\xE8me de paiement",
+      "\u2705 Installer le Meta Pixel et GA4 avec les vrais IDs",
+      "\u2705 A/B tester 2 variants du headline sur 1000 visiteurs minimum",
+      "\u2705 Configurer les modes de paiement locaux: ${marketCfg.payment_methods.slice(0, 4).join(", ")}",
+      "\u2705 V\xE9rifier la vitesse PageSpeed Insights > 90 mobile et desktop"
+    ]
+  },
+
+  "meta": {
+    "title": "titre SEO 60 chars pour ${brand_name} \u2014 ${product_name}",
+    "description": "meta description 155 chars avec CTA",
+    "recommended_tools": ["v0.dev", "Cursor AI", "Framer AI", "Webflow AI", "Builder.io"]
+  }
+}`
     },
     {
       key: "user_guide",
@@ -48878,7 +48947,7 @@ Adapte les actions et contenus sp\xE9cifiquement au secteur "${sector}" et \xE0 
       let fullContent = "";
       const stream = await cerebrasStream({
         model: CEREBRAS_MODEL,
-        max_tokens: 4096,
+        max_tokens: section.key === "landing_page" ? 8192 : 4096,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: section.prompt }
