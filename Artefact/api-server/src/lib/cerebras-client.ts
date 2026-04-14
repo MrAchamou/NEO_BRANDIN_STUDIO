@@ -122,18 +122,14 @@ export async function cerebrasCreate(
         console.log(`[Cerebras] ⏳ clé #${keyNum} saturée → essai clé #${((idx + 1) % pool.length) + 1}`);
         continue;
       }
-      if (isRateLimitOrQueue(err) && params.model !== CEREBRAS_MODEL_FAST) {
-        const fallbackIdx = (idx + 1) % pool.length;
-        console.log(`[Cerebras] ⚡ fallback rapide → clé #${fallbackIdx + 1} (${CEREBRAS_MODEL_FAST})`);
-        return pool[fallbackIdx].chat.completions.create({
-          ...params,
-          model: CEREBRAS_MODEL_FAST,
-        });
+      if (isRateLimitOrQueue(err)) {
+        console.error(`[Cerebras] ✗ ${label ?? "create"} — toutes les ${pool.length} clés saturées, abandon.`);
+        throw new Error("Toutes les clés Cerebras sont saturées. Veuillez réessayer dans quelques instants.");
       }
       throw err;
     }
   }
-  throw new Error("Toutes les clés Cerebras sont saturées.");
+  throw new Error("Toutes les clés Cerebras sont saturées. Veuillez réessayer dans quelques instants.");
 }
 
 /**
@@ -164,19 +160,14 @@ export async function cerebrasStream(
         console.log(`[Cerebras] ⏳ clé #${keyNum} saturée → essai clé #${((idx + 1) % pool.length) + 1}`);
         continue;
       }
-      if (isRateLimitOrQueue(err) && params.model !== CEREBRAS_MODEL_FAST) {
-        const fallbackIdx = (idx + 1) % pool.length;
-        console.log(`[Cerebras] ⚡ fallback rapide → clé #${fallbackIdx + 1} (${CEREBRAS_MODEL_FAST})`);
-        return pool[fallbackIdx].chat.completions.create({
-          ...params,
-          model: CEREBRAS_MODEL_FAST,
-          stream: true,
-        });
+      if (isRateLimitOrQueue(err)) {
+        console.error(`[Cerebras] ✗ ${label ?? "stream"} — toutes les ${pool.length} clés saturées, abandon.`);
+        throw new Error("Toutes les clés Cerebras sont saturées. Veuillez réessayer dans quelques instants.");
       }
       throw err;
     }
   }
-  throw new Error("Toutes les clés Cerebras sont saturées.");
+  throw new Error("Toutes les clés Cerebras sont saturées. Veuillez réessayer dans quelques instants.");
 }
 
 /**

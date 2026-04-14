@@ -243,7 +243,7 @@ export async function reviewWithGPT(
       gpt.chat.completions.create({
         model: GPT_MODEL,
         messages: [{ role: "user", content: prompt }],
-        max_completion_tokens: 1800,
+        max_completion_tokens: 4000,
       }),
       REVIEW_TIMEOUT_MS,
       "GPT"
@@ -273,7 +273,7 @@ export async function reviewWithClaude(
     const message = await withTimeout(
       claude.messages.create({
         model: CLAUDE_MODEL,
-        max_tokens: 1800,
+        max_tokens: 4000,
         messages: [{ role: "user", content: prompt }],
       }),
       REVIEW_TIMEOUT_MS,

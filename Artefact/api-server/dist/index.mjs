@@ -39359,18 +39359,14 @@ async function cerebrasCreate(params, label) {
         console.log(`[Cerebras] \u23F3 cl\xE9 #${keyNum} satur\xE9e \u2192 essai cl\xE9 #${(idx + 1) % pool.length + 1}`);
         continue;
       }
-      if (isRateLimitOrQueue(err) && params.model !== CEREBRAS_MODEL_FAST) {
-        const fallbackIdx = (idx + 1) % pool.length;
-        console.log(`[Cerebras] \u26A1 fallback rapide \u2192 cl\xE9 #${fallbackIdx + 1} (${CEREBRAS_MODEL_FAST})`);
-        return pool[fallbackIdx].chat.completions.create({
-          ...params,
-          model: CEREBRAS_MODEL_FAST
-        });
+      if (isRateLimitOrQueue(err)) {
+        console.error(`[Cerebras] \u2717 ${label ?? "create"} \u2014 toutes les ${pool.length} cl\xE9s satur\xE9es, abandon.`);
+        throw new Error("Toutes les cl\xE9s Cerebras sont satur\xE9es. Veuillez r\xE9essayer dans quelques instants.");
       }
       throw err;
     }
   }
-  throw new Error("Toutes les cl\xE9s Cerebras sont satur\xE9es.");
+  throw new Error("Toutes les cl\xE9s Cerebras sont satur\xE9es. Veuillez r\xE9essayer dans quelques instants.");
 }
 async function cerebrasStream(params, label) {
   const pool = getClientPool();
@@ -39388,19 +39384,14 @@ async function cerebrasStream(params, label) {
         console.log(`[Cerebras] \u23F3 cl\xE9 #${keyNum} satur\xE9e \u2192 essai cl\xE9 #${(idx + 1) % pool.length + 1}`);
         continue;
       }
-      if (isRateLimitOrQueue(err) && params.model !== CEREBRAS_MODEL_FAST) {
-        const fallbackIdx = (idx + 1) % pool.length;
-        console.log(`[Cerebras] \u26A1 fallback rapide \u2192 cl\xE9 #${fallbackIdx + 1} (${CEREBRAS_MODEL_FAST})`);
-        return pool[fallbackIdx].chat.completions.create({
-          ...params,
-          model: CEREBRAS_MODEL_FAST,
-          stream: true
-        });
+      if (isRateLimitOrQueue(err)) {
+        console.error(`[Cerebras] \u2717 ${label ?? "stream"} \u2014 toutes les ${pool.length} cl\xE9s satur\xE9es, abandon.`);
+        throw new Error("Toutes les cl\xE9s Cerebras sont satur\xE9es. Veuillez r\xE9essayer dans quelques instants.");
       }
       throw err;
     }
   }
-  throw new Error("Toutes les cl\xE9s Cerebras sont satur\xE9es.");
+  throw new Error("Toutes les cl\xE9s Cerebras sont satur\xE9es. Veuillez r\xE9essayer dans quelques instants.");
 }
 function getNextCerebrasClient() {
   const pool = getClientPool();
@@ -45619,7 +45610,7 @@ async function reviewWithGPT(content, brief, sectionKey) {
       gpt.chat.completions.create({
         model: GPT_MODEL,
         messages: [{ role: "user", content: prompt }],
-        max_completion_tokens: 1800
+        max_completion_tokens: 4e3
       }),
       REVIEW_TIMEOUT_MS,
       "GPT"
@@ -45646,7 +45637,7 @@ async function reviewWithClaude(content, brief, sectionKey) {
     const message = await withTimeout(
       claude.messages.create({
         model: CLAUDE_MODEL,
-        max_tokens: 1800,
+        max_tokens: 4e3,
         messages: [{ role: "user", content: prompt }]
       }),
       REVIEW_TIMEOUT_MS,
