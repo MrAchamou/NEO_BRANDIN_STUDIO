@@ -113,10 +113,12 @@ Style musiques de fond: ${bgmStyle}`;
   const colorPriorityBlock = brand_colors
     ? `\nL'identité visuelle de la marque utilise ces couleurs: ${brand_colors}. Le rendu sonore doit traduire cette palette chromatique en émotions musicales cohérentes.`
     : "";
-  const systemPrompt = `Tu es un directeur artistique sonore expert en identité sonore de marque et en génération de prompts pour des outils de création audio (Suno, Udio, ElevenLabs, Adobe Podcast).
-Tu génères des prompts audio ultra-précis et des briefs créatifs complets pour chaque actif sonore d'une marque.
-Tu retournes TOUJOURS du JSON valide uniquement, sans markdown, sans texte avant ou après.
-Tous les textes sont en français, créatifs, adaptés au secteur ${sector} et au style ${tone}.${colorPriorityBlock}
+  const systemPrompt = `You are a senior sound art director, expert in brand sonic identity and audio prompt generation for AI tools (Suno, Udio, ElevenLabs, Adobe Podcast).
+You generate ultra-precise audio prompts and complete creative briefs for every sonic asset of a brand.
+Always return ONLY valid JSON, without markdown, without text before or after.
+LANGUAGE RULES (strictly enforced):
+• Audio GENERATION PROMPTS (sections "jingle", "background_music", "sound_effects", "beat_sync"): write EXCLUSIVELY IN ENGLISH — native Suno/Udio vocabulary (instrument names, styles, BPM, genre tags)
+• Voice-over SCRIPTS (section "voice_over" — ElevenLabs read-aloud content): write IN FRENCH — for French-speaking audiences${colorPriorityBlock}
 
 RÈGLE ABSOLUE — NOMMAGE DES INSTRUMENTS:
 • TOUJOURS nommer les instruments avec précision et leur rôle exact. INTERDIT d'écrire "guitare" ou "percussions" seuls.

@@ -127,19 +127,21 @@ Cible: ${target_audience}${yearLine} | Code promo: ${promoCode} | Durée promo: 
   const colorPriorityBlock = brand_colors
     ? `\n⚠️ RÈGLE ABSOLUE COULEURS: Le client impose ces couleurs de marque: ${brand_colors}. Ces couleurs sont SACRÉES — les utiliser EXACTEMENT dans tous les visuels vidéo décrits.`
     : "";
-  const systemPrompt = `Tu es un expert senior en création de scripts publicitaires et prompts vidéo pour RoboNeo.com.
-Tu rédiges des scripts punchy, adaptés au secteur ${sector}, en français. Formule courte, efficace, copywriting direct.
-Tu retournes TOUJOURS du JSON valide uniquement, sans markdown, sans texte avant ou après.${colorPriorityBlock}
+  const systemPrompt = `You are a senior expert in advertising script creation and video generation prompts for RoboNeo.com.
+LANGUAGE RULES (strictly enforced):
+• Ad scripts and voice-over texts (sections "scripts" and "voice_over"): write IN FRENCH — punchy, adapted to the ${sector} sector, direct copywriting
+• Video generation prompts (sections "short_videos", "long_video", "teaser", "thumbnails"): write EXCLUSIVELY IN ENGLISH — native vocabulary for Runway Gen-3, Pika, Kling, Midjourney, DALL-E 3
+Always return ONLY valid JSON, without markdown, without text before or after.${colorPriorityBlock}
 
-RÈGLES VOIX DE MARQUE — OBLIGATOIRES:
-• INTERDIT dans les scripts: argot ("ça saoule", "c'est ouf", "trop bien", "franchement"), expressions familières ("ce que j'aime", "j'ai une routine simple"), ton de conversation personnelle
-• Le ton doit rester cohérent avec le secteur ${sector} — voir la charte de voix R09 définie en Module 01.4
-• Scripts en voix off professionnelle: neutre, fluide, adapté au TTS ElevenLabs
+BRAND VOICE RULES — MANDATORY:
+• FORBIDDEN in scripts: slang or overly casual expressions — tone must match the ${sector} sector
+• See voice guidelines R09 from the Brand Guidelines in Module 01.4
+• Scripts in professional voice-over style: neutral, fluid, optimized for ElevenLabs TTS
 
-RÈGLES OVERLAY TEXTE VIDÉO — OBLIGATOIRES (conformes charte R01):
-• INTERDIT: effets emboss, gaufrage, relief, ombre portée épaisse sur les textes overlay
-• Texte overlay: flat, net, sans effet 3D — fond semi-transparent ou outline simple 1px maximum
-• Respecter les règles R01 (usage du logo) et R09 (voix de marque) de la charte graphique du Module 01.4`;
+VIDEO TEXT OVERLAY RULES — MANDATORY (compliant with charter R01):
+• FORBIDDEN: emboss, bevel, thick drop shadow effects on overlay text
+• Text overlay: flat, crisp, no 3D effects — semi-transparent background or simple 1px outline maximum
+• Respect rules R01 (logo usage) and R09 (brand voice) from Module 01.4`;
 
   const SECTIONS = [
     {
@@ -209,10 +211,10 @@ FORMAT "tiktok_30s" (30 secondes):
 - Transitions: type et durée
 - Code ${promoCode} visible à l'écran en fin de vidéo
 
-RÈGLES:
-• Adapté aux algorithmes TikTok/Reels (hook fort en 0-3s)
-• Mouvements de caméra naturels, tendances actuelles
-• Français, ultra-précis, réalisable avec un smartphone ou caméra
+RULES:
+• Adapted for TikTok/Reels algorithms (strong hook in 0-3s)
+• Natural camera movements, current trends
+• Write in English, ultra-precise, achievable with a smartphone or camera
 
 Retourne UNIQUEMENT ce JSON:
 {
@@ -243,10 +245,11 @@ POUR CHAQUE SÉQUENCE, décrire:
 - Texte overlay (contenu, style, timing)
 - Musique: dynamique et évolution sur 60s
 
-RÈGLES:
-• Qualité pub TV/YouTube Premium
-• Mouvements caméra maîtrisés, non amateurs
-• Rythme: pose en début, montée en énergie vers le CTA
+RULES (ENGLISH OUTPUT REQUIRED):
+• TV/YouTube Premium ad quality
+• Controlled, non-amateur camera movements
+• Pacing: calm opening, building energy toward CTA
+• Write this prompt EXCLUSIVELY IN ENGLISH — native Runway Gen-3/Pika/Kling vocabulary
 
 Retourne UNIQUEMENT ce JSON:
 {
@@ -277,10 +280,10 @@ POUR CHAQUE PHASE, décrire:
 • Transitions: type exact, durée en frames
 • Audio: genre musical, BPM, évolution
 
-RÈGLES ABSOLUES:
-• Trois versions: vertical 9:16 (1080×1920), horizontal 16:9 (1920×1080), et boucle 5s ambient
-• Prompt en français, extrêmement détaillé et précis
-• Effets adaptés au style ${teaserStyle}: ${TEASER_DESCRIPTIONS[teaserStyle]}
+ABSOLUTE RULES:
+• Three versions: vertical 9:16 (1080×1920), horizontal 16:9 (1920×1080), and 5s ambient loop
+• Write prompt EXCLUSIVELY IN ENGLISH — extremely detailed and precise, native Runway/Pika/Kling vocabulary
+• Effects adapted to style ${teaserStyle}: ${TEASER_DESCRIPTIONS[teaserStyle]}
 
 VERSION BOUCLE 5s (ambient loop — pour fond de site web, Stories en boucle, écran d'accueil):
 • Durée: exactement 5 secondes en boucle parfaite seamless
@@ -320,11 +323,12 @@ Pour CHAQUE variante (A, B, C), décrire:
 
 TYPE ${thumbnailType.toUpperCase()} — Règles spécifiques: ${THUMBNAIL_DESCRIPTIONS[thumbnailType]}
 
-RÈGLES CTR:
-• Contraste maximal pour se démarquer dans les suggestions YouTube
-• Visage ou objet reconnaissable à 200px
-• Texte lisible sur mobile
-• Teaser de curiosité sans spoiler
+CTR RULES (ENGLISH OUTPUT REQUIRED — for Midjourney/DALL-E 3/Stable Diffusion):
+• Maximum contrast to stand out in YouTube suggestions
+• Face or object recognizable at 200px
+• Text readable on mobile
+• Curiosity teaser without spoiler
+• Write each variant prompt EXCLUSIVELY IN ENGLISH — native image generation model vocabulary
 
 ⚠️ NOTE POST-PRODUCTION OBLIGATOIRE:
 Les générateurs d'images actuels (Midjourney, DALL-E, SDXL, Firefly) ne peuvent pas reproduire fidèlement du texte long ou des titres précis.

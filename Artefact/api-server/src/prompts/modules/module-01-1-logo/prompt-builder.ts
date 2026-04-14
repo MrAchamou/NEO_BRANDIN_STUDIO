@@ -18,155 +18,155 @@ interface SectorMapping {
 
 const SECTOR_MAPPINGS: Record<string, SectorMapping> = {
   tech: {
-    style: "corporate minimaliste, sobre et stable",
-    ambiance: "trusted technology: sérieux, moderne, non ostentatoire",
-    symbolConcept: "vecteurs, trajectoires contrôlées et rigueur scientifique",
+    style: "corporate minimalist, clean and stable",
+    ambiance: "trusted technology: serious, modern, non-ostentatious",
+    symbolConcept: "vectors, controlled trajectories and scientific rigor",
     primaryColor: "#003087",
     secondaryColor: "#6C757D",
     accentColor: "#2F80ED",
   },
   luxury: {
-    style: "minimaliste élégant, précision horlogère",
-    ambiance: "prestige intemporel: élégance, raffinement, discrétion",
-    symbolConcept: "élégance, héritage, précision artisanale",
+    style: "elegant minimalist, horological precision",
+    ambiance: "timeless prestige: elegance, refinement, discretion",
+    symbolConcept: "elegance, heritage, artisanal precision",
     primaryColor: "#1A2C3E",
     secondaryColor: "#C5A572",
     accentColor: "#D4AF37",
   },
   streetwear: {
-    style: "audacieux typographique, authenticité urbaine",
-    ambiance: "street credibility: authentique, urbain, sans compromis",
-    symbolConcept: "énergie urbaine, mouvement, authenticité",
+    style: "bold typographic, urban authenticity",
+    ambiance: "street credibility: authentic, urban, uncompromising",
+    symbolConcept: "urban energy, movement, authenticity",
     primaryColor: "#1A1A1A",
     secondaryColor: "#E63946",
     accentColor: "#F4A261",
   },
   fitness: {
-    style: "dynamique énergique, angles vifs",
-    ambiance: "performance: motivation, dépassement, force maîtrisée",
-    symbolConcept: "dynamique, progression, force maîtrisée",
+    style: "dynamic energetic, sharp angles",
+    ambiance: "performance: motivation, surpassing limits, controlled strength",
+    symbolConcept: "dynamic, progression, controlled strength",
     primaryColor: "#1E3A8A",
     secondaryColor: "#EF4444",
     accentColor: "#22C55E",
   },
   cosmetic: {
-    style: "doux organique, pureté, rondeurs subtiles",
-    ambiance: "beauté naturelle: douceur, efficacité, bien-être",
-    symbolConcept: "pureté, éclat, transformation naturelle",
+    style: "soft organic, purity, subtle curves",
+    ambiance: "natural beauty: softness, effectiveness, well-being",
+    symbolConcept: "purity, radiance, natural transformation",
     primaryColor: "#F5E6D3",
     secondaryColor: "#D4A5A5",
     accentColor: "#A7C7B9",
   },
 };
 
-const GOLDEN_EXAMPLE = `Crée le logo de Theravectys pour une marque tech corporate positionnée sur l'innovation, la rigueur scientifique et la fiabilité (expertise B2B, environnement R&D/ingénierie). Le logo doit inspirer stabilité, confiance et précision, avec une exécution premium, lisible et scalable pour usages web/app, documents officiels et supports institutionnels.
+const GOLDEN_EXAMPLE = `Create the logo for Theravectys, a tech corporate brand positioned on innovation, scientific rigor, and reliability (B2B expertise, R&D/engineering environment). The logo must inspire stability, trust, and precision, with a premium, readable, and scalable execution for web/app, official documents, and institutional materials.
 
-**Direction artistique (style, esprit, ambiance)**
-Style corporate minimaliste, sobre et stable. Composition nette, géométrie propre, alignements rigoureux (grid-based design), contraste maîtrisé. Ambiance "trusted technology": sérieux, moderne, non ostentatoire. Éviter tout effet gadget. Rendu final **flat vector** (pas de 3D, pas de textures), contours propres, angles maîtrisés (mix subtil d'angles droits et coins légèrement arrondis pour la fiabilité).
+**Artistic Direction (style, spirit, atmosphere)**
+Corporate minimalist style, clean and stable. Sharp composition, clean geometry, rigorous alignments (grid-based design), controlled contrast. "Trusted technology" atmosphere: serious, modern, non-ostentatious. Avoid any gimmick effects. Final render **flat vector** (no 3D, no textures), clean outlines, controlled angles (subtle mix of straight angles and slightly rounded corners for reliability).
 
-**Typographie recommandée (sans-serif solide)**
-- Police principale: **IBM Plex Sans** (Google Fonts) — https://fonts.google.com/specimen/IBM+Plex+Sans
-  - Recommandation: "Theravectys" en **SemiBold 600** (tracking -1% à 0%), capitalisation: "Theravectys" (T majuscule, reste minuscules)
+**Recommended Typography (solid sans-serif)**
+- Primary font: **IBM Plex Sans** (Google Fonts) — https://fonts.google.com/specimen/IBM+Plex+Sans
+  - Recommendation: "Theravectys" in **SemiBold 600** (tracking -1% to 0%), capitalization: "Theravectys" (T uppercase, rest lowercase)
 - Alternatives: **Roboto** https://fonts.google.com/specimen/Roboto ; **Lato** https://fonts.google.com/specimen/Lato ; **Inter** https://fonts.google.com/specimen/Inter
-- Ajustements: kerning optique activé, hauteur de x confortable, lisibilité maximale à 24px de largeur.
+- Adjustments: optical kerning enabled, comfortable x-height, maximum readability at 24px width.
 
-**Symbole / icône (description précise + inspirations)**
-Créer un symbole abstrait à gauche du wordmark, évoquant à la fois **vecteurs**, **trajectoires contrôlées** et **rigueur scientifique**:
-- Icône basée sur un **"V" stylisé** construit avec 2 segments géométriques (épaisseur uniforme), formant une **flèche vectorielle** discrète vers l'avant (innovation) et une impression de **stabilité** (base plus large, sommet maîtrisé).
-- Intégrer une **micro-grille** implicite via 2–3 points nodaux (petits cercles) alignés sur une trajectoire, comme une visualisation scientifique propre.
-- Style: lignes pleines, angles propres, aucune référence médicale clichée.
-- Taille du symbole: hauteur = hauteur de x du wordmark × 1.2, alignement vertical centré sur la baseline du texte.
-- Espacement symbole/wordmark: aéré et proportionnel, respiration visuelle suffisante pour une lecture immédiate.
+**Symbol / Icon (precise description + inspirations)**
+Create an abstract symbol to the left of the wordmark, evoking both **vectors**, **controlled trajectories** and **scientific rigor**:
+- Icon based on a stylized **"V"** built with 2 geometric segments (uniform thickness), forming a discrete **vectorial arrow** pointing forward (innovation) and a sense of **stability** (wider base, controlled apex).
+- Integrate an implicit **micro-grid** via 2–3 nodal points (small circles) aligned on a trajectory, like a clean scientific visualization.
+- Style: solid lines, clean angles, no clichéd medical references.
+- Symbol size: height = x-height of wordmark × 1.2, vertically centered on the text baseline.
+- Symbol/wordmark spacing: airy and proportional, sufficient visual breathing room for immediate reading.
 
-**Palette chromatique**
-- Primaire: **#003087** — bleu marine confiance (60% des usages: fond, icône principale)
-- Secondaire: **#6C757D** — gris corporate neutre (30%: textes secondaires, lignes, fonds légers)
-- Accent: **#2F80ED** — tech highlight (10%: points nodaux, hover states, highlights)
-- Neutres: #FFFFFF (fond clair), #F8F9FA (fond off-white), #0B1220 (fond sombre), #1C2B4A (bleu nuit)
+**Color Palette**
+- Primary: **#003087** — trust navy blue (60% of usage: background, main icon)
+- Secondary: **#6C757D** — neutral corporate gray (30%: secondary text, lines, light backgrounds)
+- Accent: **#2F80ED** — tech highlight (10%: nodal points, hover states, highlights)
+- Neutrals: #FFFFFF (light background), #F8F9FA (off-white background), #0B1220 (dark background), #1C2B4A (midnight blue)
 
-**4 variations requises**
-1. **Fond clair (principal)**: fond #FFFFFF, icône et wordmark en #003087 — usage web, documents, présentations
-2. **Fond sombre**: fond #0B1220, wordmark et icône en #FFFFFF avec accent #2F80ED sur les points nodaux — usage digital dark mode, écrans, événements
-3. **Monochrome noir**: fond #FFFFFF, logo entier en #1A1A1A — impression N&B, documents officiels, tampons
-4. **Inversé (knockout)**: blanc #FFFFFF sur fond bleu marine #003087 — usage institutionnel, cartes de visite, en-têtes officiels
+**4 Required Variations**
+1. **Light background (main)**: background #FFFFFF, icon and wordmark in #003087 — web, documents, presentations
+2. **Dark background**: background #0B1220, wordmark and icon in #FFFFFF with accent #2F80ED on nodal points — dark mode digital, screens, events
+3. **Black monochrome**: background #FFFFFF, entire logo in #1A1A1A — B&W printing, official documents, stamps
+4. **Reversed (knockout)**: white #FFFFFF on navy blue background #003087 — institutional use, business cards, official headers
 
-**Spécifications techniques**
-- Format export: PNG 4000×4000px haute résolution (fond transparent), rendu Flat Design imitant un fichier vectoriel propre et épuré. ⚠️ Note post-production : les générateurs d'images (Midjourney, DALL-E, SDXL) produisent des fichiers matriciels (PNG/JPG) et non des SVG éditables. Une vectorisation manuelle est requise en post-production (Adobe Illustrator Live Trace, Inkscape ou Vector Magic) pour obtenir un fichier SVG réellement scalable et éditable.
-- Zone de sécurité: espace blanc = hauteur de la lettre majuscule "T" du wordmark sur tous les côtés
-- Taille minimale: 80px de largeur en digital, 20mm en impression
-- Aspect géométrique: alignement parfait, espacement régulier et proportionnel, géométrie cohérente, composition équilibrée. ⚠️ Note : ce cahier des charges est destiné au designer humain qui utilisera ce prompt comme inspiration — les valeurs pixel exactes ne sont pas interprétées par les générateurs d'images IA.
-- Proportions: ratio largeur/hauteur du logo complet entre 3:1 et 4:1
-- Alignement: symbole et wordmark sur baseline commune, centrage vertical optique
+**Technical Specifications**
+- Export format: PNG 4000×4000px high resolution (transparent background), Flat Design render mimicking a clean vector file. ⚠️ Post-production note: image generators (Midjourney, DALL-E, SDXL) produce raster files (PNG/JPG) not editable SVGs. Manual vectorization is required in post-production (Adobe Illustrator Live Trace, Inkscape, or Vector Magic) to obtain a truly scalable and editable SVG file.
+- Safety zone: white space = height of the capital "T" in the wordmark on all sides
+- Minimum size: 80px width digital, 20mm print
+- Geometric aspect: perfect alignment, regular and proportional spacing, consistent geometry, balanced composition. ⚠️ Note: this specification is intended for the human designer using this prompt as inspiration — exact pixel values are not interpreted by AI image generators.
+- Proportions: width/height ratio of the full logo between 3:1 and 4:1
+- Alignment: symbol and wordmark on common baseline, optical vertical centering
 
 **NEGATIVE_PROMPT**
-vieux, obsolète, rétro, vintage, désordonné, câbles apparents en désordre, interface confuse, erreurs visibles, bugs, désinvolte, informel, trop décontracté, argot, watermark, mockup photoréaliste, gradients agressifs, 3D, bevel/emboss, textures, bruit, glitch, texte illisible, kerning mauvais, compression JPEG visible, artefacts IA, formes incohérentes, détails trop fins non-scalables, symboles médicaux clichés, ADN, seringue, croix, mascotte, cartoon, low-res
+old, obsolete, retro, vintage, messy, tangled cables, confusing interface, visible errors, bugs, casual, informal, too relaxed, slang, watermark, photorealistic mockup, aggressive gradients, 3D, bevel/emboss, textures, noise, glitch, unreadable text, bad kerning, visible JPEG compression, AI artifacts, inconsistent shapes, too-thin non-scalable details, clichéd medical symbols, DNA, syringe, cross, mascot, cartoon, low-res
 
-**PARAMÈTRES TECHNIQUES**
+**TECHNICAL PARAMETERS**
 --ar 1:1 --style raw --no watermark --no texture --no gradient --no 3D --v 6`;
 
 function buildSymbolDescription(sector: string, symbolConcept: string): string {
-  const base = `Créer un symbole abstrait à gauche du wordmark, évoquant ${symbolConcept}:`;
+  const base = `Create an abstract symbol to the left of the wordmark, evoking ${symbolConcept}:`;
 
   if (sector === "tech") {
     return `${base}
-- Icône basée sur un "V" stylisé construit avec 2 segments géométriques (épaisseur uniforme), formant une flèche vectorielle discrète vers l'avant (innovation) et une impression de stabilité (base plus large, sommet maîtrisé).
-- Intégrer une micro-grille implicite via 2–3 points nodaux (petits cercles) alignés sur une trajectoire, comme une visualisation scientifique propre.
-- Style: lignes pleines, angles propres, aucune référence médicale clichée.
-- Taille du symbole: hauteur = hauteur de x du wordmark × 1.2, alignement vertical centré sur la baseline du texte.
-- Espacement symbole/wordmark: aéré et proportionnel, respiration visuelle suffisante pour une lecture immédiate.`;
+- Icon based on a stylized "V" built with 2 geometric segments (uniform thickness), forming a discrete vectorial arrow pointing forward (innovation) and a sense of stability (wider base, controlled apex).
+- Integrate an implicit micro-grid via 2–3 nodal points (small circles) aligned on a trajectory, like a clean scientific visualization.
+- Style: solid lines, clean angles, no clichéd medical references.
+- Symbol size: height = x-height of wordmark × 1.2, vertically centered on the text baseline.
+- Symbol/wordmark spacing: airy and proportional, sufficient visual breathing room for immediate reading.`;
   }
 
   if (sector === "luxury") {
     return `${base}
-- Icône basée sur un monogramme stylisé évoquant l'héritage et la précision artisanale.
-- Lignes épurées, géométrie parfaite, symétrie maîtrisée.
-- Style: lignes fines, élégance discrète, sans surcharge décorative.
-- Taille du symbole: hauteur = hauteur de x du wordmark × 1.2, alignement vertical centré sur la baseline du texte.
-- Espacement symbole/wordmark: aéré et proportionnel, respiration visuelle suffisante pour une lecture immédiate.`;
+- Icon based on a stylized monogram evoking heritage and artisanal precision.
+- Clean lines, perfect geometry, controlled symmetry.
+- Style: fine lines, discreet elegance, no decorative overload.
+- Symbol size: height = x-height of wordmark × 1.2, vertically centered on the text baseline.
+- Symbol/wordmark spacing: airy and proportional, sufficient visual breathing room for immediate reading.`;
   }
 
   if (sector === "streetwear") {
     return `${base}
-- Icône basée sur une lettre stylisée ou un pictogramme urbain audacieux.
-- Trait épais, angles vifs, présence marquée.
-- Style: impact visuel fort, typographique, authenticité.
-- Taille du symbole: hauteur = hauteur de x du wordmark × 1.2, alignement vertical centré sur la baseline du texte.
-- Espacement symbole/wordmark: aéré et proportionnel, respiration visuelle suffisante pour une lecture immédiate.`;
+- Icon based on a stylized letter or bold urban pictogram.
+- Thick stroke, sharp angles, strong visual presence.
+- Style: strong visual impact, typographic, authentic.
+- Symbol size: height = x-height of wordmark × 1.2, vertically centered on the text baseline.
+- Symbol/wordmark spacing: airy and proportional, sufficient visual breathing room for immediate reading.`;
   }
 
   if (sector === "fitness") {
     return `${base}
-- Icône basée sur un symbole de mouvement (flèche, vague, dynamique).
-- Lignes énergiques, sensation de vitesse et de puissance contrôlée.
-- Style: dynamique, motivant, performance.
-- Taille du symbole: hauteur = hauteur de x du wordmark × 1.2, alignement vertical centré sur la baseline du texte.
-- Espacement symbole/wordmark: aéré et proportionnel, respiration visuelle suffisante pour une lecture immédiate.`;
+- Icon based on a movement symbol (arrow, wave, dynamic shape).
+- Energetic lines, sense of speed and controlled power.
+- Style: dynamic, motivating, performance.
+- Symbol size: height = x-height of wordmark × 1.2, vertically centered on the text baseline.
+- Symbol/wordmark spacing: airy and proportional, sufficient visual breathing room for immediate reading.`;
   }
 
   if (sector === "cosmetic") {
     return `${base}
-- Icône basée sur une forme organique (goutte, pétale, cercle parfait).
-- Courbes douces, fluidité, sensation de pureté.
-- Style: naturel, apaisant, élégance subtile.
-- Taille du symbole: hauteur = hauteur de x du wordmark × 1.2, alignement vertical centré sur la baseline du texte.
-- Espacement symbole/wordmark: aéré et proportionnel, respiration visuelle suffisante pour une lecture immédiate.`;
+- Icon based on an organic shape (droplet, petal, perfect circle).
+- Smooth curves, fluidity, sense of purity.
+- Style: natural, soothing, subtle elegance.
+- Symbol size: height = x-height of wordmark × 1.2, vertically centered on the text baseline.
+- Symbol/wordmark spacing: airy and proportional, sufficient visual breathing room for immediate reading.`;
   }
 
   return `${base}
-- Icône abstraite adaptée à l'univers de la marque.
-- Style épuré, lisible, scalable.
-- Taille du symbole: hauteur = hauteur de x du wordmark × 1.2, alignement vertical centré sur la baseline du texte.
-- Espacement symbole/wordmark: aéré et proportionnel, respiration visuelle suffisante pour une lecture immédiate.`;
+- Abstract icon adapted to the brand universe.
+- Clean, readable, scalable style.
+- Symbol size: height = x-height of wordmark × 1.2, vertically centered on the text baseline.
+- Symbol/wordmark spacing: airy and proportional, sufficient visual breathing room for immediate reading.`;
 }
 
 function buildNegativePromptSuffix(sector: string): string {
   const base =
-    "vieux, obsolète, rétro, vintage, désordonné, câbles apparents en désordre, interface confuse, erreurs visibles, bugs, désinvolte, informel, trop décontracté, argot, watermark, mockup photoréaliste, gradients agressifs, 3D, bevel/emboss, textures, bruit, glitch, texte illisible, kerning mauvais, compression JPEG visible, artefacts IA, formes incohérentes, détails trop fins non-scalables, symboles médicaux clichés, ADN, seringue, croix, mascotte, cartoon, low-res";
+    "old, obsolete, retro, vintage, messy, tangled cables, confusing interface, visible errors, bugs, casual, informal, too relaxed, slang, watermark, photorealistic mockup, aggressive gradients, 3D, bevel/emboss, textures, noise, glitch, unreadable text, bad kerning, visible JPEG compression, AI artifacts, inconsistent shapes, too-thin non-scalable details, clichéd medical symbols, DNA, syringe, cross, mascot, cartoon, low-res";
 
-  if (sector === "luxury") return `${base}, cheap, bas de gamme, imitation, plastique, brillant excessif`;
-  if (sector === "streetwear") return `${base}, commercial, corporate, trop propre, aseptisé, institutionnel`;
-  if (sector === "fitness") return `${base}, statique, mou, sans énergie, passif, lourd`;
-  if (sector === "cosmetic") return `${base}, agressif, angulaire, synthétique, artificiel`;
+  if (sector === "luxury") return `${base}, cheap, low-end, imitation, plastic, excessive shine`;
+  if (sector === "streetwear") return `${base}, commercial, corporate, too clean, sterile, institutional`;
+  if (sector === "fitness") return `${base}, static, limp, no energy, passive, heavy`;
+  if (sector === "cosmetic") return `${base}, aggressive, angular, synthetic, artificial`;
   return base;
 }
 
@@ -187,13 +187,13 @@ export function buildLogoPrompt(brief: BrandBrief): string {
   const accentColor = clientHexes[2] ?? mapping.accentColor;
 
   const clientColorsBlock = brief.brandColors
-    ? `\n⚠️ COULEURS CLIENT IMPOSÉES — PRIORITÉ ABSOLUE:\nLe client a fourni: ${brief.brandColors}\nUtilise EXCLUSIVEMENT ces couleurs. NE PAS les remplacer par d'autres teintes.`
+    ? `\n⚠️ CLIENT COLORS — ABSOLUTE PRIORITY:\nClient provided: ${brief.brandColors}\nUse EXCLUSIVELY these colors. DO NOT replace them with other hues.`
     : "";
 
   const valuesText = brief.values.join(", ");
-  const v0 = brief.values[0] ?? "stabilité";
-  const v1 = brief.values[1] ?? "confiance";
-  const v2 = brief.values[2] ?? "précision";
+  const v0 = brief.values[0] ?? "stability";
+  const v1 = brief.values[1] ?? "trust";
+  const v2 = brief.values[2] ?? "precision";
 
   const symbolDescription = buildSymbolDescription(sector, symbolConcept);
   const negativePrompt = buildNegativePromptSuffix(sector);
@@ -202,40 +202,40 @@ export function buildLogoPrompt(brief: BrandBrief): string {
 
   prompt = prompt.replace(/Theravectys/g, brief.brandName);
   prompt = prompt.replace(/tech corporate/g, `${brief.sector} ${brief.tone}`);
-  prompt = prompt.replace(/l'innovation, la rigueur scientifique et la fiabilité/g, valuesText);
-  prompt = prompt.replace(/stabilité, confiance et précision/g, `${v0}, ${v1}, ${v2}`);
-  prompt = prompt.replace(/Style corporate minimaliste, sobre et stable/g, `Style ${style}`);
+  prompt = prompt.replace(/innovation, scientific rigor, and reliability/g, valuesText);
+  prompt = prompt.replace(/stability, trust, and precision/g, `${v0}, ${v1}, ${v2}`);
+  prompt = prompt.replace(/Corporate minimalist style, clean and stable/g, `${style} style`);
   prompt = prompt.replace(
-    /Ambiance "trusted technology": sérieux, moderne, non ostentatoire/g,
-    `Ambiance "${ambiance}"`
+    /"Trusted technology" atmosphere: serious, modern, non-ostentatious/g,
+    `"${ambiance}" atmosphere`
   );
   prompt = prompt.replace(
-    /Créer un symbole abstrait à gauche du wordmark, évoquant à la fois \*\*vecteurs\*\*, \*\*trajectoires contrôlées\*\* et \*\*rigueur scientifique\*\*:[\s\S]*?(?=\n\n\*\*Palette)/,
+    /Create an abstract symbol to the left of the wordmark, evoking both \*\*vectors\*\*, \*\*controlled trajectories\*\* and \*\*scientific rigor\*\*:[\s\S]*?(?=\n\n\*\*Color Palette\*\*)/,
     `${symbolDescription}\n`
   );
   prompt = prompt.replace(/#003087/g, primaryColor);
   prompt = prompt.replace(/#6C757D/g, secondaryColor);
   prompt = prompt.replace(/#2F80ED/g, accentColor);
-  prompt = prompt.replace(/bleu marine confiance/g, `${primaryColor} (couleur primaire)`);
-  prompt = prompt.replace(/gris corporate neutre/g, `${secondaryColor} (couleur secondaire)`);
-  prompt = prompt.replace(/tech highlight/g, `highlight ${brief.sector}`);
+  prompt = prompt.replace(/trust navy blue/g, `${primaryColor} (primary color)`);
+  prompt = prompt.replace(/neutral corporate gray/g, `${secondaryColor} (secondary color)`);
+  prompt = prompt.replace(/tech highlight/g, `${brief.sector} highlight`);
   prompt = prompt.replace(
-    /fond #FFFFFF, icône et wordmark en #003087/g,
-    `fond #FFFFFF, icône et wordmark en ${primaryColor}`
+    /background #FFFFFF, icon and wordmark in #003087/g,
+    `background #FFFFFF, icon and wordmark in ${primaryColor}`
   );
   prompt = prompt.replace(
-    /blanc #FFFFFF sur fond bleu marine #003087/g,
-    `blanc #FFFFFF sur fond ${primaryColor}`
+    /white #FFFFFF on navy blue background #003087/g,
+    `white #FFFFFF on ${primaryColor} background`
   );
   prompt = prompt.replace(
-    /vieux, obsolète, rétro, vintage[\s\S]*?low-res/,
+    /old, obsolete, retro, vintage[\s\S]*?low-res/,
     negativePrompt
   );
 
   if (clientColorsBlock) {
     prompt = prompt.replace(
-      /(\*\*Palette chromatique\*\*)/,
-      `**Palette chromatique**${clientColorsBlock}`
+      /(\*\*Color Palette\*\*)/,
+      `**Color Palette**${clientColorsBlock}`
     );
   }
 

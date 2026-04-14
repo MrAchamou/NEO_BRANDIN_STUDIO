@@ -168,12 +168,12 @@ Cible: ${target_audience}
 
 Angles: ${anglesList}
 
-RÈGLES STRICTES:
-• Fond blanc pur professionnel, éclairage studio 3 points
-• Format carré 2000×2000px, qualité commerciale premium
-• Chaque prompt en français, 4-6 phrases ultra-précises
-• Décrire: le produit exact, l'angle précis, le type d'éclairage, les ombres, les reflets, les détails clés du matériau/couleur
-• Vocabulaire de photographe professionnel (key light, fill light, rim light, f/8, ISO 100, etc.)
+STRICT RULES:
+• Pure white professional background, 3-point studio lighting
+• Square format 2000×2000px, premium commercial quality
+• Each prompt in English, 4-6 ultra-precise sentences — native Midjourney/DALL-E 3/Stable Diffusion vocabulary
+• Describe: exact product, precise angle, lighting type, shadows, reflections, key material/color details
+• Professional photographer vocabulary (key light, fill light, rim light, f/8, ISO 100, etc.)
 
 Retourne UNIQUEMENT un objet JSON valide (sans markdown, sans texte):
 {${Object.keys(angles).map((k) => `\n  "${k}": "prompt complet"`).join(",")}\n}`;

@@ -36,33 +36,33 @@ interface SectorPalette {
 
 const SECTOR_PALETTES: Record<string, SectorPalette> = {
   tech: {
-    primary: { hex: "#003087", rgb: "0,48,135", meaning: "fiabilité, confiance, rigueur scientifique", role: "fonds UI, header, blocs de marque" },
-    secondary: { hex: "#6C757D", rgb: "108,117,125", meaning: "neutralité technique, support, sobriété", harmony: "gris neutre complémentaire au bleu profond, apporte équilibre et lisibilité" },
-    accent: { hex: "#2F80ED", rgb: "47,128,237", meaning: "énergie contrôlée, action technologique, clarté" },
+    primary: { hex: "#003087", rgb: "0,48,135", meaning: "reliability, trust, scientific rigor", role: "UI backgrounds, header, brand blocks" },
+    secondary: { hex: "#6C757D", rgb: "108,117,125", meaning: "technical neutrality, support, sobriety", harmony: "neutral gray complementary to deep blue, brings balance and readability" },
+    accent: { hex: "#2F80ED", rgb: "47,128,237", meaning: "controlled energy, technological action, clarity" },
     neutrals: { "01": "#F8F9FA", "02": "#E9ECEF", "03": "#DEE2E6", "04": "#6C757D", "05": "#212529" },
   },
   luxury: {
-    primary: { hex: "#1A2C3E", rgb: "26,44,62", meaning: "prestige, profondeur, élégance intemporelle", role: "fonds premium, en-têtes, éléments d'autorité" },
-    secondary: { hex: "#C5A572", rgb: "197,165,114", meaning: "richesse, raffinement, héritage", harmony: "contraste chaud-froid, élégance dorée sur fond profond" },
-    accent: { hex: "#D4AF37", rgb: "212,175,55", meaning: "luxe, exclusivité, excellence" },
+    primary: { hex: "#1A2C3E", rgb: "26,44,62", meaning: "prestige, depth, timeless elegance", role: "premium backgrounds, headers, authority elements" },
+    secondary: { hex: "#C5A572", rgb: "197,165,114", meaning: "richness, refinement, heritage", harmony: "warm-cool contrast, golden elegance on deep background" },
+    accent: { hex: "#D4AF37", rgb: "212,175,55", meaning: "luxury, exclusivity, excellence" },
     neutrals: { "01": "#F5F3F0", "02": "#E8E4DD", "03": "#D4CDBC", "04": "#8B7A6B", "05": "#2C2418" },
   },
   streetwear: {
-    primary: { hex: "#1A1A1A", rgb: "26,26,26", meaning: "authenticité, puissance, attitude urbaine", role: "fonds, éléments dominants, identité forte" },
-    secondary: { hex: "#E63946", rgb: "230,57,70", meaning: "énergie, audace, rébellion maîtrisée", harmony: "contraste maximal, tension visuelle dynamique" },
-    accent: { hex: "#F4A261", rgb: "244,162,97", meaning: "chaleur urbaine, signal fort, singularité" },
+    primary: { hex: "#1A1A1A", rgb: "26,26,26", meaning: "authenticity, power, urban attitude", role: "backgrounds, dominant elements, strong identity" },
+    secondary: { hex: "#E63946", rgb: "230,57,70", meaning: "energy, boldness, controlled rebellion", harmony: "maximum contrast, dynamic visual tension" },
+    accent: { hex: "#F4A261", rgb: "244,162,97", meaning: "urban warmth, strong signal, singularity" },
     neutrals: { "01": "#F5F5F5", "02": "#E0E0E0", "03": "#BDBDBD", "04": "#757575", "05": "#212121" },
   },
   fitness: {
-    primary: { hex: "#1E3A8A", rgb: "30,58,138", meaning: "performance, discipline, puissance maîtrisée", role: "fonds dynamiques, éléments structurants" },
-    secondary: { hex: "#EF4444", rgb: "239,68,68", meaning: "énergie, effort, motivation intense", harmony: "complémentaire contrastée, tension action/repos" },
-    accent: { hex: "#22C55E", rgb: "34,197,94", meaning: "progression, résultat, vitalité" },
+    primary: { hex: "#1E3A8A", rgb: "30,58,138", meaning: "performance, discipline, controlled power", role: "dynamic backgrounds, structural elements" },
+    secondary: { hex: "#EF4444", rgb: "239,68,68", meaning: "energy, effort, intense motivation", harmony: "complementary contrast, action/rest tension" },
+    accent: { hex: "#22C55E", rgb: "34,197,94", meaning: "progression, results, vitality" },
     neutrals: { "01": "#FAFAFA", "02": "#F0F0F0", "03": "#D4D4D4", "04": "#737373", "05": "#0A0A0A" },
   },
   cosmetic: {
-    primary: { hex: "#F5E6D3", rgb: "245,230,211", meaning: "douceur, pureté, naturel", role: "fonds apaisants, surfaces principales" },
-    secondary: { hex: "#D4A5A5", rgb: "212,165,165", meaning: "douceur rose, bien-être, délicatesse", harmony: "harmonie ton sur ton, continuité apaisante" },
-    accent: { hex: "#A7C7B9", rgb: "167,199,185", meaning: "fraîcheur, nature, efficacité douce" },
+    primary: { hex: "#F5E6D3", rgb: "245,230,211", meaning: "softness, purity, natural", role: "soothing backgrounds, main surfaces" },
+    secondary: { hex: "#D4A5A5", rgb: "212,165,165", meaning: "soft pink, well-being, delicacy", harmony: "tone-on-tone harmony, soothing continuity" },
+    accent: { hex: "#A7C7B9", rgb: "167,199,185", meaning: "freshness, nature, gentle effectiveness" },
     neutrals: { "01": "#FFFFFF", "02": "#F9F7F5", "03": "#E8E2DA", "04": "#B8A99A", "05": "#5C4E3D" },
   },
 };
@@ -94,20 +94,20 @@ function hexToCmyk(hex: string): string {
 
 function getSectorColorDescription(sector: string): string {
   const descriptions: Record<string, string> = {
-    tech: "scientific tech (bleu/bleu-vert ou équivalent crédible)",
-    luxury: "premium heritage (bleu profond, or, tons nobles)",
-    streetwear: "urban authentic (noir profond, rouge audacieux)",
-    fitness: "performance energy (bleu électrique, rouge dynamique)",
-    cosmetic: "natural elegance (tons doux, organiques)",
+    tech: "scientific tech (deep blue/blue-green or credible equivalent)",
+    luxury: "premium heritage (deep blue, gold, noble tones)",
+    streetwear: "urban authentic (deep black, bold red)",
+    fitness: "performance energy (electric blue, dynamic red)",
+    cosmetic: "natural elegance (soft, organic tones)",
   };
   return descriptions[sector] ?? descriptions["tech"];
 }
 
 function getToneModifier(tone: string): string {
   const modifiers: Record<string, string> = {
-    professionnel: ", avec une approche maîtrisée et experte",
-    audacieux: ", avec une touche d'innovation disruptive",
-    minimaliste: ", dans une approche épurée et essentielle",
+    professionnel: ", with a controlled and expert approach",
+    audacieux: ", with a touch of disruptive innovation",
+    minimaliste: ", in a clean and essential approach",
   };
   return modifiers[tone.toLowerCase()] ?? "";
 }
@@ -146,88 +146,88 @@ export function buildPalettePrompt(brief: BrandBrief): string {
   const { neutrals } = palette;
 
   const clientColorsInstruction = brief.brandColors
-    ? `⚠️ RÈGLE ABSOLUE — COULEURS CLIENT IMPOSÉES:\nLe client a défini ces couleurs pour sa marque: ${brief.brandColors}\nCes couleurs sont SACRÉES et IMMUABLES. Tu dois:\n1. Les utiliser EXACTEMENT comme base (primaire, secondaire, accent) — ne jamais les remplacer\n2. Construire les neutres, WCAG et hover states AUTOUR de ces couleurs\n3. Ignorer toute suggestion de palette sectorielle automatique\nL'auto-détection couleur est DÉSACTIVÉE.\n\n`
+    ? `⚠️ ABSOLUTE RULE — CLIENT-IMPOSED COLORS:\nThe client has defined these colors for their brand: ${brief.brandColors}\nThese colors are SACRED and IMMUTABLE. You must:\n1. Use them EXACTLY as the base (primary, secondary, accent) — never replace them\n2. Build the neutrals, WCAG values, and hover states AROUND these colors\n3. Ignore any automatic sector-based color suggestion\nColor auto-detection is DISABLED.\n\n`
     : "";
   const valuesText = brief.values.join(", ");
   const toneModifier = getToneModifier(brief.tone);
   const colorDesc = getSectorColorDescription(sector);
   const seasonalLabel = getSeasonalLabel(sector);
 
-  return `${clientColorsInstruction}Génère la palette de couleurs complète pour ${brief.brandName} (secteur ${brief.sector}), ton ${brief.tone}, valeurs: ${valuesText}. Livre une palette "brand-ready" structurée pour UI/UX, web et print, avec usages 60/30/10, neutres, et contrôles d'accessibilité. Style visuel: moderne, précis, premium, sans effet "gadget". ZÉRO élément obsolète, ZÉRO interface confuse, ZÉRO watermark, ZÉRO texte illisible, ZÉRO palette aléatoire non justifiée.
+  return `${clientColorsInstruction}Generate the complete color palette for ${brief.brandName} (sector: ${brief.sector}), tone: ${brief.tone}, values: ${valuesText}. Deliver a "brand-ready" structured palette for UI/UX, web, and print, with 60/30/10 usage distribution, neutrals, and accessibility checks. Visual style: modern, precise, premium, no "gimmick" effects. ZERO obsolete elements, ZERO confusing interface, ZERO watermark, ZERO unreadable text, ZERO unjustified random palette.
 
-1) Couleur primaire (60% usage)
-- Propose 1 couleur primaire "${colorDesc}" avec code HEX + RGB.
-- Donne sa signification psychologique (${primary.meaning}${toneModifier}) et son rôle (${primary.role}).
+1) Primary Color (60% usage)
+- Propose 1 primary "${colorDesc}" color with HEX + RGB code.
+- Provide its psychological meaning (${primary.meaning}${toneModifier}) and role (${primary.role}).
 - HEX: ${primary.hex} | RGB: ${primary.rgb}
 
-2) Couleur secondaire (30% usage)
-- Propose 1 couleur secondaire complémentaire/harmonique avec code HEX + RGB.
+2) Secondary Color (30% usage)
+- Propose 1 complementary/harmonic secondary color with HEX + RGB code.
 - HEX: ${secondary.hex} | RGB: ${secondary.rgb}
-- Explique l'accord colorimétrique: ${secondary.harmony}
+- Explain the color harmony: ${secondary.harmony}
 
-3) Couleur accent / CTA (10% usage)
-- Propose 1 couleur accent orientée conversion (CTA) avec code HEX + RGB.
+3) Accent / CTA Color (10% usage)
+- Propose 1 conversion-oriented accent color (CTA) with HEX + RGB code.
 - HEX: ${accent.hex} | RGB: ${accent.rgb}
-- Décris l'émotion générée: ${accent.meaning}
-- Doit ressortir sur la primaire + sur fond blanc.
+- Describe the emotion generated: ${accent.meaning}
+- Must stand out on the primary color + on white background.
 
-4) 5 nuances neutres (HEX exacts)
-- Neutral-01 (background très clair): ${neutrals["01"]}
+4) 5 Neutral Shades (exact HEX)
+- Neutral-01 (very light background): ${neutrals["01"]}
 - Neutral-02 (surface / cards): ${neutrals["02"]}
-- Neutral-03 (bordures / separators): ${neutrals["03"]}
-- Neutral-04 (texte secondaire): ${neutrals["04"]}
-- Neutral-05 (texte principal / fond sombre): ${neutrals["05"]}
+- Neutral-03 (borders / separators): ${neutrals["03"]}
+- Neutral-04 (secondary text): ${neutrals["04"]}
+- Neutral-05 (primary text / dark background): ${neutrals["05"]}
 
-5) Validation WCAG 2.1 AA (calculée)
-- Calcule et affiche les contrast ratios (min 4.5:1 pour texte normal, 3.0:1 pour large).
-- Utilise la formule: contrastRatio = (L1 + 0.05) / (L2 + 0.05) where L = 0.2126 * R + 0.7152 * G + 0.0722 * B, with RGB values normalized to 0-1 and gamma corrected
-- Donne un tableau clair "VALIDES / INVALIDES" pour les paires suivantes:
+5) WCAG 2.1 AA Validation (calculated)
+- Calculate and display contrast ratios (min 4.5:1 for normal text, 3.0:1 for large text).
+- Use the formula: contrastRatio = (L1 + 0.05) / (L2 + 0.05) where L = 0.2126 * R + 0.7152 * G + 0.0722 * B, with RGB values normalized to 0-1 and gamma corrected
+- Provide a clear "VALID / INVALID" table for the following pairs:
 
-| Paire | Ratio | Statut |
-|-------|-------|--------|
-| Texte ${neutrals["05"]} sur blanc | [calculer] | [valider] |
-| Texte ${neutrals["04"]} sur blanc | [calculer] | [valider] |
-| CTA (${accent.hex}) sur blanc | [calculer] | [valider] |
-| Texte #FFFFFF sur primaire (${primary.hex}) | [calculer] | [valider] |
-| Texte #FFFFFF sur secondaire (${secondary.hex}) | [calculer] | [valider] |
-| Texte #FFFFFF sur CTA (${accent.hex}) | [calculer] | [valider] |
-| Texte ${neutrals["04"]} sur ${neutrals["02"]} | [calculer] | [valider] |
-| Texte ${neutrals["01"]} sur ${neutrals["05"]} | [calculer] | [valider] |
+| Pair | Ratio | Status |
+|------|-------|--------|
+| Text ${neutrals["05"]} on white | [calculate] | [validate] |
+| Text ${neutrals["04"]} on white | [calculate] | [validate] |
+| CTA (${accent.hex}) on white | [calculate] | [validate] |
+| Text #FFFFFF on primary (${primary.hex}) | [calculate] | [validate] |
+| Text #FFFFFF on secondary (${secondary.hex}) | [calculate] | [validate] |
+| Text #FFFFFF on CTA (${accent.hex}) | [calculate] | [validate] |
+| Text ${neutrals["04"]} on ${neutrals["02"]} | [calculate] | [validate] |
+| Text ${neutrals["01"]} on ${neutrals["05"]} | [calculate] | [validate] |
 
-- Si une paire est invalide: propose un ajustement en itérations (max 3) en lightening/darkening (indiquer X%), en préservant la teinte (hue) ±3° et en limitant la variation de saturation (±10%). Fournis le NOUVEAU HEX + RGB + nouveau ratio.
+- If a pair is invalid: propose an adjustment in iterations (max 3) by lightening/darkening (indicate X%), preserving the hue ±3° and limiting saturation variation (±10%). Provide the NEW HEX + RGB + new ratio.
 
-6) Applications recommandées (règles d'usage)
-- Boutons: primary = ${primary.hex}, secondary = ${secondary.hex}, ghost = transparent avec bordure ${neutrals["03"]}
+6) Recommended Applications (usage rules)
+- Buttons: primary = ${primary.hex}, secondary = ${secondary.hex}, ghost = transparent with ${neutrals["03"]} border
 - Hover states: primary darken 10%, secondary lighten 10%
-- Liens: ${accent.hex} avec underline on hover
-- Fonds: Neutral-01 pour fond principal, Neutral-02 pour cards
-- Textes: H1/H2 = ${primary.hex} sur fond clair, body = ${neutrals["05"]}
-- Icônes: ${secondary.hex} pour les actions secondaires
+- Links: ${accent.hex} with underline on hover
+- Backgrounds: Neutral-01 for main background, Neutral-02 for cards
+- Text: H1/H2 = ${primary.hex} on light background, body = ${neutrals["05"]}
+- Icons: ${secondary.hex} for secondary actions
 - Badges: success = #10B981, info = ${accent.hex}, warning = #F59E0B, error = #EF4444
 - Print (CMYK approx): ${hexToCmyk(primary.hex)}, ${hexToCmyk(secondary.hex)}
 
-7) Palette saisonnière / mood board
-- Propose 1 mini-variation "${seasonalLabel}" dérivée de la palette principale:
-  * ${primary.hex} (20% plus foncé) (primary plus profond)
-  * ${accent.hex} (15% plus clair) (accent plus lumineux)
-  * ${neutrals["03"]} (neutral intermédiaire)
-- Usage: supports de conférence, présentations, documents institutionnels
-- Cohérence: conserve l'identité de marque tout en apportant de la profondeur
+7) Seasonal Palette / Mood Board
+- Propose 1 "${seasonalLabel}" mini-variation derived from the main palette:
+  * ${primary.hex} (20% darker) (deeper primary)
+  * ${accent.hex} (15% lighter) (brighter accent)
+  * ${neutrals["03"]} (intermediate neutral)
+- Usage: conference materials, presentations, institutional documents
+- Consistency: preserves brand identity while adding depth
 
-**TABLEAUX RÉCAPITULATIFS**
+**SUMMARY TABLES**
 
-| Rôle | HEX | RGB | Usage |
+| Role | HEX | RGB | Usage |
 |------|-----|-----|-------|
-| Primaire | ${primary.hex} | ${primary.rgb} | 60% — ${primary.role} |
-| Secondaire | ${secondary.hex} | ${secondary.rgb} | 30% — textes secondaires, lignes |
-| Accent / CTA | ${accent.hex} | ${accent.rgb} | 10% — boutons, liens, highlights |
-| Neutral-01 | ${neutrals["01"]} | [RGB] | Fond principal |
+| Primary | ${primary.hex} | ${primary.rgb} | 60% — ${primary.role} |
+| Secondary | ${secondary.hex} | ${secondary.rgb} | 30% — secondary text, lines |
+| Accent / CTA | ${accent.hex} | ${accent.rgb} | 10% — buttons, links, highlights |
+| Neutral-01 | ${neutrals["01"]} | [RGB] | Main background |
 | Neutral-02 | ${neutrals["02"]} | [RGB] | Cards / surfaces |
-| Neutral-03 | ${neutrals["03"]} | [RGB] | Bordures / séparateurs |
-| Neutral-04 | ${neutrals["04"]} | [RGB] | Texte secondaire |
-| Neutral-05 | ${neutrals["05"]} | [RGB] | Texte principal / fond sombre |
+| Neutral-03 | ${neutrals["03"]} | [RGB] | Borders / separators |
+| Neutral-04 | ${neutrals["04"]} | [RGB] | Secondary text |
+| Neutral-05 | ${neutrals["05"]} | [RGB] | Primary text / dark background |
 
-**JSON FINAL OBLIGATOIRE** (machine-readable):
+**MANDATORY FINAL JSON** (machine-readable):
 \`\`\`json
 {
   "brand": "${brief.brandName}",

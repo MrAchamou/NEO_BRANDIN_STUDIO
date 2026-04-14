@@ -45518,28 +45518,29 @@ L'auto-d\xE9tection de couleurs par secteur est D\xC9SACTIV\xC9E pour cette sess
 \u2550\u2550\u2550 MODULE EN COURS \u2550\u2550\u2550
 ${moduleLabel}
 
-\u2550\u2550\u2550 M\xC9THODE DE TRAVAIL (CHAIN-OF-THOUGHT) \u2550\u2550\u2550
-Avant de r\xE9diger chaque prompt, tu dois:
-1. ANALYSER: Identifier le positionnement exact de la marque dans son secteur
-2. DIFF\xC9RENCIER: Trouver ce qui distingue ${brief.brand_name} de ses concurrents
-3. CALIBRER: Ajuster le niveau de pr\xE9cision technique aux outils RoboNeo
-4. R\xC9DIGER: \xC9crire un prompt directement utilisable, riche en d\xE9tails sp\xE9cifiques \xE0 la marque
+\u2550\u2550\u2550 WORKING METHOD (CHAIN-OF-THOUGHT) \u2550\u2550\u2550
+Before writing each prompt, you must:
+1. ANALYZE: Identify the brand's exact positioning in its sector
+2. DIFFERENTIATE: Find what distinguishes ${brief.brand_name} from its competitors
+3. CALIBRATE: Adjust technical precision to match the target AI generation tool
+4. WRITE: Produce a directly usable prompt, dense with brand-specific technical details
 
-\u2550\u2550\u2550 CALIBRATION QUALIT\xC9 (FEW-SHOT) \u2550\u2550\u2550
-Exemple de prompt INSUFFISANT (\xE0 ne pas imiter):
-\u2717 "Cr\xE9e une photo de produit pour une montre. Style luxe. Fond blanc."
+\u2550\u2550\u2550 QUALITY CALIBRATION (FEW-SHOT) \u2550\u2550\u2550
+INSUFFICIENT prompt (do NOT imitate):
+\u2717 "Create a product photo for a watch. Luxury style. White background."
 
-Exemple de prompt EXCELLENCE (niveau attendu):
-\u2713 "Cr\xE9e une photo produit ultra-r\xE9aliste pour ${brief.brand_name}: montre positionn\xE9e sur un socle de marbre blanc Calacatta avec dorures, \xE9clairage 3-points (lumi\xE8re principale 45\xB0 gauche, fill light droit, backlight dor\xE9), bokeh 85mm f/1.8, reflets r\xE9alistes sur le bo\xEEtier, cadran visible \xE0 10h10, fond gradient noir profond (#0A0A0A \u2192 #1C1C1C), anamorphic lens flare l\xE9ger en coin sup\xE9rieur droit. Format 3000x3000px, 300dpi, export PNG transparent."
+EXCELLENCE prompt (expected level):
+\u2713 "${brief.brand_name} luxury watch, ultra-realistic product photography: timepiece centered on white Calacatta marble base with gold accents, 3-point studio lighting setup (key light 45\xB0 left at 5600K, soft fill right, warm golden rim backlight), 85mm f/1.8 shallow depth of field, realistic reflections on stainless steel case, dial visible at 10:10 position, deep black gradient background (#0A0A0A to #1C1C1C), subtle anamorphic lens flare upper-right corner, 3000x3000px, 300dpi, PNG transparent export -- [TECHNICAL PARAMETERS] --ar 1:1 --style raw --no watermark --v 6 -- [CLIP SYNTHESIS] luxury watch product photography, marble base, 3-point studio lighting, bokeh, anamorphic flare, 8k"
 
-\u2550\u2550\u2550 EXIGENCES OBLIGATOIRES \u2550\u2550\u2550
-\u2022 Chaque prompt doit mentionner "${brief.brand_name}" explicitement
-\u2022 Inclure des codes HEX, dimensions, et sp\xE9cifications techniques pr\xE9cises
-\u2022 Adapter chaque prompt au secteur "${brief.sector}" et au ton "${brief.tone}"
-\u2022 R\xE9diger en fran\xE7ais, avec terminologie technique anglaise pour les param\xE8tres IA
-\u2022 Unit\xE9s : Kelvin s'\xE9crit TOUJOURS avec un K MAJUSCULE (ex : 5600K, 3200K, 6500K \u2014 jamais 5600k)
-\u2022 Terminer chaque prompt avec un bloc [PARAM\xC8TRES TECHNIQUES] structur\xE9
-\u2022 Ajouter apr\xE8s [PARAM\xC8TRES TECHNIQUES] une ligne [SYNTH\xC8SE CLIP] en anglais pour optimiser la compr\xE9hension des mod\xE8les SDXL/Stable Diffusion (ex : "product photography, amber glass dropper bottle, macro shot, wood cap texture, 8k, studio lighting, white background")${colorsContext}
+\u2550\u2550\u2550 MANDATORY REQUIREMENTS \u2550\u2550\u2550
+\u2022 Always mention "${brief.brand_name}" explicitly in every prompt
+\u2022 Include HEX color codes, pixel dimensions, and precise technical specifications
+\u2022 Adapt each prompt to sector "${brief.sector}" and tone "${brief.tone}"
+\u2022 Write ALL generated prompts EXCLUSIVELY IN ENGLISH \u2014 native vocabulary of AI generation models (Midjourney, DALL-E 3, Stable Diffusion XL, Runway Gen-3, Pika, Kling, Suno, Udio, ElevenLabs)
+\u2022 Technical parameters use native model syntax: f/1.8, ISO 100, 85mm, 5600K, --ar 16:9 --style raw --v 6
+\u2022 Temperature in Kelvin always with uppercase K (5600K, 3200K \u2014 never 5600k)
+\u2022 End each prompt with a [TECHNICAL PARAMETERS] block using native model parameter syntax
+\u2022 Add a [CLIP SYNTHESIS] line after [TECHNICAL PARAMETERS] with the most critical keywords for SDXL/Stable Diffusion (e.g., "product photography, amber glass dropper bottle, macro shot, 8k, studio lighting, white background")${colorsContext}
 
 \u26A0\uFE0F R\xC8GLE ABSOLUE \u2014 ANTI-HALLUCINATION DONN\xC9ES FACTUELLES \u26A0\uFE0F
 Tu ne dois JAMAIS inventer ni supposer:
@@ -45719,144 +45720,144 @@ R\xE9ponds en JSON uniquement: [{"persona": "description pr\xE9cise du persona",
 // src/prompts/modules/module-01-1-logo/prompt-builder.ts
 var SECTOR_MAPPINGS = {
   tech: {
-    style: "corporate minimaliste, sobre et stable",
-    ambiance: "trusted technology: s\xE9rieux, moderne, non ostentatoire",
-    symbolConcept: "vecteurs, trajectoires contr\xF4l\xE9es et rigueur scientifique",
+    style: "corporate minimalist, clean and stable",
+    ambiance: "trusted technology: serious, modern, non-ostentatious",
+    symbolConcept: "vectors, controlled trajectories and scientific rigor",
     primaryColor: "#003087",
     secondaryColor: "#6C757D",
     accentColor: "#2F80ED"
   },
   luxury: {
-    style: "minimaliste \xE9l\xE9gant, pr\xE9cision horlog\xE8re",
-    ambiance: "prestige intemporel: \xE9l\xE9gance, raffinement, discr\xE9tion",
-    symbolConcept: "\xE9l\xE9gance, h\xE9ritage, pr\xE9cision artisanale",
+    style: "elegant minimalist, horological precision",
+    ambiance: "timeless prestige: elegance, refinement, discretion",
+    symbolConcept: "elegance, heritage, artisanal precision",
     primaryColor: "#1A2C3E",
     secondaryColor: "#C5A572",
     accentColor: "#D4AF37"
   },
   streetwear: {
-    style: "audacieux typographique, authenticit\xE9 urbaine",
-    ambiance: "street credibility: authentique, urbain, sans compromis",
-    symbolConcept: "\xE9nergie urbaine, mouvement, authenticit\xE9",
+    style: "bold typographic, urban authenticity",
+    ambiance: "street credibility: authentic, urban, uncompromising",
+    symbolConcept: "urban energy, movement, authenticity",
     primaryColor: "#1A1A1A",
     secondaryColor: "#E63946",
     accentColor: "#F4A261"
   },
   fitness: {
-    style: "dynamique \xE9nergique, angles vifs",
-    ambiance: "performance: motivation, d\xE9passement, force ma\xEEtris\xE9e",
-    symbolConcept: "dynamique, progression, force ma\xEEtris\xE9e",
+    style: "dynamic energetic, sharp angles",
+    ambiance: "performance: motivation, surpassing limits, controlled strength",
+    symbolConcept: "dynamic, progression, controlled strength",
     primaryColor: "#1E3A8A",
     secondaryColor: "#EF4444",
     accentColor: "#22C55E"
   },
   cosmetic: {
-    style: "doux organique, puret\xE9, rondeurs subtiles",
-    ambiance: "beaut\xE9 naturelle: douceur, efficacit\xE9, bien-\xEAtre",
-    symbolConcept: "puret\xE9, \xE9clat, transformation naturelle",
+    style: "soft organic, purity, subtle curves",
+    ambiance: "natural beauty: softness, effectiveness, well-being",
+    symbolConcept: "purity, radiance, natural transformation",
     primaryColor: "#F5E6D3",
     secondaryColor: "#D4A5A5",
     accentColor: "#A7C7B9"
   }
 };
-var GOLDEN_EXAMPLE = `Cr\xE9e le logo de Theravectys pour une marque tech corporate positionn\xE9e sur l'innovation, la rigueur scientifique et la fiabilit\xE9 (expertise B2B, environnement R&D/ing\xE9nierie). Le logo doit inspirer stabilit\xE9, confiance et pr\xE9cision, avec une ex\xE9cution premium, lisible et scalable pour usages web/app, documents officiels et supports institutionnels.
+var GOLDEN_EXAMPLE = `Create the logo for Theravectys, a tech corporate brand positioned on innovation, scientific rigor, and reliability (B2B expertise, R&D/engineering environment). The logo must inspire stability, trust, and precision, with a premium, readable, and scalable execution for web/app, official documents, and institutional materials.
 
-**Direction artistique (style, esprit, ambiance)**
-Style corporate minimaliste, sobre et stable. Composition nette, g\xE9om\xE9trie propre, alignements rigoureux (grid-based design), contraste ma\xEEtris\xE9. Ambiance "trusted technology": s\xE9rieux, moderne, non ostentatoire. \xC9viter tout effet gadget. Rendu final **flat vector** (pas de 3D, pas de textures), contours propres, angles ma\xEEtris\xE9s (mix subtil d'angles droits et coins l\xE9g\xE8rement arrondis pour la fiabilit\xE9).
+**Artistic Direction (style, spirit, atmosphere)**
+Corporate minimalist style, clean and stable. Sharp composition, clean geometry, rigorous alignments (grid-based design), controlled contrast. "Trusted technology" atmosphere: serious, modern, non-ostentatious. Avoid any gimmick effects. Final render **flat vector** (no 3D, no textures), clean outlines, controlled angles (subtle mix of straight angles and slightly rounded corners for reliability).
 
-**Typographie recommand\xE9e (sans-serif solide)**
-- Police principale: **IBM Plex Sans** (Google Fonts) \u2014 https://fonts.google.com/specimen/IBM+Plex+Sans
-  - Recommandation: "Theravectys" en **SemiBold 600** (tracking -1% \xE0 0%), capitalisation: "Theravectys" (T majuscule, reste minuscules)
+**Recommended Typography (solid sans-serif)**
+- Primary font: **IBM Plex Sans** (Google Fonts) \u2014 https://fonts.google.com/specimen/IBM+Plex+Sans
+  - Recommendation: "Theravectys" in **SemiBold 600** (tracking -1% to 0%), capitalization: "Theravectys" (T uppercase, rest lowercase)
 - Alternatives: **Roboto** https://fonts.google.com/specimen/Roboto ; **Lato** https://fonts.google.com/specimen/Lato ; **Inter** https://fonts.google.com/specimen/Inter
-- Ajustements: kerning optique activ\xE9, hauteur de x confortable, lisibilit\xE9 maximale \xE0 24px de largeur.
+- Adjustments: optical kerning enabled, comfortable x-height, maximum readability at 24px width.
 
-**Symbole / ic\xF4ne (description pr\xE9cise + inspirations)**
-Cr\xE9er un symbole abstrait \xE0 gauche du wordmark, \xE9voquant \xE0 la fois **vecteurs**, **trajectoires contr\xF4l\xE9es** et **rigueur scientifique**:
-- Ic\xF4ne bas\xE9e sur un **"V" stylis\xE9** construit avec 2 segments g\xE9om\xE9triques (\xE9paisseur uniforme), formant une **fl\xE8che vectorielle** discr\xE8te vers l'avant (innovation) et une impression de **stabilit\xE9** (base plus large, sommet ma\xEEtris\xE9).
-- Int\xE9grer une **micro-grille** implicite via 2\u20133 points nodaux (petits cercles) align\xE9s sur une trajectoire, comme une visualisation scientifique propre.
-- Style: lignes pleines, angles propres, aucune r\xE9f\xE9rence m\xE9dicale clich\xE9e.
-- Taille du symbole: hauteur = hauteur de x du wordmark \xD7 1.2, alignement vertical centr\xE9 sur la baseline du texte.
-- Espacement symbole/wordmark: a\xE9r\xE9 et proportionnel, respiration visuelle suffisante pour une lecture imm\xE9diate.
+**Symbol / Icon (precise description + inspirations)**
+Create an abstract symbol to the left of the wordmark, evoking both **vectors**, **controlled trajectories** and **scientific rigor**:
+- Icon based on a stylized **"V"** built with 2 geometric segments (uniform thickness), forming a discrete **vectorial arrow** pointing forward (innovation) and a sense of **stability** (wider base, controlled apex).
+- Integrate an implicit **micro-grid** via 2\u20133 nodal points (small circles) aligned on a trajectory, like a clean scientific visualization.
+- Style: solid lines, clean angles, no clich\xE9d medical references.
+- Symbol size: height = x-height of wordmark \xD7 1.2, vertically centered on the text baseline.
+- Symbol/wordmark spacing: airy and proportional, sufficient visual breathing room for immediate reading.
 
-**Palette chromatique**
-- Primaire: **#003087** \u2014 bleu marine confiance (60% des usages: fond, ic\xF4ne principale)
-- Secondaire: **#6C757D** \u2014 gris corporate neutre (30%: textes secondaires, lignes, fonds l\xE9gers)
-- Accent: **#2F80ED** \u2014 tech highlight (10%: points nodaux, hover states, highlights)
-- Neutres: #FFFFFF (fond clair), #F8F9FA (fond off-white), #0B1220 (fond sombre), #1C2B4A (bleu nuit)
+**Color Palette**
+- Primary: **#003087** \u2014 trust navy blue (60% of usage: background, main icon)
+- Secondary: **#6C757D** \u2014 neutral corporate gray (30%: secondary text, lines, light backgrounds)
+- Accent: **#2F80ED** \u2014 tech highlight (10%: nodal points, hover states, highlights)
+- Neutrals: #FFFFFF (light background), #F8F9FA (off-white background), #0B1220 (dark background), #1C2B4A (midnight blue)
 
-**4 variations requises**
-1. **Fond clair (principal)**: fond #FFFFFF, ic\xF4ne et wordmark en #003087 \u2014 usage web, documents, pr\xE9sentations
-2. **Fond sombre**: fond #0B1220, wordmark et ic\xF4ne en #FFFFFF avec accent #2F80ED sur les points nodaux \u2014 usage digital dark mode, \xE9crans, \xE9v\xE9nements
-3. **Monochrome noir**: fond #FFFFFF, logo entier en #1A1A1A \u2014 impression N&B, documents officiels, tampons
-4. **Invers\xE9 (knockout)**: blanc #FFFFFF sur fond bleu marine #003087 \u2014 usage institutionnel, cartes de visite, en-t\xEAtes officiels
+**4 Required Variations**
+1. **Light background (main)**: background #FFFFFF, icon and wordmark in #003087 \u2014 web, documents, presentations
+2. **Dark background**: background #0B1220, wordmark and icon in #FFFFFF with accent #2F80ED on nodal points \u2014 dark mode digital, screens, events
+3. **Black monochrome**: background #FFFFFF, entire logo in #1A1A1A \u2014 B&W printing, official documents, stamps
+4. **Reversed (knockout)**: white #FFFFFF on navy blue background #003087 \u2014 institutional use, business cards, official headers
 
-**Sp\xE9cifications techniques**
-- Format export: PNG 4000\xD74000px haute r\xE9solution (fond transparent), rendu Flat Design imitant un fichier vectoriel propre et \xE9pur\xE9. \u26A0\uFE0F Note post-production : les g\xE9n\xE9rateurs d'images (Midjourney, DALL-E, SDXL) produisent des fichiers matriciels (PNG/JPG) et non des SVG \xE9ditables. Une vectorisation manuelle est requise en post-production (Adobe Illustrator Live Trace, Inkscape ou Vector Magic) pour obtenir un fichier SVG r\xE9ellement scalable et \xE9ditable.
-- Zone de s\xE9curit\xE9: espace blanc = hauteur de la lettre majuscule "T" du wordmark sur tous les c\xF4t\xE9s
-- Taille minimale: 80px de largeur en digital, 20mm en impression
-- Aspect g\xE9om\xE9trique: alignement parfait, espacement r\xE9gulier et proportionnel, g\xE9om\xE9trie coh\xE9rente, composition \xE9quilibr\xE9e. \u26A0\uFE0F Note : ce cahier des charges est destin\xE9 au designer humain qui utilisera ce prompt comme inspiration \u2014 les valeurs pixel exactes ne sont pas interpr\xE9t\xE9es par les g\xE9n\xE9rateurs d'images IA.
-- Proportions: ratio largeur/hauteur du logo complet entre 3:1 et 4:1
-- Alignement: symbole et wordmark sur baseline commune, centrage vertical optique
+**Technical Specifications**
+- Export format: PNG 4000\xD74000px high resolution (transparent background), Flat Design render mimicking a clean vector file. \u26A0\uFE0F Post-production note: image generators (Midjourney, DALL-E, SDXL) produce raster files (PNG/JPG) not editable SVGs. Manual vectorization is required in post-production (Adobe Illustrator Live Trace, Inkscape, or Vector Magic) to obtain a truly scalable and editable SVG file.
+- Safety zone: white space = height of the capital "T" in the wordmark on all sides
+- Minimum size: 80px width digital, 20mm print
+- Geometric aspect: perfect alignment, regular and proportional spacing, consistent geometry, balanced composition. \u26A0\uFE0F Note: this specification is intended for the human designer using this prompt as inspiration \u2014 exact pixel values are not interpreted by AI image generators.
+- Proportions: width/height ratio of the full logo between 3:1 and 4:1
+- Alignment: symbol and wordmark on common baseline, optical vertical centering
 
 **NEGATIVE_PROMPT**
-vieux, obsol\xE8te, r\xE9tro, vintage, d\xE9sordonn\xE9, c\xE2bles apparents en d\xE9sordre, interface confuse, erreurs visibles, bugs, d\xE9sinvolte, informel, trop d\xE9contract\xE9, argot, watermark, mockup photor\xE9aliste, gradients agressifs, 3D, bevel/emboss, textures, bruit, glitch, texte illisible, kerning mauvais, compression JPEG visible, artefacts IA, formes incoh\xE9rentes, d\xE9tails trop fins non-scalables, symboles m\xE9dicaux clich\xE9s, ADN, seringue, croix, mascotte, cartoon, low-res
+old, obsolete, retro, vintage, messy, tangled cables, confusing interface, visible errors, bugs, casual, informal, too relaxed, slang, watermark, photorealistic mockup, aggressive gradients, 3D, bevel/emboss, textures, noise, glitch, unreadable text, bad kerning, visible JPEG compression, AI artifacts, inconsistent shapes, too-thin non-scalable details, clich\xE9d medical symbols, DNA, syringe, cross, mascot, cartoon, low-res
 
-**PARAM\xC8TRES TECHNIQUES**
+**TECHNICAL PARAMETERS**
 --ar 1:1 --style raw --no watermark --no texture --no gradient --no 3D --v 6`;
 function buildSymbolDescription(sector, symbolConcept) {
-  const base = `Cr\xE9er un symbole abstrait \xE0 gauche du wordmark, \xE9voquant ${symbolConcept}:`;
+  const base = `Create an abstract symbol to the left of the wordmark, evoking ${symbolConcept}:`;
   if (sector === "tech") {
     return `${base}
-- Ic\xF4ne bas\xE9e sur un "V" stylis\xE9 construit avec 2 segments g\xE9om\xE9triques (\xE9paisseur uniforme), formant une fl\xE8che vectorielle discr\xE8te vers l'avant (innovation) et une impression de stabilit\xE9 (base plus large, sommet ma\xEEtris\xE9).
-- Int\xE9grer une micro-grille implicite via 2\u20133 points nodaux (petits cercles) align\xE9s sur une trajectoire, comme une visualisation scientifique propre.
-- Style: lignes pleines, angles propres, aucune r\xE9f\xE9rence m\xE9dicale clich\xE9e.
-- Taille du symbole: hauteur = hauteur de x du wordmark \xD7 1.2, alignement vertical centr\xE9 sur la baseline du texte.
-- Espacement symbole/wordmark: a\xE9r\xE9 et proportionnel, respiration visuelle suffisante pour une lecture imm\xE9diate.`;
+- Icon based on a stylized "V" built with 2 geometric segments (uniform thickness), forming a discrete vectorial arrow pointing forward (innovation) and a sense of stability (wider base, controlled apex).
+- Integrate an implicit micro-grid via 2\u20133 nodal points (small circles) aligned on a trajectory, like a clean scientific visualization.
+- Style: solid lines, clean angles, no clich\xE9d medical references.
+- Symbol size: height = x-height of wordmark \xD7 1.2, vertically centered on the text baseline.
+- Symbol/wordmark spacing: airy and proportional, sufficient visual breathing room for immediate reading.`;
   }
   if (sector === "luxury") {
     return `${base}
-- Ic\xF4ne bas\xE9e sur un monogramme stylis\xE9 \xE9voquant l'h\xE9ritage et la pr\xE9cision artisanale.
-- Lignes \xE9pur\xE9es, g\xE9om\xE9trie parfaite, sym\xE9trie ma\xEEtris\xE9e.
-- Style: lignes fines, \xE9l\xE9gance discr\xE8te, sans surcharge d\xE9corative.
-- Taille du symbole: hauteur = hauteur de x du wordmark \xD7 1.2, alignement vertical centr\xE9 sur la baseline du texte.
-- Espacement symbole/wordmark: a\xE9r\xE9 et proportionnel, respiration visuelle suffisante pour une lecture imm\xE9diate.`;
+- Icon based on a stylized monogram evoking heritage and artisanal precision.
+- Clean lines, perfect geometry, controlled symmetry.
+- Style: fine lines, discreet elegance, no decorative overload.
+- Symbol size: height = x-height of wordmark \xD7 1.2, vertically centered on the text baseline.
+- Symbol/wordmark spacing: airy and proportional, sufficient visual breathing room for immediate reading.`;
   }
   if (sector === "streetwear") {
     return `${base}
-- Ic\xF4ne bas\xE9e sur une lettre stylis\xE9e ou un pictogramme urbain audacieux.
-- Trait \xE9pais, angles vifs, pr\xE9sence marqu\xE9e.
-- Style: impact visuel fort, typographique, authenticit\xE9.
-- Taille du symbole: hauteur = hauteur de x du wordmark \xD7 1.2, alignement vertical centr\xE9 sur la baseline du texte.
-- Espacement symbole/wordmark: a\xE9r\xE9 et proportionnel, respiration visuelle suffisante pour une lecture imm\xE9diate.`;
+- Icon based on a stylized letter or bold urban pictogram.
+- Thick stroke, sharp angles, strong visual presence.
+- Style: strong visual impact, typographic, authentic.
+- Symbol size: height = x-height of wordmark \xD7 1.2, vertically centered on the text baseline.
+- Symbol/wordmark spacing: airy and proportional, sufficient visual breathing room for immediate reading.`;
   }
   if (sector === "fitness") {
     return `${base}
-- Ic\xF4ne bas\xE9e sur un symbole de mouvement (fl\xE8che, vague, dynamique).
-- Lignes \xE9nergiques, sensation de vitesse et de puissance contr\xF4l\xE9e.
-- Style: dynamique, motivant, performance.
-- Taille du symbole: hauteur = hauteur de x du wordmark \xD7 1.2, alignement vertical centr\xE9 sur la baseline du texte.
-- Espacement symbole/wordmark: a\xE9r\xE9 et proportionnel, respiration visuelle suffisante pour une lecture imm\xE9diate.`;
+- Icon based on a movement symbol (arrow, wave, dynamic shape).
+- Energetic lines, sense of speed and controlled power.
+- Style: dynamic, motivating, performance.
+- Symbol size: height = x-height of wordmark \xD7 1.2, vertically centered on the text baseline.
+- Symbol/wordmark spacing: airy and proportional, sufficient visual breathing room for immediate reading.`;
   }
   if (sector === "cosmetic") {
     return `${base}
-- Ic\xF4ne bas\xE9e sur une forme organique (goutte, p\xE9tale, cercle parfait).
-- Courbes douces, fluidit\xE9, sensation de puret\xE9.
-- Style: naturel, apaisant, \xE9l\xE9gance subtile.
-- Taille du symbole: hauteur = hauteur de x du wordmark \xD7 1.2, alignement vertical centr\xE9 sur la baseline du texte.
-- Espacement symbole/wordmark: a\xE9r\xE9 et proportionnel, respiration visuelle suffisante pour une lecture imm\xE9diate.`;
+- Icon based on an organic shape (droplet, petal, perfect circle).
+- Smooth curves, fluidity, sense of purity.
+- Style: natural, soothing, subtle elegance.
+- Symbol size: height = x-height of wordmark \xD7 1.2, vertically centered on the text baseline.
+- Symbol/wordmark spacing: airy and proportional, sufficient visual breathing room for immediate reading.`;
   }
   return `${base}
-- Ic\xF4ne abstraite adapt\xE9e \xE0 l'univers de la marque.
-- Style \xE9pur\xE9, lisible, scalable.
-- Taille du symbole: hauteur = hauteur de x du wordmark \xD7 1.2, alignement vertical centr\xE9 sur la baseline du texte.
-- Espacement symbole/wordmark: a\xE9r\xE9 et proportionnel, respiration visuelle suffisante pour une lecture imm\xE9diate.`;
+- Abstract icon adapted to the brand universe.
+- Clean, readable, scalable style.
+- Symbol size: height = x-height of wordmark \xD7 1.2, vertically centered on the text baseline.
+- Symbol/wordmark spacing: airy and proportional, sufficient visual breathing room for immediate reading.`;
 }
 function buildNegativePromptSuffix(sector) {
-  const base = "vieux, obsol\xE8te, r\xE9tro, vintage, d\xE9sordonn\xE9, c\xE2bles apparents en d\xE9sordre, interface confuse, erreurs visibles, bugs, d\xE9sinvolte, informel, trop d\xE9contract\xE9, argot, watermark, mockup photor\xE9aliste, gradients agressifs, 3D, bevel/emboss, textures, bruit, glitch, texte illisible, kerning mauvais, compression JPEG visible, artefacts IA, formes incoh\xE9rentes, d\xE9tails trop fins non-scalables, symboles m\xE9dicaux clich\xE9s, ADN, seringue, croix, mascotte, cartoon, low-res";
-  if (sector === "luxury") return `${base}, cheap, bas de gamme, imitation, plastique, brillant excessif`;
-  if (sector === "streetwear") return `${base}, commercial, corporate, trop propre, aseptis\xE9, institutionnel`;
-  if (sector === "fitness") return `${base}, statique, mou, sans \xE9nergie, passif, lourd`;
-  if (sector === "cosmetic") return `${base}, agressif, angulaire, synth\xE9tique, artificiel`;
+  const base = "old, obsolete, retro, vintage, messy, tangled cables, confusing interface, visible errors, bugs, casual, informal, too relaxed, slang, watermark, photorealistic mockup, aggressive gradients, 3D, bevel/emboss, textures, noise, glitch, unreadable text, bad kerning, visible JPEG compression, AI artifacts, inconsistent shapes, too-thin non-scalable details, clich\xE9d medical symbols, DNA, syringe, cross, mascot, cartoon, low-res";
+  if (sector === "luxury") return `${base}, cheap, low-end, imitation, plastic, excessive shine`;
+  if (sector === "streetwear") return `${base}, commercial, corporate, too clean, sterile, institutional`;
+  if (sector === "fitness") return `${base}, static, limp, no energy, passive, heavy`;
+  if (sector === "cosmetic") return `${base}, aggressive, angular, synthetic, artificial`;
   return base;
 }
 function parseHexColors(colorStr) {
@@ -45872,52 +45873,52 @@ function buildLogoPrompt(brief) {
   const secondaryColor = clientHexes[1] ?? mapping.secondaryColor;
   const accentColor = clientHexes[2] ?? mapping.accentColor;
   const clientColorsBlock = brief.brandColors ? `
-\u26A0\uFE0F COULEURS CLIENT IMPOS\xC9ES \u2014 PRIORIT\xC9 ABSOLUE:
-Le client a fourni: ${brief.brandColors}
-Utilise EXCLUSIVEMENT ces couleurs. NE PAS les remplacer par d'autres teintes.` : "";
+\u26A0\uFE0F CLIENT COLORS \u2014 ABSOLUTE PRIORITY:
+Client provided: ${brief.brandColors}
+Use EXCLUSIVELY these colors. DO NOT replace them with other hues.` : "";
   const valuesText = brief.values.join(", ");
-  const v0 = brief.values[0] ?? "stabilit\xE9";
-  const v1 = brief.values[1] ?? "confiance";
-  const v2 = brief.values[2] ?? "pr\xE9cision";
+  const v0 = brief.values[0] ?? "stability";
+  const v1 = brief.values[1] ?? "trust";
+  const v2 = brief.values[2] ?? "precision";
   const symbolDescription = buildSymbolDescription(sector, symbolConcept);
   const negativePrompt = buildNegativePromptSuffix(sector);
   let prompt = GOLDEN_EXAMPLE;
   prompt = prompt.replace(/Theravectys/g, brief.brandName);
   prompt = prompt.replace(/tech corporate/g, `${brief.sector} ${brief.tone}`);
-  prompt = prompt.replace(/l'innovation, la rigueur scientifique et la fiabilité/g, valuesText);
-  prompt = prompt.replace(/stabilité, confiance et précision/g, `${v0}, ${v1}, ${v2}`);
-  prompt = prompt.replace(/Style corporate minimaliste, sobre et stable/g, `Style ${style}`);
+  prompt = prompt.replace(/innovation, scientific rigor, and reliability/g, valuesText);
+  prompt = prompt.replace(/stability, trust, and precision/g, `${v0}, ${v1}, ${v2}`);
+  prompt = prompt.replace(/Corporate minimalist style, clean and stable/g, `${style} style`);
   prompt = prompt.replace(
-    /Ambiance "trusted technology": sérieux, moderne, non ostentatoire/g,
-    `Ambiance "${ambiance}"`
+    /"Trusted technology" atmosphere: serious, modern, non-ostentatious/g,
+    `"${ambiance}" atmosphere`
   );
   prompt = prompt.replace(
-    /Créer un symbole abstrait à gauche du wordmark, évoquant à la fois \*\*vecteurs\*\*, \*\*trajectoires contrôlées\*\* et \*\*rigueur scientifique\*\*:[\s\S]*?(?=\n\n\*\*Palette)/,
+    /Create an abstract symbol to the left of the wordmark, evoking both \*\*vectors\*\*, \*\*controlled trajectories\*\* and \*\*scientific rigor\*\*:[\s\S]*?(?=\n\n\*\*Color Palette\*\*)/,
     `${symbolDescription}
 `
   );
   prompt = prompt.replace(/#003087/g, primaryColor);
   prompt = prompt.replace(/#6C757D/g, secondaryColor);
   prompt = prompt.replace(/#2F80ED/g, accentColor);
-  prompt = prompt.replace(/bleu marine confiance/g, `${primaryColor} (couleur primaire)`);
-  prompt = prompt.replace(/gris corporate neutre/g, `${secondaryColor} (couleur secondaire)`);
-  prompt = prompt.replace(/tech highlight/g, `highlight ${brief.sector}`);
+  prompt = prompt.replace(/trust navy blue/g, `${primaryColor} (primary color)`);
+  prompt = prompt.replace(/neutral corporate gray/g, `${secondaryColor} (secondary color)`);
+  prompt = prompt.replace(/tech highlight/g, `${brief.sector} highlight`);
   prompt = prompt.replace(
-    /fond #FFFFFF, icône et wordmark en #003087/g,
-    `fond #FFFFFF, ic\xF4ne et wordmark en ${primaryColor}`
+    /background #FFFFFF, icon and wordmark in #003087/g,
+    `background #FFFFFF, icon and wordmark in ${primaryColor}`
   );
   prompt = prompt.replace(
-    /blanc #FFFFFF sur fond bleu marine #003087/g,
-    `blanc #FFFFFF sur fond ${primaryColor}`
+    /white #FFFFFF on navy blue background #003087/g,
+    `white #FFFFFF on ${primaryColor} background`
   );
   prompt = prompt.replace(
-    /vieux, obsolète, rétro, vintage[\s\S]*?low-res/,
+    /old, obsolete, retro, vintage[\s\S]*?low-res/,
     negativePrompt
   );
   if (clientColorsBlock) {
     prompt = prompt.replace(
-      /(\*\*Palette chromatique\*\*)/,
-      `**Palette chromatique**${clientColorsBlock}`
+      /(\*\*Color Palette\*\*)/,
+      `**Color Palette**${clientColorsBlock}`
     );
   }
   return prompt;
@@ -45926,33 +45927,33 @@ Utilise EXCLUSIVEMENT ces couleurs. NE PAS les remplacer par d'autres teintes.` 
 // src/prompts/modules/module-01-2-palette/prompt-builder.ts
 var SECTOR_PALETTES = {
   tech: {
-    primary: { hex: "#003087", rgb: "0,48,135", meaning: "fiabilit\xE9, confiance, rigueur scientifique", role: "fonds UI, header, blocs de marque" },
-    secondary: { hex: "#6C757D", rgb: "108,117,125", meaning: "neutralit\xE9 technique, support, sobri\xE9t\xE9", harmony: "gris neutre compl\xE9mentaire au bleu profond, apporte \xE9quilibre et lisibilit\xE9" },
-    accent: { hex: "#2F80ED", rgb: "47,128,237", meaning: "\xE9nergie contr\xF4l\xE9e, action technologique, clart\xE9" },
+    primary: { hex: "#003087", rgb: "0,48,135", meaning: "reliability, trust, scientific rigor", role: "UI backgrounds, header, brand blocks" },
+    secondary: { hex: "#6C757D", rgb: "108,117,125", meaning: "technical neutrality, support, sobriety", harmony: "neutral gray complementary to deep blue, brings balance and readability" },
+    accent: { hex: "#2F80ED", rgb: "47,128,237", meaning: "controlled energy, technological action, clarity" },
     neutrals: { "01": "#F8F9FA", "02": "#E9ECEF", "03": "#DEE2E6", "04": "#6C757D", "05": "#212529" }
   },
   luxury: {
-    primary: { hex: "#1A2C3E", rgb: "26,44,62", meaning: "prestige, profondeur, \xE9l\xE9gance intemporelle", role: "fonds premium, en-t\xEAtes, \xE9l\xE9ments d'autorit\xE9" },
-    secondary: { hex: "#C5A572", rgb: "197,165,114", meaning: "richesse, raffinement, h\xE9ritage", harmony: "contraste chaud-froid, \xE9l\xE9gance dor\xE9e sur fond profond" },
-    accent: { hex: "#D4AF37", rgb: "212,175,55", meaning: "luxe, exclusivit\xE9, excellence" },
+    primary: { hex: "#1A2C3E", rgb: "26,44,62", meaning: "prestige, depth, timeless elegance", role: "premium backgrounds, headers, authority elements" },
+    secondary: { hex: "#C5A572", rgb: "197,165,114", meaning: "richness, refinement, heritage", harmony: "warm-cool contrast, golden elegance on deep background" },
+    accent: { hex: "#D4AF37", rgb: "212,175,55", meaning: "luxury, exclusivity, excellence" },
     neutrals: { "01": "#F5F3F0", "02": "#E8E4DD", "03": "#D4CDBC", "04": "#8B7A6B", "05": "#2C2418" }
   },
   streetwear: {
-    primary: { hex: "#1A1A1A", rgb: "26,26,26", meaning: "authenticit\xE9, puissance, attitude urbaine", role: "fonds, \xE9l\xE9ments dominants, identit\xE9 forte" },
-    secondary: { hex: "#E63946", rgb: "230,57,70", meaning: "\xE9nergie, audace, r\xE9bellion ma\xEEtris\xE9e", harmony: "contraste maximal, tension visuelle dynamique" },
-    accent: { hex: "#F4A261", rgb: "244,162,97", meaning: "chaleur urbaine, signal fort, singularit\xE9" },
+    primary: { hex: "#1A1A1A", rgb: "26,26,26", meaning: "authenticity, power, urban attitude", role: "backgrounds, dominant elements, strong identity" },
+    secondary: { hex: "#E63946", rgb: "230,57,70", meaning: "energy, boldness, controlled rebellion", harmony: "maximum contrast, dynamic visual tension" },
+    accent: { hex: "#F4A261", rgb: "244,162,97", meaning: "urban warmth, strong signal, singularity" },
     neutrals: { "01": "#F5F5F5", "02": "#E0E0E0", "03": "#BDBDBD", "04": "#757575", "05": "#212121" }
   },
   fitness: {
-    primary: { hex: "#1E3A8A", rgb: "30,58,138", meaning: "performance, discipline, puissance ma\xEEtris\xE9e", role: "fonds dynamiques, \xE9l\xE9ments structurants" },
-    secondary: { hex: "#EF4444", rgb: "239,68,68", meaning: "\xE9nergie, effort, motivation intense", harmony: "compl\xE9mentaire contrast\xE9e, tension action/repos" },
-    accent: { hex: "#22C55E", rgb: "34,197,94", meaning: "progression, r\xE9sultat, vitalit\xE9" },
+    primary: { hex: "#1E3A8A", rgb: "30,58,138", meaning: "performance, discipline, controlled power", role: "dynamic backgrounds, structural elements" },
+    secondary: { hex: "#EF4444", rgb: "239,68,68", meaning: "energy, effort, intense motivation", harmony: "complementary contrast, action/rest tension" },
+    accent: { hex: "#22C55E", rgb: "34,197,94", meaning: "progression, results, vitality" },
     neutrals: { "01": "#FAFAFA", "02": "#F0F0F0", "03": "#D4D4D4", "04": "#737373", "05": "#0A0A0A" }
   },
   cosmetic: {
-    primary: { hex: "#F5E6D3", rgb: "245,230,211", meaning: "douceur, puret\xE9, naturel", role: "fonds apaisants, surfaces principales" },
-    secondary: { hex: "#D4A5A5", rgb: "212,165,165", meaning: "douceur rose, bien-\xEAtre, d\xE9licatesse", harmony: "harmonie ton sur ton, continuit\xE9 apaisante" },
-    accent: { hex: "#A7C7B9", rgb: "167,199,185", meaning: "fra\xEEcheur, nature, efficacit\xE9 douce" },
+    primary: { hex: "#F5E6D3", rgb: "245,230,211", meaning: "softness, purity, natural", role: "soothing backgrounds, main surfaces" },
+    secondary: { hex: "#D4A5A5", rgb: "212,165,165", meaning: "soft pink, well-being, delicacy", harmony: "tone-on-tone harmony, soothing continuity" },
+    accent: { hex: "#A7C7B9", rgb: "167,199,185", meaning: "freshness, nature, gentle effectiveness" },
     neutrals: { "01": "#FFFFFF", "02": "#F9F7F5", "03": "#E8E2DA", "04": "#B8A99A", "05": "#5C4E3D" }
   }
 };
@@ -45980,19 +45981,19 @@ function hexToCmyk(hex) {
 }
 function getSectorColorDescription(sector) {
   const descriptions = {
-    tech: "scientific tech (bleu/bleu-vert ou \xE9quivalent cr\xE9dible)",
-    luxury: "premium heritage (bleu profond, or, tons nobles)",
-    streetwear: "urban authentic (noir profond, rouge audacieux)",
-    fitness: "performance energy (bleu \xE9lectrique, rouge dynamique)",
-    cosmetic: "natural elegance (tons doux, organiques)"
+    tech: "scientific tech (deep blue/blue-green or credible equivalent)",
+    luxury: "premium heritage (deep blue, gold, noble tones)",
+    streetwear: "urban authentic (deep black, bold red)",
+    fitness: "performance energy (electric blue, dynamic red)",
+    cosmetic: "natural elegance (soft, organic tones)"
   };
   return descriptions[sector] ?? descriptions["tech"];
 }
 function getToneModifier(tone) {
   const modifiers = {
-    professionnel: ", avec une approche ma\xEEtris\xE9e et experte",
-    audacieux: ", avec une touche d'innovation disruptive",
-    minimaliste: ", dans une approche \xE9pur\xE9e et essentielle"
+    professionnel: ", with a controlled and expert approach",
+    audacieux: ", with a touch of disruptive innovation",
+    minimaliste: ", in a clean and essential approach"
   };
   return modifiers[tone.toLowerCase()] ?? "";
 }
@@ -46014,94 +46015,94 @@ function buildPalettePrompt(brief) {
   const secondary = clientHexes[1] ? { ...palette.secondary, hex: clientHexes[1], rgb: hexToRgb(clientHexes[1]) } : palette.secondary;
   const accent = clientHexes[2] ? { ...palette.accent, hex: clientHexes[2], rgb: hexToRgb(clientHexes[2]) } : palette.accent;
   const { neutrals } = palette;
-  const clientColorsInstruction = brief.brandColors ? `\u26A0\uFE0F R\xC8GLE ABSOLUE \u2014 COULEURS CLIENT IMPOS\xC9ES:
-Le client a d\xE9fini ces couleurs pour sa marque: ${brief.brandColors}
-Ces couleurs sont SACR\xC9ES et IMMUABLES. Tu dois:
-1. Les utiliser EXACTEMENT comme base (primaire, secondaire, accent) \u2014 ne jamais les remplacer
-2. Construire les neutres, WCAG et hover states AUTOUR de ces couleurs
-3. Ignorer toute suggestion de palette sectorielle automatique
-L'auto-d\xE9tection couleur est D\xC9SACTIV\xC9E.
+  const clientColorsInstruction = brief.brandColors ? `\u26A0\uFE0F ABSOLUTE RULE \u2014 CLIENT-IMPOSED COLORS:
+The client has defined these colors for their brand: ${brief.brandColors}
+These colors are SACRED and IMMUTABLE. You must:
+1. Use them EXACTLY as the base (primary, secondary, accent) \u2014 never replace them
+2. Build the neutrals, WCAG values, and hover states AROUND these colors
+3. Ignore any automatic sector-based color suggestion
+Color auto-detection is DISABLED.
 
 ` : "";
   const valuesText = brief.values.join(", ");
   const toneModifier = getToneModifier(brief.tone);
   const colorDesc = getSectorColorDescription(sector);
   const seasonalLabel = getSeasonalLabel(sector);
-  return `${clientColorsInstruction}G\xE9n\xE8re la palette de couleurs compl\xE8te pour ${brief.brandName} (secteur ${brief.sector}), ton ${brief.tone}, valeurs: ${valuesText}. Livre une palette "brand-ready" structur\xE9e pour UI/UX, web et print, avec usages 60/30/10, neutres, et contr\xF4les d'accessibilit\xE9. Style visuel: moderne, pr\xE9cis, premium, sans effet "gadget". Z\xC9RO \xE9l\xE9ment obsol\xE8te, Z\xC9RO interface confuse, Z\xC9RO watermark, Z\xC9RO texte illisible, Z\xC9RO palette al\xE9atoire non justifi\xE9e.
+  return `${clientColorsInstruction}Generate the complete color palette for ${brief.brandName} (sector: ${brief.sector}), tone: ${brief.tone}, values: ${valuesText}. Deliver a "brand-ready" structured palette for UI/UX, web, and print, with 60/30/10 usage distribution, neutrals, and accessibility checks. Visual style: modern, precise, premium, no "gimmick" effects. ZERO obsolete elements, ZERO confusing interface, ZERO watermark, ZERO unreadable text, ZERO unjustified random palette.
 
-1) Couleur primaire (60% usage)
-- Propose 1 couleur primaire "${colorDesc}" avec code HEX + RGB.
-- Donne sa signification psychologique (${primary.meaning}${toneModifier}) et son r\xF4le (${primary.role}).
+1) Primary Color (60% usage)
+- Propose 1 primary "${colorDesc}" color with HEX + RGB code.
+- Provide its psychological meaning (${primary.meaning}${toneModifier}) and role (${primary.role}).
 - HEX: ${primary.hex} | RGB: ${primary.rgb}
 
-2) Couleur secondaire (30% usage)
-- Propose 1 couleur secondaire compl\xE9mentaire/harmonique avec code HEX + RGB.
+2) Secondary Color (30% usage)
+- Propose 1 complementary/harmonic secondary color with HEX + RGB code.
 - HEX: ${secondary.hex} | RGB: ${secondary.rgb}
-- Explique l'accord colorim\xE9trique: ${secondary.harmony}
+- Explain the color harmony: ${secondary.harmony}
 
-3) Couleur accent / CTA (10% usage)
-- Propose 1 couleur accent orient\xE9e conversion (CTA) avec code HEX + RGB.
+3) Accent / CTA Color (10% usage)
+- Propose 1 conversion-oriented accent color (CTA) with HEX + RGB code.
 - HEX: ${accent.hex} | RGB: ${accent.rgb}
-- D\xE9cris l'\xE9motion g\xE9n\xE9r\xE9e: ${accent.meaning}
-- Doit ressortir sur la primaire + sur fond blanc.
+- Describe the emotion generated: ${accent.meaning}
+- Must stand out on the primary color + on white background.
 
-4) 5 nuances neutres (HEX exacts)
-- Neutral-01 (background tr\xE8s clair): ${neutrals["01"]}
+4) 5 Neutral Shades (exact HEX)
+- Neutral-01 (very light background): ${neutrals["01"]}
 - Neutral-02 (surface / cards): ${neutrals["02"]}
-- Neutral-03 (bordures / separators): ${neutrals["03"]}
-- Neutral-04 (texte secondaire): ${neutrals["04"]}
-- Neutral-05 (texte principal / fond sombre): ${neutrals["05"]}
+- Neutral-03 (borders / separators): ${neutrals["03"]}
+- Neutral-04 (secondary text): ${neutrals["04"]}
+- Neutral-05 (primary text / dark background): ${neutrals["05"]}
 
-5) Validation WCAG 2.1 AA (calcul\xE9e)
-- Calcule et affiche les contrast ratios (min 4.5:1 pour texte normal, 3.0:1 pour large).
-- Utilise la formule: contrastRatio = (L1 + 0.05) / (L2 + 0.05) where L = 0.2126 * R + 0.7152 * G + 0.0722 * B, with RGB values normalized to 0-1 and gamma corrected
-- Donne un tableau clair "VALIDES / INVALIDES" pour les paires suivantes:
+5) WCAG 2.1 AA Validation (calculated)
+- Calculate and display contrast ratios (min 4.5:1 for normal text, 3.0:1 for large text).
+- Use the formula: contrastRatio = (L1 + 0.05) / (L2 + 0.05) where L = 0.2126 * R + 0.7152 * G + 0.0722 * B, with RGB values normalized to 0-1 and gamma corrected
+- Provide a clear "VALID / INVALID" table for the following pairs:
 
-| Paire | Ratio | Statut |
-|-------|-------|--------|
-| Texte ${neutrals["05"]} sur blanc | [calculer] | [valider] |
-| Texte ${neutrals["04"]} sur blanc | [calculer] | [valider] |
-| CTA (${accent.hex}) sur blanc | [calculer] | [valider] |
-| Texte #FFFFFF sur primaire (${primary.hex}) | [calculer] | [valider] |
-| Texte #FFFFFF sur secondaire (${secondary.hex}) | [calculer] | [valider] |
-| Texte #FFFFFF sur CTA (${accent.hex}) | [calculer] | [valider] |
-| Texte ${neutrals["04"]} sur ${neutrals["02"]} | [calculer] | [valider] |
-| Texte ${neutrals["01"]} sur ${neutrals["05"]} | [calculer] | [valider] |
+| Pair | Ratio | Status |
+|------|-------|--------|
+| Text ${neutrals["05"]} on white | [calculate] | [validate] |
+| Text ${neutrals["04"]} on white | [calculate] | [validate] |
+| CTA (${accent.hex}) on white | [calculate] | [validate] |
+| Text #FFFFFF on primary (${primary.hex}) | [calculate] | [validate] |
+| Text #FFFFFF on secondary (${secondary.hex}) | [calculate] | [validate] |
+| Text #FFFFFF on CTA (${accent.hex}) | [calculate] | [validate] |
+| Text ${neutrals["04"]} on ${neutrals["02"]} | [calculate] | [validate] |
+| Text ${neutrals["01"]} on ${neutrals["05"]} | [calculate] | [validate] |
 
-- Si une paire est invalide: propose un ajustement en it\xE9rations (max 3) en lightening/darkening (indiquer X%), en pr\xE9servant la teinte (hue) \xB13\xB0 et en limitant la variation de saturation (\xB110%). Fournis le NOUVEAU HEX + RGB + nouveau ratio.
+- If a pair is invalid: propose an adjustment in iterations (max 3) by lightening/darkening (indicate X%), preserving the hue \xB13\xB0 and limiting saturation variation (\xB110%). Provide the NEW HEX + RGB + new ratio.
 
-6) Applications recommand\xE9es (r\xE8gles d'usage)
-- Boutons: primary = ${primary.hex}, secondary = ${secondary.hex}, ghost = transparent avec bordure ${neutrals["03"]}
+6) Recommended Applications (usage rules)
+- Buttons: primary = ${primary.hex}, secondary = ${secondary.hex}, ghost = transparent with ${neutrals["03"]} border
 - Hover states: primary darken 10%, secondary lighten 10%
-- Liens: ${accent.hex} avec underline on hover
-- Fonds: Neutral-01 pour fond principal, Neutral-02 pour cards
-- Textes: H1/H2 = ${primary.hex} sur fond clair, body = ${neutrals["05"]}
-- Ic\xF4nes: ${secondary.hex} pour les actions secondaires
+- Links: ${accent.hex} with underline on hover
+- Backgrounds: Neutral-01 for main background, Neutral-02 for cards
+- Text: H1/H2 = ${primary.hex} on light background, body = ${neutrals["05"]}
+- Icons: ${secondary.hex} for secondary actions
 - Badges: success = #10B981, info = ${accent.hex}, warning = #F59E0B, error = #EF4444
 - Print (CMYK approx): ${hexToCmyk(primary.hex)}, ${hexToCmyk(secondary.hex)}
 
-7) Palette saisonni\xE8re / mood board
-- Propose 1 mini-variation "${seasonalLabel}" d\xE9riv\xE9e de la palette principale:
-  * ${primary.hex} (20% plus fonc\xE9) (primary plus profond)
-  * ${accent.hex} (15% plus clair) (accent plus lumineux)
-  * ${neutrals["03"]} (neutral interm\xE9diaire)
-- Usage: supports de conf\xE9rence, pr\xE9sentations, documents institutionnels
-- Coh\xE9rence: conserve l'identit\xE9 de marque tout en apportant de la profondeur
+7) Seasonal Palette / Mood Board
+- Propose 1 "${seasonalLabel}" mini-variation derived from the main palette:
+  * ${primary.hex} (20% darker) (deeper primary)
+  * ${accent.hex} (15% lighter) (brighter accent)
+  * ${neutrals["03"]} (intermediate neutral)
+- Usage: conference materials, presentations, institutional documents
+- Consistency: preserves brand identity while adding depth
 
-**TABLEAUX R\xC9CAPITULATIFS**
+**SUMMARY TABLES**
 
-| R\xF4le | HEX | RGB | Usage |
+| Role | HEX | RGB | Usage |
 |------|-----|-----|-------|
-| Primaire | ${primary.hex} | ${primary.rgb} | 60% \u2014 ${primary.role} |
-| Secondaire | ${secondary.hex} | ${secondary.rgb} | 30% \u2014 textes secondaires, lignes |
-| Accent / CTA | ${accent.hex} | ${accent.rgb} | 10% \u2014 boutons, liens, highlights |
-| Neutral-01 | ${neutrals["01"]} | [RGB] | Fond principal |
+| Primary | ${primary.hex} | ${primary.rgb} | 60% \u2014 ${primary.role} |
+| Secondary | ${secondary.hex} | ${secondary.rgb} | 30% \u2014 secondary text, lines |
+| Accent / CTA | ${accent.hex} | ${accent.rgb} | 10% \u2014 buttons, links, highlights |
+| Neutral-01 | ${neutrals["01"]} | [RGB] | Main background |
 | Neutral-02 | ${neutrals["02"]} | [RGB] | Cards / surfaces |
-| Neutral-03 | ${neutrals["03"]} | [RGB] | Bordures / s\xE9parateurs |
-| Neutral-04 | ${neutrals["04"]} | [RGB] | Texte secondaire |
-| Neutral-05 | ${neutrals["05"]} | [RGB] | Texte principal / fond sombre |
+| Neutral-03 | ${neutrals["03"]} | [RGB] | Borders / separators |
+| Neutral-04 | ${neutrals["04"]} | [RGB] | Secondary text |
+| Neutral-05 | ${neutrals["05"]} | [RGB] | Primary text / dark background |
 
-**JSON FINAL OBLIGATOIRE** (machine-readable):
+**MANDATORY FINAL JSON** (machine-readable):
 \`\`\`json
 {
   "brand": "${brief.brandName}",
@@ -46251,13 +46252,13 @@ router3.post("/openai/enhance-prompts", async (req, res) => {
     {
       key: "logo",
       agent: "Brand Design Agent / Product Display Agent",
-      systemPrompt: `Tu es un expert en g\xE9n\xE9ration de prompts pour logo. \xC0 partir de la structure de r\xE9f\xE9rence fournie (golden example adapt\xE9 \xE0 la marque), g\xE9n\xE8re un prompt ULTRA-PR\xC9CIS, structur\xE9 et pr\xEAt \xE0 \xEAtre utilis\xE9 dans RoboNeo.com. Respecte EXACTEMENT les 8 sections: Direction artistique, Typographie recommand\xE9e, Symbole/ic\xF4ne, Palette chromatique, 4 variations requises, Sp\xE9cifications techniques, NEGATIVE_PROMPT, PARAM\xC8TRES TECHNIQUES. Ne r\xE9sume pas, ne raccourcis pas \u2014 chaque section doit \xEAtre aussi d\xE9taill\xE9e que le mod\xE8le.`,
+      systemPrompt: `You are an expert in logo generation prompts for RoboNeo.com. From the reference structure provided (golden example adapted to the brand), generate an ULTRA-PRECISE prompt, structured and ready for use in image generation tools (Midjourney, DALL-E 3, Stable Diffusion XL). Respect EXACTLY the 8 sections: Artistic Direction, Recommended Typography, Symbol/Icon, Color Palette, 4 required variations, Technical Specifications, NEGATIVE_PROMPT, TECHNICAL PARAMETERS. Do NOT summarize or shorten \u2014 each section must be as detailed as the reference model. Write the entire prompt EXCLUSIVELY IN ENGLISH.`,
       userPrompt: logoOptimizedPrompt
     },
     {
       key: "palette",
       agent: "Brand Design Agent",
-      systemPrompt: `Tu es un expert en design system et accessibilit\xE9 des couleurs. \xC0 partir de la structure de r\xE9f\xE9rence fournie, g\xE9n\xE8re une palette de couleurs compl\xE8te, structur\xE9e, avec tableaux WCAG et JSON. Respecte EXACTEMENT les 7 sections + tableaux r\xE9capitulatifs + JSON final. Calcule les contrast ratios pr\xE9cis\xE9ment selon la formule WCAG 2.1. Ne r\xE9sume pas, ne raccourcis pas \u2014 remplis chaque section aussi pr\xE9cis\xE9ment que le mod\xE8le.`,
+      systemPrompt: `You are an expert in design systems and color accessibility. From the reference structure provided, generate a complete, structured color palette with WCAG tables and JSON. Respect EXACTLY the 7 sections + summary tables + final JSON. Calculate contrast ratios precisely using the WCAG 2.1 formula. Do NOT summarize or shorten \u2014 fill each section as precisely as the reference model. Write all content EXCLUSIVELY IN ENGLISH.`,
       userPrompt: paletteOptimizedPrompt
     },
     {
@@ -46265,28 +46266,30 @@ router3.post("/openai/enhance-prompts", async (req, res) => {
       agent: "Brand Design Agent",
       userPrompt: `MODULE 01.3 \u2014 TYPOGRAPHY SYSTEM
 
-G\xE9n\xE8re un prompt RoboNeo ULTRA-PR\xC9CIS pour le syst\xE8me typographique de ${brand_name}.
+Generate an ULTRA-PRECISE RoboNeo prompt for the typography system of ${brand_name}.
 
-STRUCTURE DU PROMPT \xC0 G\xC9N\xC9RER:
-1. Police titres (h1/h2/h3): nom + Google Fonts URL + graisses + tailles (h1: 48px, h2: 36px, h3: 24px)
-2. Police corps (paragraphes): nom + URL + 16px + interligne 1.5 + graisses
-3. Police accent (CTA/boutons/captions): nom + URL + tailles + graisses
-4. 2 fallbacks web-safe par police
-5. Variables CSS (--font-heading, --font-body, --font-accent)
-6. Classes utilitaires (.heading-xl, .heading-lg, .body-md, .caption, .cta)
-7. Paires recommand\xE9es (quelle police sur quel fond de couleur)
+PROMPT STRUCTURE TO GENERATE:
+1. Heading font (h1/h2/h3): name + Google Fonts URL + weights + sizes (h1: 48px, h2: 36px, h3: 24px)
+2. Body font (paragraphs): name + URL + 16px + line-height 1.5 + weights
+3. Accent font (CTA/buttons/captions): name + URL + sizes + weights
+4. 2 web-safe fallbacks per font
+5. CSS variables (--font-heading, --font-body, --font-accent)
+6. Utility classes (.heading-xl, .heading-lg, .body-md, .caption, .cta)
+7. Recommended pairings (which font on which background color)
 
-R\xC8GLES ABSOLUES COULEURS TYPOGRAPHIQUES:
-\u2022 Toutes les couleurs de texte DOIVENT \xEAtre des codes HEX exacts (ex: #1A1A1A, #555555, #FFFFFF)
-\u2022 INTERDIT: opacit\xE9 CSS pour d\xE9finir une couleur (rgba(0,0,0,0.7), opacity: 0.6, color: inherit)
-\u2022 Texte principal: HEX pur \u2014 ex: #1A1A1A (jamais black avec opacit\xE9)
-\u2022 Texte secondaire: HEX pur calcul\xE9 \u2014 ex: #6B7280 (jamais gray avec opacity)
-\u2022 Texte d\xE9sactiv\xE9: HEX pur \u2014 ex: #9CA3AF (jamais rgba)
-\u2022 Ratio WCAG 2.1 AA calcul\xE9 sur la valeur HEX r\xE9elle, pas sur une opacit\xE9 approximative
+ABSOLUTE RULES \u2014 TYPOGRAPHIC COLORS:
+\u2022 All text colors MUST be exact HEX codes (e.g., #1A1A1A, #555555, #FFFFFF)
+\u2022 FORBIDDEN: CSS opacity to define a color (rgba(0,0,0,0.7), opacity: 0.6, color: inherit)
+\u2022 Primary text: pure HEX \u2014 e.g., #1A1A1A (never black with opacity)
+\u2022 Secondary text: calculated pure HEX \u2014 e.g., #6B7280 (never gray with opacity)
+\u2022 Disabled text: pure HEX \u2014 e.g., #9CA3AF (never rgba)
+\u2022 WCAG 2.1 AA ratio calculated on the real HEX value, not on an approximate opacity
+
+LANGUAGE RULE: Write this entire prompt EXCLUSIVELY IN ENGLISH.
 
 ${negativeBlock}
 
-Commence directement par: "G\xE9n\xE8re le syst\xE8me typographique complet pour ${brand_name}..."`
+Start directly with: "Generate the complete typography system for ${brand_name}..."`
     },
     {
       key: "guidelines",
@@ -46603,12 +46606,12 @@ Cible: ${target_audience}
 
 Angles: ${anglesList}
 
-R\xC8GLES STRICTES:
-\u2022 Fond blanc pur professionnel, \xE9clairage studio 3 points
-\u2022 Format carr\xE9 2000\xD72000px, qualit\xE9 commerciale premium
-\u2022 Chaque prompt en fran\xE7ais, 4-6 phrases ultra-pr\xE9cises
-\u2022 D\xE9crire: le produit exact, l'angle pr\xE9cis, le type d'\xE9clairage, les ombres, les reflets, les d\xE9tails cl\xE9s du mat\xE9riau/couleur
-\u2022 Vocabulaire de photographe professionnel (key light, fill light, rim light, f/8, ISO 100, etc.)
+STRICT RULES:
+\u2022 Pure white professional background, 3-point studio lighting
+\u2022 Square format 2000\xD72000px, premium commercial quality
+\u2022 Each prompt in English, 4-6 ultra-precise sentences \u2014 native Midjourney/DALL-E 3/Stable Diffusion vocabulary
+\u2022 Describe: exact product, precise angle, lighting type, shadows, reflections, key material/color details
+\u2022 Professional photographer vocabulary (key light, fill light, rim light, f/8, ISO 100, etc.)
 
 Retourne UNIQUEMENT un objet JSON valide (sans markdown, sans texte):
 {${Object.keys(angles).map((k) => `
@@ -46972,19 +46975,21 @@ Cible: ${target_audience}${yearLine} | Code promo: ${promoCode} | Dur\xE9e promo
   res.setHeader("X-Accel-Buffering", "no");
   const colorPriorityBlock = brand_colors ? `
 \u26A0\uFE0F R\xC8GLE ABSOLUE COULEURS: Le client impose ces couleurs de marque: ${brand_colors}. Ces couleurs sont SACR\xC9ES \u2014 les utiliser EXACTEMENT dans tous les visuels vid\xE9o d\xE9crits.` : "";
-  const systemPrompt = `Tu es un expert senior en cr\xE9ation de scripts publicitaires et prompts vid\xE9o pour RoboNeo.com.
-Tu r\xE9diges des scripts punchy, adapt\xE9s au secteur ${sector}, en fran\xE7ais. Formule courte, efficace, copywriting direct.
-Tu retournes TOUJOURS du JSON valide uniquement, sans markdown, sans texte avant ou apr\xE8s.${colorPriorityBlock}
+  const systemPrompt = `You are a senior expert in advertising script creation and video generation prompts for RoboNeo.com.
+LANGUAGE RULES (strictly enforced):
+\u2022 Ad scripts and voice-over texts (sections "scripts" and "voice_over"): write IN FRENCH \u2014 punchy, adapted to the ${sector} sector, direct copywriting
+\u2022 Video generation prompts (sections "short_videos", "long_video", "teaser", "thumbnails"): write EXCLUSIVELY IN ENGLISH \u2014 native vocabulary for Runway Gen-3, Pika, Kling, Midjourney, DALL-E 3
+Always return ONLY valid JSON, without markdown, without text before or after.${colorPriorityBlock}
 
-R\xC8GLES VOIX DE MARQUE \u2014 OBLIGATOIRES:
-\u2022 INTERDIT dans les scripts: argot ("\xE7a saoule", "c'est ouf", "trop bien", "franchement"), expressions famili\xE8res ("ce que j'aime", "j'ai une routine simple"), ton de conversation personnelle
-\u2022 Le ton doit rester coh\xE9rent avec le secteur ${sector} \u2014 voir la charte de voix R09 d\xE9finie en Module 01.4
-\u2022 Scripts en voix off professionnelle: neutre, fluide, adapt\xE9 au TTS ElevenLabs
+BRAND VOICE RULES \u2014 MANDATORY:
+\u2022 FORBIDDEN in scripts: slang or overly casual expressions \u2014 tone must match the ${sector} sector
+\u2022 See voice guidelines R09 from the Brand Guidelines in Module 01.4
+\u2022 Scripts in professional voice-over style: neutral, fluid, optimized for ElevenLabs TTS
 
-R\xC8GLES OVERLAY TEXTE VID\xC9O \u2014 OBLIGATOIRES (conformes charte R01):
-\u2022 INTERDIT: effets emboss, gaufrage, relief, ombre port\xE9e \xE9paisse sur les textes overlay
-\u2022 Texte overlay: flat, net, sans effet 3D \u2014 fond semi-transparent ou outline simple 1px maximum
-\u2022 Respecter les r\xE8gles R01 (usage du logo) et R09 (voix de marque) de la charte graphique du Module 01.4`;
+VIDEO TEXT OVERLAY RULES \u2014 MANDATORY (compliant with charter R01):
+\u2022 FORBIDDEN: emboss, bevel, thick drop shadow effects on overlay text
+\u2022 Text overlay: flat, crisp, no 3D effects \u2014 semi-transparent background or simple 1px outline maximum
+\u2022 Respect rules R01 (logo usage) and R09 (brand voice) from Module 01.4`;
   const SECTIONS = [
     {
       key: "scripts",
@@ -47053,10 +47058,10 @@ FORMAT "tiktok_30s" (30 secondes):
 - Transitions: type et dur\xE9e
 - Code ${promoCode} visible \xE0 l'\xE9cran en fin de vid\xE9o
 
-R\xC8GLES:
-\u2022 Adapt\xE9 aux algorithmes TikTok/Reels (hook fort en 0-3s)
-\u2022 Mouvements de cam\xE9ra naturels, tendances actuelles
-\u2022 Fran\xE7ais, ultra-pr\xE9cis, r\xE9alisable avec un smartphone ou cam\xE9ra
+RULES:
+\u2022 Adapted for TikTok/Reels algorithms (strong hook in 0-3s)
+\u2022 Natural camera movements, current trends
+\u2022 Write in English, ultra-precise, achievable with a smartphone or camera
 
 Retourne UNIQUEMENT ce JSON:
 {
@@ -47087,10 +47092,11 @@ POUR CHAQUE S\xC9QUENCE, d\xE9crire:
 - Texte overlay (contenu, style, timing)
 - Musique: dynamique et \xE9volution sur 60s
 
-R\xC8GLES:
-\u2022 Qualit\xE9 pub TV/YouTube Premium
-\u2022 Mouvements cam\xE9ra ma\xEEtris\xE9s, non amateurs
-\u2022 Rythme: pose en d\xE9but, mont\xE9e en \xE9nergie vers le CTA
+RULES (ENGLISH OUTPUT REQUIRED):
+\u2022 TV/YouTube Premium ad quality
+\u2022 Controlled, non-amateur camera movements
+\u2022 Pacing: calm opening, building energy toward CTA
+\u2022 Write this prompt EXCLUSIVELY IN ENGLISH \u2014 native Runway Gen-3/Pika/Kling vocabulary
 
 Retourne UNIQUEMENT ce JSON:
 {
@@ -47121,10 +47127,10 @@ POUR CHAQUE PHASE, d\xE9crire:
 \u2022 Transitions: type exact, dur\xE9e en frames
 \u2022 Audio: genre musical, BPM, \xE9volution
 
-R\xC8GLES ABSOLUES:
-\u2022 Trois versions: vertical 9:16 (1080\xD71920), horizontal 16:9 (1920\xD71080), et boucle 5s ambient
-\u2022 Prompt en fran\xE7ais, extr\xEAmement d\xE9taill\xE9 et pr\xE9cis
-\u2022 Effets adapt\xE9s au style ${teaserStyle}: ${TEASER_DESCRIPTIONS[teaserStyle]}
+ABSOLUTE RULES:
+\u2022 Three versions: vertical 9:16 (1080\xD71920), horizontal 16:9 (1920\xD71080), and 5s ambient loop
+\u2022 Write prompt EXCLUSIVELY IN ENGLISH \u2014 extremely detailed and precise, native Runway/Pika/Kling vocabulary
+\u2022 Effects adapted to style ${teaserStyle}: ${TEASER_DESCRIPTIONS[teaserStyle]}
 
 VERSION BOUCLE 5s (ambient loop \u2014 pour fond de site web, Stories en boucle, \xE9cran d'accueil):
 \u2022 Dur\xE9e: exactement 5 secondes en boucle parfaite seamless
@@ -47164,11 +47170,12 @@ Pour CHAQUE variante (A, B, C), d\xE9crire:
 
 TYPE ${thumbnailType.toUpperCase()} \u2014 R\xE8gles sp\xE9cifiques: ${THUMBNAIL_DESCRIPTIONS[thumbnailType]}
 
-R\xC8GLES CTR:
-\u2022 Contraste maximal pour se d\xE9marquer dans les suggestions YouTube
-\u2022 Visage ou objet reconnaissable \xE0 200px
-\u2022 Texte lisible sur mobile
-\u2022 Teaser de curiosit\xE9 sans spoiler
+CTR RULES (ENGLISH OUTPUT REQUIRED \u2014 for Midjourney/DALL-E 3/Stable Diffusion):
+\u2022 Maximum contrast to stand out in YouTube suggestions
+\u2022 Face or object recognizable at 200px
+\u2022 Text readable on mobile
+\u2022 Curiosity teaser without spoiler
+\u2022 Write each variant prompt EXCLUSIVELY IN ENGLISH \u2014 native image generation model vocabulary
 
 \u26A0\uFE0F NOTE POST-PRODUCTION OBLIGATOIRE:
 Les g\xE9n\xE9rateurs d'images actuels (Midjourney, DALL-E, SDXL, Firefly) ne peuvent pas reproduire fid\xE8lement du texte long ou des titres pr\xE9cis.
@@ -47344,10 +47351,12 @@ Couleurs: ${colorStr} | Code promo: ${promoCode} | Remise: ${discount}% | Livrai
   res.setHeader("X-Accel-Buffering", "no");
   const colorPriorityBlock = colors.length > 0 ? `
 \u26A0\uFE0F R\xC8GLE ABSOLUE COULEURS: Le client impose ces couleurs: ${colorStr}. Ces couleurs sont IMMUABLES \u2014 les utiliser EXACTEMENT dans toutes les cr\xE9ations publicitaires. L'auto-d\xE9tection par secteur est D\xC9SACTIV\xC9E.` : "";
-  const systemPrompt = `Tu es un expert senior en publicit\xE9 digitale et cr\xE9ation de prompts pour RoboNeo.com.
-Tu g\xE9n\xE8res des prompts de cr\xE9ation publicitaire ultra-pr\xE9cis (Meta Ads, Google Display, TikTok, Carousel) et des copies publicitaires pr\xEAtes \xE0 l'emploi.
-Tu retournes TOUJOURS du JSON valide uniquement, sans markdown, sans texte avant ou apr\xE8s.
-Tous les textes sont en fran\xE7ais, percutants, adapt\xE9s au secteur ${sector} et au style ${style}.${colorPriorityBlock}
+  const systemPrompt = `You are a senior expert in digital advertising and creative prompt generation for RoboNeo.com.
+You generate ultra-precise creative prompts (Meta Ads, Google Display, TikTok, Carousel) and ready-to-use ad copy.
+Always return ONLY valid JSON, without markdown, without text before or after.
+LANGUAGE RULES (strictly enforced):
+\u2022 Image and video GENERATION PROMPTS (meta_ads visuals, google_display banners, tiktok_ads video directions, carousel_ads slides): write EXCLUSIVELY IN ENGLISH \u2014 native Midjourney/DALL-E 3/Runway/Pika vocabulary
+\u2022 AD COPY texts (section "ad_copy": primary_text, headline, description, hashtags, cta): write IN FRENCH \u2014 punchy, adapted to sector ${sector} and style ${style}${colorPriorityBlock}
 
 \u26A0\uFE0F R\xC8GLE ANTI-HALLUCINATION \u2014 REPR\xC9SENTATION DES PERSONNES:
 \u2022 INTERDIT d'inventer une ethnie, couleur de peau, morphologie ou identit\xE9 culturelle non mentionn\xE9e dans le brief.
@@ -47776,10 +47785,12 @@ Style musiques de fond: ${bgmStyle}`;
   res.setHeader("X-Accel-Buffering", "no");
   const colorPriorityBlock = brand_colors ? `
 L'identit\xE9 visuelle de la marque utilise ces couleurs: ${brand_colors}. Le rendu sonore doit traduire cette palette chromatique en \xE9motions musicales coh\xE9rentes.` : "";
-  const systemPrompt = `Tu es un directeur artistique sonore expert en identit\xE9 sonore de marque et en g\xE9n\xE9ration de prompts pour des outils de cr\xE9ation audio (Suno, Udio, ElevenLabs, Adobe Podcast).
-Tu g\xE9n\xE8res des prompts audio ultra-pr\xE9cis et des briefs cr\xE9atifs complets pour chaque actif sonore d'une marque.
-Tu retournes TOUJOURS du JSON valide uniquement, sans markdown, sans texte avant ou apr\xE8s.
-Tous les textes sont en fran\xE7ais, cr\xE9atifs, adapt\xE9s au secteur ${sector} et au style ${tone}.${colorPriorityBlock}
+  const systemPrompt = `You are a senior sound art director, expert in brand sonic identity and audio prompt generation for AI tools (Suno, Udio, ElevenLabs, Adobe Podcast).
+You generate ultra-precise audio prompts and complete creative briefs for every sonic asset of a brand.
+Always return ONLY valid JSON, without markdown, without text before or after.
+LANGUAGE RULES (strictly enforced):
+\u2022 Audio GENERATION PROMPTS (sections "jingle", "background_music", "sound_effects", "beat_sync"): write EXCLUSIVELY IN ENGLISH \u2014 native Suno/Udio vocabulary (instrument names, styles, BPM, genre tags)
+\u2022 Voice-over SCRIPTS (section "voice_over" \u2014 ElevenLabs read-aloud content): write IN FRENCH \u2014 for French-speaking audiences${colorPriorityBlock}
 
 R\xC8GLE ABSOLUE \u2014 NOMMAGE DES INSTRUMENTS:
 \u2022 TOUJOURS nommer les instruments avec pr\xE9cision et leur r\xF4le exact. INTERDIT d'\xE9crire "guitare" ou "percussions" seuls.

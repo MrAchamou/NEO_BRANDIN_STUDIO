@@ -91,28 +91,29 @@ export function buildSystemPrompt(brief: EnhancedBrief, moduleLabel: string): st
 ═══ MODULE EN COURS ═══
 ${moduleLabel}
 
-═══ MÉTHODE DE TRAVAIL (CHAIN-OF-THOUGHT) ═══
-Avant de rédiger chaque prompt, tu dois:
-1. ANALYSER: Identifier le positionnement exact de la marque dans son secteur
-2. DIFFÉRENCIER: Trouver ce qui distingue ${brief.brand_name} de ses concurrents
-3. CALIBRER: Ajuster le niveau de précision technique aux outils RoboNeo
-4. RÉDIGER: Écrire un prompt directement utilisable, riche en détails spécifiques à la marque
+═══ WORKING METHOD (CHAIN-OF-THOUGHT) ═══
+Before writing each prompt, you must:
+1. ANALYZE: Identify the brand's exact positioning in its sector
+2. DIFFERENTIATE: Find what distinguishes ${brief.brand_name} from its competitors
+3. CALIBRATE: Adjust technical precision to match the target AI generation tool
+4. WRITE: Produce a directly usable prompt, dense with brand-specific technical details
 
-═══ CALIBRATION QUALITÉ (FEW-SHOT) ═══
-Exemple de prompt INSUFFISANT (à ne pas imiter):
-✗ "Crée une photo de produit pour une montre. Style luxe. Fond blanc."
+═══ QUALITY CALIBRATION (FEW-SHOT) ═══
+INSUFFICIENT prompt (do NOT imitate):
+✗ "Create a product photo for a watch. Luxury style. White background."
 
-Exemple de prompt EXCELLENCE (niveau attendu):
-✓ "Crée une photo produit ultra-réaliste pour ${brief.brand_name}: montre positionnée sur un socle de marbre blanc Calacatta avec dorures, éclairage 3-points (lumière principale 45° gauche, fill light droit, backlight doré), bokeh 85mm f/1.8, reflets réalistes sur le boîtier, cadran visible à 10h10, fond gradient noir profond (#0A0A0A → #1C1C1C), anamorphic lens flare léger en coin supérieur droit. Format 3000x3000px, 300dpi, export PNG transparent."
+EXCELLENCE prompt (expected level):
+✓ "${brief.brand_name} luxury watch, ultra-realistic product photography: timepiece centered on white Calacatta marble base with gold accents, 3-point studio lighting setup (key light 45° left at 5600K, soft fill right, warm golden rim backlight), 85mm f/1.8 shallow depth of field, realistic reflections on stainless steel case, dial visible at 10:10 position, deep black gradient background (#0A0A0A to #1C1C1C), subtle anamorphic lens flare upper-right corner, 3000x3000px, 300dpi, PNG transparent export -- [TECHNICAL PARAMETERS] --ar 1:1 --style raw --no watermark --v 6 -- [CLIP SYNTHESIS] luxury watch product photography, marble base, 3-point studio lighting, bokeh, anamorphic flare, 8k"
 
-═══ EXIGENCES OBLIGATOIRES ═══
-• Chaque prompt doit mentionner "${brief.brand_name}" explicitement
-• Inclure des codes HEX, dimensions, et spécifications techniques précises
-• Adapter chaque prompt au secteur "${brief.sector}" et au ton "${brief.tone}"
-• Rédiger en français, avec terminologie technique anglaise pour les paramètres IA
-• Unités : Kelvin s'écrit TOUJOURS avec un K MAJUSCULE (ex : 5600K, 3200K, 6500K — jamais 5600k)
-• Terminer chaque prompt avec un bloc [PARAMÈTRES TECHNIQUES] structuré
-• Ajouter après [PARAMÈTRES TECHNIQUES] une ligne [SYNTHÈSE CLIP] en anglais pour optimiser la compréhension des modèles SDXL/Stable Diffusion (ex : "product photography, amber glass dropper bottle, macro shot, wood cap texture, 8k, studio lighting, white background")${colorsContext}
+═══ MANDATORY REQUIREMENTS ═══
+• Always mention "${brief.brand_name}" explicitly in every prompt
+• Include HEX color codes, pixel dimensions, and precise technical specifications
+• Adapt each prompt to sector "${brief.sector}" and tone "${brief.tone}"
+• Write ALL generated prompts EXCLUSIVELY IN ENGLISH — native vocabulary of AI generation models (Midjourney, DALL-E 3, Stable Diffusion XL, Runway Gen-3, Pika, Kling, Suno, Udio, ElevenLabs)
+• Technical parameters use native model syntax: f/1.8, ISO 100, 85mm, 5600K, --ar 16:9 --style raw --v 6
+• Temperature in Kelvin always with uppercase K (5600K, 3200K — never 5600k)
+• End each prompt with a [TECHNICAL PARAMETERS] block using native model parameter syntax
+• Add a [CLIP SYNTHESIS] line after [TECHNICAL PARAMETERS] with the most critical keywords for SDXL/Stable Diffusion (e.g., "product photography, amber glass dropper bottle, macro shot, 8k, studio lighting, white background")${colorsContext}
 
 ⚠️ RÈGLE ABSOLUE — ANTI-HALLUCINATION DONNÉES FACTUELLES ⚠️
 Tu ne dois JAMAIS inventer ni supposer:
@@ -127,11 +128,11 @@ Si une donnée n'est pas explicitement fournie dans le brief, OMETS-LA totalemen
 // ─── Few-Shot Examples by Module ─────────────────────────────────────────────
 
 export const FEWSHOT_EXAMPLES: Record<string, string> = {
-  logo: `BON EXEMPLE:
-"Crée un logo pour [MARQUE], marque [SECTEUR] [TON]. Style: [STYLE]. Typographie: [POLICE] (Google Fonts: [LIEN]). Icône/symbole: [DESCRIPTION PRÉCISE]. Palette: Primaire [HEX], Secondaire [HEX], Accent [HEX]. 4 variations: (1) fond clair [HEX], (2) fond sombre [HEX], (3) monochrome noir, (4) inversé blanc. Espace de protection: 2× hauteur du pictogramme. Format: PNG 2000×2000px + SVG vectoriel. Pas de: effets 3D, dégradés complexes, plus de 3 couleurs."`,
+  logo: `GOOD EXAMPLE:
+"Create a logo for [BRAND], a [SECTOR] [TONE] brand. Style: [STYLE]. Typography: [FONT] (Google Fonts: [URL]). Icon/symbol: [PRECISE DESCRIPTION]. Palette: Primary [HEX], Secondary [HEX], Accent [HEX]. 4 variations: (1) light background [HEX], (2) dark background [HEX], (3) black monochrome, (4) reversed white. Safety zone: 2× pictogram height. Format: PNG 2000×2000px + SVG vector. No: 3D effects, complex gradients, more than 3 colors. --ar 1:1 --style raw --no watermark --v 6"`,
 
-  visual: `BON EXEMPLE:
-"Photo produit [MARQUE]: [PRODUIT] positionné sur [SURFACE], éclairage [TYPE] (température [K], direction [ANGLE]°), [OBJECTIF] mm f/[APERTURE], bokeh [INTENSITÉ], couleurs [HEX primaire] dominant, reflets [TYPE], fond [DESCRIPTION], format [DIMENSIONS]px, RAW → export JPEG 96dpi et PNG transparent."`,
+  visual: `GOOD EXAMPLE:
+"[BRAND] product photography: [PRODUCT] positioned on [SURFACE], [TYPE] lighting (temperature [K], direction [ANGLE]°), [FOCAL LENGTH]mm f/[APERTURE], [INTENSITY] bokeh, [PRIMARY HEX] colors dominant, [TYPE] reflections, [DESCRIPTION] background, [DIMENSIONS]px format, RAW → JPEG 96dpi and PNG transparent export. --ar 1:1 --style raw --v 6"`,
 };
 
 // ─── Quality Review — Débat GPT vs Claude (Mode Ultra-Qualité) ───────────────

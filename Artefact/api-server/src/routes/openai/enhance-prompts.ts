@@ -124,13 +124,13 @@ router.post("/openai/enhance-prompts", async (req, res) => {
     {
       key: "logo",
       agent: "Brand Design Agent / Product Display Agent",
-      systemPrompt: `Tu es un expert en génération de prompts pour logo. À partir de la structure de référence fournie (golden example adapté à la marque), génère un prompt ULTRA-PRÉCIS, structuré et prêt à être utilisé dans RoboNeo.com. Respecte EXACTEMENT les 8 sections: Direction artistique, Typographie recommandée, Symbole/icône, Palette chromatique, 4 variations requises, Spécifications techniques, NEGATIVE_PROMPT, PARAMÈTRES TECHNIQUES. Ne résume pas, ne raccourcis pas — chaque section doit être aussi détaillée que le modèle.`,
+      systemPrompt: `You are an expert in logo generation prompts for RoboNeo.com. From the reference structure provided (golden example adapted to the brand), generate an ULTRA-PRECISE prompt, structured and ready for use in image generation tools (Midjourney, DALL-E 3, Stable Diffusion XL). Respect EXACTLY the 8 sections: Artistic Direction, Recommended Typography, Symbol/Icon, Color Palette, 4 required variations, Technical Specifications, NEGATIVE_PROMPT, TECHNICAL PARAMETERS. Do NOT summarize or shorten — each section must be as detailed as the reference model. Write the entire prompt EXCLUSIVELY IN ENGLISH.`,
       userPrompt: logoOptimizedPrompt,
     },
     {
       key: "palette",
       agent: "Brand Design Agent",
-      systemPrompt: `Tu es un expert en design system et accessibilité des couleurs. À partir de la structure de référence fournie, génère une palette de couleurs complète, structurée, avec tableaux WCAG et JSON. Respecte EXACTEMENT les 7 sections + tableaux récapitulatifs + JSON final. Calcule les contrast ratios précisément selon la formule WCAG 2.1. Ne résume pas, ne raccourcis pas — remplis chaque section aussi précisément que le modèle.`,
+      systemPrompt: `You are an expert in design systems and color accessibility. From the reference structure provided, generate a complete, structured color palette with WCAG tables and JSON. Respect EXACTLY the 7 sections + summary tables + final JSON. Calculate contrast ratios precisely using the WCAG 2.1 formula. Do NOT summarize or shorten — fill each section as precisely as the reference model. Write all content EXCLUSIVELY IN ENGLISH.`,
       userPrompt: paletteOptimizedPrompt,
     },
     {
@@ -138,28 +138,30 @@ router.post("/openai/enhance-prompts", async (req, res) => {
       agent: "Brand Design Agent",
       userPrompt: `MODULE 01.3 — TYPOGRAPHY SYSTEM
 
-Génère un prompt RoboNeo ULTRA-PRÉCIS pour le système typographique de ${brand_name}.
+Generate an ULTRA-PRECISE RoboNeo prompt for the typography system of ${brand_name}.
 
-STRUCTURE DU PROMPT À GÉNÉRER:
-1. Police titres (h1/h2/h3): nom + Google Fonts URL + graisses + tailles (h1: 48px, h2: 36px, h3: 24px)
-2. Police corps (paragraphes): nom + URL + 16px + interligne 1.5 + graisses
-3. Police accent (CTA/boutons/captions): nom + URL + tailles + graisses
-4. 2 fallbacks web-safe par police
-5. Variables CSS (--font-heading, --font-body, --font-accent)
-6. Classes utilitaires (.heading-xl, .heading-lg, .body-md, .caption, .cta)
-7. Paires recommandées (quelle police sur quel fond de couleur)
+PROMPT STRUCTURE TO GENERATE:
+1. Heading font (h1/h2/h3): name + Google Fonts URL + weights + sizes (h1: 48px, h2: 36px, h3: 24px)
+2. Body font (paragraphs): name + URL + 16px + line-height 1.5 + weights
+3. Accent font (CTA/buttons/captions): name + URL + sizes + weights
+4. 2 web-safe fallbacks per font
+5. CSS variables (--font-heading, --font-body, --font-accent)
+6. Utility classes (.heading-xl, .heading-lg, .body-md, .caption, .cta)
+7. Recommended pairings (which font on which background color)
 
-RÈGLES ABSOLUES COULEURS TYPOGRAPHIQUES:
-• Toutes les couleurs de texte DOIVENT être des codes HEX exacts (ex: #1A1A1A, #555555, #FFFFFF)
-• INTERDIT: opacité CSS pour définir une couleur (rgba(0,0,0,0.7), opacity: 0.6, color: inherit)
-• Texte principal: HEX pur — ex: #1A1A1A (jamais black avec opacité)
-• Texte secondaire: HEX pur calculé — ex: #6B7280 (jamais gray avec opacity)
-• Texte désactivé: HEX pur — ex: #9CA3AF (jamais rgba)
-• Ratio WCAG 2.1 AA calculé sur la valeur HEX réelle, pas sur une opacité approximative
+ABSOLUTE RULES — TYPOGRAPHIC COLORS:
+• All text colors MUST be exact HEX codes (e.g., #1A1A1A, #555555, #FFFFFF)
+• FORBIDDEN: CSS opacity to define a color (rgba(0,0,0,0.7), opacity: 0.6, color: inherit)
+• Primary text: pure HEX — e.g., #1A1A1A (never black with opacity)
+• Secondary text: calculated pure HEX — e.g., #6B7280 (never gray with opacity)
+• Disabled text: pure HEX — e.g., #9CA3AF (never rgba)
+• WCAG 2.1 AA ratio calculated on the real HEX value, not on an approximate opacity
+
+LANGUAGE RULE: Write this entire prompt EXCLUSIVELY IN ENGLISH.
 
 ${negativeBlock}
 
-Commence directement par: "Génère le système typographique complet pour ${brand_name}..."`,
+Start directly with: "Generate the complete typography system for ${brand_name}..."`,
     },
     {
       key: "guidelines",
