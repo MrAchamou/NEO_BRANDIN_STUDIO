@@ -71,28 +71,28 @@ const CAROUSEL_NARRATIVES: Record<string, string[]> = {
     "Slide 2 – Matériaux nobles: gros plan sur les matières d'exception (or, cuir, soie). Texte: 'Des matériaux d'exception'",
     "Slide 3 – Savoir-faire: artisan ou processus de création. Texte: 'Un héritage de savoir-faire'",
     "Slide 4 – Exclusivité: édition limitée, coffret luxe. Texte: 'Une pièce unique'",
-    "Slide 5 – CTA: logo sur fond noir, reflets dorés. Texte: 'Découvrez la collection'",
+    "Slide 5 – CTA: logo sur fond noir, reflets dorés. TEXTE NON RENDU PAR L'IA — laisser une zone vide bien définie (bas de l'image, 20% de hauteur) pour superposition texte en post-production. Midjourney: --no text --stylize 250. Fond épuré, composition centrée, sans aucune lettre visible.",
   ],
   probleme_solution: [
     "Slide 1 – Accroche lifestyle: produit en situation, visuel accrocheur. Texte: 'Vous connaissez ce problème?'",
     "Slide 2 – Problème: situation sans produit, expression frustrée ou problème visible",
     "Slide 3 – Produit: mise en valeur du produit, bénéfice principal visible. Texte: 'La solution'",
     "Slide 4 – Résultat: après utilisation, transformation visible. Expression confiante",
-    "Slide 5 – CTA: logo + produit + offre spéciale. Texte: 'Essayez maintenant'",
+    "Slide 5 – CTA: logo + produit centré. TEXTE NON RENDU PAR L'IA — zone vierge réservée (bas de l'image, 25% de hauteur) pour superposition CTA en post-production. Midjourney: --no text --stylize 250. Aucune lettre, aucun chiffre dans l'image générée.",
   ],
   storytelling: [
     "Slide 1 – Contexte: mise en scène du besoin, ambiance narrative. Texte: 'Imaginez...'",
     "Slide 2 – Découverte: moment de découverte du produit, surprise. Texte: 'Et si la solution existait?'",
     "Slide 3 – Transformation: produit en action, usage concret. Texte: 'La révélation'",
     "Slide 4 – Résultat: satisfaction, bonheur, résultat visible. Texte: 'La vie a changé'",
-    "Slide 5 – Invitation: logo, produit, CTA doux. Texte: 'Votre histoire commence ici'",
+    "Slide 5 – Invitation: logo + produit, ambiance douce et chaleureuse. TEXTE NON RENDU PAR L'IA — espace vierge réservé (bas de l'image) pour superposition CTA par le graphiste. Midjourney: --no text --stylize 250. Composition épurée, pas de typographie visible.",
   ],
   education: [
     "Slide 1 – Question: visuel interrogatif, curiosité suscitée. Texte: 'Saviez-vous que...?'",
     "Slide 2 – Explication: schéma simple ou produit décomposé. Texte: 'Voici pourquoi'",
     "Slide 3 – Démonstration: produit en utilisation réelle. Texte: 'Comment ça marche'",
     "Slide 4 – Résultats: données chiffrées ou transformation visible. Texte: 'Les résultats parlent'",
-    "Slide 5 – CTA: logo + offre. Texte: 'Prêt à essayer?'",
+    "Slide 5 – CTA: logo + produit sur fond neutre. TEXTE NON RENDU PAR L'IA — bande vierge (bas de l'image, 20% de hauteur) réservée pour superposition CTA en post-production. Midjourney: --no text --stylize 250. Aucune lettre visible dans l'image.",
   ],
 };
 

@@ -110,7 +110,9 @@ Exemple de prompt EXCELLENCE (niveau attendu):
 • Inclure des codes HEX, dimensions, et spécifications techniques précises
 • Adapter chaque prompt au secteur "${brief.sector}" et au ton "${brief.tone}"
 • Rédiger en français, avec terminologie technique anglaise pour les paramètres IA
-• Terminer chaque prompt avec un bloc [PARAMÈTRES TECHNIQUES] structuré${colorsContext}
+• Unités : Kelvin s'écrit TOUJOURS avec un K MAJUSCULE (ex : 5600K, 3200K, 6500K — jamais 5600k)
+• Terminer chaque prompt avec un bloc [PARAMÈTRES TECHNIQUES] structuré
+• Ajouter après [PARAMÈTRES TECHNIQUES] une ligne [SYNTHÈSE CLIP] en anglais pour optimiser la compréhension des modèles SDXL/Stable Diffusion (ex : "product photography, amber glass dropper bottle, macro shot, wood cap texture, 8k, studio lighting, white background")${colorsContext}
 
 ⚠️ RÈGLE ABSOLUE — ANTI-HALLUCINATION DONNÉES FACTUELLES ⚠️
 Tu ne dois JAMAIS inventer ni supposer:

@@ -45537,7 +45537,9 @@ Exemple de prompt EXCELLENCE (niveau attendu):
 \u2022 Inclure des codes HEX, dimensions, et sp\xE9cifications techniques pr\xE9cises
 \u2022 Adapter chaque prompt au secteur "${brief.sector}" et au ton "${brief.tone}"
 \u2022 R\xE9diger en fran\xE7ais, avec terminologie technique anglaise pour les param\xE8tres IA
-\u2022 Terminer chaque prompt avec un bloc [PARAM\xC8TRES TECHNIQUES] structur\xE9${colorsContext}
+\u2022 Unit\xE9s : Kelvin s'\xE9crit TOUJOURS avec un K MAJUSCULE (ex : 5600K, 3200K, 6500K \u2014 jamais 5600k)
+\u2022 Terminer chaque prompt avec un bloc [PARAM\xC8TRES TECHNIQUES] structur\xE9
+\u2022 Ajouter apr\xE8s [PARAM\xC8TRES TECHNIQUES] une ligne [SYNTH\xC8SE CLIP] en anglais pour optimiser la compr\xE9hension des mod\xE8les SDXL/Stable Diffusion (ex : "product photography, amber glass dropper bottle, macro shot, wood cap texture, 8k, studio lighting, white background")${colorsContext}
 
 \u26A0\uFE0F R\xC8GLE ABSOLUE \u2014 ANTI-HALLUCINATION DONN\xC9ES FACTUELLES \u26A0\uFE0F
 Tu ne dois JAMAIS inventer ni supposer:
@@ -46451,28 +46453,28 @@ var CAROUSEL_NARRATIVES = {
     "Slide 2 \u2013 Mat\xE9riaux nobles: gros plan sur les mati\xE8res d'exception (or, cuir, soie). Texte: 'Des mat\xE9riaux d'exception'",
     "Slide 3 \u2013 Savoir-faire: artisan ou processus de cr\xE9ation. Texte: 'Un h\xE9ritage de savoir-faire'",
     "Slide 4 \u2013 Exclusivit\xE9: \xE9dition limit\xE9e, coffret luxe. Texte: 'Une pi\xE8ce unique'",
-    "Slide 5 \u2013 CTA: logo sur fond noir, reflets dor\xE9s. Texte: 'D\xE9couvrez la collection'"
+    "Slide 5 \u2013 CTA: logo sur fond noir, reflets dor\xE9s. TEXTE NON RENDU PAR L'IA \u2014 laisser une zone vide bien d\xE9finie (bas de l'image, 20% de hauteur) pour superposition texte en post-production. Midjourney: --no text --stylize 250. Fond \xE9pur\xE9, composition centr\xE9e, sans aucune lettre visible."
   ],
   probleme_solution: [
     "Slide 1 \u2013 Accroche lifestyle: produit en situation, visuel accrocheur. Texte: 'Vous connaissez ce probl\xE8me?'",
     "Slide 2 \u2013 Probl\xE8me: situation sans produit, expression frustr\xE9e ou probl\xE8me visible",
     "Slide 3 \u2013 Produit: mise en valeur du produit, b\xE9n\xE9fice principal visible. Texte: 'La solution'",
     "Slide 4 \u2013 R\xE9sultat: apr\xE8s utilisation, transformation visible. Expression confiante",
-    "Slide 5 \u2013 CTA: logo + produit + offre sp\xE9ciale. Texte: 'Essayez maintenant'"
+    "Slide 5 \u2013 CTA: logo + produit centr\xE9. TEXTE NON RENDU PAR L'IA \u2014 zone vierge r\xE9serv\xE9e (bas de l'image, 25% de hauteur) pour superposition CTA en post-production. Midjourney: --no text --stylize 250. Aucune lettre, aucun chiffre dans l'image g\xE9n\xE9r\xE9e."
   ],
   storytelling: [
     "Slide 1 \u2013 Contexte: mise en sc\xE8ne du besoin, ambiance narrative. Texte: 'Imaginez...'",
     "Slide 2 \u2013 D\xE9couverte: moment de d\xE9couverte du produit, surprise. Texte: 'Et si la solution existait?'",
     "Slide 3 \u2013 Transformation: produit en action, usage concret. Texte: 'La r\xE9v\xE9lation'",
     "Slide 4 \u2013 R\xE9sultat: satisfaction, bonheur, r\xE9sultat visible. Texte: 'La vie a chang\xE9'",
-    "Slide 5 \u2013 Invitation: logo, produit, CTA doux. Texte: 'Votre histoire commence ici'"
+    "Slide 5 \u2013 Invitation: logo + produit, ambiance douce et chaleureuse. TEXTE NON RENDU PAR L'IA \u2014 espace vierge r\xE9serv\xE9 (bas de l'image) pour superposition CTA par le graphiste. Midjourney: --no text --stylize 250. Composition \xE9pur\xE9e, pas de typographie visible."
   ],
   education: [
     "Slide 1 \u2013 Question: visuel interrogatif, curiosit\xE9 suscit\xE9e. Texte: 'Saviez-vous que...?'",
     "Slide 2 \u2013 Explication: sch\xE9ma simple ou produit d\xE9compos\xE9. Texte: 'Voici pourquoi'",
     "Slide 3 \u2013 D\xE9monstration: produit en utilisation r\xE9elle. Texte: 'Comment \xE7a marche'",
     "Slide 4 \u2013 R\xE9sultats: donn\xE9es chiffr\xE9es ou transformation visible. Texte: 'Les r\xE9sultats parlent'",
-    "Slide 5 \u2013 CTA: logo + offre. Texte: 'Pr\xEAt \xE0 essayer?'"
+    "Slide 5 \u2013 CTA: logo + produit sur fond neutre. TEXTE NON RENDU PAR L'IA \u2014 bande vierge (bas de l'image, 20% de hauteur) r\xE9serv\xE9e pour superposition CTA en post-production. Midjourney: --no text --stylize 250. Aucune lettre visible dans l'image."
   ]
 };
 function parseJsonSafe(text) {
