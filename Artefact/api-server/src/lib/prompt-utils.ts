@@ -4,6 +4,7 @@
  */
 
 import { cerebrasAI, CEREBRAS_MODEL } from "./cerebras-client";
+import { geminiAI, GEMINI_MODEL_PRO } from "./gemini-client";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -130,14 +131,19 @@ export const FEWSHOT_EXAMPLES: Record<string, string> = {
 "Photo produit [MARQUE]: [PRODUIT] positionné sur [SURFACE], éclairage [TYPE] (température [K], direction [ANGLE]°), [OBJECTIF] mm f/[APERTURE], bokeh [INTENSITÉ], couleurs [HEX primaire] dominant, reflets [TYPE], fond [DESCRIPTION], format [DIMENSIONS]px, RAW → export JPEG 96dpi et PNG transparent."`,
 };
 
-// ─── Quality Review ───────────────────────────────────────────────────────────
+// ─── Quality Review (Mode Ultra-Qualité — Gemini) ─────────────────────────────
+//
+// Cette fonction est exclusivement appelée quand enable_review = true.
+// Elle utilise Gemini (rotation 5 clés) pour un second passage de qualité
+// indépendant de la génération Cerebras initiale.
 
 export async function reviewPromptQuality(
   content: string,
   brief: EnhancedBrief,
   sectionKey: string
 ): Promise<{ score: number; refined: string; improvements: string[] }> {
-  const reviewPrompt = `Tu es un expert QA pour des prompts créatifs IA destinés à RoboNeo.com.
+  const reviewPrompt = `Tu es un expert QA senior pour des prompts créatifs IA destinés à RoboNeo.com.
+Tu analyses des prompts générés par un premier modèle et tu les améliores avec une exigence maximale.
 
 Évalue ce prompt (section: ${sectionKey}) pour la marque "${brief.brand_name}" (secteur: ${brief.sector}, ton: ${brief.tone}):
 
@@ -145,25 +151,31 @@ export async function reviewPromptQuality(
 ${content}
 """
 
-CRITÈRES D'ÉVALUATION (note /10 chacun):
-1. Spécificité à la marque (nom mentionné, secteur reflété)
-2. Précision technique (HEX, dimensions, paramètres IA)
-3. Utilisabilité directe dans RoboNeo (0 modification nécessaire)
-4. Richesse des détails visuels/créatifs
-5. Cohérence avec le ton "${brief.tone}"
+CRITÈRES D'ÉVALUATION (note /10 chacun — sois strict et exigeant):
+1. Spécificité à la marque (nom "${brief.brand_name}" mentionné, secteur "${brief.sector}" reflété dans chaque détail)
+2. Précision technique (codes HEX exacts, dimensions px, paramètres IA comme f/stop, ISO, BPM, etc.)
+3. Utilisabilité directe dans RoboNeo (0 modification nécessaire par l'utilisateur)
+4. Richesse des détails visuels/créatifs (chaque élément est décrit avec précision chirurgicale)
+5. Cohérence avec le ton "${brief.tone}" et la voix de marque (aucun glissement de registre)
 
-Réponds en JSON valide uniquement:
+RÈGLES D'AMÉLIORATION:
+• Si score < 9: proposer une version raffinée qui atteint 9-10/10
+• Ajouter les codes HEX manquants, préciser les valeurs vagues
+• Éliminer toute donnée inventée non présente dans le brief (dates, stats, certifications)
+• Maintenir la longueur et la structure — améliorer la précision, pas réduire
+
+Réponds en JSON valide uniquement (sans markdown):
 {
-  "score": <moyenne sur 10>,
-  "improvements": ["amélioration 1", "amélioration 2"],
-  "refined_prompt": "<version améliorée du prompt si score < 8, sinon copie l'original>"
+  "score": <moyenne sur 10, nombre décimal>,
+  "improvements": ["amélioration précise 1", "amélioration précise 2", "amélioration précise 3"],
+  "refined_prompt": "<version ultra-améliorée si score < 9, sinon copie l'original>"
 }`;
 
   try {
-    const response = await cerebrasAI.chat.completions.create({
-      model: CEREBRAS_MODEL,
+    const response = await geminiAI.chat.completions.create({
+      model: GEMINI_MODEL_PRO,
       messages: [{ role: "user", content: reviewPrompt }],
-      max_tokens: 2048,
+      max_tokens: 4096,
     });
 
     const text = response.choices[0]?.message?.content ?? "{}";
@@ -180,18 +192,22 @@ Réponds en JSON valide uniquement:
   }
 }
 
-// ─── Persona Variants ─────────────────────────────────────────────────────────
+// ─── Persona Variants (Mode Ultra-Qualité — Gemini) ───────────────────────────
+//
+// Utilise Gemini pour générer des variantes persona de haute qualité,
+// avec une compréhension plus fine des nuances marketing.
 
 export async function generatePersonaVariants(
   basePrompt: string,
   brief: EnhancedBrief
 ): Promise<{ persona: string; variant: string }[]> {
-  const response = await cerebrasAI.chat.completions.create({
-    model: CEREBRAS_MODEL,
+  const response = await geminiAI.chat.completions.create({
+    model: GEMINI_MODEL_PRO,
     messages: [
       {
         role: "system",
-        content: `Tu es expert en segmentation marketing pour la marque ${brief.brand_name} (secteur: ${brief.sector}).`,
+        content: `Tu es expert senior en segmentation marketing et copywriting pour la marque ${brief.brand_name} (secteur: ${brief.sector}, ton: ${brief.tone}).
+Tu génères des variantes de prompts qui sont précisément calibrées pour chaque persona — angle émotionnel distinct, vocabulaire adapté, bénéfices mis en avant différemment.`,
       },
       {
         role: "user",
@@ -200,11 +216,14 @@ export async function generatePersonaVariants(
 ${basePrompt}
 """
 
-Génère 3 variantes calibrées pour 3 personas différents (adapte le ton, les mots-clés, l'angle émotionnel).
-Réponds en JSON: [{"persona": "nom du persona", "variant": "prompt adapté"}]`,
+Génère 3 variantes calibrées pour 3 personas différents et distincts.
+Pour chaque variante: adapte le ton, les mots-clés, l'angle émotionnel, et les bénéfices mis en avant.
+Chaque variante doit être substantiellement différente des autres, pas seulement des synonymes.
+
+Réponds en JSON uniquement: [{"persona": "description précise du persona", "variant": "prompt complet adapté"}]`,
       },
     ],
-    max_tokens: 2048,
+    max_tokens: 4096,
   });
 
   try {

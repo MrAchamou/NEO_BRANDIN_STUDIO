@@ -39472,6 +39472,50 @@ var scrape_gmb_default = router2;
 // src/routes/openai/enhance-prompts.ts
 var import_express3 = __toESM(require_express2(), 1);
 
+// src/lib/gemini-client.ts
+var GEMINI_MODEL_PRO = "gemini-2.5-pro-exp-03-25";
+var GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/";
+function loadGeminiKeys() {
+  const keys = [];
+  for (let i = 1; i <= 5; i++) {
+    const key = process.env[`GEMINI_API_KEY_${i}`];
+    if (key) keys.push(key);
+  }
+  if (keys.length === 0) {
+    throw new Error(
+      "Aucune cl\xE9 API Gemini trouv\xE9e. V\xE9rifie les secrets GEMINI_API_KEY_1 \xE0 GEMINI_API_KEY_5."
+    );
+  }
+  return keys;
+}
+var geminiClientPool = null;
+var geminiRotationIndex = 0;
+function getGeminiClientPool() {
+  if (!geminiClientPool) {
+    const keys = loadGeminiKeys();
+    geminiClientPool = keys.map(
+      (apiKey) => new OpenAI({
+        apiKey,
+        baseURL: GEMINI_BASE_URL
+      })
+    );
+  }
+  return geminiClientPool;
+}
+function getNextGeminiClient() {
+  const pool = getGeminiClientPool();
+  const client = pool[geminiRotationIndex % pool.length];
+  geminiRotationIndex = (geminiRotationIndex + 1) % pool.length;
+  return client;
+}
+var geminiAI = new Proxy({}, {
+  get(_target, prop) {
+    const client = getNextGeminiClient();
+    const value = client[prop];
+    return typeof value === "function" ? value.bind(client) : value;
+  }
+});
+
 // src/lib/prompt-utils.ts
 var SECTOR_NEGATIVES = {
   bijou: ["plastique", "grossier", "bon march\xE9", "clip art", "pixelis\xE9", "amateur", "d\xE9form\xE9", "flou", "stock photo g\xE9n\xE9rique"],
@@ -39555,7 +39599,8 @@ Tu ne dois JAMAIS inventer ni supposer:
 Si une donn\xE9e n'est pas explicitement fournie dans le brief, OMETS-LA totalement. N'invente rien, n'assume rien. Utilise uniquement ce qui est dans le brief.`;
 }
 async function reviewPromptQuality(content, brief, sectionKey) {
-  const reviewPrompt = `Tu es un expert QA pour des prompts cr\xE9atifs IA destin\xE9s \xE0 RoboNeo.com.
+  const reviewPrompt = `Tu es un expert QA senior pour des prompts cr\xE9atifs IA destin\xE9s \xE0 RoboNeo.com.
+Tu analyses des prompts g\xE9n\xE9r\xE9s par un premier mod\xE8le et tu les am\xE9liores avec une exigence maximale.
 
 \xC9value ce prompt (section: ${sectionKey}) pour la marque "${brief.brand_name}" (secteur: ${brief.sector}, ton: ${brief.tone}):
 
@@ -39563,24 +39608,30 @@ async function reviewPromptQuality(content, brief, sectionKey) {
 ${content}
 """
 
-CRIT\xC8RES D'\xC9VALUATION (note /10 chacun):
-1. Sp\xE9cificit\xE9 \xE0 la marque (nom mentionn\xE9, secteur refl\xE9t\xE9)
-2. Pr\xE9cision technique (HEX, dimensions, param\xE8tres IA)
-3. Utilisabilit\xE9 directe dans RoboNeo (0 modification n\xE9cessaire)
-4. Richesse des d\xE9tails visuels/cr\xE9atifs
-5. Coh\xE9rence avec le ton "${brief.tone}"
+CRIT\xC8RES D'\xC9VALUATION (note /10 chacun \u2014 sois strict et exigeant):
+1. Sp\xE9cificit\xE9 \xE0 la marque (nom "${brief.brand_name}" mentionn\xE9, secteur "${brief.sector}" refl\xE9t\xE9 dans chaque d\xE9tail)
+2. Pr\xE9cision technique (codes HEX exacts, dimensions px, param\xE8tres IA comme f/stop, ISO, BPM, etc.)
+3. Utilisabilit\xE9 directe dans RoboNeo (0 modification n\xE9cessaire par l'utilisateur)
+4. Richesse des d\xE9tails visuels/cr\xE9atifs (chaque \xE9l\xE9ment est d\xE9crit avec pr\xE9cision chirurgicale)
+5. Coh\xE9rence avec le ton "${brief.tone}" et la voix de marque (aucun glissement de registre)
 
-R\xE9ponds en JSON valide uniquement:
+R\xC8GLES D'AM\xC9LIORATION:
+\u2022 Si score < 9: proposer une version raffin\xE9e qui atteint 9-10/10
+\u2022 Ajouter les codes HEX manquants, pr\xE9ciser les valeurs vagues
+\u2022 \xC9liminer toute donn\xE9e invent\xE9e non pr\xE9sente dans le brief (dates, stats, certifications)
+\u2022 Maintenir la longueur et la structure \u2014 am\xE9liorer la pr\xE9cision, pas r\xE9duire
+
+R\xE9ponds en JSON valide uniquement (sans markdown):
 {
-  "score": <moyenne sur 10>,
-  "improvements": ["am\xE9lioration 1", "am\xE9lioration 2"],
-  "refined_prompt": "<version am\xE9lior\xE9e du prompt si score < 8, sinon copie l'original>"
+  "score": <moyenne sur 10, nombre d\xE9cimal>,
+  "improvements": ["am\xE9lioration pr\xE9cise 1", "am\xE9lioration pr\xE9cise 2", "am\xE9lioration pr\xE9cise 3"],
+  "refined_prompt": "<version ultra-am\xE9lior\xE9e si score < 9, sinon copie l'original>"
 }`;
   try {
-    const response = await cerebrasAI.chat.completions.create({
-      model: CEREBRAS_MODEL,
+    const response = await geminiAI.chat.completions.create({
+      model: GEMINI_MODEL_PRO,
       messages: [{ role: "user", content: reviewPrompt }],
-      max_tokens: 2048
+      max_tokens: 4096
     });
     const text = response.choices[0]?.message?.content ?? "{}";
     const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
@@ -39595,12 +39646,13 @@ R\xE9ponds en JSON valide uniquement:
   }
 }
 async function generatePersonaVariants(basePrompt, brief) {
-  const response = await cerebrasAI.chat.completions.create({
-    model: CEREBRAS_MODEL,
+  const response = await geminiAI.chat.completions.create({
+    model: GEMINI_MODEL_PRO,
     messages: [
       {
         role: "system",
-        content: `Tu es expert en segmentation marketing pour la marque ${brief.brand_name} (secteur: ${brief.sector}).`
+        content: `Tu es expert senior en segmentation marketing et copywriting pour la marque ${brief.brand_name} (secteur: ${brief.sector}, ton: ${brief.tone}).
+Tu g\xE9n\xE8res des variantes de prompts qui sont pr\xE9cis\xE9ment calibr\xE9es pour chaque persona \u2014 angle \xE9motionnel distinct, vocabulaire adapt\xE9, b\xE9n\xE9fices mis en avant diff\xE9remment.`
       },
       {
         role: "user",
@@ -39609,11 +39661,14 @@ async function generatePersonaVariants(basePrompt, brief) {
 ${basePrompt}
 """
 
-G\xE9n\xE8re 3 variantes calibr\xE9es pour 3 personas diff\xE9rents (adapte le ton, les mots-cl\xE9s, l'angle \xE9motionnel).
-R\xE9ponds en JSON: [{"persona": "nom du persona", "variant": "prompt adapt\xE9"}]`
+G\xE9n\xE8re 3 variantes calibr\xE9es pour 3 personas diff\xE9rents et distincts.
+Pour chaque variante: adapte le ton, les mots-cl\xE9s, l'angle \xE9motionnel, et les b\xE9n\xE9fices mis en avant.
+Chaque variante doit \xEAtre substantiellement diff\xE9rente des autres, pas seulement des synonymes.
+
+R\xE9ponds en JSON uniquement: [{"persona": "description pr\xE9cise du persona", "variant": "prompt complet adapt\xE9"}]`
       }
     ],
-    max_tokens: 2048
+    max_tokens: 4096
   });
   try {
     const text = response.choices[0]?.message?.content ?? "[]";
