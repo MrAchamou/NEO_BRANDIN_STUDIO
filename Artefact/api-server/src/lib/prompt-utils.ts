@@ -215,7 +215,7 @@ function parseAgentReview(text: string, content: string, agentName: string): Age
   };
 }
 
-const REVIEW_TIMEOUT_MS = 25_000;
+const REVIEW_TIMEOUT_MS = 90_000;
 
 function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
   return Promise.race([
@@ -236,17 +236,25 @@ export async function reviewWithGPT(
     content, brief, sectionKey,
     "a technical precision expert and AI prompt specialist (GPT Agent — Challenger)",
   );
-  const response = await withTimeout(
-    gpt.chat.completions.create({
-      model: GPT_MODEL,
-      messages: [{ role: "user", content: prompt }],
-      max_completion_tokens: 1800,
-    }),
-    REVIEW_TIMEOUT_MS,
-    "GPT"
-  );
-  const text = response.choices[0]?.message?.content ?? "{}";
-  return parseAgentReview(text, content, "GPT");
+  console.log(`[GPT Review] ${sectionKey} — démarrage (model: ${GPT_MODEL}, prompt: ${prompt.length} chars)`);
+  const t0 = Date.now();
+  try {
+    const response = await withTimeout(
+      gpt.chat.completions.create({
+        model: GPT_MODEL,
+        messages: [{ role: "user", content: prompt }],
+        max_completion_tokens: 1800,
+      }),
+      REVIEW_TIMEOUT_MS,
+      "GPT"
+    );
+    console.log(`[GPT Review] ${sectionKey} — réponse en ${Date.now() - t0}ms`);
+    const text = response.choices[0]?.message?.content ?? "{}";
+    return parseAgentReview(text, content, "GPT");
+  } catch (err) {
+    console.error(`[GPT Review] ${sectionKey} — ERREUR après ${Date.now() - t0}ms:`, err instanceof Error ? err.message : err);
+    throw err;
+  }
 }
 
 export async function reviewWithClaude(
@@ -259,18 +267,26 @@ export async function reviewWithClaude(
     content, brief, sectionKey,
     "a brand voice expert, creative strategist and narrative precision specialist (Claude Agent — Critic)",
   );
-  const message = await withTimeout(
-    claude.messages.create({
-      model: CLAUDE_MODEL,
-      max_tokens: 1800,
-      messages: [{ role: "user", content: prompt }],
-    }),
-    REVIEW_TIMEOUT_MS,
-    "Claude"
-  );
-  const block = message.content[0];
-  const text = block.type === "text" ? block.text : "{}";
-  return parseAgentReview(text, content, "Claude");
+  console.log(`[Claude Review] ${sectionKey} — démarrage (model: ${CLAUDE_MODEL}, prompt: ${prompt.length} chars)`);
+  const t0 = Date.now();
+  try {
+    const message = await withTimeout(
+      claude.messages.create({
+        model: CLAUDE_MODEL,
+        max_tokens: 1800,
+        messages: [{ role: "user", content: prompt }],
+      }),
+      REVIEW_TIMEOUT_MS,
+      "Claude"
+    );
+    console.log(`[Claude Review] ${sectionKey} — réponse en ${Date.now() - t0}ms`);
+    const block = message.content[0];
+    const text = block.type === "text" ? block.text : "{}";
+    return parseAgentReview(text, content, "Claude");
+  } catch (err) {
+    console.error(`[Claude Review] ${sectionKey} — ERREUR après ${Date.now() - t0}ms:`, err instanceof Error ? err.message : err);
+    throw err;
+  }
 }
 
 export async function reviewPromptQuality(
