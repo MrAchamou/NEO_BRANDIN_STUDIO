@@ -23,33 +23,34 @@ const JINGLE_STYLE_MAP: Record<string, string> = {
 };
 
 const BGM_STYLE_MAP: Record<string, string> = {
-  bijou: "orchestral pop — cordes, piano, harpe — élégant, lumineux",
-  luxe: "orchestral cinématique — orchestre complet, harpe — majestueux, intemporel",
-  cosmétique: "pop acoustique — guitare, piano, clochettes — frais, naturel",
-  skincare: "ambient pop — piano, nappes — relaxant, apaisant",
-  tech: "électronique — synthé, beats — moderne, dynamique",
-  gadgets: "électronique pop — synthé, beats, basse — pratique, fun",
-  fitness: "EDM — synthé, batterie, basse — énergique, motivant",
-  sport: "épique — orchestre + électronique — puissant, motivant",
-  mode: "pop urbaine — beat, basse — tendance, cool",
-  streetwear: "hip-hop/trap — 808, basse, beat — urbain, authentique",
-  décoration: "ambient — guitare, piano — cosy, apaisant",
-  maroquinerie: "orchestral artisanal — cordes, piano — qualité, élégance",
+  bijou: "orchestral pop élégant — harpe (lead mélodique), cordes en nappe, piano Rhodes (accords doux), triangle cristallin — lumineux, intemporel",
+  luxe: "orchestral cinématique — orchestre cordes complet, harpe (arpèges lead), cuivres doux, timbales feutrées, clavecin optionnel — majestueux, intemporel",
+  cosmétique: "pop acoustique fraîche — piano acoustique (lead), guitare acoustique (picking), clochettes légères, glockenspiel, basse fretless douce — frais, naturel",
+  skincare: "ambient pop apaisant — piano acoustique (mélodie), nappe de synthé pad doux, flûte traversière, sons nature (eau douce, feuilles), basse sine wave — relaxant, zen",
+  tech: "électronique minimal — synthé lead analogique, beats électroniques 4/4, basse synthé, arpégiateur rapide, effets glitch contrôlés — moderne, précis",
+  gadgets: "électronique pop — synthé pad, beats entraînants, basse synthé, sons UI stylisés (bip, click), marimba électronique — fun, pratique",
+  fitness: "EDM énergique — kick 4/4 fort, synthé supersaw, basse sidechain, snare claquante, risers et drops — motivant, explosif, 130-140 BPM",
+  sport: "épique orchestral + électronique — section cordes puissante, cuivres héroïques, percussions orchestrales (timbales, grosse caisse), batterie électronique en renfort — puissant, inspirant",
+  mode: "pop urbaine tendance — beat trap léger, basse chaude, synthé pad aérien, guitare rythmique, voix harmonisées choppées — cool, aspirationnel",
+  streetwear: "hip-hop/trap authentique — kick 808 profond, basse sub, snare claquante, hi-hat roulant, vocal chop mélodique, sample vinyle — urbain, authentique",
+  décoration: "ambient cosy — guitare acoustique fingerpicking (lead), piano Fender Rhodes, violoncelle doux, sons d'intérieur (feu de cheminée, horloge feutrée) — chaleureux, serein",
+  maroquinerie: "orchestral artisanal — quatuor à cordes (lead), piano classique, guitare classique nylon, contrebasse pizzicato — qualité, savoir-faire",
 };
 
-const ELEVENLABS_VOICES: Record<string, { name: string; description: string; tone: string; use_for: string[] }> = {
-  Rachel: { name: "Rachel", description: "Voix féminine, chaleureuse, accessible", tone: "friendly, warm, inviting", use_for: ["cosmétique", "skincare", "mode", "lifestyle"] },
-  Adam: { name: "Adam", description: "Voix masculine, professionnelle, confiante", tone: "professional, confident, authoritative", use_for: ["tech", "gadgets", "finance", "B2B"] },
-  Antoni: { name: "Antoni", description: "Voix masculine, énergique, dynamique", tone: "energetic, enthusiastic, motivating", use_for: ["fitness", "sport", "streetwear"] },
-  Bella: { name: "Bella", description: "Voix féminine, élégante, raffinée", tone: "elegant, sophisticated, refined", use_for: ["bijou", "luxe", "maroquinerie", "montres"] },
-  Emily: { name: "Emily", description: "Voix féminine, naturelle, authentique", tone: "natural, authentic, genuine", use_for: ["skincare", "décoration", "bio", "nature"] },
+// ⚠️ VOIX ELEVENLABS FRANCOPHONES — model_id: eleven_multilingual_v2 OBLIGATOIRE
+// Rachel, Bella, Emily, Antoni, Adam = voix ANGLAISES → accent fort en français
+// Utiliser uniquement des voix multilingues natives ou excellentes en français
+const ELEVENLABS_VOICES: Record<string, { name: string; description: string; tone: string; use_for: string[]; lang_note: string }> = {
+  Josephine: { name: "Josephine", description: "Voix française native, chaleureuse, naturelle et accessible", tone: "friendly, warm, inviting", use_for: ["cosmétique", "skincare", "mode", "lifestyle"], lang_note: "Voix native française — model_id: eleven_multilingual_v2" },
+  Thomas: { name: "Thomas", description: "Voix masculine française, professionnelle et confiante", tone: "professional, confident, authoritative", use_for: ["tech", "gadgets", "finance", "B2B", "fitness", "sport", "streetwear"], lang_note: "model_id: eleven_multilingual_v2 — diction française parfaite" },
+  Charlotte: { name: "Charlotte", description: "Voix féminine multilingue, élégante, raffinée — excellente diction française", tone: "elegant, sophisticated, refined", use_for: ["bijou", "luxe", "maroquinerie", "montres", "décoration", "bio", "nature"], lang_note: "Multilingue — model_id: eleven_multilingual_v2, accent neutre élégant" },
 };
 
 function pickVoice(sector: string) {
   for (const [, voice] of Object.entries(ELEVENLABS_VOICES)) {
     if (voice.use_for.includes(sector)) return voice;
   }
-  return ELEVENLABS_VOICES["Adam"];
+  return ELEVENLABS_VOICES["Thomas"];
 }
 
 function parseJsonSafe(text: string): Record<string, unknown> | null {
@@ -115,7 +116,15 @@ Style musiques de fond: ${bgmStyle}`;
   const systemPrompt = `Tu es un directeur artistique sonore expert en identité sonore de marque et en génération de prompts pour des outils de création audio (Suno, Udio, ElevenLabs, Adobe Podcast).
 Tu génères des prompts audio ultra-précis et des briefs créatifs complets pour chaque actif sonore d'une marque.
 Tu retournes TOUJOURS du JSON valide uniquement, sans markdown, sans texte avant ou après.
-Tous les textes sont en français, créatifs, adaptés au secteur ${sector} et au style ${tone}.${colorPriorityBlock}`;
+Tous les textes sont en français, créatifs, adaptés au secteur ${sector} et au style ${tone}.${colorPriorityBlock}
+
+RÈGLE ABSOLUE — NOMMAGE DES INSTRUMENTS:
+• TOUJOURS nommer les instruments avec précision et leur rôle exact. INTERDIT d'écrire "guitare" ou "percussions" seuls.
+• Format obligatoire: "nom de l'instrument (rôle dans le mix)" — ex: "kora (lead mélodique arabesque)", "balafon (contrechant rythmique)", "nappe de piano électrique Rhodes (harmonie en fond)", "shakers légers (texture rythmique)"
+• Pour les genres world/afro: Kora (harpe africaine à 21 cordes), Balafon (xylophone africain en bois), Djembé (percussions lead), Talking drum (percussions répondantes), Ngoni (luth africain)
+• Pour les genres latins: Tumbadora/Conga (lead), Bongos (contrechant), Güiro (texture rythmique), Tres cubano (harmonie)
+• Pour les genres orientaux: Oud (lead mélodique), Qanun (harmonie), Darbuka (percussions lead), Bendir (percussions nappe)
+• Ces précisions permettent aux IA musicales (Suno, Udio) de ne pas partir sur de la pop commerciale générique`;
 
   const SECTIONS = [
     {

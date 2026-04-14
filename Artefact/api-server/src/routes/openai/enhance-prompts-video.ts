@@ -20,35 +20,41 @@ const THUMBNAIL_TYPE_MAP: Record<string, string> = {
   tech: "review", gadgets: "unboxing", streetwear: "review",
 };
 
-const VOICE_MAP: Record<string, { id: string; description: string; tone: string }> = {
-  bijou: { id: "Bella", description: "Voix féminine, élégante, raffinée", tone: "elegant, sophisticated, refined" },
-  luxe: { id: "Bella", description: "Voix féminine, élégante, raffinée", tone: "elegant, sophisticated, refined" },
-  maroquinerie: { id: "Bella", description: "Voix féminine, élégante, raffinée", tone: "elegant, sophisticated, refined" },
-  montres: { id: "Bella", description: "Voix féminine, élégante, raffinée", tone: "elegant, sophisticated, refined" },
-  cosmétique: { id: "Rachel", description: "Voix féminine, chaleureuse, accessible", tone: "friendly, warm, inviting" },
-  skincare: { id: "Emily", description: "Voix féminine, naturelle, authentique", tone: "natural, authentic, genuine" },
-  mode: { id: "Rachel", description: "Voix féminine, chaleureuse, accessible", tone: "friendly, warm, inviting" },
-  fitness: { id: "Antoni", description: "Voix masculine, énergique, dynamique", tone: "energetic, enthusiastic, motivating" },
-  sport: { id: "Antoni", description: "Voix masculine, énergique, dynamique", tone: "energetic, enthusiastic, motivating" },
-  streetwear: { id: "Antoni", description: "Voix masculine, énergique, dynamique", tone: "energetic, enthusiastic, motivating" },
-  tech: { id: "Adam", description: "Voix masculine, professionnelle, confiante", tone: "professional, confident, authoritative" },
-  gadgets: { id: "Adam", description: "Voix masculine, professionnelle, confiante", tone: "professional, confident, authoritative" },
+// ⚠️ VOIX ELEVENLABS — MODÈLE OBLIGATOIRE: eleven_multilingual_v2
+// Les voix anglaises (Bella, Rachel, Emily, Antoni, Adam) lisent le français avec un fort accent US.
+// Toujours utiliser des voix du catalogue multilingue + model_id: eleven_multilingual_v2
+const VOICE_MAP: Record<string, { id: string; description: string; tone: string; lang_note: string }> = {
+  bijou: { id: "Charlotte", description: "Voix féminine multilingue, élégante, posée, parfaite pour le luxe en français", tone: "elegant, sophisticated, refined", lang_note: "Modèle: eleven_multilingual_v2 — excellente diction française, accent neutre" },
+  luxe: { id: "Charlotte", description: "Voix féminine multilingue, élégante, posée, parfaite pour le luxe en français", tone: "elegant, sophisticated, refined", lang_note: "Modèle: eleven_multilingual_v2 — excellente diction française, accent neutre" },
+  maroquinerie: { id: "Charlotte", description: "Voix féminine multilingue, élégante, artisanale", tone: "elegant, sophisticated, refined", lang_note: "Modèle: eleven_multilingual_v2" },
+  montres: { id: "Charlotte", description: "Voix féminine multilingue, précise, intemporelle", tone: "elegant, sophisticated, refined", lang_note: "Modèle: eleven_multilingual_v2" },
+  cosmétique: { id: "Josephine", description: "Voix française native, chaleureuse, accessible et naturelle", tone: "friendly, warm, inviting", lang_note: "Voix native française — Modèle: eleven_multilingual_v2, aucun accent étranger" },
+  skincare: { id: "Josephine", description: "Voix française native, douce, naturelle et authentique", tone: "natural, authentic, genuine", lang_note: "Voix native française — Modèle: eleven_multilingual_v2" },
+  mode: { id: "Josephine", description: "Voix française native, chaleureuse, lifestyle", tone: "friendly, warm, inviting", lang_note: "Voix native française — Modèle: eleven_multilingual_v2" },
+  fitness: { id: "Thomas", description: "Voix masculine française, énergique, dynamique et motivante", tone: "energetic, enthusiastic, motivating", lang_note: "Modèle: eleven_multilingual_v2 — diction française parfaite" },
+  sport: { id: "Thomas", description: "Voix masculine française, épique, motivante", tone: "energetic, enthusiastic, motivating", lang_note: "Modèle: eleven_multilingual_v2" },
+  streetwear: { id: "Thomas", description: "Voix masculine française, directe, urbaine et authentique", tone: "energetic, enthusiastic, motivating", lang_note: "Modèle: eleven_multilingual_v2" },
+  tech: { id: "Thomas", description: "Voix masculine française, professionnelle et confiante", tone: "professional, confident, authoritative", lang_note: "Modèle: eleven_multilingual_v2" },
+  gadgets: { id: "Thomas", description: "Voix masculine française, claire et enthousiasmante", tone: "professional, confident, authoritative", lang_note: "Modèle: eleven_multilingual_v2" },
 };
 
 const TEASER_DESCRIPTIONS: Record<string, string> = {
-  luxe: "slow pan élégant, particules dorées, lumière chaude, fondu sur logo or/noir",
-  cinematic: "slow zoom dramatique, profondeur de champ, lens flare, grain film, musique orchestrale",
-  glitch: "effets RGB split, scanlines, distortion cyberpunk, transitions saccadées, beat électronique",
-  kinetic: "typographie animée dynamique, mouvements rapides, motion blur, EDM, énergie maximale",
-  minimal: "fond blanc épuré, rotation 360°, transitions simples, piano ambient, texte minimal",
+  luxe: "slow pan élégant, particules dorées flottantes, lumière chaude 3200K, depth of field extrême, fondu logo or/noir, grain film 8mm",
+  cinematic: "slow zoom dramatique (24mm → 85mm f/1.4), profondeur de champ cinéma, lens flare anamorph doré, grain film 35mm, musique orchestrale crescendo, color grading teal & orange. VERSION BOUCLE 5s: macro texture du produit en loop seamless, bokeh lumière dorée animé, logo en transparence 30% — idéal pour fond Stories et site web",
+  glitch: "effets RGB split (décalage 8px), scanlines CRT, distortion cyberpunk, chromatic aberration, transitions saccadées frame-by-frame, beat électronique synchronisé",
+  kinetic: "typographie animée dynamique (kinetic type), mouvements rapides, motion blur 180° shutter, zoom in brutal, EDM 128 BPM, énergie maximale, couleurs saturées",
+  minimal: "fond blanc épuré, rotation 360° produit (turntable), drop shadow doux, transitions morph fluides, piano ambient 80 BPM, texte minimal en noir",
 };
 
+// ⚠️ IMPORTANT: Les générateurs d'images (Midjourney, DALL-E, SDXL) écrivent mal le texte long.
+// Ces prompts génèrent le FOND VISUEL uniquement — tout texte overlay (AVANT/APRÈS, titres, CTAs)
+// doit être ajouté en post-production (Canva, Photoshop, After Effects).
 const THUMBNAIL_DESCRIPTIONS: Record<string, string> = {
-  product_focus: "produit centré, éclairage studio, texte court percutant, palette marque, contraste élevé",
-  before_after: "split screen gauche/droite, 'AVANT / APRÈS' en gros, avant fade/après vibrant",
-  tutorial: "main tenant le produit, flèches indicatrices, 'COMMENT FAIRE', fond épuré",
-  review: "visage surpris/impressionné + produit, 'JE TESTE [PRODUIT]', fond coloré",
-  unboxing: "packaging + produit sorti, 'UNBOXING', confettis, ambiance excitante",
+  product_focus: "produit centré, éclairage studio professionnel, palette marque, contraste élevé — zone vierge en haut pour texte overlay post-prod",
+  before_after: "split screen gauche/droite, côté gauche désaturé/terne, côté droit vibrant/éclatant — AUCUN texte dans l'image, zone vierge 20% haut réservée pour overlay 'AVANT / APRÈS' en post-production (Canva/Photoshop)",
+  tutorial: "main tenant le produit, composition claire, fond épuré — zone vierge 25% haut réservée pour overlay 'COMMENT FAIRE' en post-production",
+  review: "visage surpris/impressionné + produit, fond coloré vif — zone vierge en bas pour overlay texte en post-production",
+  unboxing: "packaging + produit sorti, confettis, ambiance excitante — zone vierge en haut pour overlay titre en post-production",
 };
 
 function parseJsonSafe(text: string): Record<string, unknown> | null {
@@ -272,14 +278,21 @@ POUR CHAQUE PHASE, décrire:
 • Audio: genre musical, BPM, évolution
 
 RÈGLES ABSOLUES:
-• Deux versions: vertical 9:16 (1080×1920) et horizontal 16:9 (1920×1080)
+• Trois versions: vertical 9:16 (1080×1920), horizontal 16:9 (1920×1080), et boucle 5s ambient
 • Prompt en français, extrêmement détaillé et précis
 • Effets adaptés au style ${teaserStyle}: ${TEASER_DESCRIPTIONS[teaserStyle]}
 
+VERSION BOUCLE 5s (ambient loop — pour fond de site web, Stories en boucle, écran d'accueil):
+• Durée: exactement 5 secondes en boucle parfaite seamless
+• Contenu: macro texture/matière du produit, bokeh lumineux animé, logo en transparence 25-30%
+• Aucune coupure visible, transition début/fin imperceptible
+• Pas de mouvement brusque — uniquement dérives lentes, particules, reflets
+
 Retourne UNIQUEMENT ce JSON:
 {
-  "vertical": "prompt teaser vertical 9:16 complet",
-  "horizontal": "prompt teaser horizontal 16:9 complet",
+  "vertical": "prompt teaser vertical 9:16 complet (15s)",
+  "horizontal": "prompt teaser horizontal 16:9 complet (15s)",
+  "loop_5s": "prompt boucle ambient 5s seamless pour site web et Stories",
   "style": "${teaserStyle}",
   "effects": "liste des effets utilisés"
 }`,
@@ -313,9 +326,16 @@ RÈGLES CTR:
 • Texte lisible sur mobile
 • Teaser de curiosité sans spoiler
 
+⚠️ NOTE POST-PRODUCTION OBLIGATOIRE:
+Les générateurs d'images actuels (Midjourney, DALL-E, SDXL, Firefly) ne peuvent pas reproduire fidèlement du texte long ou des titres précis.
+Ces prompts génèrent le FOND VISUEL et l'AMBIANCE uniquement.
+Tout texte overlay ('AVANT / APRÈS', noms produits, CTAs, statistiques) DOIT être ajouté en post-production sur Canva, Photoshop ou After Effects pour garantir une typographie parfaite.
+Chaque variante doit inclure une zone vierge clairement définie pour accueillir ce texte.
+
 RÈGLES OVERLAY TEXTE (conformes charte R01):
-• INTERDIT: effets emboss, relief, gaufrage, ombre portée épaisse sur le texte
-• Texte: flat, net — stroke 1-2px ou fond semi-transparent uniquement
+• INTERDIT dans le prompt image: tout texte lisible, toute typographie dans la composition
+• La zone texte sera ajoutée en post-production uniquement
+• Décrire uniquement: fond visuel, éclairage, composition, ambiance
 
 DISCLAIMER RÉGLEMENTAIRE (miniatures Before/After uniquement):
 • Si le type est "before_after": inclure une micro-mention en bas de miniature "Résultats individuels — usage créatif uniquement"
@@ -336,8 +356,11 @@ Retourne UNIQUEMENT ce JSON:
       agent: "ElevenLabs / AI Voice Generator",
       buildPrompt: () => `${contextBlock}
 
+⚠️ LANGUE: Les scripts sont en FRANÇAIS. Utiliser OBLIGATOIREMENT une voix multilingue française avec model_id: eleven_multilingual_v2 pour éviter l'accent étranger.
+
 Voix recommandée pour ce secteur (${sector}): ${voice.id} — ${voice.description}
 Ton: ${voice.tone}
+Note technique: ${voice.lang_note}
 
 Génère les textes de voix off optimisés pour lecture TTS (ElevenLabs) en 3 durées.
 
@@ -358,10 +381,12 @@ Retourne UNIQUEMENT ce JSON:
   "recommended_voice": "${voice.id}",
   "voice_description": "${voice.description}",
   "voice_tone": "${voice.tone}",
+  "model_id": "eleven_multilingual_v2",
+  "lang_note": "${voice.lang_note}",
   "script_15s": "texte voix off 15s optimisé ElevenLabs",
   "script_30s": "texte voix off 30s optimisé ElevenLabs",
   "script_60s": "texte voix off 60s optimisé ElevenLabs",
-  "elevenlabs_settings": "stability, similarity_boost, style recommandés"
+  "elevenlabs_settings": {"stability": 0.75, "similarity_boost": 0.85, "style": 0.3, "model_id": "eleven_multilingual_v2"}
 }`,
     },
   ] as const;

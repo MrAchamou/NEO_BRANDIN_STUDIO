@@ -46818,32 +46818,32 @@ var THUMBNAIL_TYPE_MAP = {
   streetwear: "review"
 };
 var VOICE_MAP = {
-  bijou: { id: "Bella", description: "Voix f\xE9minine, \xE9l\xE9gante, raffin\xE9e", tone: "elegant, sophisticated, refined" },
-  luxe: { id: "Bella", description: "Voix f\xE9minine, \xE9l\xE9gante, raffin\xE9e", tone: "elegant, sophisticated, refined" },
-  maroquinerie: { id: "Bella", description: "Voix f\xE9minine, \xE9l\xE9gante, raffin\xE9e", tone: "elegant, sophisticated, refined" },
-  montres: { id: "Bella", description: "Voix f\xE9minine, \xE9l\xE9gante, raffin\xE9e", tone: "elegant, sophisticated, refined" },
-  cosm\u00E9tique: { id: "Rachel", description: "Voix f\xE9minine, chaleureuse, accessible", tone: "friendly, warm, inviting" },
-  skincare: { id: "Emily", description: "Voix f\xE9minine, naturelle, authentique", tone: "natural, authentic, genuine" },
-  mode: { id: "Rachel", description: "Voix f\xE9minine, chaleureuse, accessible", tone: "friendly, warm, inviting" },
-  fitness: { id: "Antoni", description: "Voix masculine, \xE9nergique, dynamique", tone: "energetic, enthusiastic, motivating" },
-  sport: { id: "Antoni", description: "Voix masculine, \xE9nergique, dynamique", tone: "energetic, enthusiastic, motivating" },
-  streetwear: { id: "Antoni", description: "Voix masculine, \xE9nergique, dynamique", tone: "energetic, enthusiastic, motivating" },
-  tech: { id: "Adam", description: "Voix masculine, professionnelle, confiante", tone: "professional, confident, authoritative" },
-  gadgets: { id: "Adam", description: "Voix masculine, professionnelle, confiante", tone: "professional, confident, authoritative" }
+  bijou: { id: "Charlotte", description: "Voix f\xE9minine multilingue, \xE9l\xE9gante, pos\xE9e, parfaite pour le luxe en fran\xE7ais", tone: "elegant, sophisticated, refined", lang_note: "Mod\xE8le: eleven_multilingual_v2 \u2014 excellente diction fran\xE7aise, accent neutre" },
+  luxe: { id: "Charlotte", description: "Voix f\xE9minine multilingue, \xE9l\xE9gante, pos\xE9e, parfaite pour le luxe en fran\xE7ais", tone: "elegant, sophisticated, refined", lang_note: "Mod\xE8le: eleven_multilingual_v2 \u2014 excellente diction fran\xE7aise, accent neutre" },
+  maroquinerie: { id: "Charlotte", description: "Voix f\xE9minine multilingue, \xE9l\xE9gante, artisanale", tone: "elegant, sophisticated, refined", lang_note: "Mod\xE8le: eleven_multilingual_v2" },
+  montres: { id: "Charlotte", description: "Voix f\xE9minine multilingue, pr\xE9cise, intemporelle", tone: "elegant, sophisticated, refined", lang_note: "Mod\xE8le: eleven_multilingual_v2" },
+  cosm\u00E9tique: { id: "Josephine", description: "Voix fran\xE7aise native, chaleureuse, accessible et naturelle", tone: "friendly, warm, inviting", lang_note: "Voix native fran\xE7aise \u2014 Mod\xE8le: eleven_multilingual_v2, aucun accent \xE9tranger" },
+  skincare: { id: "Josephine", description: "Voix fran\xE7aise native, douce, naturelle et authentique", tone: "natural, authentic, genuine", lang_note: "Voix native fran\xE7aise \u2014 Mod\xE8le: eleven_multilingual_v2" },
+  mode: { id: "Josephine", description: "Voix fran\xE7aise native, chaleureuse, lifestyle", tone: "friendly, warm, inviting", lang_note: "Voix native fran\xE7aise \u2014 Mod\xE8le: eleven_multilingual_v2" },
+  fitness: { id: "Thomas", description: "Voix masculine fran\xE7aise, \xE9nergique, dynamique et motivante", tone: "energetic, enthusiastic, motivating", lang_note: "Mod\xE8le: eleven_multilingual_v2 \u2014 diction fran\xE7aise parfaite" },
+  sport: { id: "Thomas", description: "Voix masculine fran\xE7aise, \xE9pique, motivante", tone: "energetic, enthusiastic, motivating", lang_note: "Mod\xE8le: eleven_multilingual_v2" },
+  streetwear: { id: "Thomas", description: "Voix masculine fran\xE7aise, directe, urbaine et authentique", tone: "energetic, enthusiastic, motivating", lang_note: "Mod\xE8le: eleven_multilingual_v2" },
+  tech: { id: "Thomas", description: "Voix masculine fran\xE7aise, professionnelle et confiante", tone: "professional, confident, authoritative", lang_note: "Mod\xE8le: eleven_multilingual_v2" },
+  gadgets: { id: "Thomas", description: "Voix masculine fran\xE7aise, claire et enthousiasmante", tone: "professional, confident, authoritative", lang_note: "Mod\xE8le: eleven_multilingual_v2" }
 };
 var TEASER_DESCRIPTIONS = {
-  luxe: "slow pan \xE9l\xE9gant, particules dor\xE9es, lumi\xE8re chaude, fondu sur logo or/noir",
-  cinematic: "slow zoom dramatique, profondeur de champ, lens flare, grain film, musique orchestrale",
-  glitch: "effets RGB split, scanlines, distortion cyberpunk, transitions saccad\xE9es, beat \xE9lectronique",
-  kinetic: "typographie anim\xE9e dynamique, mouvements rapides, motion blur, EDM, \xE9nergie maximale",
-  minimal: "fond blanc \xE9pur\xE9, rotation 360\xB0, transitions simples, piano ambient, texte minimal"
+  luxe: "slow pan \xE9l\xE9gant, particules dor\xE9es flottantes, lumi\xE8re chaude 3200K, depth of field extr\xEAme, fondu logo or/noir, grain film 8mm",
+  cinematic: "slow zoom dramatique (24mm \u2192 85mm f/1.4), profondeur de champ cin\xE9ma, lens flare anamorph dor\xE9, grain film 35mm, musique orchestrale crescendo, color grading teal & orange. VERSION BOUCLE 5s: macro texture du produit en loop seamless, bokeh lumi\xE8re dor\xE9e anim\xE9, logo en transparence 30% \u2014 id\xE9al pour fond Stories et site web",
+  glitch: "effets RGB split (d\xE9calage 8px), scanlines CRT, distortion cyberpunk, chromatic aberration, transitions saccad\xE9es frame-by-frame, beat \xE9lectronique synchronis\xE9",
+  kinetic: "typographie anim\xE9e dynamique (kinetic type), mouvements rapides, motion blur 180\xB0 shutter, zoom in brutal, EDM 128 BPM, \xE9nergie maximale, couleurs satur\xE9es",
+  minimal: "fond blanc \xE9pur\xE9, rotation 360\xB0 produit (turntable), drop shadow doux, transitions morph fluides, piano ambient 80 BPM, texte minimal en noir"
 };
 var THUMBNAIL_DESCRIPTIONS = {
-  product_focus: "produit centr\xE9, \xE9clairage studio, texte court percutant, palette marque, contraste \xE9lev\xE9",
-  before_after: "split screen gauche/droite, 'AVANT / APR\xC8S' en gros, avant fade/apr\xE8s vibrant",
-  tutorial: "main tenant le produit, fl\xE8ches indicatrices, 'COMMENT FAIRE', fond \xE9pur\xE9",
-  review: "visage surpris/impressionn\xE9 + produit, 'JE TESTE [PRODUIT]', fond color\xE9",
-  unboxing: "packaging + produit sorti, 'UNBOXING', confettis, ambiance excitante"
+  product_focus: "produit centr\xE9, \xE9clairage studio professionnel, palette marque, contraste \xE9lev\xE9 \u2014 zone vierge en haut pour texte overlay post-prod",
+  before_after: "split screen gauche/droite, c\xF4t\xE9 gauche d\xE9satur\xE9/terne, c\xF4t\xE9 droit vibrant/\xE9clatant \u2014 AUCUN texte dans l'image, zone vierge 20% haut r\xE9serv\xE9e pour overlay 'AVANT / APR\xC8S' en post-production (Canva/Photoshop)",
+  tutorial: "main tenant le produit, composition claire, fond \xE9pur\xE9 \u2014 zone vierge 25% haut r\xE9serv\xE9e pour overlay 'COMMENT FAIRE' en post-production",
+  review: "visage surpris/impressionn\xE9 + produit, fond color\xE9 vif \u2014 zone vierge en bas pour overlay texte en post-production",
+  unboxing: "packaging + produit sorti, confettis, ambiance excitante \u2014 zone vierge en haut pour overlay titre en post-production"
 };
 function parseJsonSafe2(text) {
   try {
@@ -47052,14 +47052,21 @@ POUR CHAQUE PHASE, d\xE9crire:
 \u2022 Audio: genre musical, BPM, \xE9volution
 
 R\xC8GLES ABSOLUES:
-\u2022 Deux versions: vertical 9:16 (1080\xD71920) et horizontal 16:9 (1920\xD71080)
+\u2022 Trois versions: vertical 9:16 (1080\xD71920), horizontal 16:9 (1920\xD71080), et boucle 5s ambient
 \u2022 Prompt en fran\xE7ais, extr\xEAmement d\xE9taill\xE9 et pr\xE9cis
 \u2022 Effets adapt\xE9s au style ${teaserStyle}: ${TEASER_DESCRIPTIONS[teaserStyle]}
 
+VERSION BOUCLE 5s (ambient loop \u2014 pour fond de site web, Stories en boucle, \xE9cran d'accueil):
+\u2022 Dur\xE9e: exactement 5 secondes en boucle parfaite seamless
+\u2022 Contenu: macro texture/mati\xE8re du produit, bokeh lumineux anim\xE9, logo en transparence 25-30%
+\u2022 Aucune coupure visible, transition d\xE9but/fin imperceptible
+\u2022 Pas de mouvement brusque \u2014 uniquement d\xE9rives lentes, particules, reflets
+
 Retourne UNIQUEMENT ce JSON:
 {
-  "vertical": "prompt teaser vertical 9:16 complet",
-  "horizontal": "prompt teaser horizontal 16:9 complet",
+  "vertical": "prompt teaser vertical 9:16 complet (15s)",
+  "horizontal": "prompt teaser horizontal 16:9 complet (15s)",
+  "loop_5s": "prompt boucle ambient 5s seamless pour site web et Stories",
   "style": "${teaserStyle}",
   "effects": "liste des effets utilis\xE9s"
 }`
@@ -47093,9 +47100,16 @@ R\xC8GLES CTR:
 \u2022 Texte lisible sur mobile
 \u2022 Teaser de curiosit\xE9 sans spoiler
 
+\u26A0\uFE0F NOTE POST-PRODUCTION OBLIGATOIRE:
+Les g\xE9n\xE9rateurs d'images actuels (Midjourney, DALL-E, SDXL, Firefly) ne peuvent pas reproduire fid\xE8lement du texte long ou des titres pr\xE9cis.
+Ces prompts g\xE9n\xE8rent le FOND VISUEL et l'AMBIANCE uniquement.
+Tout texte overlay ('AVANT / APR\xC8S', noms produits, CTAs, statistiques) DOIT \xEAtre ajout\xE9 en post-production sur Canva, Photoshop ou After Effects pour garantir une typographie parfaite.
+Chaque variante doit inclure une zone vierge clairement d\xE9finie pour accueillir ce texte.
+
 R\xC8GLES OVERLAY TEXTE (conformes charte R01):
-\u2022 INTERDIT: effets emboss, relief, gaufrage, ombre port\xE9e \xE9paisse sur le texte
-\u2022 Texte: flat, net \u2014 stroke 1-2px ou fond semi-transparent uniquement
+\u2022 INTERDIT dans le prompt image: tout texte lisible, toute typographie dans la composition
+\u2022 La zone texte sera ajout\xE9e en post-production uniquement
+\u2022 D\xE9crire uniquement: fond visuel, \xE9clairage, composition, ambiance
 
 DISCLAIMER R\xC9GLEMENTAIRE (miniatures Before/After uniquement):
 \u2022 Si le type est "before_after": inclure une micro-mention en bas de miniature "R\xE9sultats individuels \u2014 usage cr\xE9atif uniquement"
@@ -47116,8 +47130,11 @@ Retourne UNIQUEMENT ce JSON:
       agent: "ElevenLabs / AI Voice Generator",
       buildPrompt: () => `${contextBlock}
 
+\u26A0\uFE0F LANGUE: Les scripts sont en FRAN\xC7AIS. Utiliser OBLIGATOIREMENT une voix multilingue fran\xE7aise avec model_id: eleven_multilingual_v2 pour \xE9viter l'accent \xE9tranger.
+
 Voix recommand\xE9e pour ce secteur (${sector}): ${voice.id} \u2014 ${voice.description}
 Ton: ${voice.tone}
+Note technique: ${voice.lang_note}
 
 G\xE9n\xE8re les textes de voix off optimis\xE9s pour lecture TTS (ElevenLabs) en 3 dur\xE9es.
 
@@ -47138,10 +47155,12 @@ Retourne UNIQUEMENT ce JSON:
   "recommended_voice": "${voice.id}",
   "voice_description": "${voice.description}",
   "voice_tone": "${voice.tone}",
+  "model_id": "eleven_multilingual_v2",
+  "lang_note": "${voice.lang_note}",
   "script_15s": "texte voix off 15s optimis\xE9 ElevenLabs",
   "script_30s": "texte voix off 30s optimis\xE9 ElevenLabs",
   "script_60s": "texte voix off 60s optimis\xE9 ElevenLabs",
-  "elevenlabs_settings": "stability, similarity_boost, style recommand\xE9s"
+  "elevenlabs_settings": {"stability": 0.75, "similarity_boost": 0.85, "style": 0.3, "model_id": "eleven_multilingual_v2"}
 }`
     }
   ];
@@ -47600,31 +47619,29 @@ var JINGLE_STYLE_MAP = {
   d\u00E9coration: "ambient cosy \u2014 guitare acoustique, piano, sons int\xE9rieur, 80-90 BPM"
 };
 var BGM_STYLE_MAP = {
-  bijou: "orchestral pop \u2014 cordes, piano, harpe \u2014 \xE9l\xE9gant, lumineux",
-  luxe: "orchestral cin\xE9matique \u2014 orchestre complet, harpe \u2014 majestueux, intemporel",
-  cosm\u00E9tique: "pop acoustique \u2014 guitare, piano, clochettes \u2014 frais, naturel",
-  skincare: "ambient pop \u2014 piano, nappes \u2014 relaxant, apaisant",
-  tech: "\xE9lectronique \u2014 synth\xE9, beats \u2014 moderne, dynamique",
-  gadgets: "\xE9lectronique pop \u2014 synth\xE9, beats, basse \u2014 pratique, fun",
-  fitness: "EDM \u2014 synth\xE9, batterie, basse \u2014 \xE9nergique, motivant",
-  sport: "\xE9pique \u2014 orchestre + \xE9lectronique \u2014 puissant, motivant",
-  mode: "pop urbaine \u2014 beat, basse \u2014 tendance, cool",
-  streetwear: "hip-hop/trap \u2014 808, basse, beat \u2014 urbain, authentique",
-  d\u00E9coration: "ambient \u2014 guitare, piano \u2014 cosy, apaisant",
-  maroquinerie: "orchestral artisanal \u2014 cordes, piano \u2014 qualit\xE9, \xE9l\xE9gance"
+  bijou: "orchestral pop \xE9l\xE9gant \u2014 harpe (lead m\xE9lodique), cordes en nappe, piano Rhodes (accords doux), triangle cristallin \u2014 lumineux, intemporel",
+  luxe: "orchestral cin\xE9matique \u2014 orchestre cordes complet, harpe (arp\xE8ges lead), cuivres doux, timbales feutr\xE9es, clavecin optionnel \u2014 majestueux, intemporel",
+  cosm\u00E9tique: "pop acoustique fra\xEEche \u2014 piano acoustique (lead), guitare acoustique (picking), clochettes l\xE9g\xE8res, glockenspiel, basse fretless douce \u2014 frais, naturel",
+  skincare: "ambient pop apaisant \u2014 piano acoustique (m\xE9lodie), nappe de synth\xE9 pad doux, fl\xFBte traversi\xE8re, sons nature (eau douce, feuilles), basse sine wave \u2014 relaxant, zen",
+  tech: "\xE9lectronique minimal \u2014 synth\xE9 lead analogique, beats \xE9lectroniques 4/4, basse synth\xE9, arp\xE9giateur rapide, effets glitch contr\xF4l\xE9s \u2014 moderne, pr\xE9cis",
+  gadgets: "\xE9lectronique pop \u2014 synth\xE9 pad, beats entra\xEEnants, basse synth\xE9, sons UI stylis\xE9s (bip, click), marimba \xE9lectronique \u2014 fun, pratique",
+  fitness: "EDM \xE9nergique \u2014 kick 4/4 fort, synth\xE9 supersaw, basse sidechain, snare claquante, risers et drops \u2014 motivant, explosif, 130-140 BPM",
+  sport: "\xE9pique orchestral + \xE9lectronique \u2014 section cordes puissante, cuivres h\xE9ro\xEFques, percussions orchestrales (timbales, grosse caisse), batterie \xE9lectronique en renfort \u2014 puissant, inspirant",
+  mode: "pop urbaine tendance \u2014 beat trap l\xE9ger, basse chaude, synth\xE9 pad a\xE9rien, guitare rythmique, voix harmonis\xE9es chopp\xE9es \u2014 cool, aspirationnel",
+  streetwear: "hip-hop/trap authentique \u2014 kick 808 profond, basse sub, snare claquante, hi-hat roulant, vocal chop m\xE9lodique, sample vinyle \u2014 urbain, authentique",
+  d\u00E9coration: "ambient cosy \u2014 guitare acoustique fingerpicking (lead), piano Fender Rhodes, violoncelle doux, sons d'int\xE9rieur (feu de chemin\xE9e, horloge feutr\xE9e) \u2014 chaleureux, serein",
+  maroquinerie: "orchestral artisanal \u2014 quatuor \xE0 cordes (lead), piano classique, guitare classique nylon, contrebasse pizzicato \u2014 qualit\xE9, savoir-faire"
 };
 var ELEVENLABS_VOICES = {
-  Rachel: { name: "Rachel", description: "Voix f\xE9minine, chaleureuse, accessible", tone: "friendly, warm, inviting", use_for: ["cosm\xE9tique", "skincare", "mode", "lifestyle"] },
-  Adam: { name: "Adam", description: "Voix masculine, professionnelle, confiante", tone: "professional, confident, authoritative", use_for: ["tech", "gadgets", "finance", "B2B"] },
-  Antoni: { name: "Antoni", description: "Voix masculine, \xE9nergique, dynamique", tone: "energetic, enthusiastic, motivating", use_for: ["fitness", "sport", "streetwear"] },
-  Bella: { name: "Bella", description: "Voix f\xE9minine, \xE9l\xE9gante, raffin\xE9e", tone: "elegant, sophisticated, refined", use_for: ["bijou", "luxe", "maroquinerie", "montres"] },
-  Emily: { name: "Emily", description: "Voix f\xE9minine, naturelle, authentique", tone: "natural, authentic, genuine", use_for: ["skincare", "d\xE9coration", "bio", "nature"] }
+  Josephine: { name: "Josephine", description: "Voix fran\xE7aise native, chaleureuse, naturelle et accessible", tone: "friendly, warm, inviting", use_for: ["cosm\xE9tique", "skincare", "mode", "lifestyle"], lang_note: "Voix native fran\xE7aise \u2014 model_id: eleven_multilingual_v2" },
+  Thomas: { name: "Thomas", description: "Voix masculine fran\xE7aise, professionnelle et confiante", tone: "professional, confident, authoritative", use_for: ["tech", "gadgets", "finance", "B2B", "fitness", "sport", "streetwear"], lang_note: "model_id: eleven_multilingual_v2 \u2014 diction fran\xE7aise parfaite" },
+  Charlotte: { name: "Charlotte", description: "Voix f\xE9minine multilingue, \xE9l\xE9gante, raffin\xE9e \u2014 excellente diction fran\xE7aise", tone: "elegant, sophisticated, refined", use_for: ["bijou", "luxe", "maroquinerie", "montres", "d\xE9coration", "bio", "nature"], lang_note: "Multilingue \u2014 model_id: eleven_multilingual_v2, accent neutre \xE9l\xE9gant" }
 };
 function pickVoice(sector) {
   for (const [, voice] of Object.entries(ELEVENLABS_VOICES)) {
     if (voice.use_for.includes(sector)) return voice;
   }
-  return ELEVENLABS_VOICES["Adam"];
+  return ELEVENLABS_VOICES["Thomas"];
 }
 function parseJsonSafe4(text) {
   try {
@@ -47672,7 +47689,15 @@ L'identit\xE9 visuelle de la marque utilise ces couleurs: ${brand_colors}. Le re
   const systemPrompt = `Tu es un directeur artistique sonore expert en identit\xE9 sonore de marque et en g\xE9n\xE9ration de prompts pour des outils de cr\xE9ation audio (Suno, Udio, ElevenLabs, Adobe Podcast).
 Tu g\xE9n\xE8res des prompts audio ultra-pr\xE9cis et des briefs cr\xE9atifs complets pour chaque actif sonore d'une marque.
 Tu retournes TOUJOURS du JSON valide uniquement, sans markdown, sans texte avant ou apr\xE8s.
-Tous les textes sont en fran\xE7ais, cr\xE9atifs, adapt\xE9s au secteur ${sector} et au style ${tone}.${colorPriorityBlock}`;
+Tous les textes sont en fran\xE7ais, cr\xE9atifs, adapt\xE9s au secteur ${sector} et au style ${tone}.${colorPriorityBlock}
+
+R\xC8GLE ABSOLUE \u2014 NOMMAGE DES INSTRUMENTS:
+\u2022 TOUJOURS nommer les instruments avec pr\xE9cision et leur r\xF4le exact. INTERDIT d'\xE9crire "guitare" ou "percussions" seuls.
+\u2022 Format obligatoire: "nom de l'instrument (r\xF4le dans le mix)" \u2014 ex: "kora (lead m\xE9lodique arabesque)", "balafon (contrechant rythmique)", "nappe de piano \xE9lectrique Rhodes (harmonie en fond)", "shakers l\xE9gers (texture rythmique)"
+\u2022 Pour les genres world/afro: Kora (harpe africaine \xE0 21 cordes), Balafon (xylophone africain en bois), Djemb\xE9 (percussions lead), Talking drum (percussions r\xE9pondantes), Ngoni (luth africain)
+\u2022 Pour les genres latins: Tumbadora/Conga (lead), Bongos (contrechant), G\xFCiro (texture rythmique), Tres cubano (harmonie)
+\u2022 Pour les genres orientaux: Oud (lead m\xE9lodique), Qanun (harmonie), Darbuka (percussions lead), Bendir (percussions nappe)
+\u2022 Ces pr\xE9cisions permettent aux IA musicales (Suno, Udio) de ne pas partir sur de la pop commerciale g\xE9n\xE9rique`;
   const SECTIONS = [
     {
       key: "jingle",
