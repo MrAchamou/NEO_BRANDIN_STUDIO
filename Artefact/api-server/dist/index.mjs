@@ -45776,7 +45776,7 @@ Cr\xE9er un symbole abstrait \xE0 gauche du wordmark, \xE9voquant \xE0 la fois *
 - Int\xE9grer une **micro-grille** implicite via 2\u20133 points nodaux (petits cercles) align\xE9s sur une trajectoire, comme une visualisation scientifique propre.
 - Style: lignes pleines, angles propres, aucune r\xE9f\xE9rence m\xE9dicale clich\xE9e.
 - Taille du symbole: hauteur = hauteur de x du wordmark \xD7 1.2, alignement vertical centr\xE9 sur la baseline du texte.
-- Espacement symbole/wordmark: 12px (grille 8px arrondie sup\xE9rieure).
+- Espacement symbole/wordmark: a\xE9r\xE9 et proportionnel, respiration visuelle suffisante pour une lecture imm\xE9diate.
 
 **Palette chromatique**
 - Primaire: **#003087** \u2014 bleu marine confiance (60% des usages: fond, ic\xF4ne principale)
@@ -45791,10 +45791,10 @@ Cr\xE9er un symbole abstrait \xE0 gauche du wordmark, \xE9voquant \xE0 la fois *
 4. **Invers\xE9 (knockout)**: blanc #FFFFFF sur fond bleu marine #003087 \u2014 usage institutionnel, cartes de visite, en-t\xEAtes officiels
 
 **Sp\xE9cifications techniques**
-- Format export: PNG 2000\xD72000px (fond transparent) + SVG vectoriel illimit\xE9
+- Format export: PNG 4000\xD74000px haute r\xE9solution (fond transparent), rendu Flat Design imitant un fichier vectoriel propre et \xE9pur\xE9. \u26A0\uFE0F Note post-production : les g\xE9n\xE9rateurs d'images (Midjourney, DALL-E, SDXL) produisent des fichiers matriciels (PNG/JPG) et non des SVG \xE9ditables. Une vectorisation manuelle est requise en post-production (Adobe Illustrator Live Trace, Inkscape ou Vector Magic) pour obtenir un fichier SVG r\xE9ellement scalable et \xE9ditable.
 - Zone de s\xE9curit\xE9: espace blanc = hauteur de la lettre majuscule "T" du wordmark sur tous les c\xF4t\xE9s
 - Taille minimale: 80px de largeur en digital, 20mm en impression
-- Grille constructive: grille 8px, toutes les dimensions multiples de 8
+- Aspect g\xE9om\xE9trique: alignement parfait, espacement r\xE9gulier et proportionnel, g\xE9om\xE9trie coh\xE9rente, composition \xE9quilibr\xE9e. \u26A0\uFE0F Note : ce cahier des charges est destin\xE9 au designer humain qui utilisera ce prompt comme inspiration \u2014 les valeurs pixel exactes ne sont pas interpr\xE9t\xE9es par les g\xE9n\xE9rateurs d'images IA.
 - Proportions: ratio largeur/hauteur du logo complet entre 3:1 et 4:1
 - Alignement: symbole et wordmark sur baseline commune, centrage vertical optique
 
@@ -45811,7 +45811,7 @@ function buildSymbolDescription(sector, symbolConcept) {
 - Int\xE9grer une micro-grille implicite via 2\u20133 points nodaux (petits cercles) align\xE9s sur une trajectoire, comme une visualisation scientifique propre.
 - Style: lignes pleines, angles propres, aucune r\xE9f\xE9rence m\xE9dicale clich\xE9e.
 - Taille du symbole: hauteur = hauteur de x du wordmark \xD7 1.2, alignement vertical centr\xE9 sur la baseline du texte.
-- Espacement symbole/wordmark: 12px (grille 8px arrondie sup\xE9rieure).`;
+- Espacement symbole/wordmark: a\xE9r\xE9 et proportionnel, respiration visuelle suffisante pour une lecture imm\xE9diate.`;
   }
   if (sector === "luxury") {
     return `${base}
@@ -45819,7 +45819,7 @@ function buildSymbolDescription(sector, symbolConcept) {
 - Lignes \xE9pur\xE9es, g\xE9om\xE9trie parfaite, sym\xE9trie ma\xEEtris\xE9e.
 - Style: lignes fines, \xE9l\xE9gance discr\xE8te, sans surcharge d\xE9corative.
 - Taille du symbole: hauteur = hauteur de x du wordmark \xD7 1.2, alignement vertical centr\xE9 sur la baseline du texte.
-- Espacement symbole/wordmark: 12px (grille 8px arrondie sup\xE9rieure).`;
+- Espacement symbole/wordmark: a\xE9r\xE9 et proportionnel, respiration visuelle suffisante pour une lecture imm\xE9diate.`;
   }
   if (sector === "streetwear") {
     return `${base}
@@ -45827,7 +45827,7 @@ function buildSymbolDescription(sector, symbolConcept) {
 - Trait \xE9pais, angles vifs, pr\xE9sence marqu\xE9e.
 - Style: impact visuel fort, typographique, authenticit\xE9.
 - Taille du symbole: hauteur = hauteur de x du wordmark \xD7 1.2, alignement vertical centr\xE9 sur la baseline du texte.
-- Espacement symbole/wordmark: 12px (grille 8px arrondie sup\xE9rieure).`;
+- Espacement symbole/wordmark: a\xE9r\xE9 et proportionnel, respiration visuelle suffisante pour une lecture imm\xE9diate.`;
   }
   if (sector === "fitness") {
     return `${base}
@@ -45835,7 +45835,7 @@ function buildSymbolDescription(sector, symbolConcept) {
 - Lignes \xE9nergiques, sensation de vitesse et de puissance contr\xF4l\xE9e.
 - Style: dynamique, motivant, performance.
 - Taille du symbole: hauteur = hauteur de x du wordmark \xD7 1.2, alignement vertical centr\xE9 sur la baseline du texte.
-- Espacement symbole/wordmark: 12px (grille 8px arrondie sup\xE9rieure).`;
+- Espacement symbole/wordmark: a\xE9r\xE9 et proportionnel, respiration visuelle suffisante pour une lecture imm\xE9diate.`;
   }
   if (sector === "cosmetic") {
     return `${base}
@@ -45843,13 +45843,13 @@ function buildSymbolDescription(sector, symbolConcept) {
 - Courbes douces, fluidit\xE9, sensation de puret\xE9.
 - Style: naturel, apaisant, \xE9l\xE9gance subtile.
 - Taille du symbole: hauteur = hauteur de x du wordmark \xD7 1.2, alignement vertical centr\xE9 sur la baseline du texte.
-- Espacement symbole/wordmark: 12px (grille 8px arrondie sup\xE9rieure).`;
+- Espacement symbole/wordmark: a\xE9r\xE9 et proportionnel, respiration visuelle suffisante pour une lecture imm\xE9diate.`;
   }
   return `${base}
 - Ic\xF4ne abstraite adapt\xE9e \xE0 l'univers de la marque.
 - Style \xE9pur\xE9, lisible, scalable.
 - Taille du symbole: hauteur = hauteur de x du wordmark \xD7 1.2, alignement vertical centr\xE9 sur la baseline du texte.
-- Espacement symbole/wordmark: 12px (grille 8px arrondie sup\xE9rieure).`;
+- Espacement symbole/wordmark: a\xE9r\xE9 et proportionnel, respiration visuelle suffisante pour une lecture imm\xE9diate.`;
 }
 function buildNegativePromptSuffix(sector) {
   const base = "vieux, obsol\xE8te, r\xE9tro, vintage, d\xE9sordonn\xE9, c\xE2bles apparents en d\xE9sordre, interface confuse, erreurs visibles, bugs, d\xE9sinvolte, informel, trop d\xE9contract\xE9, argot, watermark, mockup photor\xE9aliste, gradients agressifs, 3D, bevel/emboss, textures, bruit, glitch, texte illisible, kerning mauvais, compression JPEG visible, artefacts IA, formes incoh\xE9rentes, d\xE9tails trop fins non-scalables, symboles m\xE9dicaux clich\xE9s, ADN, seringue, croix, mascotte, cartoon, low-res";
@@ -46279,10 +46279,12 @@ Commence directement par: "G\xE9n\xE8re le syst\xE8me typographique complet pour
     },
     {
       key: "guidelines",
-      agent: "Brand Design Agent (PDF generation)",
+      agent: "Brand Design Agent (Brand Guidelines Content)",
       userPrompt: `MODULE 01.4 \u2014 BRAND GUIDELINES
 
-G\xE9n\xE8re un prompt RoboNeo ULTRA-PR\xC9CIS pour cr\xE9er la charte graphique PDF de ${brand_name}.
+\u26A0\uFE0F NOTE TECHNIQUE IMPORTANTE : Un LLM g\xE9n\xE8re du TEXTE structur\xE9, pas un fichier binaire PDF. Ce prompt produit le contenu textuel et structur\xE9 d'une charte graphique, destin\xE9 \xE0 \xEAtre mis en page par un outil de publication (Canva, Adobe InDesign, Figma, ou un script de g\xE9n\xE9ration PDF). Le fichier PDF final sera cr\xE9\xE9 en post-production \xE0 partir de ce contenu.
+
+G\xE9n\xE8re un prompt RoboNeo ULTRA-PR\xC9CIS pour r\xE9diger le CONTENU TEXTUEL STRUCTUR\xC9 de la charte graphique de ${brand_name} (le contenu servira de base \xE0 la g\xE9n\xE9ration PDF en post-production).
 
 STRUCTURE DU PROMPT \xC0 G\xC9N\xC9RER:
 10 r\xE8gles graphiques obligatoires (R01 \xE0 R10):
@@ -46301,7 +46303,7 @@ Pour chaque r\xE8gle: description pr\xE9cise + Do's (3 exemples) + Don'ts (3 exe
 
 ${negativeBlock}
 
-Commence directement par: "G\xE9n\xE8re la charte graphique compl\xE8te pour ${brand_name}..."`
+Commence directement par: "R\xE9dige le contenu structur\xE9 de la charte graphique pour ${brand_name}..."`
     }
   ];
   for (const section of sections) {

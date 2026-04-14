@@ -76,7 +76,7 @@ Créer un symbole abstrait à gauche du wordmark, évoquant à la fois **vecteur
 - Intégrer une **micro-grille** implicite via 2–3 points nodaux (petits cercles) alignés sur une trajectoire, comme une visualisation scientifique propre.
 - Style: lignes pleines, angles propres, aucune référence médicale clichée.
 - Taille du symbole: hauteur = hauteur de x du wordmark × 1.2, alignement vertical centré sur la baseline du texte.
-- Espacement symbole/wordmark: 12px (grille 8px arrondie supérieure).
+- Espacement symbole/wordmark: aéré et proportionnel, respiration visuelle suffisante pour une lecture immédiate.
 
 **Palette chromatique**
 - Primaire: **#003087** — bleu marine confiance (60% des usages: fond, icône principale)
@@ -91,10 +91,10 @@ Créer un symbole abstrait à gauche du wordmark, évoquant à la fois **vecteur
 4. **Inversé (knockout)**: blanc #FFFFFF sur fond bleu marine #003087 — usage institutionnel, cartes de visite, en-têtes officiels
 
 **Spécifications techniques**
-- Format export: PNG 2000×2000px (fond transparent) + SVG vectoriel illimité
+- Format export: PNG 4000×4000px haute résolution (fond transparent), rendu Flat Design imitant un fichier vectoriel propre et épuré. ⚠️ Note post-production : les générateurs d'images (Midjourney, DALL-E, SDXL) produisent des fichiers matriciels (PNG/JPG) et non des SVG éditables. Une vectorisation manuelle est requise en post-production (Adobe Illustrator Live Trace, Inkscape ou Vector Magic) pour obtenir un fichier SVG réellement scalable et éditable.
 - Zone de sécurité: espace blanc = hauteur de la lettre majuscule "T" du wordmark sur tous les côtés
 - Taille minimale: 80px de largeur en digital, 20mm en impression
-- Grille constructive: grille 8px, toutes les dimensions multiples de 8
+- Aspect géométrique: alignement parfait, espacement régulier et proportionnel, géométrie cohérente, composition équilibrée. ⚠️ Note : ce cahier des charges est destiné au designer humain qui utilisera ce prompt comme inspiration — les valeurs pixel exactes ne sont pas interprétées par les générateurs d'images IA.
 - Proportions: ratio largeur/hauteur du logo complet entre 3:1 et 4:1
 - Alignement: symbole et wordmark sur baseline commune, centrage vertical optique
 
@@ -113,7 +113,7 @@ function buildSymbolDescription(sector: string, symbolConcept: string): string {
 - Intégrer une micro-grille implicite via 2–3 points nodaux (petits cercles) alignés sur une trajectoire, comme une visualisation scientifique propre.
 - Style: lignes pleines, angles propres, aucune référence médicale clichée.
 - Taille du symbole: hauteur = hauteur de x du wordmark × 1.2, alignement vertical centré sur la baseline du texte.
-- Espacement symbole/wordmark: 12px (grille 8px arrondie supérieure).`;
+- Espacement symbole/wordmark: aéré et proportionnel, respiration visuelle suffisante pour une lecture immédiate.`;
   }
 
   if (sector === "luxury") {
@@ -122,7 +122,7 @@ function buildSymbolDescription(sector: string, symbolConcept: string): string {
 - Lignes épurées, géométrie parfaite, symétrie maîtrisée.
 - Style: lignes fines, élégance discrète, sans surcharge décorative.
 - Taille du symbole: hauteur = hauteur de x du wordmark × 1.2, alignement vertical centré sur la baseline du texte.
-- Espacement symbole/wordmark: 12px (grille 8px arrondie supérieure).`;
+- Espacement symbole/wordmark: aéré et proportionnel, respiration visuelle suffisante pour une lecture immédiate.`;
   }
 
   if (sector === "streetwear") {
@@ -131,7 +131,7 @@ function buildSymbolDescription(sector: string, symbolConcept: string): string {
 - Trait épais, angles vifs, présence marquée.
 - Style: impact visuel fort, typographique, authenticité.
 - Taille du symbole: hauteur = hauteur de x du wordmark × 1.2, alignement vertical centré sur la baseline du texte.
-- Espacement symbole/wordmark: 12px (grille 8px arrondie supérieure).`;
+- Espacement symbole/wordmark: aéré et proportionnel, respiration visuelle suffisante pour une lecture immédiate.`;
   }
 
   if (sector === "fitness") {
@@ -140,7 +140,7 @@ function buildSymbolDescription(sector: string, symbolConcept: string): string {
 - Lignes énergiques, sensation de vitesse et de puissance contrôlée.
 - Style: dynamique, motivant, performance.
 - Taille du symbole: hauteur = hauteur de x du wordmark × 1.2, alignement vertical centré sur la baseline du texte.
-- Espacement symbole/wordmark: 12px (grille 8px arrondie supérieure).`;
+- Espacement symbole/wordmark: aéré et proportionnel, respiration visuelle suffisante pour une lecture immédiate.`;
   }
 
   if (sector === "cosmetic") {
@@ -149,14 +149,14 @@ function buildSymbolDescription(sector: string, symbolConcept: string): string {
 - Courbes douces, fluidité, sensation de pureté.
 - Style: naturel, apaisant, élégance subtile.
 - Taille du symbole: hauteur = hauteur de x du wordmark × 1.2, alignement vertical centré sur la baseline du texte.
-- Espacement symbole/wordmark: 12px (grille 8px arrondie supérieure).`;
+- Espacement symbole/wordmark: aéré et proportionnel, respiration visuelle suffisante pour une lecture immédiate.`;
   }
 
   return `${base}
 - Icône abstraite adaptée à l'univers de la marque.
 - Style épuré, lisible, scalable.
 - Taille du symbole: hauteur = hauteur de x du wordmark × 1.2, alignement vertical centré sur la baseline du texte.
-- Espacement symbole/wordmark: 12px (grille 8px arrondie supérieure).`;
+- Espacement symbole/wordmark: aéré et proportionnel, respiration visuelle suffisante pour une lecture immédiate.`;
 }
 
 function buildNegativePromptSuffix(sector: string): string {

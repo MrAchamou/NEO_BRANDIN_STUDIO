@@ -150,10 +150,12 @@ Commence directement par: "Génère le système typographique complet pour ${bra
     },
     {
       key: "guidelines",
-      agent: "Brand Design Agent (PDF generation)",
+      agent: "Brand Design Agent (Brand Guidelines Content)",
       userPrompt: `MODULE 01.4 — BRAND GUIDELINES
 
-Génère un prompt RoboNeo ULTRA-PRÉCIS pour créer la charte graphique PDF de ${brand_name}.
+⚠️ NOTE TECHNIQUE IMPORTANTE : Un LLM génère du TEXTE structuré, pas un fichier binaire PDF. Ce prompt produit le contenu textuel et structuré d'une charte graphique, destiné à être mis en page par un outil de publication (Canva, Adobe InDesign, Figma, ou un script de génération PDF). Le fichier PDF final sera créé en post-production à partir de ce contenu.
+
+Génère un prompt RoboNeo ULTRA-PRÉCIS pour rédiger le CONTENU TEXTUEL STRUCTURÉ de la charte graphique de ${brand_name} (le contenu servira de base à la génération PDF en post-production).
 
 STRUCTURE DU PROMPT À GÉNÉRER:
 10 règles graphiques obligatoires (R01 à R10):
@@ -172,7 +174,7 @@ Pour chaque règle: description précise + Do's (3 exemples) + Don'ts (3 exemple
 
 ${negativeBlock}
 
-Commence directement par: "Génère la charte graphique complète pour ${brand_name}..."`,
+Commence directement par: "Rédige le contenu structuré de la charte graphique pour ${brand_name}..."`,
     },
   ];
 
