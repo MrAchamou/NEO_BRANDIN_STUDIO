@@ -32286,17 +32286,6 @@ var HealthCheckResponse = objectType({
   status: stringType()
 });
 
-// src/routes/health.ts
-var router = (0, import_express.Router)();
-router.get("/healthz", (_req, res) => {
-  const data = HealthCheckResponse.parse({ status: "ok" });
-  res.json(data);
-});
-var health_default = router;
-
-// src/routes/scrape-gmb.ts
-var import_express2 = __toESM(require_express2(), 1);
-
 // ../../node_modules/.pnpm/openai@6.32.0_zod@3.25.76/node_modules/openai/internal/tslib.mjs
 function __classPrivateFieldSet(receiver, state, value, kind, f) {
   if (kind === "m")
@@ -39319,6 +39308,10 @@ function getClientPool() {
   }
   return clientPool;
 }
+function getRotationState() {
+  const pool = getClientPool();
+  return { currentIndex: rotationIndex, totalKeys: pool.length };
+}
 function isRateLimitOrQueue(err) {
   if (err instanceof OpenAI.APIError) {
     return err.status === 429;
@@ -39329,20 +39322,46 @@ function isRateLimitOrQueue(err) {
   }
   return false;
 }
-async function cerebrasCreate(params) {
+async function testCerebrasKey(keyIndex) {
+  const pool = getClientPool();
+  if (keyIndex >= pool.length) {
+    return { index: keyIndex, status: "error", error: "Index hors limites" };
+  }
+  const start = Date.now();
+  try {
+    await pool[keyIndex].chat.completions.create({
+      model: CEREBRAS_MODEL_FAST,
+      messages: [{ role: "user", content: "1+1=" }],
+      max_tokens: 5
+    });
+    return { index: keyIndex, status: "ok", latencyMs: Date.now() - start };
+  } catch (err) {
+    if (isRateLimitOrQueue(err)) {
+      return { index: keyIndex, status: "rate_limit", latencyMs: Date.now() - start };
+    }
+    const message = err instanceof Error ? err.message : String(err);
+    return { index: keyIndex, status: "error", latencyMs: Date.now() - start, error: message };
+  }
+}
+async function cerebrasCreate(params, label) {
   const pool = getClientPool();
   const startIndex = rotationIndex;
   for (let i = 0; i < pool.length; i++) {
     const idx = (startIndex + i) % pool.length;
     rotationIndex = (idx + 1) % pool.length;
+    const keyNum = idx + 1;
     try {
-      return await pool[idx].chat.completions.create(params);
+      const result = await pool[idx].chat.completions.create(params);
+      console.log(`[Cerebras] \u2713 ${label ?? "create"} \u2192 cl\xE9 #${keyNum}/${pool.length}`);
+      return result;
     } catch (err) {
       if (isRateLimitOrQueue(err) && i < pool.length - 1) {
+        console.log(`[Cerebras] \u23F3 cl\xE9 #${keyNum} satur\xE9e \u2192 essai cl\xE9 #${(idx + 1) % pool.length + 1}`);
         continue;
       }
       if (isRateLimitOrQueue(err) && params.model !== CEREBRAS_MODEL_FAST) {
         const fallbackIdx = (idx + 1) % pool.length;
+        console.log(`[Cerebras] \u26A1 fallback rapide \u2192 cl\xE9 #${fallbackIdx + 1} (${CEREBRAS_MODEL_FAST})`);
         return pool[fallbackIdx].chat.completions.create({
           ...params,
           model: CEREBRAS_MODEL_FAST
@@ -39353,20 +39372,25 @@ async function cerebrasCreate(params) {
   }
   throw new Error("Toutes les cl\xE9s Cerebras sont satur\xE9es.");
 }
-async function cerebrasStream(params) {
+async function cerebrasStream(params, label) {
   const pool = getClientPool();
   const startIndex = rotationIndex;
   for (let i = 0; i < pool.length; i++) {
     const idx = (startIndex + i) % pool.length;
     rotationIndex = (idx + 1) % pool.length;
+    const keyNum = idx + 1;
     try {
-      return await pool[idx].chat.completions.create({ ...params, stream: true });
+      const stream = await pool[idx].chat.completions.create({ ...params, stream: true });
+      console.log(`[Cerebras] \u2713 ${label ?? "stream"} \u2192 cl\xE9 #${keyNum}/${pool.length} (next: #${rotationIndex + 1})`);
+      return stream;
     } catch (err) {
       if (isRateLimitOrQueue(err) && i < pool.length - 1) {
+        console.log(`[Cerebras] \u23F3 cl\xE9 #${keyNum} satur\xE9e \u2192 essai cl\xE9 #${(idx + 1) % pool.length + 1}`);
         continue;
       }
       if (isRateLimitOrQueue(err) && params.model !== CEREBRAS_MODEL_FAST) {
         const fallbackIdx = (idx + 1) % pool.length;
+        console.log(`[Cerebras] \u26A1 fallback rapide \u2192 cl\xE9 #${fallbackIdx + 1} (${CEREBRAS_MODEL_FAST})`);
         return pool[fallbackIdx].chat.completions.create({
           ...params,
           model: CEREBRAS_MODEL_FAST,
@@ -39392,7 +39416,45 @@ var cerebrasAI = new Proxy({}, {
   }
 });
 
+// src/routes/health.ts
+var router = (0, import_express.Router)();
+router.get("/healthz", (_req, res) => {
+  const data = HealthCheckResponse.parse({ status: "ok" });
+  res.json(data);
+});
+router.get("/healthz/cerebras", async (_req, res) => {
+  const { currentIndex, totalKeys } = getRotationState();
+  const results = await Promise.all(
+    Array.from({ length: totalKeys }, (_, i) => testCerebrasKey(i))
+  );
+  const available = results.filter((r) => r.status === "ok").length;
+  const rateLimited = results.filter((r) => r.status === "rate_limit").length;
+  const errors = results.filter((r) => r.status === "error").length;
+  res.json({
+    model: CEREBRAS_MODEL,
+    rotation: {
+      nextKeyIndex: currentIndex,
+      nextKeyNumber: currentIndex + 1,
+      totalKeys
+    },
+    summary: {
+      available,
+      rate_limited: rateLimited,
+      errors,
+      health: available > 0 ? "operational" : "degraded"
+    },
+    keys: results.map((r) => ({
+      key: `#${r.index + 1}`,
+      status: r.status,
+      latencyMs: r.latencyMs,
+      ...r.error ? { error: r.error } : {}
+    }))
+  });
+});
+var health_default = router;
+
 // src/routes/scrape-gmb.ts
+var import_express2 = __toESM(require_express2(), 1);
 var router2 = (0, import_express2.Router)();
 async function resolveGmbUrl(url) {
   try {
@@ -40341,7 +40403,7 @@ Commence directement par: "G\xE9n\xE8re la charte graphique compl\xE8te pour ${b
           { role: "system", content: activeSystemPrompt },
           { role: "user", content: section.userPrompt }
         ]
-      });
+      }, section.key);
       for await (const chunk of stream) {
         const content = chunk.choices[0]?.delta?.content;
         if (content) {

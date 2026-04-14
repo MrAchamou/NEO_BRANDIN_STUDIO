@@ -50,6 +50,11 @@ function getClientPool(): OpenAI[] {
   return clientPool;
 }
 
+export function getRotationState(): { currentIndex: number; totalKeys: number } {
+  const pool = getClientPool();
+  return { currentIndex: rotationIndex, totalKeys: pool.length };
+}
+
 function isRateLimitOrQueue(err: unknown): boolean {
   if (err instanceof OpenAI.APIError) {
     return err.status === 429;
@@ -61,6 +66,36 @@ function isRateLimitOrQueue(err: unknown): boolean {
   return false;
 }
 
+// ─── Test d'une clé individuelle ─────────────────────────────────────────────
+
+export async function testCerebrasKey(keyIndex: number): Promise<{
+  index: number;
+  status: "ok" | "rate_limit" | "error";
+  latencyMs?: number;
+  error?: string;
+}> {
+  const pool = getClientPool();
+  if (keyIndex >= pool.length) {
+    return { index: keyIndex, status: "error", error: "Index hors limites" };
+  }
+
+  const start = Date.now();
+  try {
+    await pool[keyIndex].chat.completions.create({
+      model: CEREBRAS_MODEL_FAST,
+      messages: [{ role: "user", content: "1+1=" }],
+      max_tokens: 5,
+    });
+    return { index: keyIndex, status: "ok", latencyMs: Date.now() - start };
+  } catch (err) {
+    if (isRateLimitOrQueue(err)) {
+      return { index: keyIndex, status: "rate_limit", latencyMs: Date.now() - start };
+    }
+    const message = err instanceof Error ? err.message : String(err);
+    return { index: keyIndex, status: "error", latencyMs: Date.now() - start, error: message };
+  }
+}
+
 // ─── Fonctions de création avec retry automatique ────────────────────────────
 
 /**
@@ -68,7 +103,8 @@ function isRateLimitOrQueue(err: unknown): boolean {
  * Si toutes les clés sont saturées, utilise le modèle rapide de secours.
  */
 export async function cerebrasCreate(
-  params: OpenAI.Chat.ChatCompletionCreateParamsNonStreaming
+  params: OpenAI.Chat.ChatCompletionCreateParamsNonStreaming,
+  label?: string
 ): Promise<OpenAI.Chat.ChatCompletion> {
   const pool = getClientPool();
   const startIndex = rotationIndex;
@@ -76,15 +112,19 @@ export async function cerebrasCreate(
   for (let i = 0; i < pool.length; i++) {
     const idx = (startIndex + i) % pool.length;
     rotationIndex = (idx + 1) % pool.length;
+    const keyNum = idx + 1;
     try {
-      return await pool[idx].chat.completions.create(params);
+      const result = await pool[idx].chat.completions.create(params);
+      console.log(`[Cerebras] ✓ ${label ?? "create"} → clé #${keyNum}/${pool.length}`);
+      return result;
     } catch (err) {
       if (isRateLimitOrQueue(err) && i < pool.length - 1) {
+        console.log(`[Cerebras] ⏳ clé #${keyNum} saturée → essai clé #${((idx + 1) % pool.length) + 1}`);
         continue;
       }
-      // Dernier recours: modèle rapide sur la clé suivante
       if (isRateLimitOrQueue(err) && params.model !== CEREBRAS_MODEL_FAST) {
         const fallbackIdx = (idx + 1) % pool.length;
+        console.log(`[Cerebras] ⚡ fallback rapide → clé #${fallbackIdx + 1} (${CEREBRAS_MODEL_FAST})`);
         return pool[fallbackIdx].chat.completions.create({
           ...params,
           model: CEREBRAS_MODEL_FAST,
@@ -99,9 +139,14 @@ export async function cerebrasCreate(
 /**
  * Crée un appel de complétion en streaming avec retry sur toutes les clés.
  * Si toutes les clés sont saturées, utilise le modèle rapide de secours.
+ *
+ * La rotation avance d'une clé à chaque appel réussi — ainsi chaque section
+ * d'une génération multi-sections utilise une clé différente, contournant
+ * les cooldowns par clé.
  */
 export async function cerebrasStream(
-  params: Omit<OpenAI.Chat.ChatCompletionCreateParamsStreaming, "stream">
+  params: Omit<OpenAI.Chat.ChatCompletionCreateParamsStreaming, "stream">,
+  label?: string
 ): Promise<AsyncIterable<OpenAI.Chat.ChatCompletionChunk>> {
   const pool = getClientPool();
   const startIndex = rotationIndex;
@@ -109,15 +154,19 @@ export async function cerebrasStream(
   for (let i = 0; i < pool.length; i++) {
     const idx = (startIndex + i) % pool.length;
     rotationIndex = (idx + 1) % pool.length;
+    const keyNum = idx + 1;
     try {
-      return await pool[idx].chat.completions.create({ ...params, stream: true });
+      const stream = await pool[idx].chat.completions.create({ ...params, stream: true });
+      console.log(`[Cerebras] ✓ ${label ?? "stream"} → clé #${keyNum}/${pool.length} (next: #${rotationIndex + 1})`);
+      return stream;
     } catch (err) {
       if (isRateLimitOrQueue(err) && i < pool.length - 1) {
+        console.log(`[Cerebras] ⏳ clé #${keyNum} saturée → essai clé #${((idx + 1) % pool.length) + 1}`);
         continue;
       }
-      // Dernier recours: modèle rapide sur la clé suivante
       if (isRateLimitOrQueue(err) && params.model !== CEREBRAS_MODEL_FAST) {
         const fallbackIdx = (idx + 1) % pool.length;
+        console.log(`[Cerebras] ⚡ fallback rapide → clé #${fallbackIdx + 1} (${CEREBRAS_MODEL_FAST})`);
         return pool[fallbackIdx].chat.completions.create({
           ...params,
           model: CEREBRAS_MODEL_FAST,
@@ -132,7 +181,6 @@ export async function cerebrasStream(
 
 /**
  * Retourne le prochain client Cerebras dans la rotation circulaire.
- * Chaque appel avance l'index d'une position.
  */
 export function getNextCerebrasClient(): OpenAI {
   const pool = getClientPool();

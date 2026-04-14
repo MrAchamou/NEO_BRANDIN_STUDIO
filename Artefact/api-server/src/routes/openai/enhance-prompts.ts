@@ -191,7 +191,7 @@ Commence directement par: "Génère la charte graphique complète pour ${brand_n
           { role: "system", content: activeSystemPrompt },
           { role: "user", content: section.userPrompt },
         ],
-      });
+      }, section.key);
 
       for await (const chunk of stream) {
         const content = chunk.choices[0]?.delta?.content;
