@@ -199,6 +199,11 @@ function ProductSection({ form }: { form: any }) {
       <FieldRow label="Matériaux">
         <Input {...form.register("product_materials")} placeholder="ex: acier inoxydable, verre saphir, cuir" className="bg-black/20 h-9 text-sm" />
       </FieldRow>
+      <div className="sm:col-span-2">
+        <FieldRow label="Caractéristique unique (différenciateur clé)">
+          <Input {...form.register("unique_feature")} placeholder="ex: Seul sérum végan made in France avec vit. C stabilisée" className="bg-black/20 h-9 text-sm" />
+        </FieldRow>
+      </div>
     </div>
   );
 }
@@ -402,6 +407,13 @@ function StrategieSection({ form }: { form: any }) {
           <Input
             {...form.register("forbidden_keywords")}
             placeholder="ex: 'cheap', 'économique', couleurs flashy, visuels surchargés, emoji dans les copies"
+            className="bg-black/20 h-9 text-sm"
+          />
+        </FieldRow>
+        <FieldRow label="Proposition de valeur unique (USP)">
+          <Input
+            {...form.register("usp")}
+            placeholder="ex: La clean beauty à la française — naturalité, traçabilité, efficacité prouvée"
             className="bg-black/20 h-9 text-sm"
           />
         </FieldRow>
@@ -738,6 +750,7 @@ export default function BrandBriefPanel() {
                 {activeSection === "identity"    && <IdentitySection    form={form} />}
                 {activeSection === "product"     && <ProductSection     form={form} />}
                 {activeSection === "commerce"    && <CommerceSection    form={form} />}
+                {activeSection === "sav"         && <SavSection         form={form} />}
                 {activeSection === "visual"      && <VisualSection      form={form} />}
                 {activeSection === "performance" && <PerformanceSection form={form} />}
                 {activeSection === "strategie"   && <StrategieSection   form={form} />}
