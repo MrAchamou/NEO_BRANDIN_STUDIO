@@ -154,6 +154,8 @@ export interface ReviewResult {
   winner: "gpt" | "claude" | "tie";
 }
 
+type AgentReviewResult = { score: number; refined: string; improvements: string[] };
+
 function buildReviewPrompt(
   content: string,
   brief: EnhancedBrief,
@@ -176,7 +178,7 @@ function buildReviewPrompt(
     : "";
 
   const secondPassNote = isSecondPass
-    ? `\n⚠️  SECOND PASS — This prompt was already refined once. Your mission: find every remaining weakness and eliminate it. Push from 8-9/10 to a perfect 10/10. Be ruthlessly precise.\n`
+    ? `\n⚠️  FINAL QUALITY PASS — This prompt was already refined once. Your mission: find every remaining weakness and eliminate it. Internally self-review your rewritten prompt before answering. Do not return until your rewritten version would score at least 9.3/10, ideally 10/10. Be ruthlessly precise.\n`
     : "";
 
   return `You are ${agentRole} for RoboNeo.com — a professional AI prompt generation platform for brand assets.${secondPassNote}
@@ -195,8 +197,9 @@ ${content}
 """
 
 YOUR DUAL MISSION:
-1. Score the prompt above STRICTLY (this is your honest assessment of the ORIGINAL)
-2. ALWAYS produce a rewritten version targeting 10/10 — even if the original scores 9/10, there is always room to sharpen it
+1. Identify the weaknesses of the prompt above STRICTLY
+2. ALWAYS produce a rewritten version targeting 10/10 — even if the original is already strong, there is always room to sharpen it
+3. Score your rewritten refined_prompt, not the original prompt
 
 EVALUATION CRITERIA (score /10 — BE RUTHLESSLY STRICT):
 1. Brand anchoring    — "${brief.brand_name}" named explicitly, sector "${brief.sector}" visible in every single detail
@@ -216,10 +219,38 @@ MANDATORY IMPROVEMENT RULES:
 
 Respond in strictly valid JSON only (no markdown block, no explanation outside JSON):
 {
-  "score": <score of the ORIGINAL prompt /10 — 1 decimal — be strict, most prompts need improvement>,
+  "score": <score of your REWRITTEN refined_prompt /10 — 1 decimal — target 9.3 to 10, never inflate weak work>,
   "improvements": ["specific flaw fixed 1", "specific flaw fixed 2", "specific flaw fixed 3", "specific flaw fixed 4"],
   "refined_prompt": "<ALWAYS a rewritten, improved version — richer, more precise, more technical, pushing toward 10/10. Never copy the original unchanged.>"
 }`;
+}
+
+function parseAgentReview(text: string, content: string, agentName: string): AgentReviewResult {
+  const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+  const jsonStart = clean.indexOf("{");
+  const jsonEnd = clean.lastIndexOf("}");
+  const json = jsonStart >= 0 && jsonEnd > jsonStart ? clean.slice(jsonStart, jsonEnd + 1) : clean;
+  const parsed = JSON.parse(json) as {
+    score?: unknown;
+    refined_prompt?: unknown;
+    improvements?: unknown;
+  };
+  const score = Number(parsed.score);
+  const refined = typeof parsed.refined_prompt === "string" ? parsed.refined_prompt.trim() : "";
+  if (!Number.isFinite(score)) {
+    throw new Error(`${agentName} a renvoyé un score invalide.`);
+  }
+  if (!refined || refined === content.trim()) {
+    throw new Error(`${agentName} n'a pas produit de version améliorée.`);
+  }
+  const improvements = Array.isArray(parsed.improvements)
+    ? parsed.improvements.map(String).filter(Boolean)
+    : [];
+  return {
+    score: Math.max(1, Math.min(10, Math.round(score * 10) / 10)),
+    refined,
+    improvements,
+  };
 }
 
 export async function reviewWithGPT(
@@ -227,30 +258,20 @@ export async function reviewWithGPT(
   brief: EnhancedBrief,
   sectionKey: string,
   isSecondPass: boolean = false
-): Promise<{ score: number; refined: string; improvements: string[] }> {
-  try {
-    const gpt = getGptReviewClient();
-    const prompt = buildReviewPrompt(
-      content, brief, sectionKey,
-      "a technical precision expert and AI prompt specialist (GPT Agent — Challenger)",
-      isSecondPass
-    );
-    const response = await gpt.chat.completions.create({
-      model: GPT_MODEL,
-      messages: [{ role: "user", content: prompt }],
-      max_tokens: 4096,
-    });
-    const text = response.choices[0]?.message?.content ?? "{}";
-    const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-    const parsed = JSON.parse(clean);
-    return {
-      score: parsed.score ?? 6,
-      refined: parsed.refined_prompt ?? content,
-      improvements: parsed.improvements ?? [],
-    };
-  } catch {
-    return { score: 6, refined: content, improvements: [] };
-  }
+): Promise<AgentReviewResult> {
+  const gpt = getGptReviewClient();
+  const prompt = buildReviewPrompt(
+    content, brief, sectionKey,
+    "a technical precision expert and AI prompt specialist (GPT Agent — Challenger)",
+    isSecondPass
+  );
+  const response = await gpt.chat.completions.create({
+    model: GPT_MODEL,
+    messages: [{ role: "user", content: prompt }],
+    max_completion_tokens: 4096,
+  });
+  const text = response.choices[0]?.message?.content ?? "{}";
+  return parseAgentReview(text, content, "GPT");
 }
 
 export async function reviewWithClaude(
@@ -258,31 +279,21 @@ export async function reviewWithClaude(
   brief: EnhancedBrief,
   sectionKey: string,
   isSecondPass: boolean = false
-): Promise<{ score: number; refined: string; improvements: string[] }> {
-  try {
-    const claude = getClaudeClient();
-    const prompt = buildReviewPrompt(
-      content, brief, sectionKey,
-      "a brand voice expert, creative strategist and narrative precision specialist (Claude Agent — Critic)",
-      isSecondPass
-    );
-    const message = await claude.messages.create({
-      model: CLAUDE_MODEL,
-      max_tokens: 4096,
-      messages: [{ role: "user", content: prompt }],
-    });
-    const block = message.content[0];
-    const text = block.type === "text" ? block.text : "{}";
-    const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-    const parsed = JSON.parse(clean);
-    return {
-      score: parsed.score ?? 6,
-      refined: parsed.refined_prompt ?? content,
-      improvements: parsed.improvements ?? [],
-    };
-  } catch {
-    return { score: 6, refined: content, improvements: [] };
-  }
+): Promise<AgentReviewResult> {
+  const claude = getClaudeClient();
+  const prompt = buildReviewPrompt(
+    content, brief, sectionKey,
+    "a brand voice expert, creative strategist and narrative precision specialist (Claude Agent — Critic)",
+    isSecondPass
+  );
+  const message = await claude.messages.create({
+    model: CLAUDE_MODEL,
+    max_tokens: 4096,
+    messages: [{ role: "user", content: prompt }],
+  });
+  const block = message.content[0];
+  const text = block.type === "text" ? block.text : "{}";
+  return parseAgentReview(text, content, "Claude");
 }
 
 export async function reviewPromptQuality(
@@ -290,11 +301,23 @@ export async function reviewPromptQuality(
   brief: EnhancedBrief,
   sectionKey: string
 ): Promise<ReviewResult> {
-  // Round 1 — both agents run in parallel, neither sees the other's evaluation
-  const [gptResult, claudeResult] = await Promise.all([
+  const [gptSettled, claudeSettled] = await Promise.allSettled([
     reviewWithGPT(content, brief, sectionKey, false),
     reviewWithClaude(content, brief, sectionKey, false),
   ]);
+
+  if (gptSettled.status === "rejected" && claudeSettled.status === "rejected") {
+    throw new Error("GPT et Claude n'ont pas pu produire de prompt amélioré.");
+  }
+
+  const gptResult =
+    gptSettled.status === "fulfilled"
+      ? gptSettled.value
+      : { score: 0, refined: "", improvements: ["GPT indisponible ou réponse invalide"] };
+  const claudeResult =
+    claudeSettled.status === "fulfilled"
+      ? claudeSettled.value
+      : { score: 0, refined: "", improvements: ["Claude indisponible ou réponse invalide"] };
 
   console.log(
     `[Review R1] ${sectionKey} → GPT: ${gptResult.score}/10 | Claude: ${claudeResult.score}/10`
@@ -302,12 +325,18 @@ export async function reviewPromptQuality(
 
   // The most demanding agent (lowest score) wins — their rewrite corrects more issues
   let winner: "gpt" | "claude" | "tie";
-  let winnerResult: typeof gptResult;
+  let winnerResult: AgentReviewResult;
 
-  if (gptResult.score < claudeResult.score) {
+  if (gptSettled.status === "fulfilled" && claudeSettled.status !== "fulfilled") {
     winner = "gpt";
     winnerResult = gptResult;
-  } else if (claudeResult.score < gptResult.score) {
+  } else if (claudeSettled.status === "fulfilled" && gptSettled.status !== "fulfilled") {
+    winner = "claude";
+    winnerResult = claudeResult;
+  } else if (gptResult.score > claudeResult.score) {
+    winner = "gpt";
+    winnerResult = gptResult;
+  } else if (claudeResult.score > gptResult.score) {
     winner = "claude";
     winnerResult = claudeResult;
   } else {
@@ -316,27 +345,35 @@ export async function reviewPromptQuality(
     winnerResult = claudeResult;
   }
 
-  const avgScoreR1 = (gptResult.score + claudeResult.score) / 2;
+  const successfulScores = [
+    gptSettled.status === "fulfilled" ? gptResult.score : undefined,
+    claudeSettled.status === "fulfilled" ? claudeResult.score : undefined,
+  ].filter((score): score is number => typeof score === "number");
+  const avgScoreR1 =
+    successfulScores.reduce((sum, score) => sum + score, 0) / successfulScores.length;
 
-  // Round 2 — if average score < 8.5, run a second pass with the opposing agent
-  // on the winner's refined version to push toward 9-10/10
   let finalRefined = winnerResult.refined;
   let finalWinner = winner;
+  let finalScore = avgScoreR1;
+  const laterImprovements: string[] = [];
 
-  if (avgScoreR1 < 8.5 && winnerResult.refined && winnerResult.refined !== content) {
+  if (avgScoreR1 < 9.5 && winnerResult.refined && winnerResult.refined !== content) {
     try {
       const secondPassFn = winner === "gpt" ? reviewWithClaude : reviewWithGPT;
       const round2 = await secondPassFn(winnerResult.refined, brief, sectionKey, true);
       console.log(
         `[Review R2] ${sectionKey} → ${winner === "gpt" ? "Claude" : "GPT"}: ${round2.score}/10`
       );
-      // Use Round 2 refined version if it is a genuine improvement (different from R1 output)
       if (round2.refined && round2.refined !== winnerResult.refined) {
         finalRefined = round2.refined;
         finalWinner = winner === "gpt" ? "claude" : "gpt";
+        finalScore = round2.score;
+        laterImprovements.push(
+          ...round2.improvements.map((i) => `[Round 2 ${finalWinner === "gpt" ? "GPT" : "Claude"}] ${i}`)
+        );
       }
-    } catch {
-      // Round 2 failed silently — keep Round 1 result
+    } catch (err) {
+      console.warn(`[Review R2] ${sectionKey} second pass skipped`, err);
     }
   }
 
@@ -344,9 +381,10 @@ export async function reviewPromptQuality(
   const allImprovements = [
     ...gptResult.improvements.map((i) => `[GPT] ${i}`),
     ...claudeResult.improvements.map((i) => `[Claude] ${i}`),
-  ].slice(0, 6);
+    ...laterImprovements,
+  ].slice(0, 8);
 
-  const avgScore = Math.round(avgScoreR1 * 10) / 10;
+  const avgScore = Math.round(finalScore * 10) / 10;
 
   return {
     score: avgScore,

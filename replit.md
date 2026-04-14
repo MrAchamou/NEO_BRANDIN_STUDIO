@@ -103,6 +103,8 @@ Le brief global se sauvegarde automatiquement dans `localStorage` avec un histor
 
 Module 01 suit le pipeline Qwen-3/Cerebras → GPT-5.2 → Claude : les agents GPT et Claude ne démarrent qu'après la génération complète Qwen-3 de chaque section. Le serveur envoie ensuite un récapitulatif SSE final avec temps total, durée Qwen-3, tokens estimés, tokens/s et scores moyens GPT/Claude pour l'affichage graphique en bas de page.
 
+Le bouton "Améliorer avec GPT & Claude" du Module 01 appelle `/api/openai/review-prompt`. GPT-5.2 et Claude évaluent et réécrivent le prompt en parallèle, le gagnant est l'agent qui produit le meilleur score final, et un second passage est lancé lorsque le résultat reste sous l'objectif qualité afin de pousser la version améliorée vers 9,3–10/10. Le serveur refuse maintenant les réponses qui renvoient le prompt original inchangé au lieu d'une vraie amélioration.
+
 Chaque carte de sous-module du Module 01 affiche une notification de validation lorsque le prompt a réellement été optimisé par GPT/Claude, avec un rappel du pipeline, un classement automatique Bronze/Silver/Gold/Premium basé sur le score qualité, et 5 modèles IA recommandés pour exploiter le prompt premium selon son type (logo, palette, typographie ou charte). Chaque recommandation inclut une description d'usage pratique du prompt avec le modèle et un bouton "Copier pour ce modèle" qui reformate automatiquement le prompt pour Midjourney, Ideogram, Recraft, FLUX, GPT-Image, Figma AI, Canva, Perplexity, Claude, GPT ou Gemini selon le cas.
 
 ## API Routes
