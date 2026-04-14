@@ -453,8 +453,8 @@ export async function reviewPromptQuality(
     gptScore = pass1.score;
     allImprovements.push(...pass1.improvements.map((i) => `[GPT-1] ${i}`));
     console.log(`[Review] ${sectionKey} — GPT Pass 1: ${pass1.score}/10 → v1 prête`);
-  } catch {
-    console.warn(`[Review] ${sectionKey} — GPT Pass 1 échoué, poursuite avec brouillon Cerebras`);
+  } catch (err) {
+    console.warn(`[Review] ${sectionKey} — GPT Pass 1 échoué: ${err instanceof Error ? err.message : String(err)}`);
   }
 
   // Phase 2 — GPT Pass 2 (2 améliorations supplémentaires sur GPT-v1)
@@ -464,8 +464,8 @@ export async function reviewPromptQuality(
     gptScore = pass2.score;
     allImprovements.push(...pass2.improvements.map((i) => `[GPT-2] ${i}`));
     console.log(`[Review] ${sectionKey} — GPT Pass 2: ${pass2.score}/10 → v2 prête`);
-  } catch {
-    console.warn(`[Review] ${sectionKey} — GPT Pass 2 échoué, poursuite avec GPT-v1`);
+  } catch (err) {
+    console.warn(`[Review] ${sectionKey} — GPT Pass 2 échoué: ${err instanceof Error ? err.message : String(err)}`);
   }
 
   // Phase 3 — Claude Final (validation voix de marque + touche finale vers 10/10)
@@ -475,8 +475,8 @@ export async function reviewPromptQuality(
     claudeScore = final.score;
     allImprovements.push(...final.improvements.map((i) => `[Claude] ${i}`));
     console.log(`[Review] ${sectionKey} — Claude Final: ${final.score}/10 ✓ GRAAL`);
-  } catch {
-    console.warn(`[Review] ${sectionKey} — Claude Final échoué, utilisation de GPT-v2`);
+  } catch (err) {
+    console.warn(`[Review] ${sectionKey} — Claude Final échoué: ${err instanceof Error ? err.message : String(err)}`);
     claudeScore = gptScore;
   }
 

@@ -45691,8 +45691,8 @@ async function reviewPromptQuality(content, brief, sectionKey) {
     gptScore = pass1.score;
     allImprovements.push(...pass1.improvements.map((i) => `[GPT-1] ${i}`));
     console.log(`[Review] ${sectionKey} \u2014 GPT Pass 1: ${pass1.score}/10 \u2192 v1 pr\xEAte`);
-  } catch {
-    console.warn(`[Review] ${sectionKey} \u2014 GPT Pass 1 \xE9chou\xE9, poursuite avec brouillon Cerebras`);
+  } catch (err) {
+    console.warn(`[Review] ${sectionKey} \u2014 GPT Pass 1 \xE9chou\xE9: ${err instanceof Error ? err.message : String(err)}`);
   }
   try {
     const pass2 = await gptRefinementPass(current, brief, sectionKey, 2);
@@ -45700,8 +45700,8 @@ async function reviewPromptQuality(content, brief, sectionKey) {
     gptScore = pass2.score;
     allImprovements.push(...pass2.improvements.map((i) => `[GPT-2] ${i}`));
     console.log(`[Review] ${sectionKey} \u2014 GPT Pass 2: ${pass2.score}/10 \u2192 v2 pr\xEAte`);
-  } catch {
-    console.warn(`[Review] ${sectionKey} \u2014 GPT Pass 2 \xE9chou\xE9, poursuite avec GPT-v1`);
+  } catch (err) {
+    console.warn(`[Review] ${sectionKey} \u2014 GPT Pass 2 \xE9chou\xE9: ${err instanceof Error ? err.message : String(err)}`);
   }
   try {
     const final = await claudeFinalValidation(current, brief, sectionKey);
@@ -45709,8 +45709,8 @@ async function reviewPromptQuality(content, brief, sectionKey) {
     claudeScore = final.score;
     allImprovements.push(...final.improvements.map((i) => `[Claude] ${i}`));
     console.log(`[Review] ${sectionKey} \u2014 Claude Final: ${final.score}/10 \u2713 GRAAL`);
-  } catch {
-    console.warn(`[Review] ${sectionKey} \u2014 Claude Final \xE9chou\xE9, utilisation de GPT-v2`);
+  } catch (err) {
+    console.warn(`[Review] ${sectionKey} \u2014 Claude Final \xE9chou\xE9: ${err instanceof Error ? err.message : String(err)}`);
     claudeScore = gptScore;
   }
   return {
