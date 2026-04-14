@@ -201,18 +201,30 @@ Commence directement par: "Génère la charte graphique complète pour ${brand_n
         }
       }
 
-      // ── Optional quality review pass ──────────────────────────────────────
-      let reviewData: { score: number; improvements: string[] } | null = null;
+      // ── Optional quality review pass (Débat GPT vs Claude) ───────────────
+      let reviewData: {
+        score: number;
+        improvements: string[];
+        gpt_score?: number;
+        claude_score?: number;
+        winner?: "gpt" | "claude" | "tie";
+      } | null = null;
       if (enable_review && fullContent.length > 100) {
         try {
           const review = await reviewPromptQuality(fullContent, brief, section.key);
-          reviewData = { score: review.score, improvements: review.improvements };
-          // If refined prompt is significantly better, stream the diff
+          reviewData = {
+            score: review.score,
+            improvements: review.improvements,
+            gpt_score: review.gpt_score,
+            claude_score: review.claude_score,
+            winner: review.winner,
+          };
+          // Si le prompt raffiné est meilleur, on l'utilise
           if (review.score < 8 && review.refined !== fullContent) {
             fullContent = review.refined;
           }
         } catch {
-          // Review is optional — silently skip on error
+          // La review est optionnelle — on ignore silencieusement en cas d'erreur
         }
       }
 

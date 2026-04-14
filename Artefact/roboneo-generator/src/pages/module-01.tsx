@@ -39,6 +39,9 @@ type SectionKey = "logo" | "palette" | "typography" | "guidelines";
 interface ReviewData {
   score: number;
   improvements: string[];
+  gpt_score?: number;
+  claude_score?: number;
+  winner?: "gpt" | "claude" | "tie";
 }
 
 interface PersonaVariant {
@@ -314,7 +317,7 @@ export default function Module01() {
                       <Star className="w-5 h-5 text-amber-400" />
                       <div>
                         <p className="text-sm font-medium text-foreground">Mode Ultra-Qualité</p>
-                        <p className="text-xs text-muted-foreground">2ème passe IA — score chaque prompt et corrige si &lt; 8/10</p>
+                        <p className="text-xs text-muted-foreground">Débat GPT ⚡ vs Claude 🧠 — le plus exigeant raffine le prompt</p>
                       </div>
                     </div>
                     <button
@@ -388,6 +391,11 @@ export default function Module01() {
                           </CardDescription>
                         </div>
                         <div className="flex items-center gap-2">
+                          {review && review.winner && (
+                            <span className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border font-bold uppercase tracking-wider ${review.winner === "gpt" ? "text-blue-400 bg-blue-400/10 border-blue-400/30" : review.winner === "claude" ? "text-orange-400 bg-orange-400/10 border-orange-400/30" : "text-violet-400 bg-violet-400/10 border-violet-400/30"}`}>
+                              {review.winner === "gpt" ? "⚡ GPT" : review.winner === "claude" ? "🧠 Claude" : "🤝 Tie"}
+                            </span>
+                          )}
                           {review && (
                             <span className={`inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full border font-semibold ${scoreColor(review.score)}`}>
                               <Star className="w-2.5 h-2.5" />
@@ -407,15 +415,33 @@ export default function Module01() {
                         {isPending ? <span className="text-muted-foreground/40 italic">En attente...</span> : <>{prompt}{isActive && <span className="inline-block w-2 h-4 bg-primary/80 animate-pulse ml-0.5 align-middle" />}</>}
                       </div>
 
-                      {/* Améliorations suggérées par la review */}
-                      {review && review.improvements.length > 0 && (
-                        <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} className="mt-3 space-y-1">
-                          <p className="text-[10px] text-amber-400/70 font-semibold uppercase tracking-wider flex items-center gap-1">
-                            <AlertTriangle className="w-3 h-3" /> Améliorations IA détectées
-                          </p>
-                          {review.improvements.map((imp, idx) => (
-                            <p key={idx} className="text-[11px] text-muted-foreground pl-2 border-l border-amber-400/20">• {imp}</p>
-                          ))}
+                      {/* Résultat du débat GPT vs Claude */}
+                      {review && (review.gpt_score !== undefined || review.improvements.length > 0) && (
+                        <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} className="mt-3 space-y-2">
+                          {review.gpt_score !== undefined && review.claude_score !== undefined && (
+                            <div className="flex items-center gap-3 px-2 py-1.5 rounded-md bg-black/20 border border-white/5">
+                              <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Débat IA</span>
+                              <span className={`text-[11px] font-bold px-1.5 py-0.5 rounded ${review.winner === "gpt" ? "text-blue-400 bg-blue-400/15" : "text-blue-400/50"}`}>
+                                ⚡ GPT {review.gpt_score}/10
+                              </span>
+                              <span className="text-muted-foreground/30 text-xs">vs</span>
+                              <span className={`text-[11px] font-bold px-1.5 py-0.5 rounded ${review.winner === "claude" ? "text-orange-400 bg-orange-400/15" : "text-orange-400/50"}`}>
+                                🧠 Claude {review.claude_score}/10
+                              </span>
+                            </div>
+                          )}
+                          {review.improvements.length > 0 && (
+                            <div className="space-y-1">
+                              <p className="text-[10px] text-amber-400/70 font-semibold uppercase tracking-wider flex items-center gap-1">
+                                <AlertTriangle className="w-3 h-3" /> Améliorations détectées
+                              </p>
+                              {review.improvements.map((imp, idx) => (
+                                <p key={idx} className={`text-[11px] pl-2 border-l ${imp.startsWith("[GPT]") ? "text-blue-300/70 border-blue-400/20" : imp.startsWith("[Claude]") ? "text-orange-300/70 border-orange-400/20" : "text-muted-foreground border-amber-400/20"}`}>
+                                  • {imp}
+                                </p>
+                              ))}
+                            </div>
+                          )}
                         </motion.div>
                       )}
                     </CardContent>

@@ -46330,7 +46330,13 @@ Commence directement par: "G\xE9n\xE8re la charte graphique compl\xE8te pour ${b
       if (enable_review && fullContent.length > 100) {
         try {
           const review = await reviewPromptQuality(fullContent, brief, section.key);
-          reviewData = { score: review.score, improvements: review.improvements };
+          reviewData = {
+            score: review.score,
+            improvements: review.improvements,
+            gpt_score: review.gpt_score,
+            claude_score: review.claude_score,
+            winner: review.winner
+          };
           if (review.score < 8 && review.refined !== fullContent) {
             fullContent = review.refined;
           }
