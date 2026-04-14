@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { cerebrasAI, CEREBRAS_MODEL } from "../lib/cerebras-client";
+import { cerebrasCreate, CEREBRAS_MODEL } from "../lib/cerebras-client";
 
 const router = Router();
 
@@ -122,7 +122,7 @@ Génère un objet JSON avec ces champs :
 - support_email: email de contact si disponible
 - shipping_info: infos de livraison si disponibles`;
 
-  const response = await cerebrasAI.chat.completions.create({
+  const response = await cerebrasCreate({
     model: CEREBRAS_MODEL,
     messages: [
       { role: "system", content: systemPrompt },

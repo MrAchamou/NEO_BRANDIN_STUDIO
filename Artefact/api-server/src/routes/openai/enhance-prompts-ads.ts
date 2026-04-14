@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { cerebrasAI, CEREBRAS_MODEL } from "../../lib/cerebras-client";
+import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
 import { buildSystemPrompt, buildNegativePrompt } from "../../lib/prompt-utils";
 
 const router: IRouter = Router();
@@ -399,14 +399,13 @@ Retourne UNIQUEMENT ce JSON:
 
     let fullContent = "";
     try {
-      const stream = await cerebrasAI.chat.completions.create({
+      const stream = await cerebrasStream({
         model: CEREBRAS_MODEL,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: section.buildPrompt() },
         ],
         max_tokens: 2500,
-        stream: true,
       });
 
       for await (const chunk of stream) {

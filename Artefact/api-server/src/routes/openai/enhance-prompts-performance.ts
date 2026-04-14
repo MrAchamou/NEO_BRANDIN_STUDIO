@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { cerebrasAI, CEREBRAS_MODEL } from "../../lib/cerebras-client";
+import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
 
 const router: IRouter = Router();
 
@@ -262,14 +262,13 @@ Réponds UNIQUEMENT avec un JSON valide:
 
       let fullContent = "";
 
-      const stream = await cerebrasAI.chat.completions.create({
+      const stream = await cerebrasStream({
         model: CEREBRAS_MODEL,
         max_tokens: 4096,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: section.userPrompt },
         ],
-        stream: true,
       });
 
       for await (const chunk of stream) {

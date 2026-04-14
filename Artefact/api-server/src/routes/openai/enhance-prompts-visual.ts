@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { cerebrasAI, CEREBRAS_MODEL } from "../../lib/cerebras-client";
+import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
 import { buildSystemPrompt, buildNegativePrompt } from "../../lib/prompt-utils";
 
 const router: IRouter = Router();
@@ -370,14 +370,13 @@ Chaque prompt visuel doit inclure un champ "negative_prompt" avec les éléments
 
     let fullContent = "";
     try {
-      const stream = await cerebrasAI.chat.completions.create({
+      const stream = await cerebrasStream({
         model: CEREBRAS_MODEL,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: section.buildUserPrompt() },
         ],
         max_tokens: 2000,
-        stream: true,
       });
 
       for await (const chunk of stream) {

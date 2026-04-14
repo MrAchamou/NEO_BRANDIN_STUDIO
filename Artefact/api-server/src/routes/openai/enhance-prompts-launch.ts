@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { cerebrasAI, CEREBRAS_MODEL } from "../../lib/cerebras-client";
+import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
 
 const router: IRouter = Router();
 
@@ -205,14 +205,13 @@ Adapte les actions et contenus spécifiquement au secteur "${sector}" et à la m
 
       let fullContent = "";
 
-      const stream = await cerebrasAI.chat.completions.create({
+      const stream = await cerebrasStream({
         model: CEREBRAS_MODEL,
         max_tokens: 4096,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: section.prompt },
         ],
-        stream: true,
       });
 
       for await (const chunk of stream) {

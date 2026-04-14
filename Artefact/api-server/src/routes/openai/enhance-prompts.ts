@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { cerebrasAI, CEREBRAS_MODEL } from "../../lib/cerebras-client";
+import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
 import { EnhancePromptsBody } from "@workspace/api-zod";
 import { buildSystemPrompt, buildNegativePrompt, reviewPromptQuality, type EnhancedBrief } from "../../lib/prompt-utils";
 import { buildLogoPrompt } from "../../prompts/modules/module-01-1-logo/prompt-builder";
@@ -184,14 +184,13 @@ Commence directement par: "Génère la charte graphique complète pour ${brand_n
 
       const activeSystemPrompt = (section as { systemPrompt?: string }).systemPrompt ?? systemPrompt;
 
-      const stream = await cerebrasAI.chat.completions.create({
+      const stream = await cerebrasStream({
         model: CEREBRAS_MODEL,
         max_tokens: 8192,
         messages: [
           { role: "system", content: activeSystemPrompt },
           { role: "user", content: section.userPrompt },
         ],
-        stream: true,
       });
 
       for await (const chunk of stream) {

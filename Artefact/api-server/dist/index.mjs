@@ -39289,7 +39289,8 @@ OpenAI.Skills = Skills;
 OpenAI.Videos = Videos;
 
 // src/lib/cerebras-client.ts
-var CEREBRAS_MODEL = "llama-3.3-70b";
+var CEREBRAS_MODEL = "qwen-3-235b-a22b-instruct-2507";
+var CEREBRAS_MODEL_FAST = "llama3.1-8b";
 var CEREBRAS_BASE_URL = "https://api.cerebras.ai/v1";
 function loadKeys() {
   const keys = [];
@@ -39317,6 +39318,65 @@ function getClientPool() {
     );
   }
   return clientPool;
+}
+function isRateLimitOrQueue(err) {
+  if (err instanceof OpenAI.APIError) {
+    return err.status === 429;
+  }
+  if (err && typeof err === "object") {
+    const e = err;
+    return e["code"] === "queue_exceeded" || e["status"] === 429;
+  }
+  return false;
+}
+async function cerebrasCreate(params) {
+  const pool = getClientPool();
+  const startIndex = rotationIndex;
+  for (let i = 0; i < pool.length; i++) {
+    const idx = (startIndex + i) % pool.length;
+    rotationIndex = (idx + 1) % pool.length;
+    try {
+      return await pool[idx].chat.completions.create(params);
+    } catch (err) {
+      if (isRateLimitOrQueue(err) && i < pool.length - 1) {
+        continue;
+      }
+      if (isRateLimitOrQueue(err) && params.model !== CEREBRAS_MODEL_FAST) {
+        const fallbackIdx = (idx + 1) % pool.length;
+        return pool[fallbackIdx].chat.completions.create({
+          ...params,
+          model: CEREBRAS_MODEL_FAST
+        });
+      }
+      throw err;
+    }
+  }
+  throw new Error("Toutes les cl\xE9s Cerebras sont satur\xE9es.");
+}
+async function cerebrasStream(params) {
+  const pool = getClientPool();
+  const startIndex = rotationIndex;
+  for (let i = 0; i < pool.length; i++) {
+    const idx = (startIndex + i) % pool.length;
+    rotationIndex = (idx + 1) % pool.length;
+    try {
+      return await pool[idx].chat.completions.create({ ...params, stream: true });
+    } catch (err) {
+      if (isRateLimitOrQueue(err) && i < pool.length - 1) {
+        continue;
+      }
+      if (isRateLimitOrQueue(err) && params.model !== CEREBRAS_MODEL_FAST) {
+        const fallbackIdx = (idx + 1) % pool.length;
+        return pool[fallbackIdx].chat.completions.create({
+          ...params,
+          model: CEREBRAS_MODEL_FAST,
+          stream: true
+        });
+      }
+      throw err;
+    }
+  }
+  throw new Error("Toutes les cl\xE9s Cerebras sont satur\xE9es.");
 }
 function getNextCerebrasClient() {
   const pool = getClientPool();
@@ -39414,7 +39474,7 @@ G\xE9n\xE8re un objet JSON avec ces champs :
 - product_features: caract\xE9ristiques cl\xE9s du produit/service
 - support_email: email de contact si disponible
 - shipping_info: infos de livraison si disponibles`;
-  const response = await cerebrasAI.chat.completions.create({
+  const response = await cerebrasCreate({
     model: CEREBRAS_MODEL,
     messages: [
       { role: "system", content: systemPrompt },
@@ -40274,14 +40334,13 @@ Commence directement par: "G\xE9n\xE8re la charte graphique compl\xE8te pour ${b
 `);
       let fullContent = "";
       const activeSystemPrompt = section.systemPrompt ?? systemPrompt;
-      const stream = await cerebrasAI.chat.completions.create({
+      const stream = await cerebrasStream({
         model: CEREBRAS_MODEL,
         max_tokens: 8192,
         messages: [
           { role: "system", content: activeSystemPrompt },
           { role: "user", content: section.userPrompt }
-        ],
-        stream: true
+        ]
       });
       for await (const chunk of stream) {
         const content = chunk.choices[0]?.delta?.content;
@@ -40704,14 +40763,13 @@ Chaque prompt visuel doit inclure un champ "negative_prompt" avec les \xE9l\xE9m
     sendEvent(res, { type: "section_start", key: section.key, label: section.label, agent: section.agent });
     let fullContent = "";
     try {
-      const stream = await cerebrasAI.chat.completions.create({
+      const stream = await cerebrasStream({
         model: CEREBRAS_MODEL,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: section.buildUserPrompt() }
         ],
-        max_tokens: 2e3,
-        stream: true
+        max_tokens: 2e3
       });
       for await (const chunk of stream) {
         const content = chunk.choices[0]?.delta?.content ?? "";
@@ -41106,14 +41164,13 @@ Retourne UNIQUEMENT ce JSON:
     sendEvent2(res, { type: "section_start", key: section.key, label: section.label, agent: section.agent });
     let fullContent = "";
     try {
-      const stream = await cerebrasAI.chat.completions.create({
+      const stream = await cerebrasStream({
         model: CEREBRAS_MODEL,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: section.buildPrompt() }
         ],
-        max_tokens: 2e3,
-        stream: true
+        max_tokens: 2e3
       });
       for await (const chunk of stream) {
         const content = chunk.choices[0]?.delta?.content ?? "";
@@ -41506,14 +41563,13 @@ Retourne UNIQUEMENT ce JSON:
     sendEvent3(res, { type: "section_start", key: section.key, label: section.label, agent: section.agent });
     let fullContent = "";
     try {
-      const stream = await cerebrasAI.chat.completions.create({
+      const stream = await cerebrasStream({
         model: CEREBRAS_MODEL,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: section.buildPrompt() }
         ],
-        max_tokens: 2500,
-        stream: true
+        max_tokens: 2500
       });
       for await (const chunk of stream) {
         const content = chunk.choices[0]?.delta?.content ?? "";
@@ -41865,14 +41921,13 @@ Retourne UNIQUEMENT ce JSON:
     sendEvent4(res, { type: "section_start", key: section.key, label: section.label, agent: section.agent });
     let fullContent = "";
     try {
-      const stream = await cerebrasAI.chat.completions.create({
+      const stream = await cerebrasStream({
         model: CEREBRAS_MODEL,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: section.buildPrompt() }
         ],
-        max_tokens: 2e3,
-        stream: true
+        max_tokens: 2e3
       });
       for await (const chunk of stream) {
         const content = chunk.choices[0]?.delta?.content ?? "";
@@ -42091,14 +42146,13 @@ Les 10 avis doivent:
         agent: section.agent
       });
       let fullContent = "";
-      const stream = await cerebrasAI.chat.completions.create({
+      const stream = await cerebrasStream({
         model: CEREBRAS_MODEL,
         max_tokens: 4096,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: section.prompt }
-        ],
-        stream: true
+        ]
       });
       for await (const chunk of stream) {
         const content = chunk.choices[0]?.delta?.content;
@@ -42306,14 +42360,13 @@ Adapte les actions et contenus sp\xE9cifiquement au secteur "${sector}" et \xE0 
         agent: section.agent
       });
       let fullContent = "";
-      const stream = await cerebrasAI.chat.completions.create({
+      const stream = await cerebrasStream({
         model: CEREBRAS_MODEL,
         max_tokens: 4096,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: section.prompt }
-        ],
-        stream: true
+        ]
       });
       for await (const chunk of stream) {
         const content = chunk.choices[0]?.delta?.content;
@@ -42516,14 +42569,13 @@ Les gestes commerciaux peuvent inclure: remboursement, renvoi, code promo ${code
         agent: section.agent
       });
       let fullContent = "";
-      const stream = await cerebrasAI.chat.completions.create({
+      const stream = await cerebrasStream({
         model: CEREBRAS_MODEL,
         max_tokens: 4096,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: section.prompt }
-        ],
-        stream: true
+        ]
       });
       for await (const chunk of stream) {
         const content = chunk.choices[0]?.delta?.content;
@@ -42754,14 +42806,13 @@ R\xE9ponds UNIQUEMENT avec un JSON valide, sans texte avant ou apr\xE8s:
     try {
       sendEvent8(res, { type: "section_start", key: section.key });
       let fullContent = "";
-      const stream = await cerebrasAI.chat.completions.create({
+      const stream = await cerebrasStream({
         model: CEREBRAS_MODEL,
         max_tokens: 4096,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: section.userPrompt }
-        ],
-        stream: true
+        ]
       });
       for await (const chunk of stream) {
         const content = chunk.choices[0]?.delta?.content;
@@ -43028,14 +43079,13 @@ R\xE9ponds UNIQUEMENT avec un JSON valide:
     try {
       sendEvent9(res, { type: "section_start", key: section.key });
       let fullContent = "";
-      const stream = await cerebrasAI.chat.completions.create({
+      const stream = await cerebrasStream({
         model: CEREBRAS_MODEL,
         max_tokens: 4096,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: section.userPrompt }
-        ],
-        stream: true
+        ]
       });
       for await (const chunk of stream) {
         const content = chunk.choices[0]?.delta?.content;
