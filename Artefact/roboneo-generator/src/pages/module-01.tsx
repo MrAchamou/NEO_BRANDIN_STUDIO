@@ -545,7 +545,7 @@ export default function Module01() {
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">Style de Logo</label>
                   <div className="relative">
-                    <select {...form.register("style_pref")} className="flex h-11 w-full appearance-none rounded-md border border-white/10 bg-black/20 px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary transition-colors">
+                    <select {...form.register("style_pref")} className="flex h-11 w-full appearance-none rounded-md border border-white/10 bg-neutral-900 text-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary transition-colors [&>option]:bg-neutral-900 [&>option]:text-white">
                       {STYLES.map((s) => <option key={s} value={s} className="bg-card">{s === "auto-detect" ? "✨ Détection automatique (recommandé)" : s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
                     </select>
                     <ChevronRight className="absolute right-3 top-3.5 h-4 w-4 text-muted-foreground rotate-90 pointer-events-none" />

@@ -65,7 +65,7 @@ const AUDIENCES = [
 ];
 
 function selectCls() {
-  return "flex h-10 w-full appearance-none rounded-md border border-white/10 bg-black/20 px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary";
+  return "flex h-10 w-full appearance-none rounded-md border border-white/10 bg-neutral-900 text-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary [&>option]:bg-neutral-900 [&>option]:text-white";
 }
 
 // Sections du panneau brief

@@ -328,7 +328,7 @@ export default function Module02() {
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Type de produit</label>
                     <div className="relative">
-                      <select {...form.register("product_type")} className="flex h-11 w-full appearance-none rounded-md border border-white/10 bg-black/20 px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary transition-colors">
+                      <select {...form.register("product_type")} className="flex h-11 w-full appearance-none rounded-md border border-white/10 bg-neutral-900 text-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary transition-colors [&>option]:bg-neutral-900 [&>option]:text-white">
                         {PRODUCT_TYPES.map((t) => <option key={t} value={t} className="bg-card">{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
                       </select>
                       <ChevronRight className="absolute right-3 top-3.5 h-4 w-4 text-muted-foreground rotate-90 pointer-events-none" />
@@ -337,7 +337,7 @@ export default function Module02() {
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Style carrousel</label>
                     <div className="relative">
-                      <select {...form.register("carousel_style")} className="flex h-11 w-full appearance-none rounded-md border border-white/10 bg-black/20 px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary transition-colors">
+                      <select {...form.register("carousel_style")} className="flex h-11 w-full appearance-none rounded-md border border-white/10 bg-neutral-900 text-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary transition-colors [&>option]:bg-neutral-900 [&>option]:text-white">
                         {CAROUSEL_STYLES.map((s) => <option key={s} value={s} className="bg-card">{s === "auto" ? "✨ Auto-détection" : s.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}</option>)}
                       </select>
                       <ChevronRight className="absolute right-3 top-3.5 h-4 w-4 text-muted-foreground rotate-90 pointer-events-none" />
