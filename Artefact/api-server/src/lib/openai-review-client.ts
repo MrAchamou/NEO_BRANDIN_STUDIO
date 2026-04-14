@@ -12,7 +12,7 @@
 
 import OpenAI from "openai";
 
-export const GPT_MODEL = "gpt-5.2";
+export const GPT_MODEL = "gpt-5-mini";
 
 let gptReviewClientInstance: OpenAI | null = null;
 

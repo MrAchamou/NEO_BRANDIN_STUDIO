@@ -45394,7 +45394,7 @@ function getClaudeClient() {
 }
 
 // src/lib/openai-review-client.ts
-var GPT_MODEL = "gpt-5.2";
+var GPT_MODEL = "gpt-5-mini";
 var gptReviewClientInstance = null;
 function getGptReviewClient() {
   if (!gptReviewClientInstance) {
@@ -45626,7 +45626,8 @@ JSON only (no markdown):
 }
 async function gptRefinementPass(content, brief, sectionKey, passNumber) {
   const gpt = getGptReviewClient();
-  const prompt = buildGptPassPrompt(content, brief, sectionKey, passNumber);
+  const truncated = content.length > 7e3 ? content.slice(0, 7e3) + "\n[...tronqu\xE9 pour performance]" : content;
+  const prompt = buildGptPassPrompt(truncated, brief, sectionKey, passNumber);
   const label = `GPT Pass ${passNumber}`;
   console.log(`[${label}] ${sectionKey} \u2014 d\xE9marrage (${prompt.length} chars)`);
   const t0 = Date.now();
@@ -45635,9 +45636,9 @@ async function gptRefinementPass(content, brief, sectionKey, passNumber) {
       gpt.chat.completions.create({
         model: GPT_MODEL,
         messages: [{ role: "user", content: prompt }],
-        max_completion_tokens: 3e3
+        max_completion_tokens: 8192
       }),
-      6e4,
+      9e4,
       label
     );
     console.log(`[${label}] ${sectionKey} \u2014 ${Date.now() - t0}ms`);
@@ -45650,17 +45651,18 @@ async function gptRefinementPass(content, brief, sectionKey, passNumber) {
 }
 async function claudeFinalValidation(content, brief, sectionKey) {
   const claude = getClaudeClient();
-  const prompt = buildClaudeFinalPrompt(content, brief, sectionKey);
+  const truncated = content.length > 7e3 ? content.slice(0, 7e3) + "\n[...tronqu\xE9 pour performance]" : content;
+  const prompt = buildClaudeFinalPrompt(truncated, brief, sectionKey);
   console.log(`[Claude Final] ${sectionKey} \u2014 d\xE9marrage (${prompt.length} chars)`);
   const t0 = Date.now();
   try {
     const message = await withTimeout(
       claude.messages.create({
         model: CLAUDE_MODEL,
-        max_tokens: 3e3,
+        max_tokens: 8192,
         messages: [{ role: "user", content: prompt }]
       }),
-      6e4,
+      12e4,
       "Claude Final"
     );
     console.log(`[Claude Final] ${sectionKey} \u2014 ${Date.now() - t0}ms`);
@@ -45694,14 +45696,18 @@ async function reviewPromptQuality(content, brief, sectionKey) {
   } catch (err) {
     console.warn(`[Review] ${sectionKey} \u2014 GPT Pass 1 \xE9chou\xE9: ${err instanceof Error ? err.message : String(err)}`);
   }
-  try {
-    const pass2 = await gptRefinementPass(current, brief, sectionKey, 2);
-    current = pass2.refined;
-    gptScore = pass2.score;
-    allImprovements.push(...pass2.improvements.map((i) => `[GPT-2] ${i}`));
-    console.log(`[Review] ${sectionKey} \u2014 GPT Pass 2: ${pass2.score}/10 \u2192 v2 pr\xEAte`);
-  } catch (err) {
-    console.warn(`[Review] ${sectionKey} \u2014 GPT Pass 2 \xE9chou\xE9: ${err instanceof Error ? err.message : String(err)}`);
+  if (gptScore < 9) {
+    try {
+      const pass2 = await gptRefinementPass(current, brief, sectionKey, 2);
+      current = pass2.refined;
+      gptScore = pass2.score;
+      allImprovements.push(...pass2.improvements.map((i) => `[GPT-2] ${i}`));
+      console.log(`[Review] ${sectionKey} \u2014 GPT Pass 2: ${pass2.score}/10 \u2192 v2 pr\xEAte`);
+    } catch (err) {
+      console.warn(`[Review] ${sectionKey} \u2014 GPT Pass 2 \xE9chou\xE9: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  } else {
+    console.log(`[Review] ${sectionKey} \u2014 GPT Pass 2 ignor\xE9 (score ${gptScore}/10 \u2265 9.0) \u2713`);
   }
   try {
     const final = await claudeFinalValidation(current, brief, sectionKey);
