@@ -73,7 +73,7 @@ router.post("/openai/enhance-prompts-video", async (req, res) => {
     product_features = [],
     benefits = [],
     target_audience = "mixte",
-    year = "2020",
+    year = "",
     promo_code = "",
     duration_days = "7",
     teaser_style: teaser_style_override = null,
@@ -104,11 +104,14 @@ router.post("/openai/enhance-prompts-video", async (req, res) => {
   const benefit2 = benefits[1] ?? "expérience unique";
 
   const colorsLine = brand_colors ? `\nCouleurs de marque (IMPOSÉES): ${brand_colors}` : "";
+  const yearLine = year ? ` | Année fondation: ${year}` : "";
   const contextBlock = `Marque: ${brand_name} | Secteur: ${sector} | Produit: ${product_name}
 Description: ${product_description || "produit premium de qualité"}
 Caractéristiques: ${product_features.join(", ") || material}
 Bénéfices: ${benefits.join(", ") || benefit1}
-Cible: ${target_audience} | Année fondation: ${year} | Code promo: ${promoCode} | Durée promo: ${duration_days} jours${colorsLine}`;
+Cible: ${target_audience}${yearLine} | Code promo: ${promoCode} | Durée promo: ${duration_days} jours${colorsLine}
+
+⚠️ ANTI-HALLUCINATION: N'invente AUCUNE date, statistique, chiffre ou certification non présent dans ce brief. Si l'année de fondation n'est pas fournie, ne la mentionne JAMAIS dans les scripts.`;
 
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
@@ -120,7 +123,17 @@ Cible: ${target_audience} | Année fondation: ${year} | Code promo: ${promoCode}
     : "";
   const systemPrompt = `Tu es un expert senior en création de scripts publicitaires et prompts vidéo pour RoboNeo.com.
 Tu rédiges des scripts punchy, adaptés au secteur ${sector}, en français. Formule courte, efficace, copywriting direct.
-Tu retournes TOUJOURS du JSON valide uniquement, sans markdown, sans texte avant ou après.${colorPriorityBlock}`;
+Tu retournes TOUJOURS du JSON valide uniquement, sans markdown, sans texte avant ou après.${colorPriorityBlock}
+
+RÈGLES VOIX DE MARQUE — OBLIGATOIRES:
+• INTERDIT dans les scripts: argot ("ça saoule", "c'est ouf", "trop bien", "franchement"), expressions familières ("ce que j'aime", "j'ai une routine simple"), ton de conversation personnelle
+• Le ton doit rester cohérent avec le secteur ${sector} — voir la charte de voix R09 définie en Module 01.4
+• Scripts en voix off professionnelle: neutre, fluide, adapté au TTS ElevenLabs
+
+RÈGLES OVERLAY TEXTE VIDÉO — OBLIGATOIRES (conformes charte R01):
+• INTERDIT: effets emboss, gaufrage, relief, ombre portée épaisse sur les textes overlay
+• Texte overlay: flat, net, sans effet 3D — fond semi-transparent ou outline simple 1px maximum
+• Respecter les règles R01 (usage du logo) et R09 (voix de marque) de la charte graphique du Module 01.4`;
 
   const SECTIONS = [
     {
@@ -299,6 +312,15 @@ RÈGLES CTR:
 • Visage ou objet reconnaissable à 200px
 • Texte lisible sur mobile
 • Teaser de curiosité sans spoiler
+
+RÈGLES OVERLAY TEXTE (conformes charte R01):
+• INTERDIT: effets emboss, relief, gaufrage, ombre portée épaisse sur le texte
+• Texte: flat, net — stroke 1-2px ou fond semi-transparent uniquement
+
+DISCLAIMER RÉGLEMENTAIRE (miniatures Before/After uniquement):
+• Si le type est "before_after": inclure une micro-mention en bas de miniature "Résultats individuels — usage créatif uniquement"
+• Zone mention: 24px hauteur, texte blanc 8px sur fond #000000 semi-transparent 50%
+• Ces visuels sont à usage promotionnel créatif uniquement et ne constituent pas une allégation clinique
 
 Retourne UNIQUEMENT ce JSON:
 {

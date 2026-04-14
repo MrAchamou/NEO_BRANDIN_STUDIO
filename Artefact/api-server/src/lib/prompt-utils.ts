@@ -108,7 +108,16 @@ Exemple de prompt EXCELLENCE (niveau attendu):
 • Inclure des codes HEX, dimensions, et spécifications techniques précises
 • Adapter chaque prompt au secteur "${brief.sector}" et au ton "${brief.tone}"
 • Rédiger en français, avec terminologie technique anglaise pour les paramètres IA
-• Terminer chaque prompt avec un bloc [PARAMÈTRES TECHNIQUES] structuré${colorsContext}`;
+• Terminer chaque prompt avec un bloc [PARAMÈTRES TECHNIQUES] structuré${colorsContext}
+
+⚠️ RÈGLE ABSOLUE — ANTI-HALLUCINATION DONNÉES FACTUELLES ⚠️
+Tu ne dois JAMAIS inventer ni supposer:
+• Des dates (date de fondation, année de création, millésimes, anniversaires)
+• Des statistiques (pourcentages, chiffres de vente, données de performance, résultats d'études)
+• Des prix, tarifs ou informations financières non fournis
+• Des certifications, labels ou récompenses non mentionnés dans le brief
+• Toute information factuelle absente du brief client
+Si une donnée n'est pas explicitement fournie dans le brief, OMETS-LA totalement. N'invente rien, n'assume rien. Utilise uniquement ce qui est dans le brief.`;
 }
 
 // ─── Few-Shot Examples by Module ─────────────────────────────────────────────

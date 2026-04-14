@@ -39543,7 +39543,16 @@ Exemple de prompt EXCELLENCE (niveau attendu):
 \u2022 Inclure des codes HEX, dimensions, et sp\xE9cifications techniques pr\xE9cises
 \u2022 Adapter chaque prompt au secteur "${brief.sector}" et au ton "${brief.tone}"
 \u2022 R\xE9diger en fran\xE7ais, avec terminologie technique anglaise pour les param\xE8tres IA
-\u2022 Terminer chaque prompt avec un bloc [PARAM\xC8TRES TECHNIQUES] structur\xE9${colorsContext}`;
+\u2022 Terminer chaque prompt avec un bloc [PARAM\xC8TRES TECHNIQUES] structur\xE9${colorsContext}
+
+\u26A0\uFE0F R\xC8GLE ABSOLUE \u2014 ANTI-HALLUCINATION DONN\xC9ES FACTUELLES \u26A0\uFE0F
+Tu ne dois JAMAIS inventer ni supposer:
+\u2022 Des dates (date de fondation, ann\xE9e de cr\xE9ation, mill\xE9simes, anniversaires)
+\u2022 Des statistiques (pourcentages, chiffres de vente, donn\xE9es de performance, r\xE9sultats d'\xE9tudes)
+\u2022 Des prix, tarifs ou informations financi\xE8res non fournis
+\u2022 Des certifications, labels ou r\xE9compenses non mentionn\xE9s dans le brief
+\u2022 Toute information factuelle absente du brief client
+Si une donn\xE9e n'est pas explicitement fournie dans le brief, OMETS-LA totalement. N'invente rien, n'assume rien. Utilise uniquement ce qui est dans le brief.`;
 }
 async function reviewPromptQuality(content, brief, sectionKey) {
   const reviewPrompt = `Tu es un expert QA pour des prompts cr\xE9atifs IA destin\xE9s \xE0 RoboNeo.com.
@@ -40164,6 +40173,14 @@ STRUCTURE DU PROMPT \xC0 G\xC9N\xC9RER:
 6. Classes utilitaires (.heading-xl, .heading-lg, .body-md, .caption, .cta)
 7. Paires recommand\xE9es (quelle police sur quel fond de couleur)
 
+R\xC8GLES ABSOLUES COULEURS TYPOGRAPHIQUES:
+\u2022 Toutes les couleurs de texte DOIVENT \xEAtre des codes HEX exacts (ex: #1A1A1A, #555555, #FFFFFF)
+\u2022 INTERDIT: opacit\xE9 CSS pour d\xE9finir une couleur (rgba(0,0,0,0.7), opacity: 0.6, color: inherit)
+\u2022 Texte principal: HEX pur \u2014 ex: #1A1A1A (jamais black avec opacit\xE9)
+\u2022 Texte secondaire: HEX pur calcul\xE9 \u2014 ex: #6B7280 (jamais gray avec opacity)
+\u2022 Texte d\xE9sactiv\xE9: HEX pur \u2014 ex: #9CA3AF (jamais rgba)
+\u2022 Ratio WCAG 2.1 AA calcul\xE9 sur la valeur HEX r\xE9elle, pas sur une opacit\xE9 approximative
+
 ${negativeBlock}
 
 Commence directement par: "G\xE9n\xE8re le syst\xE8me typographique complet pour ${brand_name}..."`
@@ -40458,6 +40475,11 @@ R\xC8GLES:
 \u2022 Mannequin/personne correspondant \xE0 ${target_audience}
 \u2022 4-6 phrases pr\xE9cises par prompt (d\xE9cor, lumi\xE8re, personnage, composition, ambiance)
 
+R\xC8GLES TECHNIQUES OPTIQUES OBLIGATOIRES:
+\u2022 Si le prompt inclut un personnage ET un produit dans le m\xEAme cadre: utiliser f/5.6 minimum pour maintenir les deux nets simultan\xE9ment \u2014 INTERDIT de sp\xE9cifier un bokeh fort (f/1.8, f/2.0, f/2.2) avec personnage ET produit tous les deux "nets" dans le m\xEAme plan, c'est physiquement impossible
+\u2022 Pour un bokeh artistique (fond flou): choisir UN sujet principal net \u2014 soit le produit seul (f/1.8-f/2.8), soit le visage avec le produit en arri\xE8re-plan flou, jamais les deux simultan\xE9ment nets \xE0 faible ouverture
+\u2022 Termes vagues \xE0 remplacer par des instructions techniques pr\xE9cises: au lieu de "aucune sur-accentuation", sp\xE9cifier "sharpening: 0, clarity: +10, texture: +15 dans Lightroom"
+
 Retourne UNIQUEMENT un JSON valide:
 {
   "feed": "prompt complet",
@@ -40471,6 +40493,11 @@ Retourne UNIQUEMENT un JSON valide:
       agent: "Image Generation (Macro Studio)",
       buildUserPrompt: () => {
         const matList = materials.slice(0, 2);
+        const mat0Lower = matList[0].toLowerCase();
+        const mat1Lower = matList[1].toLowerCase();
+        const isTransparent = (m) => m.includes("verre") || m.includes("cristal") || m.includes("transparent") || m.includes("acrylique");
+        const focusStack0 = isTransparent(mat0Lower) ? "focus stacking: ON (5-7 couches, empilage logiciel Helicon Focus) \u2014 obligatoire pour les mat\xE9riaux transparents avec profondeur optique" : "mise au point unique sur la texture de surface, focus stacking: optionnel";
+        const focusStack1 = isTransparent(mat1Lower) ? "focus stacking: ON (5-7 couches, empilage logiciel Helicon Focus) \u2014 obligatoire pour les mat\xE9riaux transparents avec profondeur optique" : "mise au point unique sur la texture de surface, focus stacking: optionnel";
         return `Tu es un expert RoboNeo en photographie macro et texture mat\xE9riaux.
 
 G\xE9n\xE8re 2 prompts macro texture pour les mat\xE9riaux de "${product_name}" \u2014 Marque: ${brand_name}.
@@ -40482,8 +40509,12 @@ Mat\xE9riaux \xE0 photographier:
 R\xC8GLES:
 \u2022 Photographie macro ultra-pr\xE9cise (macro 100mm, bague allonge)
 \u2022 Texture, grain, fibres ou facettes visibles \xE0 l'extr\xEAme
-\u2022 \xC9clairage adapt\xE9: ${matList[0].includes("cuir") || matList[0].includes("textile") ? "lumi\xE8re rasante lat\xE9rale pour r\xE9v\xE9ler la texture" : matList[0].includes("m\xE9tal") || matList[0].includes("or") ? "\xE9clairage studio contr\xF4l\xE9, reflets ma\xEEtris\xE9s" : "lumi\xE8re douce diffuse, fond neutre"}
+\u2022 \xC9clairage adapt\xE9 mat 1: ${mat0Lower.includes("cuir") || mat0Lower.includes("textile") ? "lumi\xE8re rasante lat\xE9rale 15\xB0 pour r\xE9v\xE9ler le grain et la texture" : mat0Lower.includes("m\xE9tal") || mat0Lower.includes("or") ? "\xE9clairage studio contr\xF4l\xE9 polaris\xE9, reflets ma\xEEtris\xE9s, pas de surexposition sp\xE9culaire" : "lumi\xE8re douce diffuse 5600K, fond neutre 18% gris"}
+\u2022 \xC9clairage adapt\xE9 mat 2: ${mat1Lower.includes("cuir") || mat1Lower.includes("textile") ? "lumi\xE8re rasante lat\xE9rale 15\xB0 pour r\xE9v\xE9ler le grain et la texture" : mat1Lower.includes("m\xE9tal") || mat1Lower.includes("or") ? "\xE9clairage studio contr\xF4l\xE9 polaris\xE9, reflets ma\xEEtris\xE9s, pas de surexposition sp\xE9culaire" : "lumi\xE8re douce diffuse 5600K, fond neutre 18% gris"}
+\u2022 Mat 1 \u2014 ${focusStack0}
+\u2022 Mat 2 \u2014 ${focusStack1}
 \u2022 Format carr\xE9 2000\xD72000px, fond neutre ou sombre
+\u2022 Accentuation pr\xE9cise: sharpening +60, clarity +20, texture +30 (param\xE8tres Lightroom) \u2014 jamais de termes vagues comme "accentuation naturelle"
 \u2022 4-5 phrases: objectif, \xE9clairage, mise au point, texture, ambiance
 
 Retourne UNIQUEMENT un JSON valide:
@@ -40515,6 +40546,12 @@ R\xC8GLES ABSOLUES:
 \u2022 After: m\xEAme lumi\xE8re, l\xE9g\xE8re chaleur en plus, expression confiante et positive
 \u2022 5-6 phrases ultra-pr\xE9cises par prompt
 
+DISCLAIMER R\xC9GLEMENTAIRE OBLIGATOIRE (\xE0 inclure dans chaque prompt):
+\u2022 Ajouter en bas du visuel une mention lisible: "Visuel \xE0 usage cr\xE9atif uniquement \u2014 r\xE9sultats non contractuels"
+\u2022 Pour les secteurs cosm\xE9tique/skincare: ajouter "Ce visuel ne constitue pas une all\xE9gation de performance conforme \xE0 la Directive UE 655/2013 sur les produits cosm\xE9tiques"
+\u2022 Zone de mention: bande de 40px en bas, texte blanc sur fond semi-transparent #000000 \xE0 60%, police 10px minimum
+\u2022 Ne jamais sugg\xE9rer des r\xE9sultats garantis ou mesurables sans donn\xE9es cliniques fournies dans le brief
+
 Retourne UNIQUEMENT un JSON valide:
 {
   "before": "prompt before complet",
@@ -40522,12 +40559,13 @@ Retourne UNIQUEMENT un JSON valide:
 }`
     },
     {
-      key: "virtual_tryon",
-      label: "Virtual Try-On \u2014 2 Mod\xE8les",
-      agent: "AI Wardrobe / Virtual Try-on",
-      buildUserPrompt: () => `Tu es un expert RoboNeo en virtual try-on et direction artistique mannequin.
+      key: "lookbook",
+      label: "Lookbook & Fashion Editorial \u2014 2 Mod\xE8les",
+      agent: "AI Wardrobe / Fashion Editorial",
+      buildUserPrompt: () => `Tu es un expert RoboNeo en direction artistique lookbook et photographie fashion editorial.
 
-G\xE9n\xE8re 2 prompts virtual try-on pour "${product_name}" (${tryonCategory}) \u2014 Marque: ${brand_name}.
+G\xE9n\xE8re 2 prompts de photographie fashion editorial (style lookbook magazine) pour "${product_name}" (${tryonCategory}) \u2014 Marque: ${brand_name}.
+Note: il s'agit de photographie fashion/lookbook stylis\xE9e, pas de virtual try-on technologique au sens IA.
 
 Profil Mod\xE8le 1: ${audienceProfiles[0]}
 Profil Mod\xE8le 2: ${audienceProfiles[1]}
@@ -40535,18 +40573,19 @@ Profil Mod\xE8le 2: ${audienceProfiles[1]}
 Couleurs produit: ${product_colors.join(", ") || "naturelles"}
 
 R\xC8GLES:
-\u2022 Fond studio professionnel (cyc blanc ou d\xE9grad\xE9 neutre)
+\u2022 Fond studio professionnel (cyc blanc ou d\xE9grad\xE9 neutre) ou d\xE9cor \xE9ditorial coh\xE9rent avec la marque
 \u2022 \xC9clairage 3 points professionnel (key light 45\xB0, fill light, rim light cheveux)
-\u2022 Produit parfaitement visible, bien ajust\xE9, port\xE9 naturellement
-\u2022 Format portrait 1080\xD71350px (4:5)
-\u2022 Expression confiante, posture naturelle mais travaill\xE9e
-\u2022 D\xE9tails: hauteur, morphologie, teint, coiffure, expression, pose exacte
+\u2022 Produit parfaitement visible, bien ajust\xE9, port\xE9 naturellement dans une composition \xE9ditoriale
+\u2022 Format portrait 1080\xD71350px (4:5) \u2014 style magazine de mode
+\u2022 Expression confiante, posture naturelle mais travaill\xE9e, regard cam\xE9ra ou regard d\xE9tourn\xE9 selon l'ambiance
+\u2022 Direction artistique pr\xE9cise: hauteur mod\xE8le, morphologie, teint, coiffure, expression, pose exacte, tenue compl\xE8te
+\u2022 Ambiance \xE9ditoriale: r\xE9f\xE9rence \xE0 un style (Vogue minimal, Harper's Bazaar, Dazed & Confused, etc.)
 \u2022 5-6 phrases par prompt
 
 Retourne UNIQUEMENT un JSON valide:
 {
-  "model_1": "prompt try-on mod\xE8le 1 complet",
-  "model_2": "prompt try-on mod\xE8le 2 complet"
+  "model_1": "prompt lookbook mod\xE8le 1 complet",
+  "model_2": "prompt lookbook mod\xE8le 2 complet"
 }`
     },
     {
@@ -40730,7 +40769,7 @@ router5.post("/openai/enhance-prompts-video", async (req, res) => {
     product_features = [],
     benefits = [],
     target_audience = "mixte",
-    year = "2020",
+    year = "",
     promo_code = "",
     duration_days = "7",
     teaser_style: teaser_style_override = null,
@@ -40751,11 +40790,14 @@ router5.post("/openai/enhance-prompts-video", async (req, res) => {
   const benefit2 = benefits[1] ?? "exp\xE9rience unique";
   const colorsLine = brand_colors ? `
 Couleurs de marque (IMPOS\xC9ES): ${brand_colors}` : "";
+  const yearLine = year ? ` | Ann\xE9e fondation: ${year}` : "";
   const contextBlock = `Marque: ${brand_name} | Secteur: ${sector} | Produit: ${product_name}
 Description: ${product_description || "produit premium de qualit\xE9"}
 Caract\xE9ristiques: ${product_features.join(", ") || material}
 B\xE9n\xE9fices: ${benefits.join(", ") || benefit1}
-Cible: ${target_audience} | Ann\xE9e fondation: ${year} | Code promo: ${promoCode} | Dur\xE9e promo: ${duration_days} jours${colorsLine}`;
+Cible: ${target_audience}${yearLine} | Code promo: ${promoCode} | Dur\xE9e promo: ${duration_days} jours${colorsLine}
+
+\u26A0\uFE0F ANTI-HALLUCINATION: N'invente AUCUNE date, statistique, chiffre ou certification non pr\xE9sent dans ce brief. Si l'ann\xE9e de fondation n'est pas fournie, ne la mentionne JAMAIS dans les scripts.`;
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
@@ -40764,7 +40806,17 @@ Cible: ${target_audience} | Ann\xE9e fondation: ${year} | Code promo: ${promoCod
 \u26A0\uFE0F R\xC8GLE ABSOLUE COULEURS: Le client impose ces couleurs de marque: ${brand_colors}. Ces couleurs sont SACR\xC9ES \u2014 les utiliser EXACTEMENT dans tous les visuels vid\xE9o d\xE9crits.` : "";
   const systemPrompt = `Tu es un expert senior en cr\xE9ation de scripts publicitaires et prompts vid\xE9o pour RoboNeo.com.
 Tu r\xE9diges des scripts punchy, adapt\xE9s au secteur ${sector}, en fran\xE7ais. Formule courte, efficace, copywriting direct.
-Tu retournes TOUJOURS du JSON valide uniquement, sans markdown, sans texte avant ou apr\xE8s.${colorPriorityBlock}`;
+Tu retournes TOUJOURS du JSON valide uniquement, sans markdown, sans texte avant ou apr\xE8s.${colorPriorityBlock}
+
+R\xC8GLES VOIX DE MARQUE \u2014 OBLIGATOIRES:
+\u2022 INTERDIT dans les scripts: argot ("\xE7a saoule", "c'est ouf", "trop bien", "franchement"), expressions famili\xE8res ("ce que j'aime", "j'ai une routine simple"), ton de conversation personnelle
+\u2022 Le ton doit rester coh\xE9rent avec le secteur ${sector} \u2014 voir la charte de voix R09 d\xE9finie en Module 01.4
+\u2022 Scripts en voix off professionnelle: neutre, fluide, adapt\xE9 au TTS ElevenLabs
+
+R\xC8GLES OVERLAY TEXTE VID\xC9O \u2014 OBLIGATOIRES (conformes charte R01):
+\u2022 INTERDIT: effets emboss, gaufrage, relief, ombre port\xE9e \xE9paisse sur les textes overlay
+\u2022 Texte overlay: flat, net, sans effet 3D \u2014 fond semi-transparent ou outline simple 1px maximum
+\u2022 Respecter les r\xE8gles R01 (usage du logo) et R09 (voix de marque) de la charte graphique du Module 01.4`;
   const SECTIONS = [
     {
       key: "scripts",
@@ -40942,6 +40994,15 @@ R\xC8GLES CTR:
 \u2022 Visage ou objet reconnaissable \xE0 200px
 \u2022 Texte lisible sur mobile
 \u2022 Teaser de curiosit\xE9 sans spoiler
+
+R\xC8GLES OVERLAY TEXTE (conformes charte R01):
+\u2022 INTERDIT: effets emboss, relief, gaufrage, ombre port\xE9e \xE9paisse sur le texte
+\u2022 Texte: flat, net \u2014 stroke 1-2px ou fond semi-transparent uniquement
+
+DISCLAIMER R\xC9GLEMENTAIRE (miniatures Before/After uniquement):
+\u2022 Si le type est "before_after": inclure une micro-mention en bas de miniature "R\xE9sultats individuels \u2014 usage cr\xE9atif uniquement"
+\u2022 Zone mention: 24px hauteur, texte blanc 8px sur fond #000000 semi-transparent 50%
+\u2022 Ces visuels sont \xE0 usage promotionnel cr\xE9atif uniquement et ne constituent pas une all\xE9gation clinique
 
 Retourne UNIQUEMENT ce JSON:
 {

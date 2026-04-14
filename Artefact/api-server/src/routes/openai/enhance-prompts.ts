@@ -136,6 +136,14 @@ STRUCTURE DU PROMPT À GÉNÉRER:
 6. Classes utilitaires (.heading-xl, .heading-lg, .body-md, .caption, .cta)
 7. Paires recommandées (quelle police sur quel fond de couleur)
 
+RÈGLES ABSOLUES COULEURS TYPOGRAPHIQUES:
+• Toutes les couleurs de texte DOIVENT être des codes HEX exacts (ex: #1A1A1A, #555555, #FFFFFF)
+• INTERDIT: opacité CSS pour définir une couleur (rgba(0,0,0,0.7), opacity: 0.6, color: inherit)
+• Texte principal: HEX pur — ex: #1A1A1A (jamais black avec opacité)
+• Texte secondaire: HEX pur calculé — ex: #6B7280 (jamais gray avec opacity)
+• Texte désactivé: HEX pur — ex: #9CA3AF (jamais rgba)
+• Ratio WCAG 2.1 AA calculé sur la valeur HEX réelle, pas sur une opacité approximative
+
 ${negativeBlock}
 
 Commence directement par: "Génère le système typographique complet pour ${brand_name}..."`,

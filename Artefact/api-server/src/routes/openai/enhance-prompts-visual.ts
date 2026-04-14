@@ -197,6 +197,11 @@ RÈGLES:
 • Mannequin/personne correspondant à ${target_audience}
 • 4-6 phrases précises par prompt (décor, lumière, personnage, composition, ambiance)
 
+RÈGLES TECHNIQUES OPTIQUES OBLIGATOIRES:
+• Si le prompt inclut un personnage ET un produit dans le même cadre: utiliser f/5.6 minimum pour maintenir les deux nets simultanément — INTERDIT de spécifier un bokeh fort (f/1.8, f/2.0, f/2.2) avec personnage ET produit tous les deux "nets" dans le même plan, c'est physiquement impossible
+• Pour un bokeh artistique (fond flou): choisir UN sujet principal net — soit le produit seul (f/1.8-f/2.8), soit le visage avec le produit en arrière-plan flou, jamais les deux simultanément nets à faible ouverture
+• Termes vagues à remplacer par des instructions techniques précises: au lieu de "aucune sur-accentuation", spécifier "sharpening: 0, clarity: +10, texture: +15 dans Lightroom"
+
 Retourne UNIQUEMENT un JSON valide:
 {
   "feed": "prompt complet",
@@ -210,6 +215,11 @@ Retourne UNIQUEMENT un JSON valide:
       agent: "Image Generation (Macro Studio)",
       buildUserPrompt: () => {
         const matList = materials.slice(0, 2);
+        const mat0Lower = matList[0].toLowerCase();
+        const mat1Lower = matList[1].toLowerCase();
+        const isTransparent = (m: string) => m.includes("verre") || m.includes("cristal") || m.includes("transparent") || m.includes("acrylique");
+        const focusStack0 = isTransparent(mat0Lower) ? "focus stacking: ON (5-7 couches, empilage logiciel Helicon Focus) — obligatoire pour les matériaux transparents avec profondeur optique" : "mise au point unique sur la texture de surface, focus stacking: optionnel";
+        const focusStack1 = isTransparent(mat1Lower) ? "focus stacking: ON (5-7 couches, empilage logiciel Helicon Focus) — obligatoire pour les matériaux transparents avec profondeur optique" : "mise au point unique sur la texture de surface, focus stacking: optionnel";
         return `Tu es un expert RoboNeo en photographie macro et texture matériaux.
 
 Génère 2 prompts macro texture pour les matériaux de "${product_name}" — Marque: ${brand_name}.
@@ -221,8 +231,12 @@ Matériaux à photographier:
 RÈGLES:
 • Photographie macro ultra-précise (macro 100mm, bague allonge)
 • Texture, grain, fibres ou facettes visibles à l'extrême
-• Éclairage adapté: ${matList[0].includes("cuir") || matList[0].includes("textile") ? "lumière rasante latérale pour révéler la texture" : matList[0].includes("métal") || matList[0].includes("or") ? "éclairage studio contrôlé, reflets maîtrisés" : "lumière douce diffuse, fond neutre"}
+• Éclairage adapté mat 1: ${mat0Lower.includes("cuir") || mat0Lower.includes("textile") ? "lumière rasante latérale 15° pour révéler le grain et la texture" : mat0Lower.includes("métal") || mat0Lower.includes("or") ? "éclairage studio contrôlé polarisé, reflets maîtrisés, pas de surexposition spéculaire" : "lumière douce diffuse 5600K, fond neutre 18% gris"}
+• Éclairage adapté mat 2: ${mat1Lower.includes("cuir") || mat1Lower.includes("textile") ? "lumière rasante latérale 15° pour révéler le grain et la texture" : mat1Lower.includes("métal") || mat1Lower.includes("or") ? "éclairage studio contrôlé polarisé, reflets maîtrisés, pas de surexposition spéculaire" : "lumière douce diffuse 5600K, fond neutre 18% gris"}
+• Mat 1 — ${focusStack0}
+• Mat 2 — ${focusStack1}
 • Format carré 2000×2000px, fond neutre ou sombre
+• Accentuation précise: sharpening +60, clarity +20, texture +30 (paramètres Lightroom) — jamais de termes vagues comme "accentuation naturelle"
 • 4-5 phrases: objectif, éclairage, mise au point, texture, ambiance
 
 Retourne UNIQUEMENT un JSON valide:
@@ -254,6 +268,12 @@ RÈGLES ABSOLUES:
 • After: même lumière, légère chaleur en plus, expression confiante et positive
 • 5-6 phrases ultra-précises par prompt
 
+DISCLAIMER RÉGLEMENTAIRE OBLIGATOIRE (à inclure dans chaque prompt):
+• Ajouter en bas du visuel une mention lisible: "Visuel à usage créatif uniquement — résultats non contractuels"
+• Pour les secteurs cosmétique/skincare: ajouter "Ce visuel ne constitue pas une allégation de performance conforme à la Directive UE 655/2013 sur les produits cosmétiques"
+• Zone de mention: bande de 40px en bas, texte blanc sur fond semi-transparent #000000 à 60%, police 10px minimum
+• Ne jamais suggérer des résultats garantis ou mesurables sans données cliniques fournies dans le brief
+
 Retourne UNIQUEMENT un JSON valide:
 {
   "before": "prompt before complet",
@@ -261,12 +281,13 @@ Retourne UNIQUEMENT un JSON valide:
 }`,
     },
     {
-      key: "virtual_tryon",
-      label: "Virtual Try-On — 2 Modèles",
-      agent: "AI Wardrobe / Virtual Try-on",
-      buildUserPrompt: () => `Tu es un expert RoboNeo en virtual try-on et direction artistique mannequin.
+      key: "lookbook",
+      label: "Lookbook & Fashion Editorial — 2 Modèles",
+      agent: "AI Wardrobe / Fashion Editorial",
+      buildUserPrompt: () => `Tu es un expert RoboNeo en direction artistique lookbook et photographie fashion editorial.
 
-Génère 2 prompts virtual try-on pour "${product_name}" (${tryonCategory}) — Marque: ${brand_name}.
+Génère 2 prompts de photographie fashion editorial (style lookbook magazine) pour "${product_name}" (${tryonCategory}) — Marque: ${brand_name}.
+Note: il s'agit de photographie fashion/lookbook stylisée, pas de virtual try-on technologique au sens IA.
 
 Profil Modèle 1: ${audienceProfiles[0]}
 Profil Modèle 2: ${audienceProfiles[1]}
@@ -274,18 +295,19 @@ Profil Modèle 2: ${audienceProfiles[1]}
 Couleurs produit: ${product_colors.join(", ") || "naturelles"}
 
 RÈGLES:
-• Fond studio professionnel (cyc blanc ou dégradé neutre)
+• Fond studio professionnel (cyc blanc ou dégradé neutre) ou décor éditorial cohérent avec la marque
 • Éclairage 3 points professionnel (key light 45°, fill light, rim light cheveux)
-• Produit parfaitement visible, bien ajusté, porté naturellement
-• Format portrait 1080×1350px (4:5)
-• Expression confiante, posture naturelle mais travaillée
-• Détails: hauteur, morphologie, teint, coiffure, expression, pose exacte
+• Produit parfaitement visible, bien ajusté, porté naturellement dans une composition éditoriale
+• Format portrait 1080×1350px (4:5) — style magazine de mode
+• Expression confiante, posture naturelle mais travaillée, regard caméra ou regard détourné selon l'ambiance
+• Direction artistique précise: hauteur modèle, morphologie, teint, coiffure, expression, pose exacte, tenue complète
+• Ambiance éditoriale: référence à un style (Vogue minimal, Harper's Bazaar, Dazed & Confused, etc.)
 • 5-6 phrases par prompt
 
 Retourne UNIQUEMENT un JSON valide:
 {
-  "model_1": "prompt try-on modèle 1 complet",
-  "model_2": "prompt try-on modèle 2 complet"
+  "model_1": "prompt lookbook modèle 1 complet",
+  "model_2": "prompt lookbook modèle 2 complet"
 }`,
     },
     {
