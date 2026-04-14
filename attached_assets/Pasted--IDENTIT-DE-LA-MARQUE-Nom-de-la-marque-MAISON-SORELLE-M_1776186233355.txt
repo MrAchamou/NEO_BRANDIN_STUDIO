@@ -1,0 +1,53 @@
+## IDENTITÉ DE LA MARQUE
+- **Nom de la marque :** MAISON SORELLE
+- **Marché / Pays cible :** France, Belgique, Suisse
+- **Secteur d'activité :** Beauté & Cosmétiques
+- **Ton de communication :** Luxueux & Élégant
+- **Valeurs de la marque :** Pureté, Naturalité, Excellence, Féminité, Transparence
+- **Devise locale :** EUR (€)
+- **Couleurs de marque :** Ivoire #F5F0E8, Or rose #D4A5A5, Vert sauge #9CAF88
+
+## PRODUIT PHARE
+- **Nom du produit phare :** Sérum Éclat Vitaminé — 30ml
+- **Audience cible :** Femmes 28-50 ans, CSP+, urbaines, adeptes de clean beauty
+- **Description du produit :** Sérum concentré à la vitamine C stabilisée et à l'acide hyaluronique naturel. Formule clean, végane, fabriquée en France. Révèle l'éclat du teint dès 7 jours.
+- **Caractéristiques clés :** 30ml, 98% ingrédients naturels, végan, cruelty-free, made in France
+- **Bénéfices client :** Éclat immédiat, hydratation 24h, réduction des taches pigmentaires
+- **Matériaux / Ingrédients :** Flacon verre violet opaque (protection UV), pipette en verre, vitamine C, acide hyaluronique, eau florale de rose
+- **Couleurs produit :** Ivoire, or rose, vert sauge
+
+## COMMERCE & PRICING
+- **Prix de vente :** 79€
+- **Réduction :** 15%
+- **Code promo :** SORELLE15
+- **Livraison offerte dès :** 120€
+- **Texte livraison :** Livraison offerte dès 120€ — 2-4 jours ouvrés (Colissimo)
+
+## SERVICE APRÈS-VENTE
+- **Délai de réponse SAV :** Sous 24h
+- **Canal de contact principal :** Email + Instagram DM
+- **Politique de retour :** Retours gratuits sous 30 jours
+- **Durée de garantie :** Satisfait ou remboursé 30 jours
+- **Message type SAV :** "Bonjour [Prénom], merci pour votre message. Nous revenons vers vous dans les plus brefs délais avec une solution personnalisée. Belle journée, L'équipe Maison Sorelle."
+
+## IDENTITÉ VISUELLE
+- **Couleur principale :** #F5F0E8 (Ivoire)
+- **Couleur secondaire :** #9CAF88 (Vert sauge)
+- **Couleur d'accent :** #D4A5A5 (Or rose)
+- **Police des titres :** Playfair Display
+- **Police du texte :** Lato
+- **Style visuel global :** Luxe & Premium
+
+## OBJECTIFS DE PERFORMANCE
+- **CA mensuel cible :** 15000€
+- **Panier moyen cible :** 95€
+- **Taux de conversion :** 2.5%
+- **ROAS cible :** 3.5x
+- **CPA cible :** 18€
+- **Marge brute :** 70%
+
+## STRATÉGIE & POSITIONNEMENT
+- **Démographie cible précise :** Femmes urbaines 28-50 ans, CSP+, sensibles à la composition des produits, abonnées à des comptes clean beauty sur Instagram.
+- **Concurrents directs :** Typology, Horace, Oh My Cream
+- **Mots-clés & éléments interdits :** "cheap", "anti-âge" (remplacé par "éclat"), emojis excessifs, visuels trop retouchés
+- **Proposition de valeur unique (USP) :** La clean beauty à la française, alliant naturalité, tra
