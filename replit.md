@@ -104,14 +104,16 @@ Le serveur Vite proxie automatiquement les requêtes `/api` vers `http://localho
 |---|---|---|
 | `CEREBRAS_API_KEY_1` à `_6` | Moteur de génération principal | ✅ Min. 1 |
 | `GEMINI_API_KEY_1` à `_5` | Mode ultra-qualité | Optionnel |
-| `AI_INTEGRATIONS_OPENAI_API_KEY` | GPT agent challenger (Replit natif) | ✅ Auto |
+| `AI_INTEGRATIONS_OPENAI_API_KEY` | GPT Optimizer (Replit natif) | ✅ Auto |
 | `AI_INTEGRATIONS_OPENAI_BASE_URL` | URL Replit OpenAI | ✅ Auto |
-| `AI_INTEGRATIONS_ANTHROPIC_API_KEY` | Claude agent critique (Replit natif) | ✅ Auto |
+| `AI_INTEGRATIONS_ANTHROPIC_API_KEY` | Claude Final Auditor (Replit natif) | ✅ Auto |
 | `AI_INTEGRATIONS_ANTHROPIC_BASE_URL` | URL Replit Anthropic | ✅ Auto |
 | `PORT` | Port de chaque service | ✅ |
 | `BASE_PATH` | Chemin de base frontend | ✅ |
 
 Les clés OpenAI et Anthropic sont injectées automatiquement via les intégrations Replit — pas besoin de les gérer manuellement.
+
+État vérifié le 19/04/2026 : aucune clé `CEREBRAS_API_KEY_*` ni `GEMINI_API_KEY_*` n'est actuellement configurée dans l'environnement Replit. Les diagnostics `/api/healthz/cerebras` et `/api/healthz/gemini` retournent donc `missing_keys` tant qu'au moins une clé Cerebras n'est pas ajoutée.
 
 ## Brief Global de Marque — Champs Complets
 
@@ -160,6 +162,7 @@ Toutes montées sous `/api` :
 |---|---|
 | `GET /api/healthz` | Santé du serveur |
 | `GET /api/healthz/cerebras` | Diagnostic complet pool Cerebras (toutes les clés) |
+| `GET /api/healthz/gemini` | Diagnostic complet pool Gemini (mode ultra-qualité) |
 | `POST /api/openai/enhance-prompts` | Module 01 — Brand Identity |
 | `POST /api/openai/enhance-prompts-visual` | Module 02 — Visual Content |
 | `POST /api/openai/enhance-prompts-video` | Module 03 — Video Content |

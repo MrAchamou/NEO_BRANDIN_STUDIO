@@ -50,6 +50,50 @@ function getGeminiClientPool(): OpenAI[] {
   return geminiClientPool;
 }
 
+export function getGeminiRotationState(): { currentIndex: number; totalKeys: number } {
+  const pool = getGeminiClientPool();
+  return { currentIndex: geminiRotationIndex, totalKeys: pool.length };
+}
+
+function isGeminiRateLimit(err: unknown): boolean {
+  if (err instanceof OpenAI.APIError) {
+    return err.status === 429;
+  }
+  if (err && typeof err === "object") {
+    const e = err as Record<string, unknown>;
+    return e["status"] === 429 || e["code"] === 429 || e["code"] === "rate_limit_exceeded";
+  }
+  return false;
+}
+
+export async function testGeminiKey(keyIndex: number): Promise<{
+  index: number;
+  status: "ok" | "rate_limit" | "error";
+  latencyMs?: number;
+  error?: string;
+}> {
+  const pool = getGeminiClientPool();
+  if (keyIndex >= pool.length) {
+    return { index: keyIndex, status: "error", error: "Index hors limites" };
+  }
+
+  const start = Date.now();
+  try {
+    await pool[keyIndex].chat.completions.create({
+      model: GEMINI_MODEL,
+      messages: [{ role: "user", content: "Reply with OK." }],
+      max_tokens: 5,
+    });
+    return { index: keyIndex, status: "ok", latencyMs: Date.now() - start };
+  } catch (err) {
+    if (isGeminiRateLimit(err)) {
+      return { index: keyIndex, status: "rate_limit", latencyMs: Date.now() - start };
+    }
+    const message = err instanceof Error ? err.message : String(err);
+    return { index: keyIndex, status: "error", latencyMs: Date.now() - start, error: message };
+  }
+}
+
 /**
  * Retourne le prochain client Gemini dans la rotation circulaire.
  * Chaque appel avance l'index d'une position.

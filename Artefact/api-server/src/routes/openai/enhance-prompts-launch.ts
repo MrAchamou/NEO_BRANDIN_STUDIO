@@ -12,9 +12,19 @@ function sendEvent(res: any, data: Record<string, unknown>) {
 }
 
 function parseJsonSafe(text: string): Record<string, unknown> | null {
+  const parse = (value: string) => JSON.parse(value) as Record<string, unknown>;
   try {
     const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-    return JSON.parse(clean);
+    try {
+      return parse(clean);
+    } catch {
+      const start = clean.indexOf("{");
+      const end = clean.lastIndexOf("}");
+      if (start >= 0 && end > start) {
+        return parse(clean.slice(start, end + 1));
+      }
+      return null;
+    }
   } catch {
     return null;
   }

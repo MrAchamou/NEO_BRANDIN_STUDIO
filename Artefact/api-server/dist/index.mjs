@@ -39407,6 +39407,86 @@ var cerebrasAI = new Proxy({}, {
   }
 });
 
+// src/lib/gemini-client.ts
+var GEMINI_MODEL = "gemini-2.0-flash";
+var GEMINI_MODEL_PRO = "gemini-2.5-pro-exp-03-25";
+var GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/";
+function loadGeminiKeys() {
+  const keys = [];
+  for (let i = 1; i <= 5; i++) {
+    const key = process.env[`GEMINI_API_KEY_${i}`];
+    if (key) keys.push(key);
+  }
+  if (keys.length === 0) {
+    throw new Error(
+      "Aucune cl\xE9 API Gemini trouv\xE9e. V\xE9rifie les secrets GEMINI_API_KEY_1 \xE0 GEMINI_API_KEY_5."
+    );
+  }
+  return keys;
+}
+var geminiClientPool = null;
+var geminiRotationIndex = 0;
+function getGeminiClientPool() {
+  if (!geminiClientPool) {
+    const keys = loadGeminiKeys();
+    geminiClientPool = keys.map(
+      (apiKey) => new OpenAI({
+        apiKey,
+        baseURL: GEMINI_BASE_URL
+      })
+    );
+  }
+  return geminiClientPool;
+}
+function getGeminiRotationState() {
+  const pool = getGeminiClientPool();
+  return { currentIndex: geminiRotationIndex, totalKeys: pool.length };
+}
+function isGeminiRateLimit(err) {
+  if (err instanceof OpenAI.APIError) {
+    return err.status === 429;
+  }
+  if (err && typeof err === "object") {
+    const e = err;
+    return e["status"] === 429 || e["code"] === 429 || e["code"] === "rate_limit_exceeded";
+  }
+  return false;
+}
+async function testGeminiKey(keyIndex) {
+  const pool = getGeminiClientPool();
+  if (keyIndex >= pool.length) {
+    return { index: keyIndex, status: "error", error: "Index hors limites" };
+  }
+  const start = Date.now();
+  try {
+    await pool[keyIndex].chat.completions.create({
+      model: GEMINI_MODEL,
+      messages: [{ role: "user", content: "Reply with OK." }],
+      max_tokens: 5
+    });
+    return { index: keyIndex, status: "ok", latencyMs: Date.now() - start };
+  } catch (err) {
+    if (isGeminiRateLimit(err)) {
+      return { index: keyIndex, status: "rate_limit", latencyMs: Date.now() - start };
+    }
+    const message = err instanceof Error ? err.message : String(err);
+    return { index: keyIndex, status: "error", latencyMs: Date.now() - start, error: message };
+  }
+}
+function getNextGeminiClient() {
+  const pool = getGeminiClientPool();
+  const client = pool[geminiRotationIndex % pool.length];
+  geminiRotationIndex = (geminiRotationIndex + 1) % pool.length;
+  return client;
+}
+var geminiAI = new Proxy({}, {
+  get(_target, prop) {
+    const client = getNextGeminiClient();
+    const value = client[prop];
+    return typeof value === "function" ? value.bind(client) : value;
+  }
+});
+
 // src/routes/health.ts
 var router = (0, import_express.Router)();
 router.get("/healthz", (_req, res) => {
@@ -39414,7 +39494,25 @@ router.get("/healthz", (_req, res) => {
   res.json(data);
 });
 router.get("/healthz/cerebras", async (_req, res) => {
-  const { currentIndex, totalKeys } = getRotationState();
+  let currentIndex = 0;
+  let totalKeys = 0;
+  try {
+    ({ currentIndex, totalKeys } = getRotationState());
+  } catch (err) {
+    res.status(503).json({
+      model: CEREBRAS_MODEL,
+      rotation: { nextKeyIndex: 0, nextKeyNumber: 0, totalKeys: 0 },
+      summary: {
+        available: 0,
+        rate_limited: 0,
+        errors: 1,
+        health: "missing_keys"
+      },
+      keys: [],
+      error: err instanceof Error ? err.message : String(err)
+    });
+    return;
+  }
   const results = await Promise.all(
     Array.from({ length: totalKeys }, (_, i) => testCerebrasKey(i))
   );
@@ -39423,6 +39521,53 @@ router.get("/healthz/cerebras", async (_req, res) => {
   const errors = results.filter((r) => r.status === "error").length;
   res.json({
     model: CEREBRAS_MODEL,
+    rotation: {
+      nextKeyIndex: currentIndex,
+      nextKeyNumber: currentIndex + 1,
+      totalKeys
+    },
+    summary: {
+      available,
+      rate_limited: rateLimited,
+      errors,
+      health: available > 0 ? "operational" : "degraded"
+    },
+    keys: results.map((r) => ({
+      key: `#${r.index + 1}`,
+      status: r.status,
+      latencyMs: r.latencyMs,
+      ...r.error ? { error: r.error } : {}
+    }))
+  });
+});
+router.get("/healthz/gemini", async (_req, res) => {
+  let currentIndex = 0;
+  let totalKeys = 0;
+  try {
+    ({ currentIndex, totalKeys } = getGeminiRotationState());
+  } catch (err) {
+    res.status(503).json({
+      model: GEMINI_MODEL,
+      rotation: { nextKeyIndex: 0, nextKeyNumber: 0, totalKeys: 0 },
+      summary: {
+        available: 0,
+        rate_limited: 0,
+        errors: 1,
+        health: "missing_keys"
+      },
+      keys: [],
+      error: err instanceof Error ? err.message : String(err)
+    });
+    return;
+  }
+  const results = await Promise.all(
+    Array.from({ length: totalKeys }, (_, i) => testGeminiKey(i))
+  );
+  const available = results.filter((r) => r.status === "ok").length;
+  const rateLimited = results.filter((r) => r.status === "rate_limit").length;
+  const errors = results.filter((r) => r.status === "error").length;
+  res.json({
+    model: GEMINI_MODEL,
     rotation: {
       nextKeyIndex: currentIndex,
       nextKeyNumber: currentIndex + 1,
@@ -45413,50 +45558,6 @@ function getGptReviewClient() {
   return gptReviewClientInstance;
 }
 
-// src/lib/gemini-client.ts
-var GEMINI_MODEL_PRO = "gemini-2.5-pro-exp-03-25";
-var GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/";
-function loadGeminiKeys() {
-  const keys = [];
-  for (let i = 1; i <= 5; i++) {
-    const key = process.env[`GEMINI_API_KEY_${i}`];
-    if (key) keys.push(key);
-  }
-  if (keys.length === 0) {
-    throw new Error(
-      "Aucune cl\xE9 API Gemini trouv\xE9e. V\xE9rifie les secrets GEMINI_API_KEY_1 \xE0 GEMINI_API_KEY_5."
-    );
-  }
-  return keys;
-}
-var geminiClientPool = null;
-var geminiRotationIndex = 0;
-function getGeminiClientPool() {
-  if (!geminiClientPool) {
-    const keys = loadGeminiKeys();
-    geminiClientPool = keys.map(
-      (apiKey) => new OpenAI({
-        apiKey,
-        baseURL: GEMINI_BASE_URL
-      })
-    );
-  }
-  return geminiClientPool;
-}
-function getNextGeminiClient() {
-  const pool = getGeminiClientPool();
-  const client = pool[geminiRotationIndex % pool.length];
-  geminiRotationIndex = (geminiRotationIndex + 1) % pool.length;
-  return client;
-}
-var geminiAI = new Proxy({}, {
-  get(_target, prop) {
-    const client = getNextGeminiClient();
-    const value = client[prop];
-    return typeof value === "function" ? value.bind(client) : value;
-  }
-});
-
 // src/lib/prompt-utils.ts
 var SECTOR_NEGATIVES = {
   bijou: ["plastique", "grossier", "bon march\xE9", "clip art", "pixelis\xE9", "amateur", "d\xE9form\xE9", "flou", "stock photo g\xE9n\xE9rique"],
@@ -46573,9 +46674,19 @@ var CAROUSEL_NARRATIVES = {
   ]
 };
 function parseJsonSafe(text) {
+  const parse = (value) => JSON.parse(value);
   try {
     const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-    return JSON.parse(clean);
+    try {
+      return parse(clean);
+    } catch {
+      const start = clean.indexOf("{");
+      const end = clean.lastIndexOf("}");
+      if (start >= 0 && end > start) {
+        return parse(clean.slice(start, end + 1));
+      }
+      return null;
+    }
   } catch {
     return null;
   }
@@ -46751,8 +46862,8 @@ Retourne UNIQUEMENT un JSON valide:
 }`
     },
     {
-      key: "lookbook",
-      label: "Lookbook & Fashion Editorial \u2014 2 Mod\xE8les",
+      key: "virtual_tryon",
+      label: "Virtual Try-On / Lookbook \u2014 2 Mod\xE8les",
       agent: "AI Wardrobe / Fashion Editorial",
       buildUserPrompt: () => `Tu es un expert RoboNeo en direction artistique lookbook et photographie fashion editorial.
 
@@ -48766,9 +48877,19 @@ function sendEvent6(res, data) {
 `);
 }
 function parseJsonSafe6(text) {
+  const parse = (value) => JSON.parse(value);
   try {
     const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-    return JSON.parse(clean);
+    try {
+      return parse(clean);
+    } catch {
+      const start = clean.indexOf("{");
+      const end = clean.lastIndexOf("}");
+      if (start >= 0 && end > start) {
+        return parse(clean.slice(start, end + 1));
+      }
+      return null;
+    }
   } catch {
     return null;
   }

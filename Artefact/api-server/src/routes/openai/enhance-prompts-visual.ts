@@ -100,9 +100,19 @@ const CAROUSEL_NARRATIVES: Record<string, string[]> = {
 };
 
 function parseJsonSafe(text: string): Record<string, string> | null {
+  const parse = (value: string) => JSON.parse(value) as Record<string, string>;
   try {
     const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-    return JSON.parse(clean);
+    try {
+      return parse(clean);
+    } catch {
+      const start = clean.indexOf("{");
+      const end = clean.lastIndexOf("}");
+      if (start >= 0 && end > start) {
+        return parse(clean.slice(start, end + 1));
+      }
+      return null;
+    }
   } catch {
     return null;
   }
@@ -284,8 +294,8 @@ Retourne UNIQUEMENT un JSON valide:
 }`,
     },
     {
-      key: "lookbook",
-      label: "Lookbook & Fashion Editorial — 2 Modèles",
+      key: "virtual_tryon",
+      label: "Virtual Try-On / Lookbook — 2 Modèles",
       agent: "AI Wardrobe / Fashion Editorial",
       buildUserPrompt: () => `Tu es un expert RoboNeo en direction artistique lookbook et photographie fashion editorial.
 
