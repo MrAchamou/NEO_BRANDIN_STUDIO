@@ -1,10 +1,9 @@
 /**
- * GPT Review Client — Agent Challenger (Replit AI Integration)
+ * GPT Review Client — Prompt Optimizer (Replit AI Integration)
  * Utilise les clés Replit par défaut, pas de clé OpenAI personnelle nécessaire.
  *
  * Modèle : gpt-5.2 (modèle phare OpenAI via Replit)
- * Rôle   : évaluer et raffiner les prompts générés par Cerebras,
- *           en débat contradictoire avec Claude
+ * Rôle   : optimiser les prompts générés par Cerebras avant l'audit Claude
  *
  * Note: Ce client est DISTINCT du client Cerebras (qui utilise aussi l'interface OpenAI).
  * Celui-ci pointe vers l'API OpenAI officielle via l'intégration Replit.

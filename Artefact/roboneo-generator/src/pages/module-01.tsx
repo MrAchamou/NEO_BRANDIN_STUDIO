@@ -72,7 +72,6 @@ interface ReviewData {
   improvements: string[];
   gpt_score?: number;
   claude_score?: number;
-  winner?: "gpt" | "claude" | "tie";
 }
 
 interface PersonaVariant {
@@ -106,7 +105,6 @@ interface PerformanceSummary {
   qwen_tokens_per_second: number;
   gpt_average_score: number | null;
   claude_average_score: number | null;
-  winner_counts: { gpt: number; claude: number; tie: number };
   review_sections: number;
   section_count: number;
   review_enabled: boolean;
@@ -432,13 +430,12 @@ export default function Module01() {
         improvements: data.improvements,
         gpt_score: data.gpt_score,
         claude_score: data.claude_score,
-        winner: data.winner,
       };
       setStreamState((p) => ({ ...p, reviews: { ...p.reviews, [key]: review } }));
       if (data.refined && data.refined !== currentPrompt) {
         setImprovedPrompts((p) => ({ ...p, [key]: data.refined }));
       }
-      toast({ title: `Score obtenu : ${data.score}/10 — ${data.winner === "gpt" ? "GPT ⚡ gagne" : data.winner === "claude" ? "Claude 🧠 gagne" : "Égalité 🤝"}` });
+      toast({ title: `Score final : ${data.score}/10 — prompt optimisé par GPT puis audité par Claude` });
     } catch {
       toast({ title: "Erreur", description: "Impossible de lancer la review IA.", variant: "destructive" });
     } finally {
@@ -505,12 +502,8 @@ export default function Module01() {
     return streamState.reviews[key] ?? null;
   };
 
-  const bestAgent = performanceSummary?.gpt_average_score !== null && performanceSummary?.claude_average_score !== null && performanceSummary?.gpt_average_score !== undefined && performanceSummary?.claude_average_score !== undefined
-    ? performanceSummary.gpt_average_score > performanceSummary.claude_average_score
-      ? "GPT"
-      : performanceSummary.claude_average_score > performanceSummary.gpt_average_score
-        ? "Claude"
-        : "Égalité"
+  const reviewChainLabel = performanceSummary?.gpt_average_score !== null && performanceSummary?.claude_average_score !== null && performanceSummary?.gpt_average_score !== undefined && performanceSummary?.claude_average_score !== undefined
+    ? "GPT → Claude"
     : null;
 
   const scoreColor = (score: number) => {
@@ -575,7 +568,7 @@ export default function Module01() {
                       <Star className="w-5 h-5 text-amber-400" />
                       <div>
                         <p className="text-sm font-medium text-foreground">Mode Ultra-Qualité</p>
-                        <p className="text-xs text-muted-foreground">Débat GPT ⚡ vs Claude 🧠 — le plus exigeant raffine le prompt</p>
+                        <p className="text-xs text-muted-foreground">GPT optimise le prompt, puis Claude complète et vérifie la couverture</p>
                       </div>
                     </div>
                     <button
@@ -653,9 +646,9 @@ export default function Module01() {
                           </CardDescription>
                         </div>
                         <div className="flex items-center gap-2">
-                          {review && review.winner && (
-                            <span className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border font-bold uppercase tracking-wider ${review.winner === "gpt" ? "text-blue-400 bg-blue-400/10 border-blue-400/30" : review.winner === "claude" ? "text-orange-400 bg-orange-400/10 border-orange-400/30" : "text-violet-400 bg-violet-400/10 border-violet-400/30"}`}>
-                              {review.winner === "gpt" ? "⚡ GPT" : review.winner === "claude" ? "🧠 Claude" : "🤝 Tie"}
+                          {review && (
+                            <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border font-bold uppercase tracking-wider text-orange-400 bg-orange-400/10 border-orange-400/30">
+                              GPT → Claude
                             </span>
                           )}
                           {review && (
@@ -693,9 +686,9 @@ export default function Module01() {
                                 <p className="text-xs font-semibold uppercase tracking-wider text-amber-300">
                                   {review ? "Prompt validé par les agents optimisateurs" : "Optimisation IA en cours"}
                                 </p>
-                                {review?.winner && (
-                                  <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${review.winner === "gpt" ? "border-blue-400/30 bg-blue-400/10 text-blue-300" : review.winner === "claude" ? "border-orange-400/30 bg-orange-400/10 text-orange-300" : "border-violet-400/30 bg-violet-400/10 text-violet-300"}`}>
-                                    {review.winner === "gpt" ? "GPT le plus exigeant" : review.winner === "claude" ? "Claude le plus exigeant" : "Équilibre GPT/Claude"}
+                                {review && (
+                                  <span className="rounded-full border px-2 py-0.5 text-[10px] font-bold border-orange-400/30 bg-orange-400/10 text-orange-300">
+                                    Couverture finale GPT → Claude
                                   </span>
                                 )}
                                 {qualityBadge && (
@@ -706,7 +699,7 @@ export default function Module01() {
                               </div>
                               <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
                                 {review
-                                  ? "Ce prompt a été généré par Qwen-3, puis relu, scoré et renforcé par GPT-5.2 et Claude avant affichage final."
+                                  ? "Ce prompt a été généré par Qwen-3, optimisé par GPT-5.2, puis audité et complété par Claude avant affichage final."
                                   : "Qwen-3 a terminé sa base et les agents GPT-5.2 / Claude sont en train de contrôler la précision premium."}
                               </p>
                               {qualityBadge && (
@@ -807,17 +800,17 @@ export default function Module01() {
                         );
                       })()}
 
-                      {/* Résultat du débat GPT vs Claude */}
+                      {/* Résultat de l'optimisation GPT puis audit Claude */}
                       {review && (review.gpt_score !== undefined || review.improvements.length > 0) && (
                         <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} className="mt-3 space-y-2">
                           {review.gpt_score !== undefined && review.claude_score !== undefined && (
                             <div className="flex items-center gap-3 px-2 py-1.5 rounded-md bg-black/20 border border-white/5">
-                              <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Débat IA</span>
-                              <span className={`text-[11px] font-bold px-1.5 py-0.5 rounded ${review.winner === "gpt" ? "text-blue-400 bg-blue-400/15" : "text-blue-400/50"}`}>
+                              <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Chaîne IA</span>
+                              <span className="text-[11px] font-bold px-1.5 py-0.5 rounded text-blue-400 bg-blue-400/15">
                                 ⚡ GPT {review.gpt_score}/10
                               </span>
-                              <span className="text-muted-foreground/30 text-xs">vs</span>
-                              <span className={`text-[11px] font-bold px-1.5 py-0.5 rounded ${review.winner === "claude" ? "text-orange-400 bg-orange-400/15" : "text-orange-400/50"}`}>
+                              <span className="text-muted-foreground/30 text-xs">→</span>
+                              <span className="text-[11px] font-bold px-1.5 py-0.5 rounded text-orange-400 bg-orange-400/15">
                                 🧠 Claude {review.claude_score}/10
                               </span>
                             </div>
@@ -926,12 +919,12 @@ export default function Module01() {
                       <p className="mt-1 text-xs text-muted-foreground">{performanceSummary.qwen_output_tokens.toLocaleString("fr-FR")} tokens estimés en {fmtMs(performanceSummary.qwen_ms)}</p>
                     </div>
                     <div className="rounded-lg border border-amber-400/20 bg-amber-400/5 p-4">
-                      <p className="text-xs uppercase tracking-wider text-amber-300/70">Score comparatif</p>
-                      <p className="mt-2 text-2xl font-bold text-amber-300">{bestAgent ?? "Non évalué"}</p>
+                      <p className="text-xs uppercase tracking-wider text-amber-300/70">Chaîne d'optimisation</p>
+                      <p className="mt-2 text-2xl font-bold text-amber-300">{reviewChainLabel ?? "Non évalué"}</p>
                       <p className="mt-1 text-xs text-muted-foreground">
                         {performanceSummary.review_enabled
                           ? `${performanceSummary.review_sections} sections analysées par GPT et Claude`
-                          : "Activez le mode Ultra-Qualité pour comparer GPT et Claude"}
+                          : "Activez le mode Ultra-Qualité pour optimiser avec GPT puis auditer avec Claude"}
                       </p>
                     </div>
                   </div>
@@ -940,11 +933,11 @@ export default function Module01() {
                     <div className="rounded-lg border border-white/10 bg-black/20 p-4 space-y-4">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
-                          <p className="text-sm font-semibold text-foreground">Comparatif GPT vs Claude</p>
-                          <p className="text-xs text-muted-foreground">Moyenne des scores qualité attribués après la sortie complète de Qwen-3.</p>
+                          <p className="text-sm font-semibold text-foreground">Scores de la chaîne GPT → Claude</p>
+                          <p className="text-xs text-muted-foreground">GPT mesure la version avant optimisation, Claude mesure la couverture finale.</p>
                         </div>
                         <span className="text-xs text-muted-foreground">
-                          Gagnants exigeants : GPT {performanceSummary.winner_counts.gpt} · Claude {performanceSummary.winner_counts.claude} · Égalité {performanceSummary.winner_counts.tie}
+                          Objectif : couvrir tous les angles avant la version finale
                         </span>
                       </div>
                       <div className="space-y-3">

@@ -101,7 +101,6 @@ router.post("/openai/enhance-prompts", async (req, res) => {
   let totalQwenTokens = 0;
   const gptScores: number[] = [];
   const claudeScores: number[] = [];
-  const winnerCounts = { gpt: 0, claude: 0, tie: 0 };
 
   const logoOptimizedPrompt = buildLogoPrompt({
     brandName: brand_name,
@@ -230,7 +229,6 @@ Commence directement par: "Rédige le contenu structuré de la charte graphique 
         improvements: string[];
         gpt_score?: number;
         claude_score?: number;
-        winner?: "gpt" | "claude" | "tie";
       } | null = null;
       if (enable_review && fullContent.length > 100) {
         try {
@@ -246,11 +244,9 @@ Commence directement par: "Rédige le contenu structuré de la charte graphique 
             improvements: review.improvements,
             gpt_score: review.gpt_score,
             claude_score: review.claude_score,
-            winner: review.winner,
           };
           gptScores.push(review.gpt_score);
           claudeScores.push(review.claude_score);
-          winnerCounts[review.winner] += 1;
 
           if (review.refined && review.refined !== fullContent) {
             fullContent = review.refined;
@@ -293,7 +289,6 @@ Commence directement par: "Rédige le contenu structuré de la charte graphique 
       qwen_tokens_per_second: totalQwenMs > 0 ? Math.round((totalQwenTokens / totalQwenMs) * 10000) / 10 : 0,
       gpt_average_score: average(gptScores),
       claude_average_score: average(claudeScores),
-      winner_counts: winnerCounts,
       review_sections: gptScores.length,
       section_count: sections.length,
       review_enabled: Boolean(enable_review),

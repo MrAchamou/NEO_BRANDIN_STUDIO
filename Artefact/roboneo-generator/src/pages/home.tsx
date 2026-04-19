@@ -500,12 +500,12 @@ export default function Home() {
                 <div className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
                   <span className="text-[11px] text-blue-400 font-mono">GPT-5.2</span>
-                  <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">review</span>
+                  <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">optimisation</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
                   <span className="text-[11px] text-orange-400 font-mono">Claude Sonnet</span>
-                  <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">débat</span>
+                  <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">audit</span>
                 </div>
               </div>
             </div>

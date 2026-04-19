@@ -453,7 +453,7 @@ Retourne UNIQUEMENT ce JSON:
         const origIsJson = !!parseJsonSafe(fullContent);
         const reviewIsJson = !!parseJsonSafe(review.refined);
         if (!origIsJson || reviewIsJson) reviewedContent = review.refined || fullContent;
-        reviewAgent = `${section.agent} → GPT×2 → Claude (${review.score}/10)`;
+        reviewAgent = `${section.agent} → GPT → Claude (${review.score}/10)`;
       } catch {
         console.warn(`[Review] ${section.key} — review échoué, Cerebras conservé`);
       }

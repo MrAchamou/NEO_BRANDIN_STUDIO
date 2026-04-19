@@ -291,7 +291,7 @@ Adapte les actions et contenus spécifiquement au secteur "${sector}" et à la m
         sendEvent(res, {
           type: "review_start",
           key: section.key,
-          message: "GPT Challenger + Claude Critique améliorent le document...",
+          message: "GPT optimise le document, puis Claude vérifie la couverture finale...",
         });
 
         try {
@@ -304,7 +304,6 @@ Adapte les actions et contenus spécifiquement au secteur "${sector}" et à la m
             score: reviewResult.score,
             gpt_score: reviewResult.gpt_score,
             claude_score: reviewResult.claude_score,
-            winner: reviewResult.winner,
             improvements: reviewResult.improvements,
           });
         } catch (reviewErr) {

@@ -11,16 +11,16 @@ Générateur de prompts IA "chirurgicaux" pour l'écosystème RoboNeo.com. L'uti
 ```
 Cerebras Qwen-3 235B  →  génération rapide (6 clés en rotation circulaire)
          ↓
-GPT-5.2 (Agent Challenger)  →  évaluation technique + score qualité
+GPT-5.2 (Optimizer)  →  optimise le prompt vers la version “graal”
          ↓
-Claude Sonnet (Agent Critique)  →  évaluation brand voice + score qualité
+Claude Sonnet (Final Auditor)  →  complète la version GPT, vérifie les oublis
          ↓
-Gagnant = agent avec score le plus bas (le plus critique) → version raffinée finale
+Version finale = couverture maximale sans débat entre agents
 ```
 
 - **Cerebras** : moteur principal de génération, 6 clés en rotation anti-limite (CEREBRAS_API_KEY_1 à _6)
-- **GPT-5.2** : agent challenger via intégration Replit OpenAI (AI_INTEGRATIONS_OPENAI_API_KEY)
-- **Claude Sonnet** : agent critique via intégration Replit Anthropic (AI_INTEGRATIONS_ANTHROPIC_API_KEY)
+- **GPT-5.2** : agent d'optimisation via intégration Replit OpenAI (AI_INTEGRATIONS_OPENAI_API_KEY)
+- **Claude Sonnet** : agent d'audit final via intégration Replit Anthropic (AI_INTEGRATIONS_ANTHROPIC_API_KEY)
 - **Gemini 2.5** : mode ultra-qualité optionnel, 5 clés en rotation (GEMINI_API_KEY_1 à _5)
 
 ## Stack Technique

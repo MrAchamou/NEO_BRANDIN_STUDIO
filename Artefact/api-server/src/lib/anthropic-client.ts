@@ -1,9 +1,9 @@
 /**
- * Claude Client — Agent Critique (Replit AI Integration)
+ * Claude Client — Final Auditor (Replit AI Integration)
  * Utilise les clés Replit par défaut, pas de clé personnelle nécessaire.
  *
  * Modèle : claude-sonnet-4-6 (meilleur ratio qualité/vitesse pour la review)
- * Rôle   : évaluer et raffiner les prompts générés par Cerebras
+ * Rôle   : auditer la version optimisée par GPT et compléter les angles oubliés
  */
 
 import Anthropic from "@anthropic-ai/sdk";

@@ -45571,7 +45571,7 @@ function withTimeout(promise, ms, label) {
     )
   ]);
 }
-function buildGptPassPrompt(content, brief, sectionKey, passNumber) {
+function buildGptPassPrompt(content, brief, sectionKey) {
   const valuesStr = Array.isArray(brief.values) ? brief.values.join(", ") : brief.values;
   const extras = [
     brief.competitors ? `Competitors: ${brief.competitors}` : "",
@@ -45581,21 +45581,26 @@ function buildGptPassPrompt(content, brief, sectionKey, passNumber) {
     brief.product_name ? `Product: ${brief.product_name}` : "",
     brief.price ? `Price: ${brief.price}` : ""
   ].filter(Boolean).join(" | ");
-  const passLabel = passNumber === 1 ? "IMPROVEMENT PASS 1 \u2014 Identify the 2 most critical weaknesses and fix them" : "IMPROVEMENT PASS 2 \u2014 This prompt was already improved once. Find the 2 remaining gaps and close them";
-  return `You are a technical AI prompt specialist for RoboNeo.com.
+  return `You are GPT Optimizer, a senior AI prompt architect for RoboNeo.com.
 
 BRAND: ${brief.brand_name} | Sector: ${brief.sector} | Tone: ${brief.tone} | Values: ${valuesStr}${extras ? ` | ${extras}` : ""}
 Section: ${sectionKey}
 
-${passLabel}:
+MISSION \u2014 Optimize this draft into the closest possible version of the "grail prompt":
 """
 ${content}
 """
 
-Rules: NEVER shorten the prompt. NEVER invent facts absent from the brief. All image/video/audio prompts MUST be in English. Add missing HEX codes, f-stops, focal lengths, color temperatures (Kelvin), pixel dimensions, model parameters where relevant.
+Coverage targets:
+\u2022 Make the prompt directly usable, dense, precise and brand-specific.
+\u2022 Add missing technical details where relevant: HEX codes, f-stops, focal lengths, color temperatures in Kelvin, pixel dimensions, model parameters, output format, composition, lighting, materials, camera/scene details.
+\u2022 Strengthen brand anchoring, product clarity, target audience fit, differentiation, negative constraints and platform-native syntax.
+\u2022 Keep all useful existing details.
+
+Rules: NEVER shorten the prompt. NEVER invent facts absent from the brief. All image/video/audio prompts MUST be in English.
 
 JSON only (no markdown):
-{"score":<score BEFORE your fix, 1 decimal, be strict>,"improvements":["exact fix 1","exact fix 2"],"refined_prompt":"<full improved version>"}`;
+{"score":<score BEFORE your optimization, 1 decimal, be strict>,"improvements":["optimization 1","optimization 2","optimization 3"],"refined_prompt":"<full optimized version>"}`;
 }
 function buildClaudeFinalPrompt(content, brief, sectionKey) {
   const valuesStr = Array.isArray(brief.values) ? brief.values.join(", ") : brief.values;
@@ -45606,14 +45611,21 @@ function buildClaudeFinalPrompt(content, brief, sectionKey) {
     brief.target_demographic || brief.target_audience ? `Audience: ${brief.target_demographic ?? brief.target_audience}` : "",
     brief.product_name ? `Product: ${brief.product_name}` : ""
   ].filter(Boolean).join(" | ");
-  return `You are a brand voice expert and final quality validator for RoboNeo.com.
+  return `You are Claude Final Auditor, a brand voice expert, creative strategist and completeness reviewer for RoboNeo.com.
 
 BRAND: ${brief.brand_name} | Sector: ${brief.sector} | Tone: ${brief.tone} | Values: ${valuesStr}${extras ? ` | ${extras}` : ""}
 Section: ${sectionKey}
 
-FINAL VALIDATION \u2014 This prompt has been through 2 GPT improvement passes. Score it strictly /10.
-\u2022 If score \u2265 9.5 \u2192 return it as-is with improvements:[]. It's already at the grail.
-\u2022 If score < 9.5 \u2192 apply up to 2 brand voice / market positioning refinements to push it to 10/10.
+FINAL AUDIT \u2014 GPT has already optimized this prompt toward the grail. Your role is not to debate GPT.
+Review GPT's optimized version and check whether anything important is still missing.
+
+If the GPT version is already complete:
+\u2022 Return it as-is with improvements:[].
+
+If it can still be better:
+\u2022 Improve coverage without undoing GPT's technical precision.
+\u2022 Add missing angles: brand voice, market positioning, audience motivation, product benefit clarity, differentiation, compliance with forbidden keywords, sacred colors, negative constraints, final output usability.
+\u2022 Preserve every useful detail already added by GPT.
 
 NEVER shorten. NEVER invent facts absent from the brand brief. Preserve all technical specs added by GPT. All image/video/audio prompts in English.
 
@@ -45622,13 +45634,13 @@ ${content}
 """
 
 JSON only (no markdown):
-{"score":<1 decimal>,"improvements":["brand refinement 1 if any","brand refinement 2 if any"],"refined_prompt":"<final version \u2014 identical to input if already 9.5+>"}`;
+{"score":<final score, 1 decimal>,"improvements":["Claude addition 1 if any","Claude addition 2 if any","Claude addition 3 if any"],"refined_prompt":"<final version \u2014 identical to GPT version if already complete>"}`;
 }
-async function gptRefinementPass(content, brief, sectionKey, passNumber) {
+async function gptRefinementPass(content, brief, sectionKey) {
   const gpt = getGptReviewClient();
   const truncated = content.length > 7e3 ? content.slice(0, 7e3) + "\n[...tronqu\xE9 pour performance]" : content;
-  const prompt = buildGptPassPrompt(truncated, brief, sectionKey, passNumber);
-  const label = `GPT Pass ${passNumber}`;
+  const prompt = buildGptPassPrompt(truncated, brief, sectionKey);
+  const label = "GPT Optimizer";
   console.log(`[${label}] ${sectionKey} \u2014 d\xE9marrage (${prompt.length} chars)`);
   const t0 = Date.now();
   try {
@@ -45688,35 +45700,22 @@ async function reviewPromptQuality(content, brief, sectionKey) {
   let gptScore = 0;
   let claudeScore = 0;
   try {
-    const pass1 = await gptRefinementPass(current, brief, sectionKey, 1);
-    current = pass1.refined;
-    gptScore = pass1.score;
-    allImprovements.push(...pass1.improvements.map((i) => `[GPT-1] ${i}`));
-    console.log(`[Review] ${sectionKey} \u2014 GPT Pass 1: ${pass1.score}/10 \u2192 v1 pr\xEAte`);
+    const gptOptimized = await gptRefinementPass(current, brief, sectionKey);
+    current = gptOptimized.refined;
+    gptScore = gptOptimized.score;
+    allImprovements.push(...gptOptimized.improvements.map((i) => `[GPT] ${i}`));
+    console.log(`[Review] ${sectionKey} \u2014 GPT Optimizer: ${gptOptimized.score}/10 \u2192 version optimis\xE9e pr\xEAte`);
   } catch (err) {
-    console.warn(`[Review] ${sectionKey} \u2014 GPT Pass 1 \xE9chou\xE9: ${err instanceof Error ? err.message : String(err)}`);
-  }
-  if (gptScore < 9) {
-    try {
-      const pass2 = await gptRefinementPass(current, brief, sectionKey, 2);
-      current = pass2.refined;
-      gptScore = pass2.score;
-      allImprovements.push(...pass2.improvements.map((i) => `[GPT-2] ${i}`));
-      console.log(`[Review] ${sectionKey} \u2014 GPT Pass 2: ${pass2.score}/10 \u2192 v2 pr\xEAte`);
-    } catch (err) {
-      console.warn(`[Review] ${sectionKey} \u2014 GPT Pass 2 \xE9chou\xE9: ${err instanceof Error ? err.message : String(err)}`);
-    }
-  } else {
-    console.log(`[Review] ${sectionKey} \u2014 GPT Pass 2 ignor\xE9 (score ${gptScore}/10 \u2265 9.0) \u2713`);
+    console.warn(`[Review] ${sectionKey} \u2014 GPT Optimizer \xE9chou\xE9: ${err instanceof Error ? err.message : String(err)}`);
   }
   try {
     const final = await claudeFinalValidation(current, brief, sectionKey);
     current = final.refined;
     claudeScore = final.score;
     allImprovements.push(...final.improvements.map((i) => `[Claude] ${i}`));
-    console.log(`[Review] ${sectionKey} \u2014 Claude Final: ${final.score}/10 \u2713 GRAAL`);
+    console.log(`[Review] ${sectionKey} \u2014 Claude Final Auditor: ${final.score}/10 \u2713 couverture finale`);
   } catch (err) {
-    console.warn(`[Review] ${sectionKey} \u2014 Claude Final \xE9chou\xE9: ${err instanceof Error ? err.message : String(err)}`);
+    console.warn(`[Review] ${sectionKey} \u2014 Claude Final Auditor \xE9chou\xE9: ${err instanceof Error ? err.message : String(err)}`);
     claudeScore = gptScore;
   }
   return {
@@ -45724,8 +45723,7 @@ async function reviewPromptQuality(content, brief, sectionKey) {
     refined: current,
     improvements: allImprovements.slice(0, 6),
     gpt_score: gptScore,
-    claude_score: claudeScore,
-    winner: claudeScore >= gptScore ? "claude" : "gpt"
+    claude_score: claudeScore
   };
 }
 async function generatePersonaVariants(basePrompt, brief) {
@@ -46277,7 +46275,6 @@ router3.post("/openai/enhance-prompts", async (req, res) => {
   let totalQwenTokens = 0;
   const gptScores = [];
   const claudeScores = [];
-  const winnerCounts = { gpt: 0, claude: 0, tie: 0 };
   const logoOptimizedPrompt = buildLogoPrompt({
     brandName: brand_name,
     sector,
@@ -46414,12 +46411,10 @@ Commence directement par: "R\xE9dige le contenu structur\xE9 de la charte graphi
             score: review.score,
             improvements: review.improvements,
             gpt_score: review.gpt_score,
-            claude_score: review.claude_score,
-            winner: review.winner
+            claude_score: review.claude_score
           };
           gptScores.push(review.gpt_score);
           claudeScores.push(review.claude_score);
-          winnerCounts[review.winner] += 1;
           if (review.refined && review.refined !== fullContent) {
             fullContent = review.refined;
           }
@@ -46459,7 +46454,6 @@ Commence directement par: "R\xE9dige le contenu structur\xE9 de la charte graphi
       qwen_tokens_per_second: totalQwenMs > 0 ? Math.round(totalQwenTokens / totalQwenMs * 1e4) / 10 : 0,
       gpt_average_score: average(gptScores),
       claude_average_score: average(claudeScores),
-      winner_counts: winnerCounts,
       review_sections: gptScores.length,
       section_count: sections.length,
       review_enabled: Boolean(enable_review)
@@ -46887,7 +46881,7 @@ Chaque prompt visuel doit inclure un champ "negative_prompt" avec les \xE9l\xE9m
         const origIsJson = !!parseJsonSafe(fullContent);
         const reviewIsJson = !!parseJsonSafe(review.refined);
         if (!origIsJson || reviewIsJson) reviewedContent = review.refined || fullContent;
-        reviewAgent = `${section.agent} \u2192 GPT\xD72 \u2192 Claude (${review.score}/10)`;
+        reviewAgent = `${section.agent} \u2192 GPT \u2192 Claude (${review.score}/10)`;
       } catch {
         console.warn(`[Review] ${section.key} \u2014 review \xE9chou\xE9, Cerebras conserv\xE9`);
       }
@@ -47331,7 +47325,7 @@ Retourne UNIQUEMENT ce JSON:
         const origIsJson = !!parseJsonSafe2(fullContent);
         const reviewIsJson = !!parseJsonSafe2(review.refined);
         if (!origIsJson || reviewIsJson) reviewedContent = review.refined || fullContent;
-        reviewAgent = `${section.agent} \u2192 GPT\xD72 \u2192 Claude (${review.score}/10)`;
+        reviewAgent = `${section.agent} \u2192 GPT \u2192 Claude (${review.score}/10)`;
       } catch {
         console.warn(`[Review] ${section.key} \u2014 review \xE9chou\xE9, Cerebras conserv\xE9`);
       }
@@ -47772,7 +47766,7 @@ Retourne UNIQUEMENT ce JSON:
         const origIsJson = !!parseJsonSafe3(fullContent);
         const reviewIsJson = !!parseJsonSafe3(review.refined);
         if (!origIsJson || reviewIsJson) reviewedContent = review.refined || fullContent;
-        reviewAgent = `${section.agent} \u2192 GPT\xD72 \u2192 Claude (${review.score}/10)`;
+        reviewAgent = `${section.agent} \u2192 GPT \u2192 Claude (${review.score}/10)`;
       } catch {
         console.warn(`[Review] ${section.key} \u2014 review \xE9chou\xE9, Cerebras conserv\xE9`);
       }
@@ -48157,7 +48151,7 @@ Retourne UNIQUEMENT ce JSON:
         const origIsJson = !!parseJsonSafe4(fullContent);
         const reviewIsJson = !!parseJsonSafe4(review.refined);
         if (!origIsJson || reviewIsJson) reviewedContent = review.refined || fullContent;
-        reviewAgent = `${section.agent} \u2192 GPT\xD72 \u2192 Claude (${review.score}/10)`;
+        reviewAgent = `${section.agent} \u2192 GPT \u2192 Claude (${review.score}/10)`;
       } catch {
         console.warn(`[Review] ${section.key} \u2014 review \xE9chou\xE9, Cerebras conserv\xE9`);
       }
@@ -48451,7 +48445,7 @@ Les 10 avis doivent:
         const origIsJson = !!parseJsonSafe5(fullContent);
         const reviewIsJson = !!parseJsonSafe5(review.refined);
         if (!origIsJson || reviewIsJson) reviewedContent = review.refined || fullContent;
-        reviewAgent = `${section.agent} \u2192 GPT\xD72 \u2192 Claude (${review.score}/10)`;
+        reviewAgent = `${section.agent} \u2192 GPT \u2192 Claude (${review.score}/10)`;
       } catch {
         console.warn(`[Review] ${section.key} \u2014 review \xE9chou\xE9, Cerebras conserv\xE9`);
       }
@@ -49009,7 +49003,7 @@ Adapte les actions et contenus sp\xE9cifiquement au secteur "${sector}" et \xE0 
         sendEvent6(res, {
           type: "review_start",
           key: section.key,
-          message: "GPT Challenger + Claude Critique am\xE9liorent le document..."
+          message: "GPT optimise le document, puis Claude v\xE9rifie la couverture finale..."
         });
         try {
           const reviewResult = await reviewPromptQuality(combinedDoc, brief, "landing_page_combined_spec");
@@ -49020,7 +49014,6 @@ Adapte les actions et contenus sp\xE9cifiquement au secteur "${sector}" et \xE0 
             score: reviewResult.score,
             gpt_score: reviewResult.gpt_score,
             claude_score: reviewResult.claude_score,
-            winner: reviewResult.winner,
             improvements: reviewResult.improvements
           });
         } catch (reviewErr) {
@@ -49269,7 +49262,7 @@ Les gestes commerciaux peuvent inclure: remboursement, renvoi, code promo ${code
         const origIsJson = !!parseJsonSafe7(fullContent);
         const reviewIsJson = !!parseJsonSafe7(review.refined);
         if (!origIsJson || reviewIsJson) reviewedContent = review.refined || fullContent;
-        reviewAgent = `${section.agent} \u2192 GPT\xD72 \u2192 Claude (${review.score}/10)`;
+        reviewAgent = `${section.agent} \u2192 GPT \u2192 Claude (${review.score}/10)`;
       } catch {
         console.warn(`[Review] ${section.key} \u2014 review \xE9chou\xE9, Cerebras conserv\xE9`);
       }

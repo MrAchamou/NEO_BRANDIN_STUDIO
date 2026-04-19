@@ -18,7 +18,6 @@ interface ReviewResult {
   score: number;
   gpt_score: number;
   claude_score: number;
-  winner: "gpt" | "claude" | "tie";
   improvements: string[];
 }
 
@@ -144,7 +143,7 @@ function LandingPageView({
   const handleDownload = () => {
     const header = `# LANDING PAGE — PROMPT IA + CAHIER DES CHARGES GOD-TIER\n# ${brief.brand_name ?? ""} — ${brief.product_name ?? ""}\n# Généré par Neo Branding Studio\n${"=".repeat(70)}\n\n`;
     const reviewSection = reviewResult
-      ? `${"=".repeat(70)}\n# REVUE GPT + CLAUDE — Score: ${reviewResult.score}/10 — Gagnant: ${reviewResult.winner.toUpperCase()}\n# GPT: ${reviewResult.gpt_score}/10 | Claude: ${reviewResult.claude_score}/10\n${"=".repeat(70)}\n\nAméliorations appliquées:\n${reviewResult.improvements.map((i) => `• ${i}`).join("\n")}\n\n`
+      ? `${"=".repeat(70)}\n# OPTIMISATION GPT → AUDIT CLAUDE — Score final: ${reviewResult.score}/10\n# GPT: ${reviewResult.gpt_score}/10 | Claude: ${reviewResult.claude_score}/10\n${"=".repeat(70)}\n\nAméliorations appliquées:\n${reviewResult.improvements.map((i) => `• ${i}`).join("\n")}\n\n`
       : "";
     const content = header + reviewSection + activeDocument;
     const a = document.createElement("a");
@@ -153,19 +152,8 @@ function LandingPageView({
     a.click();
   };
 
-  const winnerBadgeStyle =
-    reviewResult?.winner === "gpt"
-      ? "text-green-400 border-green-500/30 bg-green-500/10"
-      : reviewResult?.winner === "claude"
-      ? "text-purple-400 border-purple-500/30 bg-purple-500/10"
-      : "text-blue-400 border-blue-500/30 bg-blue-500/10";
-
-  const winnerLabel =
-    reviewResult?.winner === "gpt"
-      ? "🤖 GPT Challenger"
-      : reviewResult?.winner === "claude"
-      ? "🟣 Claude Critique"
-      : "🤖 GPT + 🟣 Claude";
+  const optimizerBadgeStyle = "text-purple-400 border-purple-500/30 bg-purple-500/10";
+  const optimizerLabel = "🤖 GPT Optimizer → 🟣 Claude Auditor";
 
   return (
     <div className="space-y-4">
@@ -218,8 +206,8 @@ function LandingPageView({
         >
           <Brain className="w-4 h-4 text-purple-400 animate-pulse flex-shrink-0" />
           <div>
-            <p className="text-sm font-semibold text-foreground">GPT Challenger + Claude Critique en débat...</p>
-            <p className="text-xs text-muted-foreground">Analyse et réécriture vers le niveau 10/10 — GOD TIER</p>
+            <p className="text-sm font-semibold text-foreground">GPT optimise, Claude audite la couverture finale...</p>
+            <p className="text-xs text-muted-foreground">Optimisation séquentielle vers le niveau 10/10 — GOD TIER</p>
           </div>
           <div className="ml-auto flex gap-1">
             <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-bounce" style={{ animationDelay: "0ms" }} />
@@ -229,17 +217,17 @@ function LandingPageView({
         </motion.div>
       )}
 
-      {/* ── Badge winner après review ──────────────────────────────────────── */}
+      {/* ── Badge optimisation après review ─────────────────────────────────── */}
       {reviewResult && (
         <motion.div
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
           className="space-y-2"
         >
-          <div className={`flex items-center gap-2.5 px-4 py-2.5 rounded-lg border text-sm font-semibold ${winnerBadgeStyle}`}>
+          <div className={`flex items-center gap-2.5 px-4 py-2.5 rounded-lg border text-sm font-semibold ${optimizerBadgeStyle}`}>
             <ShieldCheck className="w-4 h-4 flex-shrink-0" />
             <span>
-              GOD TIER — Amélioré par {winnerLabel} — Score final {reviewResult.score}/10
+              GOD TIER — Optimisé par {optimizerLabel} — Score final {reviewResult.score}/10
               <span className="ml-2 text-[11px] font-normal opacity-70">
                 (GPT: {reviewResult.gpt_score}/10 · Claude: {reviewResult.claude_score}/10)
               </span>
@@ -708,7 +696,6 @@ export default function Module07() {
                 score: event.score,
                 gpt_score: event.gpt_score,
                 claude_score: event.claude_score,
-                winner: event.winner,
                 improvements: event.improvements,
               };
               setStreamState((p) => ({
@@ -797,7 +784,7 @@ export default function Module07() {
     for (const sec of sections) {
       txt += `\n${"=".repeat(60)}\n${sec.label.toUpperCase()}\nAgent: ${sec.agent}\n${"=".repeat(60)}\n\n`;
       if (sec.reviewResult) {
-        txt += `[GPT: ${sec.reviewResult.gpt_score}/10 | Claude: ${sec.reviewResult.claude_score}/10 | Score final: ${sec.reviewResult.score}/10 | Gagnant: ${sec.reviewResult.winner.toUpperCase()}]\n\n`;
+        txt += `[GPT: ${sec.reviewResult.gpt_score}/10 | Claude: ${sec.reviewResult.claude_score}/10 | Score final: ${sec.reviewResult.score}/10 | Chaîne: GPT → Claude]\n\n`;
         txt += sec.reviewResult.refined + "\n";
       } else {
         txt += sec.rawContent + "\n";
@@ -835,7 +822,7 @@ export default function Module07() {
             <CardHeader>
               <CardTitle className="text-2xl text-foreground">Launch Ready</CardTitle>
               <CardDescription>
-                Génère un <strong>Prompt IA + Cahier des Charges GOD-TIER fusionnés</strong> pour votre landing page — prêt à coller directement dans v0.dev, Cursor, Claude ou Framer. GPT Challenger + Claude Critique améliorent automatiquement le document vers le niveau 10/10. Inclut un guide stratégique et un calendrier 30 jours personnalisé.
+                Génère un <strong>Prompt IA + Cahier des Charges GOD-TIER fusionnés</strong> pour votre landing page — prêt à coller directement dans v0.dev, Cursor, Claude ou Framer. GPT optimise automatiquement le document, puis Claude l'audite pour compléter ce qui manque et viser le niveau 10/10. Inclut un guide stratégique et un calendrier 30 jours personnalisé.
               </CardDescription>
             </CardHeader>
             <CardContent>

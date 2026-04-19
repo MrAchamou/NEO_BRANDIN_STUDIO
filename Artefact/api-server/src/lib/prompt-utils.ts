@@ -135,16 +135,15 @@ export const FEWSHOT_EXAMPLES: Record<string, string> = {
 "[BRAND] product photography: [PRODUCT] positioned on [SURFACE], [TYPE] lighting (temperature [K], direction [ANGLE]°), [FOCAL LENGTH]mm f/[APERTURE], [INTENSITY] bokeh, [PRIMARY HEX] colors dominant, [TYPE] reflections, [DESCRIPTION] background, [DIMENSIONS]px format, RAW → JPEG 96dpi and PNG transparent export. --ar 1:1 --style raw --v 6"`,
 };
 
-// ─── Quality Review — Pipeline Séquentiel 3 Passes (Mode Ultra-Qualité) ──────
+// ─── Quality Review — Pipeline Séquentiel GPT → Claude (Mode Ultra-Qualité) ──
 //
-// Pipeline cumulatif : chaque passe s'appuie sur la version précédente.
+// Pipeline cumulatif simple : chaque agent s'appuie sur la version précédente.
 //
-//   Phase 1 — GPT Challenger Pass 1 : 2 corrections techniques sur le brouillon Cerebras
-//   Phase 2 — GPT Challenger Pass 2 : 2 améliorations supplémentaires sur GPT-v1
-//   Phase 3 — Claude Final Validator : validation voix de marque + touche finale vers 10/10
+//   Phase 1 — GPT Optimizer : rapproche le brouillon Cerebras du prompt graal.
+//   Phase 2 — Claude Final Auditor : complète la version GPT, vérifie les oublis.
 //
-// Chaque agent reçoit un prompt léger et focalisé → temps de réponse optimisé.
-// Si une phase échoue, la suivante repart de la meilleure version disponible.
+// Pas de confrontation entre agents : GPT optimise, Claude couvre les angles
+// restants pour produire la meilleure version finale possible.
 
 export interface ReviewResult {
   score: number;
@@ -152,7 +151,6 @@ export interface ReviewResult {
   improvements: string[];
   gpt_score: number;
   claude_score: number;
-  winner: "gpt" | "claude" | "tie";
 }
 
 type AgentReviewResult = { score: number; refined: string; improvements: string[] };
@@ -235,7 +233,7 @@ export async function reviewWithGPT(
   const gpt = getGptReviewClient();
   const prompt = buildReviewPrompt(
     content, brief, sectionKey,
-    "a technical precision expert and AI prompt specialist (GPT Agent — Challenger)",
+    "a technical precision expert and AI prompt optimizer (GPT Optimizer)",
   );
   console.log(`[GPT Review] ${sectionKey} — démarrage (model: ${GPT_MODEL}, prompt: ${prompt.length} chars)`);
   const t0 = Date.now();
@@ -296,7 +294,6 @@ function buildGptPassPrompt(
   content: string,
   brief: EnhancedBrief,
   sectionKey: string,
-  passNumber: 1 | 2,
 ): string {
   const valuesStr = Array.isArray(brief.values) ? brief.values.join(", ") : brief.values;
   const extras = [
@@ -309,24 +306,26 @@ function buildGptPassPrompt(
     brief.price           ? `Price: ${brief.price}` : "",
   ].filter(Boolean).join(" | ");
 
-  const passLabel = passNumber === 1
-    ? "IMPROVEMENT PASS 1 — Identify the 2 most critical weaknesses and fix them"
-    : "IMPROVEMENT PASS 2 — This prompt was already improved once. Find the 2 remaining gaps and close them";
-
-  return `You are a technical AI prompt specialist for RoboNeo.com.
+  return `You are GPT Optimizer, a senior AI prompt architect for RoboNeo.com.
 
 BRAND: ${brief.brand_name} | Sector: ${brief.sector} | Tone: ${brief.tone} | Values: ${valuesStr}${extras ? ` | ${extras}` : ""}
 Section: ${sectionKey}
 
-${passLabel}:
+MISSION — Optimize this draft into the closest possible version of the "grail prompt":
 """
 ${content}
 """
 
-Rules: NEVER shorten the prompt. NEVER invent facts absent from the brief. All image/video/audio prompts MUST be in English. Add missing HEX codes, f-stops, focal lengths, color temperatures (Kelvin), pixel dimensions, model parameters where relevant.
+Coverage targets:
+• Make the prompt directly usable, dense, precise and brand-specific.
+• Add missing technical details where relevant: HEX codes, f-stops, focal lengths, color temperatures in Kelvin, pixel dimensions, model parameters, output format, composition, lighting, materials, camera/scene details.
+• Strengthen brand anchoring, product clarity, target audience fit, differentiation, negative constraints and platform-native syntax.
+• Keep all useful existing details.
+
+Rules: NEVER shorten the prompt. NEVER invent facts absent from the brief. All image/video/audio prompts MUST be in English.
 
 JSON only (no markdown):
-{"score":<score BEFORE your fix, 1 decimal, be strict>,"improvements":["exact fix 1","exact fix 2"],"refined_prompt":"<full improved version>"}`;
+{"score":<score BEFORE your optimization, 1 decimal, be strict>,"improvements":["optimization 1","optimization 2","optimization 3"],"refined_prompt":"<full optimized version>"}`;
 }
 
 function buildClaudeFinalPrompt(
@@ -344,14 +343,21 @@ function buildClaudeFinalPrompt(
     brief.product_name    ? `Product: ${brief.product_name}` : "",
   ].filter(Boolean).join(" | ");
 
-  return `You are a brand voice expert and final quality validator for RoboNeo.com.
+  return `You are Claude Final Auditor, a brand voice expert, creative strategist and completeness reviewer for RoboNeo.com.
 
 BRAND: ${brief.brand_name} | Sector: ${brief.sector} | Tone: ${brief.tone} | Values: ${valuesStr}${extras ? ` | ${extras}` : ""}
 Section: ${sectionKey}
 
-FINAL VALIDATION — This prompt has been through 2 GPT improvement passes. Score it strictly /10.
-• If score ≥ 9.5 → return it as-is with improvements:[]. It's already at the grail.
-• If score < 9.5 → apply up to 2 brand voice / market positioning refinements to push it to 10/10.
+FINAL AUDIT — GPT has already optimized this prompt toward the grail. Your role is not to debate GPT.
+Review GPT's optimized version and check whether anything important is still missing.
+
+If the GPT version is already complete:
+• Return it as-is with improvements:[].
+
+If it can still be better:
+• Improve coverage without undoing GPT's technical precision.
+• Add missing angles: brand voice, market positioning, audience motivation, product benefit clarity, differentiation, compliance with forbidden keywords, sacred colors, negative constraints, final output usability.
+• Preserve every useful detail already added by GPT.
 
 NEVER shorten. NEVER invent facts absent from the brand brief. Preserve all technical specs added by GPT. All image/video/audio prompts in English.
 
@@ -360,20 +366,19 @@ ${content}
 """
 
 JSON only (no markdown):
-{"score":<1 decimal>,"improvements":["brand refinement 1 if any","brand refinement 2 if any"],"refined_prompt":"<final version — identical to input if already 9.5+>"}`;
+{"score":<final score, 1 decimal>,"improvements":["Claude addition 1 if any","Claude addition 2 if any","Claude addition 3 if any"],"refined_prompt":"<final version — identical to GPT version if already complete>"}`;
 }
 
 async function gptRefinementPass(
   content: string,
   brief: EnhancedBrief,
   sectionKey: string,
-  passNumber: 1 | 2,
 ): Promise<AgentReviewResult> {
   const gpt = getGptReviewClient();
   // Tronquer le contenu si trop long pour éviter les timeouts et JSON tronqués
   const truncated = content.length > 7000 ? content.slice(0, 7000) + "\n[...tronqué pour performance]" : content;
-  const prompt = buildGptPassPrompt(truncated, brief, sectionKey, passNumber);
-  const label = `GPT Pass ${passNumber}`;
+  const prompt = buildGptPassPrompt(truncated, brief, sectionKey);
+  const label = "GPT Optimizer";
   console.log(`[${label}] ${sectionKey} — démarrage (${prompt.length} chars)`);
   const t0 = Date.now();
   try {
@@ -438,7 +443,7 @@ async function claudeFinalValidation(
   }
 }
 
-// ─── reviewPromptQuality — Pipeline séquentiel GPT×2 → Claude Final ──────────
+// ─── reviewPromptQuality — Pipeline séquentiel GPT Optimizer → Claude Auditor ─
 
 export async function reviewPromptQuality(
   content: string,
@@ -450,41 +455,26 @@ export async function reviewPromptQuality(
   let gptScore = 0;
   let claudeScore = 0;
 
-  // Phase 1 — GPT Pass 1 : optimise le brouillon Cerebras
+  // Phase 1 — GPT : optimise le brouillon Cerebras vers le prompt graal
   try {
-    const pass1 = await gptRefinementPass(current, brief, sectionKey, 1);
-    current = pass1.refined;
-    gptScore = pass1.score;
-    allImprovements.push(...pass1.improvements.map((i) => `[GPT-1] ${i}`));
-    console.log(`[Review] ${sectionKey} — GPT Pass 1: ${pass1.score}/10 → v1 prête`);
+    const gptOptimized = await gptRefinementPass(current, brief, sectionKey);
+    current = gptOptimized.refined;
+    gptScore = gptOptimized.score;
+    allImprovements.push(...gptOptimized.improvements.map((i) => `[GPT] ${i}`));
+    console.log(`[Review] ${sectionKey} — GPT Optimizer: ${gptOptimized.score}/10 → version optimisée prête`);
   } catch (err) {
-    console.warn(`[Review] ${sectionKey} — GPT Pass 1 échoué: ${err instanceof Error ? err.message : String(err)}`);
+    console.warn(`[Review] ${sectionKey} — GPT Optimizer échoué: ${err instanceof Error ? err.message : String(err)}`);
   }
 
-  // Phase 2 — GPT Pass 2 : uniquement si le score n'atteint pas encore 9/10
-  if (gptScore < 9.0) {
-    try {
-      const pass2 = await gptRefinementPass(current, brief, sectionKey, 2);
-      current = pass2.refined;
-      gptScore = pass2.score;
-      allImprovements.push(...pass2.improvements.map((i) => `[GPT-2] ${i}`));
-      console.log(`[Review] ${sectionKey} — GPT Pass 2: ${pass2.score}/10 → v2 prête`);
-    } catch (err) {
-      console.warn(`[Review] ${sectionKey} — GPT Pass 2 échoué: ${err instanceof Error ? err.message : String(err)}`);
-    }
-  } else {
-    console.log(`[Review] ${sectionKey} — GPT Pass 2 ignoré (score ${gptScore}/10 ≥ 9.0) ✓`);
-  }
-
-  // Phase 3 — Claude Final : ajoute ce que GPT a manqué (voix de marque, positionnement)
+  // Phase 2 — Claude : audite la version GPT et ajoute ce qui manque
   try {
     const final = await claudeFinalValidation(current, brief, sectionKey);
     current = final.refined;
     claudeScore = final.score;
     allImprovements.push(...final.improvements.map((i) => `[Claude] ${i}`));
-    console.log(`[Review] ${sectionKey} — Claude Final: ${final.score}/10 ✓ GRAAL`);
+    console.log(`[Review] ${sectionKey} — Claude Final Auditor: ${final.score}/10 ✓ couverture finale`);
   } catch (err) {
-    console.warn(`[Review] ${sectionKey} — Claude Final échoué: ${err instanceof Error ? err.message : String(err)}`);
+    console.warn(`[Review] ${sectionKey} — Claude Final Auditor échoué: ${err instanceof Error ? err.message : String(err)}`);
     claudeScore = gptScore;
   }
 
@@ -494,7 +484,6 @@ export async function reviewPromptQuality(
     improvements: allImprovements.slice(0, 6),
     gpt_score: gptScore,
     claude_score: claudeScore,
-    winner: claudeScore >= gptScore ? "claude" : "gpt",
   };
 }
 
