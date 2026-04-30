@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
 import { buildSystemPrompt, buildNegativePrompt, brandLockHeader, reviewPromptQuality, type EnhancedBrief } from "../../lib/prompt-utils";
+import { resolveLang, languageInstruction } from "../../i18n/messages";
 import { buildBrandLock } from "../../governance";
 import { runGovernancePass, extractBriefInputFromBody } from "../../governance/sse-helper";
 
@@ -107,7 +108,8 @@ Couleurs: ${colorStr} | Code promo: ${promoCode} | Remise: ${discount}% | Livrai
     : "";
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? undefined);
   const lockHeader = brandLockHeader(lock);
-  const systemPrompt = `${lockHeader}You are a senior expert in digital advertising and creative prompt generation for RoboNeo.com.
+  const outputLang = resolveLang(req);
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}You are a senior expert in digital advertising and creative prompt generation for RoboNeo.com.
 You generate ultra-precise creative prompts (Meta Ads, Google Display, TikTok, Carousel) and ready-to-use ad copy.
 Always return ONLY valid JSON, without markdown, without text before or after.
 LANGUAGE RULES (strictly enforced):

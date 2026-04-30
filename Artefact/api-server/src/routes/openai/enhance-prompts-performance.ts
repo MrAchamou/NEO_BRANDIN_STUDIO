@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
 import { getMarketConfig, buildMarketContext } from "../../lib/market-config";
 import { brandLockHeader } from "../../lib/prompt-utils";
+import { resolveLang, languageInstruction } from "../../i18n/messages";
 import { buildBrandLock, computeProfit } from "../../governance";
 import { runGovernancePass, extractBriefInputFromBody } from "../../governance/sse-helper";
 
@@ -111,7 +112,8 @@ Valeurs verrouillées :
   • CPA cible dynamique = ${profit.target_cpa_dynamic ?? "n/a"}
 RÈGLE : Ces chiffres sont la SEULE source de vérité financière. Tout autre nombre que tu produis (ROAS, prévisions CA, etc.) doit être cohérent avec eux. Tout chiffre absent doit être marqué "n/a" dans ta réponse, jamais inventé.`;
 
-  const systemPrompt = `${lockHeader}Tu es un expert en performance marketing e-commerce et analyse de données pour RoboNeo.com.${profitBlock}
+  const outputLang = resolveLang(req);
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert en performance marketing e-commerce et analyse de données pour RoboNeo.com.${profitBlock}
 Ta mission: créer des outils de tracking et d'optimisation PRÉCIS et ACTIONNABLES pour maximiser le ROI.
 
 ${marketCtx}

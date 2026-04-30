@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
 import { EnhancePromptsBody } from "@workspace/api-zod";
 import { buildSystemPrompt, buildNegativePrompt, brandLockHeader, reviewPromptQuality, type EnhancedBrief } from "../../lib/prompt-utils";
+import { resolveLang, languageInstruction } from "../../i18n/messages";
 import { buildLogoPrompt } from "../../prompts/modules/module-01-1-logo/prompt-builder";
 import { buildPalettePrompt } from "../../prompts/modules/module-01-2-palette/prompt-builder";
 import { buildBrandLock } from "../../governance";
@@ -94,7 +95,8 @@ router.post("/openai/enhance-prompts", async (req, res) => {
   const moduleLabel = "MODULE 01 — Brand Identity (Logo, Palette, Typographie, Charte Graphique)";
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? undefined);
   const lockHeader = brandLockHeader(lock);
-  const systemPrompt = `${lockHeader}${buildSystemPrompt(brief, moduleLabel)}`;
+  const outputLang = resolveLang(req);
+  const systemPrompt = `${lockHeader}${buildSystemPrompt(brief, moduleLabel)}${languageInstruction(outputLang)}`;
 
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");

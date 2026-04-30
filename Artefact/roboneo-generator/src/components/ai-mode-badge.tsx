@@ -12,8 +12,10 @@ import AIEngineConfig from "@/components/ai-engine-config";
 import {
   loadEngineConfig, onEngineChange, type AIEngineConfig as Cfg,
 } from "@/lib/ai-engine";
+import { useT } from "@/i18n";
 
 export default function AIModeBadge() {
+  const { t } = useT();
   const [cfg, setCfg] = useState<Cfg>(() => loadEngineConfig());
   const [open, setOpen] = useState(false);
 
@@ -34,7 +36,7 @@ export default function AIModeBadge() {
             : "bg-emerald-500/10 border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/15"
         }`}
         data-testid="button-ai-mode-badge"
-        title="Configurer le moteur AI"
+        title={t("ai_engine.dialog_title")}
       >
         <span
           className={`w-1.5 h-1.5 rounded-full ${
@@ -48,8 +50,8 @@ export default function AIModeBadge() {
         )}
         <span className="font-mono uppercase tracking-wider">
           {isPro
-            ? `Pro · ${cfg.modelLabel ?? cfg.model.split("/").pop()}`
-            : "Replit Managed"}
+            ? `${t("ai_engine.badge_pro")} · ${cfg.modelLabel ?? cfg.model.split("/").pop()}`
+            : t("ai_engine.badge_replit")}
         </span>
       </button>
 

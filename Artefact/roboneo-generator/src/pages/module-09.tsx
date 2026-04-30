@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { getEngineHeaders } from "@/lib/ai-engine";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Copy, Download, ChevronRight, Check, ShoppingCart,
@@ -803,7 +804,7 @@ export default function Module09() {
     try {
       const response = await fetch(`${import.meta.env.BASE_URL}api/openai/enhance-prompts-upsell`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getEngineHeaders() },
         body: JSON.stringify({
           ...governanceFields(brief),
           brand_name: brief.brand_name,

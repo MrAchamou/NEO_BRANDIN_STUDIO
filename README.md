@@ -1,10 +1,84 @@
-# Neo Branding Studio
+# AI BRAND OS — v3.x
 
-> Plateforme de génération de prompts IA chirurgicaux pour l'écosystème **RoboNeo.com**
+> **L'infrastructure stratégique des agences de marque nouvelle génération.**
+> Brand Operating System — Governance · Intelligence · Differentiation · Scale.
 
 ---
 
-## Vue d'ensemble
+## Positionnement v3.x — Agency-First
+
+**AI BRAND OS** est l'OS opérationnel des agences de marque. Il structure, gouverne, industrialise et scale la création de marque sur 10 modules end-to-end (Identity, Visual, Video, Ads, Sound, Copy, Launch, Chatbot, Upsell, Performance) — tout en restant pilotable par l'agence : choix du moteur IA, choix de la langue de sortie, gouvernance sectorielle.
+
+### Trois piliers v3.x
+
+1. **Dual AI Engine** — `Replit Managed` par défaut (zéro config, opérationnel en 1 clic), bascule vers `Professional OpenRouter (BYOK)` pour les agences qui apportent leur propre clé. Le serveur **ne stocke jamais** les clés OpenRouter — sessionStorage uniquement, transmises via headers `X-AI-Mode` / `X-AI-Model` / `X-OpenRouter-Key`.
+2. **Internationalisation complète (6 langues)** — Interface et sorties IA disponibles en `fr` (défaut) / `en` / `es` / `de` / `it` / `pt`, avec **séparation langue UI vs langue de sortie** : l'agence peut piloter en français et livrer un brief client en allemand. Fallback automatique vers EN si une clé est manquante.
+3. **Gouvernance sectorielle** (héritée v2.x, conservée) — Profils sectoriels JSON-driven (cosmetics EU, finance EU, food EU, fashion, saas) avec validateurs WCAG AA et règles de claims (1223/2009, MiFID, EFSA, etc.).
+
+---
+
+## Architecture i18n
+
+```
+Artefact/roboneo-generator/src/i18n/
+  index.tsx              ← Provider + useT() hook + LanguageSelector mount point
+  types.ts               ← TranslationKey type from EN
+  locales/
+    en.json              ← référence (fallback)
+    fr.json              ← défaut
+    es.json
+    de.json
+    it.json
+    pt.json
+
+Artefact/api-server/src/i18n/
+  messages.ts            ← catalog backend (errors, governance, brief export labels)
+                         ← resolveLang(req) lit X-Output-Lang / X-UI-Lang
+                         ← languageInstruction(lang) injecté dans tous les prompts AI
+```
+
+### Persistence client
+- `localStorage.aibrandos.ui_lang` — langue d'interface
+- `localStorage.aibrandos.output_lang` — langue des sorties IA (peut différer)
+
+### Headers réseau
+Toute requête vers `/api/openai/enhance-prompts*` ou `/api/growth/weekly-brief/export` inclut automatiquement (via `getEngineHeaders()` dans `lib/ai-engine.ts`) :
+- `X-Output-Lang` — pour piloter la langue de réponse de l'IA et l'export brief
+- `X-UI-Lang` — pour les messages d'erreur serveur
+
+### Couverture i18n actuelle
+| Zone | État |
+|---|---|
+| Header, hero, sidebar modules, footer | ✅ migré |
+| AI engine config + badge | ✅ migré |
+| Governance badge | ✅ migré |
+| Brief summary banner | ✅ migré |
+| Brand brief panel (en-tête) | ✅ migré |
+| Module-01 (Brand Identity) — témoin | ⚠️ partiel — formulaire à finaliser |
+| Modules 02-10 | ⏳ follow-up — pattern reproductible déjà établi |
+| Brief export HTML (10 sections) | ✅ migré (6 langues) |
+| Prompts AI (`languageInstruction`) | ✅ injecté dans 9 routes enhance-prompts |
+
+---
+
+## Démarrage rapide
+
+```bash
+pnpm install
+pnpm dev   # API:3000 + Vite:5000
+```
+
+Aucune clé n'est requise pour démarrer en mode `Replit Managed` (intégrations OpenAI + Anthropic déjà provisionnées). Pour basculer en `Professional OpenRouter`, ouvrir le panneau "AI Engine" en haut à droite de l'app et coller une clé OpenRouter — elle reste en `sessionStorage`, jamais transmise au stockage serveur.
+
+---
+
+## Historique — v2.x (Neo Branding Studio)
+
+> Le contenu ci-dessous décrit l'architecture historique multi-modèles (Cerebras → GPT → Claude). La logique de pipeline est conservée intacte ; seule la couche moteur a été abstraite par le Dual AI Engine v3.x.
+
+---
+
+## Vue d'ensemble (v2.x)
 
 **Neo Branding Studio** est une application web full-stack conçue pour générer, en temps réel, des prompts créatifs ultra-précis couvrant l'intégralité de l'identité d'une marque. À partir d'un brief client, un pipeline multi-modèles prend en charge la génération, l'évaluation et le raffinement automatique de chaque section — section par section, en streaming continu.
 

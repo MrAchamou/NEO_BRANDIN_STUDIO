@@ -1,8 +1,25 @@
-# Neo Branding Studio — v2.1.0
+# AI BRAND OS — v3.x
 
 ## Vue d'ensemble
 
-Générateur de prompts IA "chirurgicaux" pour l'écosystème RoboNeo.com. L'utilisateur remplit un **Brief Global de Marque** unique et l'IA génère des prompts créatifs ultra-précis en temps réel via streaming SSE (Server-Sent Events), section par section, pour 10 modules complets couvrant l'intégralité de l'univers de marque.
+**AI BRAND OS** — l'infrastructure stratégique des agences de marque nouvelle génération. Brand Operating System qui structure, gouverne, industrialise et scale la création de marque sur 10 modules end-to-end (Identity, Visual, Video, Ads, Sound, Copy, Launch, Chatbot, Upsell, Performance).
+
+Le moteur historique multi-modèles (génération streaming SSE + agents critiques) est conservé sous forme de pipeline. La v3.x ajoute trois piliers agency-first par-dessus :
+
+1. **Dual AI Engine** — `Replit Managed` par défaut (zéro config) ou `Professional OpenRouter (BYOK)` pour les agences qui apportent leur clé. Clés OpenRouter en `sessionStorage` uniquement, transmises via headers `X-AI-Mode` / `X-AI-Model` / `X-OpenRouter-Key`. Le serveur ne stocke jamais les clés.
+2. **i18n complète (6 langues)** — UI et sorties IA en `fr` (défaut) / `en` / `es` / `de` / `it` / `pt`, avec **séparation langue UI vs langue de sortie**. Fallback EN automatique. Persistence `localStorage.aibrandos.ui_lang` + `localStorage.aibrandos.output_lang`.
+3. **Gouvernance sectorielle** (héritée v2.x) — Profils JSON (cosmetics EU, fashion, finance EU, food EU, saas) + WCAG AA validator.
+
+### Architecture i18n
+- Frontend : `src/i18n/{index.tsx, types.ts, locales/{en,fr,es,de,it,pt}.json}` + Provider + `useT()` hook + `LanguageSelector` monté dans le header.
+- Backend : `src/i18n/messages.ts` avec `resolveLang(req)` (lit `X-Output-Lang`/`X-UI-Lang`), `getMessage(lang, key)` (catalog flat key/value avec fallback EN), `languageInstruction(lang)` (bloc "Respond in <lang>" injecté dans les system prompts AI).
+- Headers automatiques : `lib/ai-engine.ts` → `getEngineHeaders()` lit `localStorage` et joint `X-Output-Lang` + `X-UI-Lang` à toute requête fetch (10 modules + brief export).
+- Brief export : `growth/brief-export.ts` → `renderBriefHtml(brief, { lang })` traduit les 10 sections (Vue d'ensemble, KPIs, Profitabilité, Scaling, Risques, Créatif, Rétention, Action) via le catalog.
+
+### État de couverture (snapshot v3.x)
+- Migré : header, hero, sidebar modules, AI engine config/badge, governance badge, brief summary banner, brand brief panel (en-tête), brief export (6 langues), tous les prompts AI (9 routes).
+- Partiel : module-01 (formulaire à finaliser comme témoin reproductible).
+- Follow-up : modules 02-10 (pattern établi, ~10000 LOC à migrer).
 
 **Préférence utilisateur : toujours répondre en français.**
 

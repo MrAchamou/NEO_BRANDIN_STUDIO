@@ -1,0 +1,192 @@
+{
+  "app": {
+    "title": "AI BRAND OS",
+    "tagline": "Strategic infrastructure for next-generation brand agencies.",
+    "subtitle": "Brand Operating System — Governance · Intelligence · Differentiation · Scale.",
+    "description": "Structure, govern, industrialize and scale brand creation.",
+    "version_label": "v3.0.0",
+    "powered_by": "Powered by RoboNeo.com"
+  },
+  "languages": {
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "de": "Deutsch",
+    "it": "Italiano",
+    "pt": "Português"
+  },
+  "language_selector": {
+    "label": "Language",
+    "ui_language": "UI language",
+    "output_language": "AI output language",
+    "output_language_hint": "Language used for all generated content (prompts, copy, reports)."
+  },
+  "ai_models": {
+    "generation": "Generation",
+    "optimization": "Optimization",
+    "audit": "Audit"
+  },
+  "ai_engine": {
+    "badge_replit": "Replit Managed",
+    "badge_pro": "Pro",
+    "dialog_title": "AI engine configuration",
+    "dialog_description": "Choose how AI BRAND OS executes generation. Governance (brand lock, sector engine, compliance, voice, claims) is enforced regardless of mode.",
+    "active_label": "Active",
+    "key_label": "Key",
+    "managed_title": "Replit Managed (default)",
+    "managed_desc": "AI models managed directly by AI BRAND OS via Replit infrastructure. No configuration required. Ideal for standard agency workflows.",
+    "pro_title": "Professional (OpenRouter)",
+    "pro_desc": "Plug your own OpenRouter key to freely choose the model. The key is never stored on the server, never logged — it stays only in this browser session.",
+    "key_input_label": "OpenRouter key",
+    "key_input_hint": "Get a key at openrouter.ai. Format: sk-or-v1-…",
+    "model_label": "Model",
+    "security_warning": "Key stored only in sessionStorage (cleared when the tab closes). Never sent outside AI BRAND OS calls.",
+    "btn_clear": "Clear key",
+    "btn_cancel": "Cancel",
+    "btn_activate_pro": "Validate and activate",
+    "btn_activate_managed": "Confirm Replit Managed",
+    "toast_managed_title": "Replit Managed mode activated",
+    "toast_managed_desc": "AI models are now managed by AI BRAND OS.",
+    "toast_pro_title": "Professional mode activated",
+    "toast_pro_desc": "Model: {{model}}",
+    "toast_key_required_title": "Key required",
+    "toast_key_required_desc": "Enter your OpenRouter key to enable professional mode.",
+    "toast_key_refused_title": "Key refused",
+    "toast_key_refused_desc": "OpenRouter did not validate this key.",
+    "toast_key_cleared_title": "OpenRouter key cleared",
+    "toast_key_cleared_desc": "Back to Replit Managed mode."
+  },
+  "modules": {
+    "section_title": "MODULES",
+    "progress_label": "{{done}}/{{total}}",
+    "1": {
+      "name": "Brand Identity",
+      "tagline": "Build the visual DNA of your brand — logo, colors, typography and full graphic charter.",
+      "variants": ["Logo", "Palette", "Typography", "Charter"]
+    },
+    "2": {
+      "name": "Visual Content",
+      "tagline": "Photography, lifestyle, product and editorial visuals to fuel all your channels.",
+      "variants": ["Photo", "Lifestyle", "Detail", "Before/After"]
+    },
+    "3": {
+      "name": "Video Content",
+      "tagline": "TikTok, YouTube, teaser and product scripts ready for production.",
+      "variants": ["Script", "TikTok", "YouTube", "Teaser"]
+    },
+    "4": {
+      "name": "Ad Creatives",
+      "tagline": "High-conversion paid creatives for Meta, Google, TikTok and carousels.",
+      "variants": ["Meta", "Google", "TikTok", "Carousel"]
+    },
+    "5": {
+      "name": "Brand Sound",
+      "tagline": "Sonic identity — jingle, voice-over, soundtrack and brand mood.",
+      "variants": ["Jingle", "Voice", "Mood", "Track"]
+    },
+    "6": {
+      "name": "Copy & Content",
+      "tagline": "Strategic copywriting — slogans, manifestos, web copy and editorial.",
+      "variants": ["Slogan", "Manifesto", "Web", "Editorial"]
+    },
+    "7": {
+      "name": "Launch Ready",
+      "tagline": "Full launch kit — emails, landing, social and press release.",
+      "variants": ["Emails", "Landing", "Social", "PR"]
+    },
+    "8": {
+      "name": "Chatbot Script",
+      "tagline": "Conversational scripts for support, sales and post-purchase.",
+      "variants": ["Support", "Sales", "Post-purchase", "FAQ"]
+    },
+    "9": {
+      "name": "Upsell Kit",
+      "tagline": "Strategic upsell and cross-sell offers across the customer journey.",
+      "variants": ["Upsell", "Cross-sell", "Bundle", "Loyalty"]
+    },
+    "10": {
+      "name": "Performance",
+      "tagline": "KPI tracking, reports and optimization actions for the brand.",
+      "variants": ["KPI", "Report", "Insights", "Actions"]
+    }
+  },
+  "brief": {
+    "title_global": "Global Brand Brief",
+    "subtitle_global": "Fill in once — all modules adapt automatically.",
+    "progress_label": "{{percent}}% completed",
+    "module_count": "{{filled}}/{{total}}",
+    "fill_first_warning": "Fill in the Global Brief at the top of the page to use this module.",
+    "go_to_brief": "Go to brief",
+    "section_module": "Brief — {{module}}",
+    "section_module_subtitle": "Define brand identity to calibrate the agents."
+  },
+  "buttons": {
+    "generate": "Generate with AI",
+    "generate_all": "Generate all",
+    "save": "Save",
+    "cancel": "Cancel",
+    "copy": "Copy",
+    "copied": "Copied",
+    "export": "Export",
+    "download_html": "Download HTML",
+    "download_pdf": "Download PDF",
+    "edit": "Edit",
+    "delete": "Delete",
+    "validate": "Validate",
+    "back": "Back",
+    "close": "Close",
+    "loading": "Loading…",
+    "retry": "Retry"
+  },
+  "governance": {
+    "brand_lock_active": "Brand Lock Active",
+    "brand_lock_off": "Brand Lock Off",
+    "compliance_passed": "Compliance Passed",
+    "compliance_warning": "Compliance Warning",
+    "compliance_blocked": "Compliance Blocked",
+    "voice_locked": "Voice Locked",
+    "claims_audited": "Claims Audited",
+    "wcag_aa": "WCAG AA",
+    "sector_active": "Sector: {{sector}}",
+    "region_active": "Region: {{region}}"
+  },
+  "growth": {
+    "title": "Growth Brain — Weekly Brief",
+    "subtitle": "Strategic synthesis derived from your KPIs.",
+    "kpi_input": "Enter weekly KPIs",
+    "generate_brief": "Generate weekly brief",
+    "generating": "Generating brief…",
+    "executive_summary": "Executive summary",
+    "key_insights": "Key insights",
+    "recommendations": "Recommended actions",
+    "next_steps": "Next steps",
+    "export_html": "Export HTML",
+    "export_pdf": "Export PDF",
+    "no_brief_yet": "No brief generated yet. Fill in your KPIs to start.",
+    "metric_revenue": "Revenue",
+    "metric_traffic": "Traffic",
+    "metric_conversion": "Conversion rate",
+    "metric_aov": "Average order value",
+    "metric_cac": "Customer acquisition cost",
+    "metric_ltv": "Lifetime value",
+    "trend_up": "Up",
+    "trend_down": "Down",
+    "trend_flat": "Stable"
+  },
+  "errors": {
+    "fill_brief_first": "Fill in the Global Brief first.",
+    "generation_failed": "Generation failed. Please retry.",
+    "network_error": "Network error. Check your connection.",
+    "invalid_key": "Invalid key.",
+    "missing_field": "Required field missing: {{field}}.",
+    "server_error": "Server error. Please try again later."
+  },
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "optional": "(optional)",
+    "required": "(required)",
+    "and": "and",
+    "or": "or"
+  }
+}

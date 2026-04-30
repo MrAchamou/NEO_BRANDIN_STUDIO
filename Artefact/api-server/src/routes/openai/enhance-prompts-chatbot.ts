@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
 import { getMarketConfig, buildMarketContext, convertPrice } from "../../lib/market-config";
 import { reviewPromptQuality, brandLockHeader, type EnhancedBrief } from "../../lib/prompt-utils";
+import { resolveLang, languageInstruction } from "../../i18n/messages";
 import { buildBrandLock } from "../../governance";
 import { runGovernancePass, extractBriefInputFromBody } from "../../governance/sse-helper";
 
@@ -100,7 +101,8 @@ router.post("/openai/enhance-prompts-chatbot", async (req, res) => {
 
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? undefined);
   const lockHeader = brandLockHeader(lock);
-  const systemPrompt = `${lockHeader}Tu es un expert en service client, gestion de communauté et chatbot marketing pour RoboNeo.com.
+  const outputLang = resolveLang(req);
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert en service client, gestion de communauté et chatbot marketing pour RoboNeo.com.
 Tu génères des scripts de service client ultra-professionnels, empathiques et orientés conversion.
 
 ${marketCtx}

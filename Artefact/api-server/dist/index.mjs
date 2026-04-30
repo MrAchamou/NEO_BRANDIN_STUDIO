@@ -42443,6 +42443,273 @@ function inferChannelStatuses(raw) {
   });
 }
 
+// src/i18n/messages.ts
+var SUPPORTED_LANGS = ["en", "fr", "es", "de", "it", "pt"];
+var DEFAULT_LANG = "fr";
+var FALLBACK_LANG = "en";
+var LANG_NAMES = {
+  en: "English",
+  fr: "French (Fran\xE7ais)",
+  es: "Spanish (Espa\xF1ol)",
+  de: "German (Deutsch)",
+  it: "Italian (Italiano)",
+  pt: "Portuguese (Portugu\xEAs)"
+};
+var CATALOG = {
+  "errors.invalid_body": {
+    en: "Invalid request body",
+    fr: "Corps de requ\xEAte invalide",
+    es: "Cuerpo de solicitud no v\xE1lido",
+    de: "Ung\xFCltiger Anfragetext",
+    it: "Corpo della richiesta non valido",
+    pt: "Corpo da solicita\xE7\xE3o inv\xE1lido"
+  },
+  "errors.brief_required": {
+    en: "Brand brief is required for this operation",
+    fr: "Le brief de marque est requis pour cette op\xE9ration",
+    es: "Se requiere el brief de marca para esta operaci\xF3n",
+    de: "Brand-Brief ist f\xFCr diesen Vorgang erforderlich",
+    it: "Il brief di marca \xE8 richiesto per questa operazione",
+    pt: "O brief de marca \xE9 necess\xE1rio para esta opera\xE7\xE3o"
+  },
+  "errors.upstream_ai": {
+    en: "AI engine error \u2014 please try again or switch to Replit Managed mode",
+    fr: "Erreur du moteur AI \u2014 r\xE9essaie ou bascule en mode Replit Managed",
+    es: "Error del motor de IA \u2014 int\xE9ntalo de nuevo o cambia al modo Replit Managed",
+    de: "AI-Engine-Fehler \u2014 versuche es erneut oder wechsle in den Replit Managed Modus",
+    it: "Errore del motore AI \u2014 riprova o passa alla modalit\xE0 Replit Managed",
+    pt: "Erro do motor de IA \u2014 tente novamente ou mude para o modo Replit Managed"
+  },
+  "governance.blocked": {
+    en: "Generation blocked by governance",
+    fr: "G\xE9n\xE9ration bloqu\xE9e par la gouvernance",
+    es: "Generaci\xF3n bloqueada por la gobernanza",
+    de: "Generierung durch Governance blockiert",
+    it: "Generazione bloccata dalla governance",
+    pt: "Gera\xE7\xE3o bloqueada pela governan\xE7a"
+  },
+  "brief.section_overview": {
+    en: "Overview",
+    fr: "Vue d'ensemble",
+    es: "Resumen",
+    de: "\xDCbersicht",
+    it: "Panoramica",
+    pt: "Vis\xE3o geral"
+  },
+  "brief.section_kpis": {
+    en: "KPIs",
+    fr: "KPIs",
+    es: "KPIs",
+    de: "KPIs",
+    it: "KPI",
+    pt: "KPIs"
+  },
+  "brief.section_identity": {
+    en: "Brand identity",
+    fr: "Identit\xE9 de marque",
+    es: "Identidad de marca",
+    de: "Markenidentit\xE4t",
+    it: "Identit\xE0 di marca",
+    pt: "Identidade da marca"
+  },
+  "brief.section_positioning": {
+    en: "Positioning",
+    fr: "Positionnement",
+    es: "Posicionamiento",
+    de: "Positionierung",
+    it: "Posizionamento",
+    pt: "Posicionamento"
+  },
+  "brief.section_governance": {
+    en: "Governance",
+    fr: "Gouvernance",
+    es: "Gobernanza",
+    de: "Governance",
+    it: "Governance",
+    pt: "Governan\xE7a"
+  },
+  "brief.exported_at": {
+    en: "Exported at",
+    fr: "Export\xE9 le",
+    es: "Exportado el",
+    de: "Exportiert am",
+    it: "Esportato il",
+    pt: "Exportado em"
+  },
+  "brief.client_ready": {
+    en: "Client-ready brief",
+    fr: "Brief client-ready",
+    es: "Brief listo para cliente",
+    de: "Kundenbereiter Brief",
+    it: "Brief pronto per il cliente",
+    pt: "Brief pronto para o cliente"
+  },
+  "brief.label_generated_at": {
+    en: "Generated on",
+    fr: "G\xE9n\xE9r\xE9 le",
+    es: "Generado el",
+    de: "Erstellt am",
+    it: "Generato il",
+    pt: "Gerado em"
+  },
+  "brief.section_overview_perf": {
+    en: "Performance overview",
+    fr: "Vue d'ensemble performance",
+    es: "Resumen de rendimiento",
+    de: "Performance-\xDCbersicht",
+    it: "Panoramica performance",
+    pt: "Vis\xE3o geral de desempenho"
+  },
+  "brief.label_outlook": {
+    en: "Outlook",
+    fr: "Perspective",
+    es: "Perspectiva",
+    de: "Ausblick",
+    it: "Prospettiva",
+    pt: "Perspectiva"
+  },
+  "brief.label_profit_sustainability": {
+    en: "Profit sustainability",
+    fr: "Soutenabilit\xE9 profit",
+    es: "Sostenibilidad del beneficio",
+    de: "Profit-Nachhaltigkeit",
+    it: "Sostenibilit\xE0 del profitto",
+    pt: "Sustentabilidade do lucro"
+  },
+  "brief.label_risk_index": {
+    en: "Risk index",
+    fr: "Indice de risque",
+    es: "\xCDndice de riesgo",
+    de: "Risikoindex",
+    it: "Indice di rischio",
+    pt: "\xCDndice de risco"
+  },
+  "brief.section_profit_check": {
+    en: "Profitability check",
+    fr: "Check profitabilit\xE9",
+    es: "Comprobaci\xF3n de rentabilidad",
+    de: "Profitabilit\xE4tscheck",
+    it: "Verifica della redditivit\xE0",
+    pt: "Verifica\xE7\xE3o de rentabilidade"
+  },
+  "brief.label_profitability": {
+    en: "Profitability",
+    fr: "Profitabilit\xE9",
+    es: "Rentabilidad",
+    de: "Profitabilit\xE4t",
+    it: "Redditivit\xE0",
+    pt: "Rentabilidade"
+  },
+  "brief.label_breakeven": {
+    en: "Break-even",
+    fr: "Break-even",
+    es: "Punto de equilibrio",
+    de: "Break-even",
+    it: "Pareggio",
+    pt: "Break-even"
+  },
+  "brief.section_scaling": {
+    en: "Scaling opportunities",
+    fr: "Opportunit\xE9s de scaling",
+    es: "Oportunidades de escalado",
+    de: "Skalierungs\xADm\xF6glichkeiten",
+    it: "Opportunit\xE0 di scaling",
+    pt: "Oportunidades de escalada"
+  },
+  "brief.empty_scaling": {
+    en: "No priority scaling opportunity detected this week.",
+    fr: "Aucune opportunit\xE9 prioritaire d\xE9tect\xE9e cette semaine.",
+    es: "No se detect\xF3 ninguna oportunidad prioritaria esta semana.",
+    de: "Diese Woche wurde keine priorit\xE4re Skalierungschance erkannt.",
+    it: "Nessuna opportunit\xE0 prioritaria rilevata questa settimana.",
+    pt: "Nenhuma oportunidade priorit\xE1ria detectada esta semana."
+  },
+  "brief.section_risks": {
+    en: "Risk signals",
+    fr: "Signaux de risque",
+    es: "Se\xF1ales de riesgo",
+    de: "Risikosignale",
+    it: "Segnali di rischio",
+    pt: "Sinais de risco"
+  },
+  "brief.empty_risks": {
+    en: "No active risk signal.",
+    fr: "Aucun signal de risque actif.",
+    es: "Ninguna se\xF1al de riesgo activa.",
+    de: "Kein aktives Risikosignal.",
+    it: "Nessun segnale di rischio attivo.",
+    pt: "Nenhum sinal de risco ativo."
+  },
+  "brief.section_creative": {
+    en: "Creative analysis",
+    fr: "Analyse cr\xE9ative",
+    es: "An\xE1lisis creativo",
+    de: "Kreativ\xADanalyse",
+    it: "Analisi creativa",
+    pt: "An\xE1lise criativa"
+  },
+  "brief.empty_creative": {
+    en: "No notable creative signal.",
+    fr: "Pas de signal cr\xE9atif notable.",
+    es: "Sin se\xF1al creativa relevante.",
+    de: "Kein bemerkenswertes Kreativsignal.",
+    it: "Nessun segnale creativo significativo.",
+    pt: "Sem sinal criativo not\xE1vel."
+  },
+  "brief.section_retention": {
+    en: "Retention update",
+    fr: "Mise \xE0 jour r\xE9tention",
+    es: "Actualizaci\xF3n de retenci\xF3n",
+    de: "Retention-Update",
+    it: "Aggiornamento retention",
+    pt: "Atualiza\xE7\xE3o de reten\xE7\xE3o"
+  },
+  "brief.label_cohort_health": {
+    en: "Cohort health",
+    fr: "Sant\xE9 cohorte",
+    es: "Salud de la cohorte",
+    de: "Kohorten-Gesundheit",
+    it: "Salute della coorte",
+    pt: "Sa\xFAde da coorte"
+  },
+  "brief.label_action": {
+    en: "Recommended action",
+    fr: "Action recommand\xE9e",
+    es: "Acci\xF3n recomendada",
+    de: "Empfohlene Aktion",
+    it: "Azione raccomandata",
+    pt: "A\xE7\xE3o recomendada"
+  }
+};
+var LOCALE_TAGS = {
+  en: "en-US",
+  fr: "fr-FR",
+  es: "es-ES",
+  de: "de-DE",
+  it: "it-IT",
+  pt: "pt-PT"
+};
+function localeTag(lang) {
+  return LOCALE_TAGS[lang] || "en-US";
+}
+function resolveLang(req) {
+  const raw = String(req.header("x-output-lang") || req.header("x-ui-lang") || "").trim().toLowerCase().slice(0, 2);
+  return SUPPORTED_LANGS.includes(raw) ? raw : DEFAULT_LANG;
+}
+function getMessage(lang, key) {
+  const entry = CATALOG[key];
+  if (!entry) return key;
+  return entry[lang] || entry[FALLBACK_LANG] || key;
+}
+function languageInstruction(lang) {
+  if (lang === DEFAULT_LANG) return "";
+  const name = LANG_NAMES[lang];
+  return `
+
+\u2550\u2550\u2550 OUTPUT LANGUAGE \u2550\u2550\u2550
+All generated copy, captions, descriptions, error messages and human-readable text MUST be written in ${name}. Technical fields (HEX colors, model parameters, --ar tags, font names, file extensions) stay as-is.`;
+}
+
 // src/growth/brief-export.ts
 var OUTLOOK_LABELS = {
   very_bullish: "Tr\xE8s haussier",
@@ -42465,12 +42732,14 @@ function renderList(items, emptyMsg = "\u2014") {
   return `<ul>${items.map((s) => `<li>${escapeHtml(s)}</li>`).join("")}</ul>`;
 }
 function renderBriefHtml(brief, opts = {}) {
+  const lang = opts.lang || DEFAULT_LANG;
+  const tr = (key) => getMessage(lang, key);
   const outlook = OUTLOOK_LABELS[brief.performance_overview.outlook] ?? brief.performance_overview.outlook;
   const riskColor = RISK_COLORS[brief.performance_overview.risk_index] ?? "#64748b";
   const action = brief.recommended_action.action;
   const scalePct = brief.recommended_action.scale_percent;
   const actionLabel = scalePct ? `${action} (+${scalePct}%)` : action;
-  const generatedDate = new Date(brief.generated_at || Date.now()).toLocaleDateString("fr-FR", {
+  const generatedDate = new Date(brief.generated_at || Date.now()).toLocaleDateString(localeTag(lang), {
     year: "numeric",
     month: "long",
     day: "numeric"
@@ -42478,7 +42747,7 @@ function renderBriefHtml(brief, opts = {}) {
   const brandLine = opts.brandName ? `<p class="brand-line">${escapeHtml(opts.brandName)}</p>` : "";
   const autoPrintScript = opts.autoPrint ? `<script>window.addEventListener("load", function () { setTimeout(function () { window.print(); }, 250); });</script>` : "";
   return `<!DOCTYPE html>
-<html lang="fr">
+<html lang="${lang}">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -42597,32 +42866,32 @@ function renderBriefHtml(brief, opts = {}) {
 <body>
 <div class="page">
   <header>
-    <span class="pill">AI BRAND OS \xB7 Brief client-ready</span>
+    <span class="pill">AI BRAND OS \xB7 ${tr("brief.client_ready")}</span>
     <h1>${escapeHtml(brief.title)}</h1>
     ${brandLine}
-    <p class="meta">G\xE9n\xE9r\xE9 le ${generatedDate}</p>
+    <p class="meta">${tr("brief.label_generated_at")} ${generatedDate}</p>
   </header>
 
   <section>
-    <h2>Vue d'ensemble performance</h2>
+    <h2>${tr("brief.section_overview_perf")}</h2>
     <div class="grid-3">
       <div class="kpi">
         <div class="value">${escapeHtml(outlook)}</div>
-        <div class="label">Perspective</div>
+        <div class="label">${tr("brief.label_outlook")}</div>
       </div>
       <div class="kpi">
         <div class="value">${escapeHtml(brief.performance_overview.profit_sustainability)}</div>
-        <div class="label">Soutenabilit\xE9 profit</div>
+        <div class="label">${tr("brief.label_profit_sustainability")}</div>
       </div>
       <div class="kpi">
         <div class="value"><span class="risk-badge" style="background:${riskColor}">${escapeHtml(brief.performance_overview.risk_index)}</span></div>
-        <div class="label">Indice de risque</div>
+        <div class="label">${tr("brief.label_risk_index")}</div>
       </div>
     </div>
   </section>
 
   <section>
-    <h2>Check profitabilit\xE9</h2>
+    <h2>${tr("brief.section_profit_check")}</h2>
     <div class="grid-3">
       <div class="kpi">
         <div class="value">${brief.profit_check.ltv_cac_ratio}x</div>
@@ -42630,40 +42899,40 @@ function renderBriefHtml(brief, opts = {}) {
       </div>
       <div class="kpi">
         <div class="value">${escapeHtml(brief.profit_check.profitability)}</div>
-        <div class="label">Profitabilit\xE9</div>
+        <div class="label">${tr("brief.label_profitability")}</div>
       </div>
       <div class="kpi">
         <div class="value">${brief.profit_check.break_even_months}m</div>
-        <div class="label">Break-even</div>
+        <div class="label">${tr("brief.label_breakeven")}</div>
       </div>
     </div>
   </section>
 
   <div class="row-2">
     <section>
-      <h2>Opportunit\xE9s de scaling</h2>
-      ${renderList(brief.scaling_opportunities, "Aucune opportunit\xE9 prioritaire d\xE9tect\xE9e cette semaine.")}
+      <h2>${tr("brief.section_scaling")}</h2>
+      ${renderList(brief.scaling_opportunities, tr("brief.empty_scaling"))}
     </section>
     <section>
-      <h2>Signaux de risque</h2>
-      ${renderList(brief.risk_flags, "Aucun signal de risque actif.")}
+      <h2>${tr("brief.section_risks")}</h2>
+      ${renderList(brief.risk_flags, tr("brief.empty_risks"))}
     </section>
   </div>
 
   <section>
-    <h2>Analyse cr\xE9ative</h2>
-    ${renderList(brief.creative_analysis, "Pas de signal cr\xE9atif notable.")}
+    <h2>${tr("brief.section_creative")}</h2>
+    ${renderList(brief.creative_analysis, tr("brief.empty_creative"))}
   </section>
 
   <section>
-    <h2>Mise \xE0 jour r\xE9tention</h2>
+    <h2>${tr("brief.section_retention")}</h2>
     <p class="stat-line"><strong>M+1 :</strong> ${escapeHtml(brief.retention_update.m1)}</p>
     <p class="stat-line"><strong>M+3 :</strong> ${escapeHtml(brief.retention_update.m3)}</p>
-    <p class="stat-line"><strong>Sant\xE9 cohorte :</strong> ${escapeHtml(brief.retention_update.health)}</p>
+    <p class="stat-line"><strong>${tr("brief.label_cohort_health")} :</strong> ${escapeHtml(brief.retention_update.health)}</p>
   </section>
 
   <div class="action-box">
-    <p class="action-title">Action recommand\xE9e</p>
+    <p class="action-title">${tr("brief.label_action")}</p>
     <p class="action-headline">${escapeHtml(actionLabel)}</p>
     ${renderList(brief.recommended_action.rationale, "\u2014")}
   </div>
@@ -42888,7 +43157,8 @@ router6.post("/growth/weekly-brief/export", (req, res) => {
   });
   const html = renderBriefHtml(brief, {
     autoPrint: format === "pdf",
-    brandName: typeof brand_name === "string" && brand_name.trim() ? brand_name.trim() : void 0
+    brandName: typeof brand_name === "string" && brand_name.trim() ? brand_name.trim() : void 0,
+    lang: resolveLang(req)
   });
   const dateStamp = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
   const ext = format === "pdf" ? "pdf.html" : "html";
@@ -50659,7 +50929,8 @@ router8.post("/openai/enhance-prompts", async (req, res) => {
   const moduleLabel = "MODULE 01 \u2014 Brand Identity (Logo, Palette, Typographie, Charte Graphique)";
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
   const lockHeader = brandLockHeader(lock);
-  const systemPrompt = `${lockHeader}${buildSystemPrompt(brief, moduleLabel)}`;
+  const outputLang = resolveLang(req);
+  const systemPrompt = `${lockHeader}${buildSystemPrompt(brief, moduleLabel)}${languageInstruction(outputLang)}`;
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
@@ -51253,7 +51524,8 @@ Ces couleurs sont SACR\xC9ES \u2014 les utiliser EXACTEMENT dans tous les visuel
 \u2022 Toujours \xE9crire explicitement la couleur de peau, la coiffure et le style culturel du sujet dans chaque prompt.` : "";
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
   const lockHeader = brandLockHeader(lock);
-  const systemPrompt = `${lockHeader}${baseSysPrompt}${colorPriorityBlock}${audienceNote}
+  const outputLang = resolveLang(req);
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}${baseSysPrompt}${colorPriorityBlock}${audienceNote}
 
 IMPORTANT: Tu retournes UNIQUEMENT du JSON valide, sans aucun markdown, sans texte avant ou apr\xE8s le JSON.
 Chaque prompt visuel doit inclure un champ "negative_prompt" avec les \xE9l\xE9ments \xE0 \xE9viter: "${negativePart}"`;
@@ -51442,7 +51714,8 @@ Cible: ${target_audience}${yearLine} | Code promo: ${promoCode} | Dur\xE9e promo
 \u26A0\uFE0F R\xC8GLE ABSOLUE COULEURS: Le client impose ces couleurs de marque: ${brand_colors}. Ces couleurs sont SACR\xC9ES \u2014 les utiliser EXACTEMENT dans tous les visuels vid\xE9o d\xE9crits.` : "";
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
   const lockHeader = brandLockHeader(lock);
-  const systemPrompt = `${lockHeader}You are a senior expert in advertising script creation and video generation prompts for RoboNeo.com.
+  const outputLang = resolveLang(req);
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}You are a senior expert in advertising script creation and video generation prompts for RoboNeo.com.
 LANGUAGE RULES (strictly enforced):
 \u2022 Ad scripts and voice-over texts (sections "scripts" and "voice_over"): write IN FRENCH \u2014 punchy, adapted to the ${sector} sector, direct copywriting
 \u2022 Video generation prompts (sections "short_videos", "long_video", "teaser", "thumbnails"): write EXCLUSIVELY IN ENGLISH \u2014 native vocabulary for Runway Gen-3, Pika, Kling, Midjourney, DALL-E 3
@@ -51843,7 +52116,8 @@ Couleurs: ${colorStr} | Code promo: ${promoCode} | Remise: ${discount}% | Livrai
 \u26A0\uFE0F R\xC8GLE ABSOLUE COULEURS: Le client impose ces couleurs: ${colorStr}. Ces couleurs sont IMMUABLES \u2014 les utiliser EXACTEMENT dans toutes les cr\xE9ations publicitaires. L'auto-d\xE9tection par secteur est D\xC9SACTIV\xC9E.` : "";
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
   const lockHeader = brandLockHeader(lock);
-  const systemPrompt = `${lockHeader}You are a senior expert in digital advertising and creative prompt generation for RoboNeo.com.
+  const outputLang = resolveLang(req);
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}You are a senior expert in digital advertising and creative prompt generation for RoboNeo.com.
 You generate ultra-precise creative prompts (Meta Ads, Google Display, TikTok, Carousel) and ready-to-use ad copy.
 Always return ONLY valid JSON, without markdown, without text before or after.
 LANGUAGE RULES (strictly enforced):
@@ -52302,7 +52576,8 @@ Style musiques de fond: ${bgmStyle}`;
 L'identit\xE9 visuelle de la marque utilise ces couleurs: ${brand_colors}. Le rendu sonore doit traduire cette palette chromatique en \xE9motions musicales coh\xE9rentes.` : "";
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
   const lockHeader = brandLockHeader(lock);
-  const systemPrompt = `${lockHeader}You are a senior sound art director, expert in brand sonic identity and audio prompt generation for AI tools (Suno, Udio, ElevenLabs, Adobe Podcast).
+  const outputLang = resolveLang(req);
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}You are a senior sound art director, expert in brand sonic identity and audio prompt generation for AI tools (Suno, Udio, ElevenLabs, Adobe Podcast).
 You generate ultra-precise audio prompts and complete creative briefs for every sonic asset of a brand.
 Always return ONLY valid JSON, without markdown, without text before or after.
 LANGUAGE RULES (strictly enforced):
@@ -52647,7 +52922,8 @@ router13.post("/openai/enhance-prompts-copy", async (req, res) => {
   res.setHeader("Connection", "keep-alive");
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
   const lockHeader = brandLockHeader(lock);
-  const systemPrompt = `${lockHeader}Tu es un expert copywriter et strat\xE8ge de contenu pour RoboNeo.com.
+  const outputLang = resolveLang(req);
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert copywriter et strat\xE8ge de contenu pour RoboNeo.com.
 Tu g\xE9n\xE8res du contenu textuel ultra-professionnel, optimis\xE9 conversion, en fran\xE7ais impeccable.
 Contexte de la marque:
 - Marque: ${brand_name}
@@ -53306,7 +53582,8 @@ Architecture conversion-first :
 \u2022 Social proof mod\xE9r\xE9 et toujours v\xE9rifiable
 \u2022 Une mention d'urgence MAX, bas\xE9e sur un fait r\xE9el (offre dat\xE9e, \xE9dition limit\xE9e d\xE9clar\xE9e)
 \u2022 CTA r\xE9p\xE9t\xE9 2-3 fois, ton mesur\xE9 ; jamais d'exclamation excessive`;
-  const systemPrompt = `${lockHeader}Tu es un expert senior en architecture de landing pages haute conversion, d\xE9veloppeur web et strat\xE8ge de lancement pour RoboNeo.com.
+  const outputLang = resolveLang(req);
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert senior en architecture de landing pages haute conversion, d\xE9veloppeur web et strat\xE8ge de lancement pour RoboNeo.com.
 
 \u2550\u2550\u2550 GROWTH MODE ACTIF : ${profile.label.toUpperCase()} \u2550\u2550\u2550
 ${profile.description}
@@ -53587,7 +53864,8 @@ router15.post("/openai/enhance-prompts-chatbot", async (req, res) => {
   res.setHeader("Connection", "keep-alive");
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
   const lockHeader = brandLockHeader(lock);
-  const systemPrompt = `${lockHeader}Tu es un expert en service client, gestion de communaut\xE9 et chatbot marketing pour RoboNeo.com.
+  const outputLang = resolveLang(req);
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert en service client, gestion de communaut\xE9 et chatbot marketing pour RoboNeo.com.
 Tu g\xE9n\xE8res des scripts de service client ultra-professionnels, empathiques et orient\xE9s conversion.
 
 ${marketCtx}
@@ -53844,7 +54122,8 @@ Inclure dans chaque bundle JSON un champ "price_breakdown" :
     "bundle_price": <calcul\xE9 strictement>
   }
 Tout \xE9cart entre le calcul et le prix annonc\xE9 sera rejet\xE9 par le Pricing Validator.`;
-  const systemPrompt = `${lockHeader}Tu es un expert en strat\xE9gie e-commerce et maximisation du panier moyen pour RoboNeo.com.${pricingDirective}
+  const outputLang = resolveLang(req);
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert en strat\xE9gie e-commerce et maximisation du panier moyen pour RoboNeo.com.${pricingDirective}
 Ta mission: g\xE9n\xE9rer des strat\xE9gies d'upsell et cross-sell PR\xC9CISES et ACTIONNABLES pour augmenter le chiffre d'affaires.
 
 ${marketCtx}
@@ -54170,7 +54449,8 @@ Valeurs verrouill\xE9es :
   \u2022 CPA max dynamique = ${profit.max_cpa_dynamic ?? "n/a"}
   \u2022 CPA cible dynamique = ${profit.target_cpa_dynamic ?? "n/a"}
 R\xC8GLE : Ces chiffres sont la SEULE source de v\xE9rit\xE9 financi\xE8re. Tout autre nombre que tu produis (ROAS, pr\xE9visions CA, etc.) doit \xEAtre coh\xE9rent avec eux. Tout chiffre absent doit \xEAtre marqu\xE9 "n/a" dans ta r\xE9ponse, jamais invent\xE9.`;
-  const systemPrompt = `${lockHeader}Tu es un expert en performance marketing e-commerce et analyse de donn\xE9es pour RoboNeo.com.${profitBlock}
+  const outputLang = resolveLang(req);
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert en performance marketing e-commerce et analyse de donn\xE9es pour RoboNeo.com.${profitBlock}
 Ta mission: cr\xE9er des outils de tracking et d'optimisation PR\xC9CIS et ACTIONNABLES pour maximiser le ROI.
 
 ${marketCtx}

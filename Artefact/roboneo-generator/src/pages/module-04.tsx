@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { getEngineHeaders } from "@/lib/ai-engine";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -252,7 +253,7 @@ export default function Module04() {
 
       const response = await fetch(`${import.meta.env.BASE_URL}api/openai/enhance-prompts-ads`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getEngineHeaders() },
         body: JSON.stringify({
           ...governanceFields(brief),
           brand_name: brief.brand_name,

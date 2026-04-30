@@ -19,6 +19,7 @@ import {
 } from "../growth/scenario-simulator";
 import { optimizeChannelMix, inferChannelStatuses, type ChannelMetrics } from "../growth/channel-optimizer";
 import { renderBriefHtml, type ClientReadyBrief } from "../growth/brief-export";
+import { resolveLang } from "../i18n/messages";
 
 const router = Router();
 
@@ -299,6 +300,7 @@ router.post("/growth/weekly-brief/export", (req, res) => {
   const html = renderBriefHtml(brief, {
     autoPrint: format === "pdf",
     brandName: typeof brand_name === "string" && brand_name.trim() ? brand_name.trim() : undefined,
+    lang: resolveLang(req),
   });
 
   const dateStamp = new Date().toISOString().slice(0, 10);

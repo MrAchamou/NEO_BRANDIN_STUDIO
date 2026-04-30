@@ -1,9 +1,11 @@
 import React from "react";
 import { AlertCircle, CheckCircle2, ChevronUp } from "lucide-react";
 import { useBrand } from "@/context/brand-context";
+import { useT } from "@/i18n";
 
 export default function BriefSummaryBanner() {
   const { brief, completionPct } = useBrand();
+  const { t } = useT();
   const isFilled = !!brief.brand_name;
 
   const scrollToBrief = () => {
@@ -15,14 +17,14 @@ export default function BriefSummaryBanner() {
       <div className="mb-5 flex items-center gap-3 px-4 py-3 rounded-xl border border-amber-400/30 bg-amber-400/5">
         <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0" />
         <p className="text-sm text-amber-300 flex-1">
-          Remplis d'abord le <strong>Brief Global</strong> en haut de page pour utiliser ce module.
+          {t("brief.fill_first_warning")}
         </p>
         <button
           onClick={scrollToBrief}
           className="flex items-center gap-1 text-xs text-amber-400 hover:text-amber-300 transition-colors font-medium whitespace-nowrap"
         >
           <ChevronUp className="w-3.5 h-3.5" />
-          Aller au brief
+          {t("brief.go_to_brief")}
         </button>
       </div>
     );
@@ -42,14 +44,16 @@ export default function BriefSummaryBanner() {
             <span className="text-xs text-muted-foreground">{brief.product_name}</span>
           </>
         )}
-        <span className="text-[10px] font-mono text-muted-foreground/50">{completionPct}% complet</span>
+        <span className="text-[10px] font-mono text-muted-foreground/50">
+          {t("brief.progress_label", { percent: completionPct })}
+        </span>
       </div>
       <button
         onClick={scrollToBrief}
         className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
       >
         <ChevronUp className="w-3.5 h-3.5" />
-        Modifier
+        {t("buttons.edit")}
       </button>
     </div>
   );

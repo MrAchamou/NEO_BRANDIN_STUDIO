@@ -24,6 +24,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { useT } from "@/i18n";
 import {
   loadEngineConfig, saveEngineConfig, clearEngineConfig,
   validateOpenRouterKey, OPENROUTER_MODELS, type AIEngineConfig,
@@ -42,6 +43,7 @@ function maskKey(k: string): string {
 
 export default function AIEngineConfig({ open, onOpenChange }: Props) {
   const { toast } = useToast();
+  const { t } = useT();
   const [current, setCurrent] = useState<AIEngineConfig>(() => loadEngineConfig());
 
   const [proEnabled, setProEnabled] = useState(false);
@@ -69,8 +71,8 @@ export default function AIEngineConfig({ open, onOpenChange }: Props) {
       clearEngineConfig();
       setCurrent(loadEngineConfig());
       toast({
-        title: "Mode Replit Managed activé",
-        description: "Les modèles AI sont désormais gérés par AI BRAND OS.",
+        title: t("ai_engine.toast_managed_title"),
+        description: t("ai_engine.toast_managed_desc"),
       });
       onOpenChange(false);
       return;
@@ -79,8 +81,8 @@ export default function AIEngineConfig({ open, onOpenChange }: Props) {
     const trimmed = keyInput.trim();
     if (!trimmed) {
       toast({
-        title: "Clé requise",
-        description: "Saisis ta clé OpenRouter pour activer le mode professionnel.",
+        title: t("ai_engine.toast_key_required_title"),
+        description: t("ai_engine.toast_key_required_desc"),
         variant: "destructive",
       });
       return;
@@ -92,8 +94,8 @@ export default function AIEngineConfig({ open, onOpenChange }: Props) {
 
     if (!result.valid) {
       toast({
-        title: "Clé refusée",
-        description: result.reason ?? "OpenRouter n'a pas validé cette clé.",
+        title: t("ai_engine.toast_key_refused_title"),
+        description: result.reason ?? t("ai_engine.toast_key_refused_desc"),
         variant: "destructive",
       });
       return;
@@ -111,8 +113,8 @@ export default function AIEngineConfig({ open, onOpenChange }: Props) {
     setCurrent(loadEngineConfig());
     setKeyInput("");
     toast({
-      title: "Mode Professional activé",
-      description: `Modèle : ${modelLabel}${result.credit_left != null ? ` · Crédit restant : ${result.credit_left}` : ""}`,
+      title: t("ai_engine.toast_pro_title"),
+      description: t("ai_engine.toast_pro_desc", { model: modelLabel }),
     });
     onOpenChange(false);
   }
@@ -123,8 +125,8 @@ export default function AIEngineConfig({ open, onOpenChange }: Props) {
     setProEnabled(false);
     setKeyInput("");
     toast({
-      title: "Clé OpenRouter effacée",
-      description: "Retour au mode Replit Managed.",
+      title: t("ai_engine.toast_key_cleared_title"),
+      description: t("ai_engine.toast_key_cleared_desc"),
     });
   }
 
@@ -134,12 +136,10 @@ export default function AIEngineConfig({ open, onOpenChange }: Props) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Cpu className="w-4 h-4 text-violet-400" />
-            Configuration du moteur AI
+            {t("ai_engine.dialog_title")}
           </DialogTitle>
           <DialogDescription>
-            Choisis comment AI BRAND OS exécute la génération. La gouvernance
-            (brand lock, sector engine, compliance, voice, claims) reste
-            appliquée quel que soit le mode.
+            {t("ai_engine.dialog_description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -152,13 +152,13 @@ export default function AIEngineConfig({ open, onOpenChange }: Props) {
           <ShieldCheck className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
           <div>
             <p className="font-semibold">
-              Actif : {isPro
-                ? `Professional · ${current.modelLabel ?? current.model}`
-                : "Replit Managed"}
+              {t("ai_engine.active_label")} : {isPro
+                ? `${t("ai_engine.badge_pro")} · ${current.modelLabel ?? current.model}`
+                : t("ai_engine.badge_replit")}
             </p>
             {isPro && current.key && (
               <p className="font-mono text-[11px] opacity-80">
-                Clé : {maskKey(current.key)}
+                {t("ai_engine.key_label")} : {maskKey(current.key)}
               </p>
             )}
           </div>
@@ -168,12 +168,10 @@ export default function AIEngineConfig({ open, onOpenChange }: Props) {
         <div className="rounded-lg border border-white/10 bg-white/3 p-4 space-y-2">
           <div className="flex items-center gap-2">
             <Lock className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="text-sm font-semibold">Replit Managed (par défaut)</span>
+            <span className="text-sm font-semibold">{t("ai_engine.managed_title")}</span>
           </div>
           <p className="text-xs text-muted-foreground">
-            Modèles AI gérés directement par AI BRAND OS via l'infrastructure
-            Replit. Aucune configuration requise. Idéal pour les workflows
-            agence standard.
+            {t("ai_engine.managed_desc")}
           </p>
         </div>
 
@@ -182,7 +180,7 @@ export default function AIEngineConfig({ open, onOpenChange }: Props) {
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <KeyRound className="w-3.5 h-3.5 text-violet-400" />
-              <span className="text-sm font-semibold">Professional (OpenRouter)</span>
+              <span className="text-sm font-semibold">{t("ai_engine.pro_title")}</span>
             </div>
             <Switch
               checked={proEnabled}
@@ -192,16 +190,14 @@ export default function AIEngineConfig({ open, onOpenChange }: Props) {
           </div>
 
           <p className="text-xs text-muted-foreground">
-            Branche ta propre clé OpenRouter pour choisir librement le modèle.
-            La clé n'est jamais stockée côté serveur ni loggée — elle reste
-            uniquement dans la session de ce navigateur.
+            {t("ai_engine.pro_desc")}
           </p>
 
           {proEnabled && (
             <div className="space-y-3 pt-2">
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-foreground/80">
-                  Clé OpenRouter
+                  {t("ai_engine.key_input_label")}
                 </label>
                 <div className="relative">
                   <Input
@@ -216,19 +212,19 @@ export default function AIEngineConfig({ open, onOpenChange }: Props) {
                     type="button"
                     onClick={() => setShowKey((s) => !s)}
                     className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    aria-label={showKey ? "Masquer la clé" : "Afficher la clé"}
+                    aria-label={t("ai_engine.key_input_label")}
                   >
                     {showKey ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                   </button>
                 </div>
                 <p className="text-[10px] text-muted-foreground/70">
-                  Obtiens une clé sur openrouter.ai. Format : <span className="font-mono">sk-or-v1-…</span>
+                  {t("ai_engine.key_input_hint")}
                 </p>
               </div>
 
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-foreground/80">
-                  Modèle
+                  {t("ai_engine.model_label")}
                 </label>
                 <Select value={model} onValueChange={setModel}>
                   <SelectTrigger data-testid="select-openrouter-model">
@@ -247,9 +243,7 @@ export default function AIEngineConfig({ open, onOpenChange }: Props) {
               <div className="rounded-md border border-amber-500/20 bg-amber-500/5 px-3 py-2 flex items-start gap-2">
                 <ShieldAlert className="w-3 h-3 text-amber-400 mt-0.5 flex-shrink-0" />
                 <p className="text-[11px] text-amber-200/80 leading-snug">
-                  Clé stockée uniquement dans <strong>sessionStorage</strong>{" "}
-                  (effacée à la fermeture de l'onglet). Jamais envoyée hors des
-                  appels AI BRAND OS.
+                  {t("ai_engine.security_warning")}
                 </p>
               </div>
             </div>
@@ -266,7 +260,7 @@ export default function AIEngineConfig({ open, onOpenChange }: Props) {
               data-testid="button-clear-key"
             >
               <Trash2 className="w-3.5 h-3.5" />
-              Effacer la clé
+              {t("ai_engine.btn_clear")}
             </Button>
           )}
           <div className="flex-1" />
@@ -276,7 +270,7 @@ export default function AIEngineConfig({ open, onOpenChange }: Props) {
             onClick={() => onOpenChange(false)}
             disabled={validating}
           >
-            Annuler
+            {t("ai_engine.btn_cancel")}
           </Button>
           <Button
             size="sm"
@@ -290,7 +284,7 @@ export default function AIEngineConfig({ open, onOpenChange }: Props) {
             ) : (
               <CheckCircle2 className="w-3.5 h-3.5" />
             )}
-            {proEnabled ? "Valider et activer" : "Confirmer Replit Managed"}
+            {proEnabled ? t("ai_engine.btn_activate_pro") : t("ai_engine.btn_activate_managed")}
           </Button>
         </div>
       </DialogContent>

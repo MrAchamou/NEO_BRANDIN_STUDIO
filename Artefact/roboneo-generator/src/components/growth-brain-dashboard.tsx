@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { getEngineHeaders } from "@/lib/ai-engine";
 
 const API = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
 
@@ -296,7 +297,7 @@ export default function GrowthBrainDashboard() {
 
       const r = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getEngineHeaders() },
         body: JSON.stringify(DEMO_PAYLOAD),
       });
 

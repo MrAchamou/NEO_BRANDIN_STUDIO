@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
 import { buildSystemPrompt, buildNegativePrompt, brandLockHeader, reviewPromptQuality, type EnhancedBrief } from "../../lib/prompt-utils";
+import { resolveLang, languageInstruction } from "../../i18n/messages";
 import { buildBrandLock } from "../../governance";
 import { runGovernancePass, extractBriefInputFromBody } from "../../governance/sse-helper";
 
@@ -131,7 +132,8 @@ Cible: ${target_audience}${yearLine} | Code promo: ${promoCode} | Durée promo: 
     : "";
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? undefined);
   const lockHeader = brandLockHeader(lock);
-  const systemPrompt = `${lockHeader}You are a senior expert in advertising script creation and video generation prompts for RoboNeo.com.
+  const outputLang = resolveLang(req);
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}You are a senior expert in advertising script creation and video generation prompts for RoboNeo.com.
 LANGUAGE RULES (strictly enforced):
 • Ad scripts and voice-over texts (sections "scripts" and "voice_over"): write IN FRENCH — punchy, adapted to the ${sector} sector, direct copywriting
 • Video generation prompts (sections "short_videos", "long_video", "teaser", "thumbnails"): write EXCLUSIVELY IN ENGLISH — native vocabulary for Runway Gen-3, Pika, Kling, Midjourney, DALL-E 3

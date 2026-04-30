@@ -1,5 +1,6 @@
 import React from "react";
 import { ShieldCheck, AlertTriangle, Info } from "lucide-react";
+import { useT } from "@/i18n";
 
 export interface GovernanceFinding {
   type: string;
@@ -24,6 +25,7 @@ const SEV_STYLE: Record<GovernanceFinding["severity"], string> = {
 };
 
 export default function GovernanceBadge({ summary }: { summary?: GovernanceSummary | null }) {
+  const { t } = useT();
   if (!summary) return null;
   const findingsCount = summary.findings.length;
   const patchesCount = summary.patches_applied.length;
@@ -36,17 +38,17 @@ export default function GovernanceBadge({ summary }: { summary?: GovernanceSumma
 
   const Icon = summary.blocked ? AlertTriangle : findingsCount > 0 ? AlertTriangle : ShieldCheck;
   const headline = summary.blocked
-    ? "Gouvernance — contenu bloqué"
+    ? t("governance.compliance_blocked")
     : findingsCount > 0
-    ? `Gouvernance — ${findingsCount} alerte${findingsCount > 1 ? "s" : ""}${patchesCount ? `, ${patchesCount} patch${patchesCount > 1 ? "s" : ""}` : ""}`
-    : "Gouvernance — conforme";
+    ? `${t("governance.compliance_warning")} — ${findingsCount}${patchesCount ? ` · ${patchesCount} patch` : ""}`
+    : t("governance.compliance_passed");
 
   return (
     <details className={`mt-3 rounded-lg border ${headerCls} text-xs`}>
       <summary className="flex cursor-pointer items-center gap-2 px-3 py-2 font-semibold list-none">
         <Icon className="w-3.5 h-3.5 flex-shrink-0" />
         <span className="flex-1">{headline}</span>
-        <span className="text-[10px] opacity-70">{summary.passes.length} passes ✓</span>
+        <span className="text-[10px] opacity-70">{summary.passes.length} ✓</span>
       </summary>
       <div className="px-3 pb-3 pt-1 space-y-2">
         {summary.findings.length > 0 && (
@@ -65,7 +67,7 @@ export default function GovernanceBadge({ summary }: { summary?: GovernanceSumma
         {summary.patches_applied.length > 0 && (
           <div className="rounded border border-emerald-400/20 bg-emerald-400/5 px-2 py-1.5 text-emerald-300">
             <div className="flex items-center gap-1.5 font-semibold">
-              <Info className="w-3 h-3" />Auto-patches appliqués
+              <Info className="w-3 h-3" />{t("governance.claims_audited")}
             </div>
             <ul className="mt-1 list-disc pl-4 text-[11px] opacity-90">
               {summary.patches_applied.map((p, i) => <li key={i}>{p}</li>)}

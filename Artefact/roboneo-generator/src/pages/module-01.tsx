@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { getEngineHeaders } from "@/lib/ai-engine";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -240,7 +241,7 @@ export default function Module01() {
 
     const response = await fetch(`${import.meta.env.BASE_URL}api/openai/enhance-prompts`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...getEngineHeaders() },
       body: JSON.stringify({
         ...governanceFields(brief),
         brand_name: brief.brand_name,
@@ -380,7 +381,7 @@ export default function Module01() {
       const values = brief.values.split(",").map((v) => v.trim()).filter(Boolean);
       const res = await fetch(`${import.meta.env.BASE_URL}api/openai/persona-variants`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getEngineHeaders() },
         body: JSON.stringify({
           base_prompt: promptText,
           brand_name: brief.brand_name,
@@ -410,7 +411,7 @@ export default function Module01() {
       const values = brief.values.split(",").map((v) => v.trim()).filter(Boolean);
       const res = await fetch(`${import.meta.env.BASE_URL}api/openai/review-prompt`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getEngineHeaders() },
         body: JSON.stringify({
           content: currentPrompt,
           section_key: key,

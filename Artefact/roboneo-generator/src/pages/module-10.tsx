@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { getEngineHeaders } from "@/lib/ai-engine";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Copy, Download, ChevronRight, Check, BarChart2,
@@ -826,7 +827,7 @@ export default function Module10() {
     try {
       const response = await fetch("/api/openai/enhance-prompts-performance", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getEngineHeaders() },
         body: JSON.stringify({
           ...governanceFields(brief),
           brand_name:    brief.brand_name,

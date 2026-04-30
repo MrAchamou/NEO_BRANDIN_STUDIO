@@ -8,6 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useBrand, BrandBrief, BRIEF_DEFAULTS } from "@/context/brand-context";
+import { useT } from "@/i18n";
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -775,6 +776,7 @@ function GmbImportBlock({ onImport }: GmbImportProps) {
 
 export default function BrandBriefPanel() {
   const { brief, savedBriefs, updateBrief, resetBrief, restoreBrief, deleteSavedBrief, completionPct, filledCount } = useBrand();
+  const { t } = useT();
   const [open, setOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("identity");
   const [saved, setSaved] = useState(false);
@@ -826,12 +828,12 @@ export default function BrandBriefPanel() {
           <Sparkles className="w-4 h-4 text-primary flex-shrink-0" />
           <div>
             <p className="text-sm font-semibold text-foreground leading-tight">
-              Brief Global de Marque
+              {t("brief.title_global")}
             </p>
             <p className="text-[11px] text-muted-foreground">
               {brief.brand_name
                 ? `${brief.brand_name} · ${SECTORS.find(s => s.value === brief.sector)?.label ?? brief.sector}`
-                : "Remplissez une fois, tous les modules s'adaptent automatiquement"}
+                : t("brief.subtitle_global")}
             </p>
           </div>
         </div>

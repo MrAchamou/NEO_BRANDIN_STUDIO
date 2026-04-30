@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
 import { getMarketConfig, buildMarketContext, convertPrice } from "../../lib/market-config";
 import { reviewPromptQuality, brandLockHeader, type EnhancedBrief } from "../../lib/prompt-utils";
+import { resolveLang, languageInstruction } from "../../i18n/messages";
 import { buildBrandLock, getGrowthProfile } from "../../governance";
 import { runGovernancePass, extractBriefInputFromBody } from "../../governance/sse-helper";
 
@@ -152,7 +153,8 @@ Architecture conversion-first :
 • Une mention d'urgence MAX, basée sur un fait réel (offre datée, édition limitée déclarée)
 • CTA répété 2-3 fois, ton mesuré ; jamais d'exclamation excessive`;
 
-  const systemPrompt = `${lockHeader}Tu es un expert senior en architecture de landing pages haute conversion, développeur web et stratège de lancement pour RoboNeo.com.
+  const outputLang = resolveLang(req);
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert senior en architecture de landing pages haute conversion, développeur web et stratège de lancement pour RoboNeo.com.
 
 ═══ GROWTH MODE ACTIF : ${profile.label.toUpperCase()} ═══
 ${profile.description}

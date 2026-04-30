@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { getEngineHeaders } from "@/lib/ai-engine";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Copy, Download, Check, Brain,
@@ -581,7 +582,7 @@ export default function Module07() {
 
       const response = await fetch(`${import.meta.env.BASE_URL}api/openai/enhance-prompts-launch`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getEngineHeaders() },
         body: JSON.stringify({
           ...governanceFields(brief),
           brand_name: brief.brand_name,

@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
 import { reviewPromptQuality, brandLockHeader, type EnhancedBrief } from "../../lib/prompt-utils";
+import { resolveLang, languageInstruction } from "../../i18n/messages";
 import { buildBrandLock } from "../../governance";
 import { runGovernancePass, extractBriefInputFromBody } from "../../governance/sse-helper";
 
@@ -66,7 +67,8 @@ router.post("/openai/enhance-prompts-copy", async (req, res) => {
 
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? undefined);
   const lockHeader = brandLockHeader(lock);
-  const systemPrompt = `${lockHeader}Tu es un expert copywriter et stratège de contenu pour RoboNeo.com.
+  const outputLang = resolveLang(req);
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert copywriter et stratège de contenu pour RoboNeo.com.
 Tu génères du contenu textuel ultra-professionnel, optimisé conversion, en français impeccable.
 Contexte de la marque:
 - Marque: ${brand_name}

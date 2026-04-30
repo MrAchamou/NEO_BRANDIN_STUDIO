@@ -3,7 +3,17 @@
  *
  * Génère le rendu HTML autonome (auto-imprimable en PDF) du brief
  * stratégique client-ready, sans dépendance externe.
+ *
+ * i18n : la langue de sortie est passée via `opts.lang`. Les labels du
+ * document sont traduits via le catalog serveur (getMessage). FR par défaut.
  */
+
+import {
+  DEFAULT_LANG,
+  getMessage,
+  localeTag,
+  type SupportedLang,
+} from "../i18n/messages";
 
 export interface ClientReadyBrief {
   title: string;
@@ -67,8 +77,15 @@ function renderList(items: string[], emptyMsg = "—"): string {
  */
 export function renderBriefHtml(
   brief: ClientReadyBrief,
-  opts: { autoPrint?: boolean; brandName?: string } = {}
+  opts: {
+    autoPrint?: boolean;
+    brandName?: string;
+    lang?: SupportedLang;
+  } = {}
 ): string {
+  const lang: SupportedLang = opts.lang || DEFAULT_LANG;
+  const tr = (key: string) => getMessage(lang, key);
+
   const outlook =
     OUTLOOK_LABELS[brief.performance_overview.outlook] ??
     brief.performance_overview.outlook;
@@ -80,7 +97,7 @@ export function renderBriefHtml(
   const actionLabel = scalePct ? `${action} (+${scalePct}%)` : action;
 
   const generatedDate = new Date(brief.generated_at || Date.now())
-    .toLocaleDateString("fr-FR", {
+    .toLocaleDateString(localeTag(lang), {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -95,7 +112,7 @@ export function renderBriefHtml(
     : "";
 
   return `<!DOCTYPE html>
-<html lang="fr">
+<html lang="${lang}">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -214,32 +231,32 @@ export function renderBriefHtml(
 <body>
 <div class="page">
   <header>
-    <span class="pill">AI BRAND OS · Brief client-ready</span>
+    <span class="pill">AI BRAND OS · ${tr("brief.client_ready")}</span>
     <h1>${escapeHtml(brief.title)}</h1>
     ${brandLine}
-    <p class="meta">Généré le ${generatedDate}</p>
+    <p class="meta">${tr("brief.label_generated_at")} ${generatedDate}</p>
   </header>
 
   <section>
-    <h2>Vue d'ensemble performance</h2>
+    <h2>${tr("brief.section_overview_perf")}</h2>
     <div class="grid-3">
       <div class="kpi">
         <div class="value">${escapeHtml(outlook)}</div>
-        <div class="label">Perspective</div>
+        <div class="label">${tr("brief.label_outlook")}</div>
       </div>
       <div class="kpi">
         <div class="value">${escapeHtml(brief.performance_overview.profit_sustainability)}</div>
-        <div class="label">Soutenabilité profit</div>
+        <div class="label">${tr("brief.label_profit_sustainability")}</div>
       </div>
       <div class="kpi">
         <div class="value"><span class="risk-badge" style="background:${riskColor}">${escapeHtml(brief.performance_overview.risk_index)}</span></div>
-        <div class="label">Indice de risque</div>
+        <div class="label">${tr("brief.label_risk_index")}</div>
       </div>
     </div>
   </section>
 
   <section>
-    <h2>Check profitabilité</h2>
+    <h2>${tr("brief.section_profit_check")}</h2>
     <div class="grid-3">
       <div class="kpi">
         <div class="value">${brief.profit_check.ltv_cac_ratio}x</div>
@@ -247,40 +264,40 @@ export function renderBriefHtml(
       </div>
       <div class="kpi">
         <div class="value">${escapeHtml(brief.profit_check.profitability)}</div>
-        <div class="label">Profitabilité</div>
+        <div class="label">${tr("brief.label_profitability")}</div>
       </div>
       <div class="kpi">
         <div class="value">${brief.profit_check.break_even_months}m</div>
-        <div class="label">Break-even</div>
+        <div class="label">${tr("brief.label_breakeven")}</div>
       </div>
     </div>
   </section>
 
   <div class="row-2">
     <section>
-      <h2>Opportunités de scaling</h2>
-      ${renderList(brief.scaling_opportunities, "Aucune opportunité prioritaire détectée cette semaine.")}
+      <h2>${tr("brief.section_scaling")}</h2>
+      ${renderList(brief.scaling_opportunities, tr("brief.empty_scaling"))}
     </section>
     <section>
-      <h2>Signaux de risque</h2>
-      ${renderList(brief.risk_flags, "Aucun signal de risque actif.")}
+      <h2>${tr("brief.section_risks")}</h2>
+      ${renderList(brief.risk_flags, tr("brief.empty_risks"))}
     </section>
   </div>
 
   <section>
-    <h2>Analyse créative</h2>
-    ${renderList(brief.creative_analysis, "Pas de signal créatif notable.")}
+    <h2>${tr("brief.section_creative")}</h2>
+    ${renderList(brief.creative_analysis, tr("brief.empty_creative"))}
   </section>
 
   <section>
-    <h2>Mise à jour rétention</h2>
+    <h2>${tr("brief.section_retention")}</h2>
     <p class="stat-line"><strong>M+1 :</strong> ${escapeHtml(brief.retention_update.m1)}</p>
     <p class="stat-line"><strong>M+3 :</strong> ${escapeHtml(brief.retention_update.m3)}</p>
-    <p class="stat-line"><strong>Santé cohorte :</strong> ${escapeHtml(brief.retention_update.health)}</p>
+    <p class="stat-line"><strong>${tr("brief.label_cohort_health")} :</strong> ${escapeHtml(brief.retention_update.health)}</p>
   </section>
 
   <div class="action-box">
-    <p class="action-title">Action recommandée</p>
+    <p class="action-title">${tr("brief.label_action")}</p>
     <p class="action-headline">${escapeHtml(actionLabel)}</p>
     ${renderList(brief.recommended_action.rationale, "—")}
   </div>

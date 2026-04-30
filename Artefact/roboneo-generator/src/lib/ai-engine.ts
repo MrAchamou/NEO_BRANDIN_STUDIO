@@ -90,12 +90,28 @@ export function clearEngineConfig(): void {
 
 export function getEngineHeaders(): Record<string, string> {
   const cfg = loadEngineConfig();
-  if (cfg.mode !== "professional_openrouter" || !cfg.key) return {};
-  return {
-    "X-AI-Mode": "professional_openrouter",
-    "X-AI-Model": cfg.model || OPENROUTER_MODELS[0].id,
-    "X-OpenRouter-Key": cfg.key,
-  };
+  const headers: Record<string, string> = {};
+
+  // i18n — output language for AI-generated content (read from localStorage
+  // directly to avoid circular imports with @/i18n)
+  try {
+    const store = typeof window !== "undefined" ? window.localStorage : null;
+    if (store) {
+      const uiLang = store.getItem("aibrandos.ui_lang");
+      const outLang = store.getItem("aibrandos.output_lang") || uiLang;
+      if (outLang) headers["X-Output-Lang"] = outLang;
+      if (uiLang) headers["X-UI-Lang"] = uiLang;
+    }
+  } catch {
+    // localStorage unavailable — backend will fall back to default (FR)
+  }
+
+  if (cfg.mode === "professional_openrouter" && cfg.key) {
+    headers["X-AI-Mode"] = "professional_openrouter";
+    headers["X-AI-Model"] = cfg.model || OPENROUTER_MODELS[0].id;
+    headers["X-OpenRouter-Key"] = cfg.key;
+  }
+  return headers;
 }
 
 // ─── Validation côté serveur ─────────────────────────────────────────────────

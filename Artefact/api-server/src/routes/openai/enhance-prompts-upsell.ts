@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
 import { getMarketConfig, buildMarketContext, convertPrice } from "../../lib/market-config";
 import { brandLockHeader } from "../../lib/prompt-utils";
+import { resolveLang, languageInstruction } from "../../i18n/messages";
 import { buildBrandLock, checkBundlePrice } from "../../governance";
 import { runGovernancePass, extractBriefInputFromBody } from "../../governance/sse-helper";
 
@@ -87,7 +88,8 @@ Inclure dans chaque bundle JSON un champ "price_breakdown" :
   }
 Tout écart entre le calcul et le prix annoncé sera rejeté par le Pricing Validator.`;
 
-  const systemPrompt = `${lockHeader}Tu es un expert en stratégie e-commerce et maximisation du panier moyen pour RoboNeo.com.${pricingDirective}
+  const outputLang = resolveLang(req);
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert en stratégie e-commerce et maximisation du panier moyen pour RoboNeo.com.${pricingDirective}
 Ta mission: générer des stratégies d'upsell et cross-sell PRÉCISES et ACTIONNABLES pour augmenter le chiffre d'affaires.
 
 ${marketCtx}

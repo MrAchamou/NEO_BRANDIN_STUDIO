@@ -7,6 +7,8 @@ import {
 } from "lucide-react";
 import BrandBriefPanel from "@/components/brand-brief-panel";
 import AIModeBadge from "@/components/ai-mode-badge";
+import LanguageSelector from "@/components/language-selector";
+import { useT } from "@/i18n";
 import Module01 from "./module-01";
 import Module02 from "./module-02";
 import Module03 from "./module-03";
@@ -27,10 +29,9 @@ interface ModuleOutput {
 
 interface ModuleDef {
   id: string;
+  /** Numeric id used in i18n keys (modules.<i18nKey>.name / .tagline / .variants). */
+  i18nKey: string;
   number: string;
-  title: string;
-  subtitle: string;
-  description: string;
   icon: React.ReactNode;
   color: string;
   bgColor: string;
@@ -40,237 +41,102 @@ interface ModuleDef {
   available: boolean;
   component?: React.ComponentType;
   prompts?: number;
-  outputs: ModuleOutput[];
+  /** Icons of variant pills (labels come from i18n). */
+  outputIcons: string[];
 }
 
 // ─── Définition des modules ───────────────────────────────────────────────────
 
 const MODULES: ModuleDef[] = [
   {
-    id: "brand-identity",
-    number: "01",
-    title: "Brand Identity",
-    subtitle: "Logo, Palette, Typo, Charte",
-    description: "Crée l'ADN visuel de ta marque — logo, couleurs, typographie et charte graphique complète.",
+    id: "brand-identity", i18nKey: "1", number: "01",
     icon: <Palette className="w-5 h-5" />,
-    color: "text-amber-400",
-    bgColor: "bg-amber-400/10",
-    gradientFrom: "from-amber-500/20",
-    gradientTo: "to-transparent",
+    color: "text-amber-400", bgColor: "bg-amber-400/10",
+    gradientFrom: "from-amber-500/20", gradientTo: "to-transparent",
     borderColor: "border-amber-400/30",
-    available: true,
-    component: Module01,
-    prompts: 4,
-    outputs: [
-      { label: "Logo", icon: "✦" },
-      { label: "Palette", icon: "◉" },
-      { label: "Typo", icon: "Aa" },
-      { label: "Charte", icon: "▤" },
-    ],
+    available: true, component: Module01, prompts: 4,
+    outputIcons: ["✦", "◉", "Aa", "▤"],
   },
   {
-    id: "visual-content",
-    number: "02",
-    title: "Visual Content",
-    subtitle: "Photos, Lifestyle, Carousel",
-    description: "Génère tous les visuels produit — shots studio, lifestyle, détails textures, before/after, try-on et carrousels.",
+    id: "visual-content", i18nKey: "2", number: "02",
     icon: <Camera className="w-5 h-5" />,
-    color: "text-rose-400",
-    bgColor: "bg-rose-400/10",
-    gradientFrom: "from-rose-500/20",
-    gradientTo: "to-transparent",
+    color: "text-rose-400", bgColor: "bg-rose-400/10",
+    gradientFrom: "from-rose-500/20", gradientTo: "to-transparent",
     borderColor: "border-rose-400/30",
-    available: true,
-    component: Module02,
-    prompts: 19,
-    outputs: [
-      { label: "Photo", icon: "📷" },
-      { label: "Lifestyle", icon: "✦" },
-      { label: "Détail", icon: "🔍" },
-      { label: "B/A", icon: "⟷" },
-      { label: "Try-On", icon: "◈" },
-      { label: "Carousel", icon: "▦" },
-    ],
+    available: true, component: Module02, prompts: 19,
+    outputIcons: ["📷", "✦", "🔍", "⟷"],
   },
   {
-    id: "video-content",
-    number: "03",
-    title: "Video Content",
-    subtitle: "Reels, TikTok, YouTube",
-    description: "Scripts, shot-lists et briefs créatifs pour tous les formats vidéo — shorts, longs formats, teasers et miniatures.",
+    id: "video-content", i18nKey: "3", number: "03",
     icon: <Video className="w-5 h-5" />,
-    color: "text-purple-400",
-    bgColor: "bg-purple-400/10",
-    gradientFrom: "from-purple-500/20",
-    gradientTo: "to-transparent",
+    color: "text-purple-400", bgColor: "bg-purple-400/10",
+    gradientFrom: "from-purple-500/20", gradientTo: "to-transparent",
     borderColor: "border-purple-400/30",
-    available: true,
-    component: Module03,
-    prompts: 14,
-    outputs: [
-      { label: "Script", icon: "✎" },
-      { label: "TikTok", icon: "▶" },
-      { label: "YouTube", icon: "▷" },
-      { label: "Teaser", icon: "✦" },
-      { label: "Thumb", icon: "▣" },
-      { label: "Voix off", icon: "🎤" },
-    ],
+    available: true, component: Module03, prompts: 14,
+    outputIcons: ["✎", "▶", "▷", "✦"],
   },
   {
-    id: "ad-creatives",
-    number: "04",
-    title: "Ad Creatives",
-    subtitle: "Meta, Google, TikTok Ads",
-    description: "Toutes les créations publicitaires — Meta Ads, Google Display 6 formats, TikTok Ads, Carousel et Ad Copy 4 variantes.",
+    id: "ad-creatives", i18nKey: "4", number: "04",
     icon: <Zap className="w-5 h-5" />,
-    color: "text-orange-400",
-    bgColor: "bg-orange-400/10",
-    gradientFrom: "from-orange-500/20",
-    gradientTo: "to-transparent",
+    color: "text-orange-400", bgColor: "bg-orange-400/10",
+    gradientFrom: "from-orange-500/20", gradientTo: "to-transparent",
     borderColor: "border-orange-400/30",
-    available: true,
-    component: Module04,
-    prompts: 18,
-    outputs: [
-      { label: "Meta", icon: "ƒ" },
-      { label: "Google", icon: "⬡" },
-      { label: "TikTok", icon: "♪" },
-      { label: "Carousel", icon: "▦" },
-      { label: "Ad Copy", icon: "✎" },
-      { label: "CTR", icon: "📊" },
-    ],
+    available: true, component: Module04, prompts: 18,
+    outputIcons: ["ƒ", "⬡", "♪", "▦"],
   },
   {
-    id: "brand-sound",
-    number: "05",
-    title: "Brand Sound",
-    subtitle: "Jingle, BGM, Voix Off",
-    description: "Identité sonore complète — jingle, musiques de fond 15s/30s/60s, effets sonores, voix ElevenLabs et synchronisation vidéo.",
+    id: "brand-sound", i18nKey: "5", number: "05",
     icon: <Music2 className="w-5 h-5" />,
-    color: "text-violet-400",
-    bgColor: "bg-violet-400/10",
-    gradientFrom: "from-violet-500/20",
-    gradientTo: "to-transparent",
+    color: "text-violet-400", bgColor: "bg-violet-400/10",
+    gradientFrom: "from-violet-500/20", gradientTo: "to-transparent",
     borderColor: "border-violet-400/30",
-    available: true,
-    component: Module05,
-    prompts: 16,
-    outputs: [
-      { label: "Jingle", icon: "♩" },
-      { label: "BGM", icon: "♫" },
-      { label: "SFX", icon: "◉" },
-      { label: "Voix off", icon: "🎤" },
-      { label: "Beat Sync", icon: "⏱" },
-    ],
+    available: true, component: Module05, prompts: 16,
+    outputIcons: ["♩", "♫", "◉", "🎤"],
   },
   {
-    id: "copy-content",
-    number: "06",
-    title: "Copy & Content",
-    subtitle: "Fiche produit, captions, emails",
-    description: "Génère tout le contenu textuel de ta marque — fiche produit complète, captions multi-plateformes, hashtags optimisés, séquence d'emails et reviews clients réalistes.",
+    id: "copy-content", i18nKey: "6", number: "06",
     icon: <FileText className="w-5 h-5" />,
-    color: "text-emerald-400",
-    bgColor: "bg-emerald-400/10",
-    gradientFrom: "from-emerald-500/20",
-    gradientTo: "to-transparent",
+    color: "text-emerald-400", bgColor: "bg-emerald-400/10",
+    gradientFrom: "from-emerald-500/20", gradientTo: "to-transparent",
     borderColor: "border-emerald-400/30",
-    available: true,
-    component: Module06,
-    prompts: 22,
-    outputs: [
-      { label: "Fiche", icon: "📄" },
-      { label: "Captions", icon: "✍" },
-      { label: "Hashtags", icon: "#" },
-      { label: "Emails", icon: "✉" },
-      { label: "Reviews", icon: "⭐" },
-    ],
+    available: true, component: Module06, prompts: 22,
+    outputIcons: ["📄", "✍", "#", "✉"],
   },
   {
-    id: "launch-ready",
-    number: "07",
-    title: "Launch Ready",
-    subtitle: "Landing page, guide, calendrier",
-    description: "Génère tout pour lancer ta marque : landing page HTML prête à déployer, guide d'utilisation complet (quel fichier, quelle plateforme, quand publier) et calendrier de publication 30 jours optimisé.",
+    id: "launch-ready", i18nKey: "7", number: "07",
     icon: <Rocket className="w-5 h-5" />,
-    color: "text-blue-400",
-    bgColor: "bg-blue-400/10",
-    gradientFrom: "from-blue-500/20",
-    gradientTo: "to-transparent",
+    color: "text-blue-400", bgColor: "bg-blue-400/10",
+    gradientFrom: "from-blue-500/20", gradientTo: "to-transparent",
     borderColor: "border-blue-400/30",
-    available: true,
-    component: Module07,
-    prompts: 18,
-    outputs: [
-      { label: "Landing", icon: "🌐" },
-      { label: "Guide", icon: "📖" },
-      { label: "Calendrier", icon: "📅" },
-    ],
+    available: true, component: Module07, prompts: 18,
+    outputIcons: ["🌐", "📖", "📅", "✉"],
   },
   {
-    id: "chatbot-script",
-    number: "08",
-    title: "Chatbot Script",
-    subtitle: "FAQ, objections, commentaires",
-    description: "Génère tout le contenu pour ton service client automatisé : 20 questions/réponses FAQ, 8 scripts de gestion des objections de vente et 5 réponses professionnelles aux commentaires négatifs.",
+    id: "chatbot-script", i18nKey: "8", number: "08",
     icon: <MessageCircle className="w-5 h-5" />,
-    color: "text-cyan-400",
-    bgColor: "bg-cyan-400/10",
-    gradientFrom: "from-cyan-500/20",
-    gradientTo: "to-transparent",
+    color: "text-cyan-400", bgColor: "bg-cyan-400/10",
+    gradientFrom: "from-cyan-500/20", gradientTo: "to-transparent",
     borderColor: "border-cyan-400/30",
-    available: true,
-    component: Module08,
-    prompts: 16,
-    outputs: [
-      { label: "FAQ", icon: "❓" },
-      { label: "Objections", icon: "🛡" },
-      { label: "Commentaires", icon: "💬" },
-    ],
+    available: true, component: Module08, prompts: 16,
+    outputIcons: ["❓", "🛡", "💬", "📋"],
   },
   {
-    id: "upsell-kit",
-    number: "09",
-    title: "Upsell & Cross-sell Kit",
-    subtitle: "Cross-sell, bundles, copy, emails",
-    description: "Génère toutes les stratégies pour maximiser la valeur du panier : 3 produits complémentaires, offres groupées, copy upsell et séquences email post-achat.",
+    id: "upsell-kit", i18nKey: "9", number: "09",
     icon: <ShoppingCart className="w-5 h-5" />,
-    color: "text-green-400",
-    bgColor: "bg-green-400/10",
-    gradientFrom: "from-green-500/20",
-    gradientTo: "to-transparent",
+    color: "text-green-400", bgColor: "bg-green-400/10",
+    gradientFrom: "from-green-500/20", gradientTo: "to-transparent",
     borderColor: "border-green-400/30",
-    available: true,
-    component: Module09,
-    prompts: 14,
-    outputs: [
-      { label: "Cross-sell", icon: "🛍" },
-      { label: "Bundles", icon: "📦" },
-      { label: "Copy", icon: "✎" },
-      { label: "Emails", icon: "✉" },
-    ],
+    available: true, component: Module09, prompts: 14,
+    outputIcons: ["🛍", "📦", "✎", "✉"],
   },
   {
-    id: "performance-tracker",
-    number: "10",
-    title: "Performance Tracker",
-    subtitle: "Dashboard, KPIs, scaling guide",
-    description: "Génère tous les outils pour suivre et optimiser vos performances : dashboard Google Sheets, guide KPIs, guide scaling & stop, et template d'analyse hebdomadaire.",
+    id: "performance-tracker", i18nKey: "10", number: "10",
     icon: <BarChart2 className="w-5 h-5" />,
-    color: "text-blue-400",
-    bgColor: "bg-blue-400/10",
-    gradientFrom: "from-blue-500/20",
-    gradientTo: "to-transparent",
+    color: "text-blue-400", bgColor: "bg-blue-400/10",
+    gradientFrom: "from-blue-500/20", gradientTo: "to-transparent",
     borderColor: "border-blue-400/30",
-    available: true,
-    component: Module10,
-    prompts: 16,
-    outputs: [
-      { label: "Dashboard", icon: "📊" },
-      { label: "KPIs", icon: "🎯" },
-      { label: "Scaling", icon: "📈" },
-      { label: "Analyse", icon: "📋" },
-    ],
+    available: true, component: Module10, prompts: 16,
+    outputIcons: ["📊", "🎯", "📈", "📋"],
   },
 ];
 
@@ -279,10 +145,13 @@ const AVAILABLE_COUNT = MODULES.filter((m) => m.available).length;
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 
 function Sidebar({ activeId, onSelect }: { activeId: string; onSelect: (id: string) => void }) {
+  const { t, tArray } = useT();
   return (
     <aside className="flex flex-col gap-1.5 py-1">
       {MODULES.map((mod) => {
         const isActive = activeId === mod.id;
+        const title = t(`modules.${mod.i18nKey}.name`);
+        const variants = tArray(`modules.${mod.i18nKey}.variants`);
         return (
           <motion.button
             key={mod.id}
@@ -328,40 +197,27 @@ function Sidebar({ activeId, onSelect }: { activeId: string; onSelect: (id: stri
                   )}
                   {!mod.available && (
                     <span className="text-[9px] px-1 py-0.5 rounded bg-white/5 text-muted-foreground/40 font-medium tracking-wider">
-                      BIENTÔT
+                      {t("buttons.loading")}
                     </span>
                   )}
                 </div>
                 <p className={`text-sm font-semibold leading-tight truncate transition-colors ${
                   isActive ? mod.color : mod.available ? "text-foreground" : "text-muted-foreground/40"
                 }`}>
-                  {mod.title}
+                  {title}
                 </p>
 
                 {/* Output pills */}
                 {mod.available && (
                   <div className="flex flex-wrap gap-1 mt-1.5">
-                    {mod.outputs.slice(0, 4).map((out) => (
-                      <span key={out.label} className={`inline-flex items-center gap-0.5 text-[9px] px-1.5 py-0.5 rounded-full border font-medium transition-colors ${
+                    {variants.slice(0, 4).map((label, i) => (
+                      <span key={label} className={`inline-flex items-center gap-0.5 text-[9px] px-1.5 py-0.5 rounded-full border font-medium transition-colors ${
                         isActive
                           ? `${mod.bgColor} ${mod.borderColor} ${mod.color}`
                           : "bg-white/5 border-white/10 text-muted-foreground/60"
                       }`}>
-                        <span className="opacity-70">{out.icon}</span>
-                        <span>{out.label}</span>
-                      </span>
-                    ))}
-                    {mod.outputs.length > 4 && (
-                      <span className="text-[9px] text-muted-foreground/40 px-1">+{mod.outputs.length - 4}</span>
-                    )}
-                  </div>
-                )}
-
-                {!mod.available && (
-                  <div className="flex flex-wrap gap-1 mt-1.5">
-                    {mod.outputs.slice(0, 3).map((out) => (
-                      <span key={out.label} className="text-[9px] px-1.5 py-0.5 rounded-full border bg-white/3 border-white/8 text-muted-foreground/30 font-medium">
-                        {out.label}
+                        <span className="opacity-70">{mod.outputIcons[i] ?? ""}</span>
+                        <span>{label}</span>
                       </span>
                     ))}
                   </div>
@@ -382,6 +238,10 @@ function Sidebar({ activeId, onSelect }: { activeId: string; onSelect: (id: stri
 // ─── Module header card ───────────────────────────────────────────────────────
 
 function ModuleHeader({ mod }: { mod: ModuleDef }) {
+  const { t, tArray } = useT();
+  const title = t(`modules.${mod.i18nKey}.name`);
+  const description = t(`modules.${mod.i18nKey}.tagline`);
+  const variants = tArray(`modules.${mod.i18nKey}.variants`);
   return (
     <motion.div
       key={mod.id}
@@ -401,22 +261,22 @@ function ModuleHeader({ mod }: { mod: ModuleDef }) {
         {/* Info */}
         <div className="flex-1 min-w-0 pt-0.5">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-mono text-muted-foreground/60 uppercase tracking-widest">Module</span>
+            <span className="text-xs font-mono text-muted-foreground/60 uppercase tracking-widest">{t("modules.section_title")}</span>
             {mod.prompts && (
               <span className={`text-xs px-2 py-0.5 rounded-full font-semibold border ${mod.bgColor} ${mod.borderColor} ${mod.color}`}>
                 {mod.prompts} prompts
               </span>
             )}
           </div>
-          <h2 className={`text-2xl font-bold leading-tight ${mod.color}`}>{mod.title}</h2>
-          <p className="text-sm text-muted-foreground mt-1 leading-relaxed max-w-xl">{mod.description}</p>
+          <h2 className={`text-2xl font-bold leading-tight ${mod.color}`}>{title}</h2>
+          <p className="text-sm text-muted-foreground mt-1 leading-relaxed max-w-xl">{description}</p>
 
           {/* Output pills row */}
           <div className="flex flex-wrap gap-2 mt-3">
-            {mod.outputs.map((out) => (
-              <span key={out.label} className={`inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full border font-medium ${mod.bgColor} ${mod.borderColor} ${mod.color}`}>
-                <span className="text-base leading-none">{out.icon}</span>
-                <span>{out.label}</span>
+            {variants.map((label, i) => (
+              <span key={label} className={`inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full border font-medium ${mod.bgColor} ${mod.borderColor} ${mod.color}`}>
+                <span className="text-base leading-none">{mod.outputIcons[i] ?? ""}</span>
+                <span>{label}</span>
               </span>
             ))}
           </div>
@@ -458,6 +318,7 @@ function MobileNav({ activeId, onSelect }: { activeId: string; onSelect: (id: st
 // ─── Composant principal ──────────────────────────────────────────────────────
 
 export default function Home() {
+  const { t } = useT();
   const [activeModuleId, setActiveModuleId] = useState("brand-identity");
   const activeModule = MODULES.find((m) => m.id === activeModuleId)!;
   const ActiveComponent = activeModule.component;
@@ -481,39 +342,39 @@ export default function Home() {
             <div>
               <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold tracking-wider uppercase mb-3">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Powered by RoboNeo.com</span>
+                <span>{t("app.powered_by")}</span>
               </div>
               <h1 className="text-3xl md:text-4xl font-bold font-serif gold-gradient-text leading-tight">
-                AI BRAND OS
+                {t("app.title")}
               </h1>
               <p className="text-foreground/80 text-sm mt-2 max-w-2xl font-medium">
-                L'infrastructure stratégique des agences de marque nouvelle génération.
+                {t("app.tagline")}
               </p>
               <p className="text-muted-foreground text-xs mt-1.5 max-w-2xl leading-relaxed">
-                Brand Operating System — Governance · Intelligence · Differentiation · Scale.
-                Structure, gouverne, industrialise et scale la création de marque.
+                {t("app.subtitle")} {t("app.description")}
               </p>
             </div>
             <div className="hidden md:flex flex-col items-end gap-2">
               <div className="flex items-center gap-2">
+                <LanguageSelector />
                 <AIModeBadge />
-                <span className="text-xs text-muted-foreground/60 font-mono">v3.0.0</span>
+                <span className="text-xs text-muted-foreground/60 font-mono">{t("app.version_label")}</span>
               </div>
               <div className="flex flex-col items-end gap-1">
                 <div className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                   <span className="text-[11px] text-green-400 font-mono">Qwen-3 235B</span>
-                  <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">génération</span>
+                  <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">{t("ai_models.generation")}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
                   <span className="text-[11px] text-blue-400 font-mono">GPT-5.2</span>
-                  <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">optimisation</span>
+                  <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">{t("ai_models.optimization")}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
                   <span className="text-[11px] text-orange-400 font-mono">Claude Sonnet</span>
-                  <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">audit</span>
+                  <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">{t("ai_models.audit")}</span>
                 </div>
               </div>
             </div>
@@ -534,8 +395,10 @@ export default function Home() {
 
               {/* Header sidebar */}
               <div className="px-2 py-2 mb-1 flex items-center justify-between">
-                <p className="text-xs font-bold text-muted-foreground/50 uppercase tracking-widest">Modules</p>
-                <span className="text-xs font-mono text-muted-foreground/40">{AVAILABLE_COUNT}/10</span>
+                <p className="text-xs font-bold text-muted-foreground/50 uppercase tracking-widest">{t("modules.section_title")}</p>
+                <span className="text-xs font-mono text-muted-foreground/40">
+                  {t("modules.progress_label", { done: AVAILABLE_COUNT, total: 10 })}
+                </span>
               </div>
 
               <Sidebar activeId={activeModuleId} onSelect={setActiveModuleId} />
@@ -543,8 +406,10 @@ export default function Home() {
               {/* Progress bar */}
               <div className="mt-3 px-1">
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-xs text-muted-foreground/50">Progression</span>
-                  <span className="text-xs font-semibold text-primary">{AVAILABLE_COUNT}/10</span>
+                  <span className="text-xs text-muted-foreground/50">{t("brief.progress_label", { percent: Math.round((AVAILABLE_COUNT / 10) * 100) })}</span>
+                  <span className="text-xs font-semibold text-primary">
+                    {t("modules.progress_label", { done: AVAILABLE_COUNT, total: 10 })}
+                  </span>
                 </div>
                 <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
                   <motion.div
@@ -554,7 +419,6 @@ export default function Home() {
                     className="h-full rounded-full bg-gradient-to-r from-amber-400 via-primary to-violet-400"
                   />
                 </div>
-                <p className="text-[10px] text-muted-foreground/35 mt-1.5">Complete Brand Universe — 10/10</p>
               </div>
             </div>
           </div>
@@ -578,8 +442,7 @@ export default function Home() {
                   <div className="flex items-center justify-center h-64 text-center rounded-2xl border border-white/5 bg-white/2">
                     <div>
                       <Lock className="w-10 h-10 text-muted-foreground/20 mx-auto mb-3" />
-                      <p className="text-muted-foreground/60 font-medium">Module bientôt disponible</p>
-                      <p className="text-xs text-muted-foreground/30 mt-1">Les modules 06–10 arrivent prochainement.</p>
+                      <p className="text-muted-foreground/60 font-medium">{t("buttons.loading")}</p>
                     </div>
                   </div>
                 )}

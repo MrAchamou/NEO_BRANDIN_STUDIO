@@ -1,0 +1,192 @@
+{
+  "app": {
+    "title": "AI BRAND OS",
+    "tagline": "Die strategische Infrastruktur für Markenagenturen der nächsten Generation.",
+    "subtitle": "Brand Operating System — Governance · Intelligence · Differentiation · Scale.",
+    "description": "Strukturieren, steuern, industrialisieren und skalieren Sie die Markenkreation.",
+    "version_label": "v3.0.0",
+    "powered_by": "Powered by RoboNeo.com"
+  },
+  "languages": {
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "de": "Deutsch",
+    "it": "Italiano",
+    "pt": "Português"
+  },
+  "language_selector": {
+    "label": "Sprache",
+    "ui_language": "Oberflächensprache",
+    "output_language": "KI-Ausgabesprache",
+    "output_language_hint": "Sprache für alle generierten Inhalte (Prompts, Texte, Berichte)."
+  },
+  "ai_models": {
+    "generation": "Generierung",
+    "optimization": "Optimierung",
+    "audit": "Prüfung"
+  },
+  "ai_engine": {
+    "badge_replit": "Replit Managed",
+    "badge_pro": "Pro",
+    "dialog_title": "KI-Engine-Konfiguration",
+    "dialog_description": "Wähle, wie AI BRAND OS die Generierung ausführt. Die Governance (Brand Lock, Sector Engine, Compliance, Voice, Claims) wird in jedem Modus angewendet.",
+    "active_label": "Aktiv",
+    "key_label": "Schlüssel",
+    "managed_title": "Replit Managed (Standard)",
+    "managed_desc": "KI-Modelle direkt von AI BRAND OS über die Replit-Infrastruktur verwaltet. Keine Konfiguration erforderlich.",
+    "pro_title": "Professional (OpenRouter)",
+    "pro_desc": "Verbinde deinen eigenen OpenRouter-Schlüssel, um das Modell frei zu wählen. Der Schlüssel wird niemals serverseitig gespeichert oder protokolliert — er bleibt nur in dieser Browser-Session.",
+    "key_input_label": "OpenRouter-Schlüssel",
+    "key_input_hint": "Schlüssel auf openrouter.ai erhalten. Format: sk-or-v1-…",
+    "model_label": "Modell",
+    "security_warning": "Schlüssel nur im sessionStorage gespeichert (beim Tab-Schließen gelöscht). Wird nie außerhalb von AI-BRAND-OS-Aufrufen gesendet.",
+    "btn_clear": "Schlüssel löschen",
+    "btn_cancel": "Abbrechen",
+    "btn_activate_pro": "Validieren und aktivieren",
+    "btn_activate_managed": "Replit Managed bestätigen",
+    "toast_managed_title": "Replit-Managed-Modus aktiviert",
+    "toast_managed_desc": "KI-Modelle werden jetzt von AI BRAND OS verwaltet.",
+    "toast_pro_title": "Professional-Modus aktiviert",
+    "toast_pro_desc": "Modell: {{model}}",
+    "toast_key_required_title": "Schlüssel erforderlich",
+    "toast_key_required_desc": "Gib deinen OpenRouter-Schlüssel ein, um den Professional-Modus zu aktivieren.",
+    "toast_key_refused_title": "Schlüssel abgelehnt",
+    "toast_key_refused_desc": "OpenRouter hat diesen Schlüssel nicht validiert.",
+    "toast_key_cleared_title": "OpenRouter-Schlüssel gelöscht",
+    "toast_key_cleared_desc": "Zurück zum Replit-Managed-Modus."
+  },
+  "modules": {
+    "section_title": "MODULE",
+    "progress_label": "{{done}}/{{total}}",
+    "1": {
+      "name": "Brand Identity",
+      "tagline": "Erschaffe die visuelle DNA deiner Marke — Logo, Farben, Typografie und vollständiges Corporate-Design-Manual.",
+      "variants": ["Logo", "Palette", "Typografie", "Manual"]
+    },
+    "2": {
+      "name": "Visual Content",
+      "tagline": "Fotografie, Lifestyle, Produkt und redaktionelle Visuals für alle deine Kanäle.",
+      "variants": ["Foto", "Lifestyle", "Detail", "Vorher/Nachher"]
+    },
+    "3": {
+      "name": "Video Content",
+      "tagline": "TikTok-, YouTube-, Teaser- und Produktskripte produktionsbereit.",
+      "variants": ["Skript", "TikTok", "YouTube", "Teaser"]
+    },
+    "4": {
+      "name": "Ad Creatives",
+      "tagline": "Performance-Creatives mit hoher Konversion für Meta, Google, TikTok und Karussells.",
+      "variants": ["Meta", "Google", "TikTok", "Karussell"]
+    },
+    "5": {
+      "name": "Brand Sound",
+      "tagline": "Sonische Identität — Jingle, Voice-over, Soundtrack und Brand Mood.",
+      "variants": ["Jingle", "Voice", "Mood", "Track"]
+    },
+    "6": {
+      "name": "Copy & Content",
+      "tagline": "Strategisches Copywriting — Slogans, Manifeste, Web-Texte und Editorials.",
+      "variants": ["Slogan", "Manifest", "Web", "Editorial"]
+    },
+    "7": {
+      "name": "Launch Ready",
+      "tagline": "Komplettes Launch-Kit — E-Mails, Landing, Social und Pressemitteilung.",
+      "variants": ["E-Mails", "Landing", "Social", "PR"]
+    },
+    "8": {
+      "name": "Chatbot Script",
+      "tagline": "Konversationsskripte für Support, Verkauf und After-Sales.",
+      "variants": ["Support", "Verkauf", "After-Sales", "FAQ"]
+    },
+    "9": {
+      "name": "Upsell Kit",
+      "tagline": "Strategische Upsell- und Cross-Sell-Angebote entlang der Customer Journey.",
+      "variants": ["Upsell", "Cross-Sell", "Bundle", "Loyalty"]
+    },
+    "10": {
+      "name": "Performance",
+      "tagline": "KPI-Tracking, Berichte und Optimierungsaktionen für die Marke.",
+      "variants": ["KPI", "Bericht", "Insights", "Aktionen"]
+    }
+  },
+  "brief": {
+    "title_global": "Globales Markenbriefing",
+    "subtitle_global": "Einmal ausfüllen — alle Module passen sich automatisch an.",
+    "progress_label": "{{percent}}% abgeschlossen",
+    "module_count": "{{filled}}/{{total}}",
+    "fill_first_warning": "Fülle zuerst das globale Briefing oben auf der Seite aus, um dieses Modul zu nutzen.",
+    "go_to_brief": "Zum Briefing",
+    "section_module": "Briefing — {{module}}",
+    "section_module_subtitle": "Definiere die Markenidentität, um die Agenten zu kalibrieren."
+  },
+  "buttons": {
+    "generate": "Mit KI generieren",
+    "generate_all": "Alles generieren",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "copy": "Kopieren",
+    "copied": "Kopiert",
+    "export": "Exportieren",
+    "download_html": "HTML herunterladen",
+    "download_pdf": "PDF herunterladen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "validate": "Bestätigen",
+    "back": "Zurück",
+    "close": "Schließen",
+    "loading": "Lädt…",
+    "retry": "Erneut versuchen"
+  },
+  "governance": {
+    "brand_lock_active": "Brand Lock aktiv",
+    "brand_lock_off": "Brand Lock inaktiv",
+    "compliance_passed": "Compliance OK",
+    "compliance_warning": "Compliance-Warnung",
+    "compliance_blocked": "Compliance blockiert",
+    "voice_locked": "Voice gesperrt",
+    "claims_audited": "Claims geprüft",
+    "wcag_aa": "WCAG AA",
+    "sector_active": "Sektor: {{sector}}",
+    "region_active": "Region: {{region}}"
+  },
+  "growth": {
+    "title": "Growth Brain — Wochenbriefing",
+    "subtitle": "Strategische Synthese aus deinen KPIs.",
+    "kpi_input": "Wöchentliche KPIs eingeben",
+    "generate_brief": "Wochenbriefing generieren",
+    "generating": "Briefing wird generiert…",
+    "executive_summary": "Executive Summary",
+    "key_insights": "Schlüsselerkenntnisse",
+    "recommendations": "Empfohlene Maßnahmen",
+    "next_steps": "Nächste Schritte",
+    "export_html": "HTML exportieren",
+    "export_pdf": "PDF exportieren",
+    "no_brief_yet": "Noch kein Briefing generiert. Fülle deine KPIs aus, um zu beginnen.",
+    "metric_revenue": "Umsatz",
+    "metric_traffic": "Traffic",
+    "metric_conversion": "Konversionsrate",
+    "metric_aov": "Durchschnittlicher Bestellwert",
+    "metric_cac": "Akquisitionskosten",
+    "metric_ltv": "Lifetime Value",
+    "trend_up": "Steigend",
+    "trend_down": "Fallend",
+    "trend_flat": "Stabil"
+  },
+  "errors": {
+    "fill_brief_first": "Fülle zuerst das globale Briefing aus.",
+    "generation_failed": "Generierung fehlgeschlagen. Bitte erneut versuchen.",
+    "network_error": "Netzwerkfehler. Prüfe deine Verbindung.",
+    "invalid_key": "Ungültiger Schlüssel.",
+    "missing_field": "Pflichtfeld fehlt: {{field}}.",
+    "server_error": "Serverfehler. Bitte später erneut versuchen."
+  },
+  "common": {
+    "yes": "Ja",
+    "no": "Nein",
+    "optional": "(optional)",
+    "required": "(erforderlich)",
+    "and": "und",
+    "or": "oder"
+  }
+}
