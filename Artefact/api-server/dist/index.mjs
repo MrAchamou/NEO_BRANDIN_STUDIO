@@ -18413,8 +18413,8 @@ var require_escape_html = __commonJS({
   "../../node_modules/.pnpm/escape-html@1.0.3/node_modules/escape-html/index.js"(exports, module) {
     "use strict";
     var matchHtmlRegExp = /["'&<>]/;
-    module.exports = escapeHtml;
-    function escapeHtml(string) {
+    module.exports = escapeHtml2;
+    function escapeHtml2(string) {
       var str2 = "" + string;
       var match = matchHtmlRegExp.exec(str2);
       if (!match) {
@@ -18545,13 +18545,13 @@ var require_finalhandler = __commonJS({
     "use strict";
     var debug = require_src()("finalhandler");
     var encodeUrl = require_encodeurl();
-    var escapeHtml = require_escape_html();
+    var escapeHtml2 = require_escape_html();
     var onFinished = require_on_finished();
     var parseUrl = require_parseurl();
     var statuses = require_statuses();
     var isFinished = onFinished.isFinished;
     function createHtmlDocument(message) {
-      var body = escapeHtml(message).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
+      var body = escapeHtml2(message).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
       return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>' + body + "</pre>\n</body>\n</html>\n";
     }
     module.exports = finalhandler;
@@ -22375,7 +22375,7 @@ var require_send = __commonJS({
     var createError = require_http_errors();
     var debug = require_src()("send");
     var encodeUrl = require_encodeurl();
-    var escapeHtml = require_escape_html();
+    var escapeHtml2 = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
     var fs = __require("fs");
@@ -22428,7 +22428,7 @@ var require_send = __commonJS({
       }
       var res = this.res;
       var msg = statuses.message[status] || String(status);
-      var doc = createHtmlDocument("Error", escapeHtml(msg));
+      var doc = createHtmlDocument("Error", escapeHtml2(msg));
       clearHeaders(res);
       if (err && err.headers) {
         setHeaders(res, err.headers);
@@ -22528,7 +22528,7 @@ var require_send = __commonJS({
         return;
       }
       var loc = encodeUrl(collapseLeadingSlashes(this.path + "/"));
-      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml(loc));
+      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml2(loc));
       res.statusCode = 301;
       res.setHeader("Content-Type", "text/html; charset=UTF-8");
       res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -22932,7 +22932,7 @@ var require_response = __commonJS({
     var createError = require_http_errors();
     var deprecate = require_depd()("express");
     var encodeUrl = require_encodeurl();
-    var escapeHtml = require_escape_html();
+    var escapeHtml2 = require_escape_html();
     var http = __require("node:http");
     var onFinished = require_on_finished();
     var mime = require_mime_types();
@@ -23271,7 +23271,7 @@ var require_response = __commonJS({
           body = statuses.message[status] + ". Redirecting to " + address;
         },
         html: function() {
-          var u = escapeHtml(address);
+          var u = escapeHtml2(address);
           body = "<p>" + statuses.message[status] + ". Redirecting to " + u + "</p>";
         },
         default: function() {
@@ -23399,7 +23399,7 @@ var require_serve_static = __commonJS({
   "../../node_modules/.pnpm/serve-static@2.2.1/node_modules/serve-static/index.js"(exports, module) {
     "use strict";
     var encodeUrl = require_encodeurl();
-    var escapeHtml = require_escape_html();
+    var escapeHtml2 = require_escape_html();
     var parseUrl = require_parseurl();
     var resolve = __require("path").resolve;
     var send = require_send();
@@ -23485,7 +23485,7 @@ var require_serve_static = __commonJS({
         originalUrl.path = null;
         originalUrl.pathname = collapseLeadingSlashes(originalUrl.pathname + "/");
         var loc = encodeUrl(url.format(originalUrl));
-        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml(loc));
+        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml2(loc));
         res.statusCode = 301;
         res.setHeader("Content-Type", "text/html; charset=UTF-8");
         res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -42443,8 +42443,283 @@ function inferChannelStatuses(raw) {
   });
 }
 
+// src/growth/brief-export.ts
+var OUTLOOK_LABELS = {
+  very_bullish: "Tr\xE8s haussier",
+  bullish: "Haussier",
+  neutral: "Neutre",
+  bearish: "Baissier"
+};
+var RISK_COLORS = {
+  Low: "#10b981",
+  Medium: "#f59e0b",
+  High: "#ef4444"
+};
+function escapeHtml(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+function renderList(items, emptyMsg = "\u2014") {
+  if (!items || items.length === 0) {
+    return `<p class="muted">${emptyMsg}</p>`;
+  }
+  return `<ul>${items.map((s) => `<li>${escapeHtml(s)}</li>`).join("")}</ul>`;
+}
+function renderBriefHtml(brief, opts = {}) {
+  const outlook = OUTLOOK_LABELS[brief.performance_overview.outlook] ?? brief.performance_overview.outlook;
+  const riskColor = RISK_COLORS[brief.performance_overview.risk_index] ?? "#64748b";
+  const action = brief.recommended_action.action;
+  const scalePct = brief.recommended_action.scale_percent;
+  const actionLabel = scalePct ? `${action} (+${scalePct}%)` : action;
+  const generatedDate = new Date(brief.generated_at || Date.now()).toLocaleDateString("fr-FR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  });
+  const brandLine = opts.brandName ? `<p class="brand-line">${escapeHtml(opts.brandName)}</p>` : "";
+  const autoPrintScript = opts.autoPrint ? `<script>window.addEventListener("load", function () { setTimeout(function () { window.print(); }, 250); });</script>` : "";
+  return `<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>${escapeHtml(brief.title)} \u2014 AI BRAND OS</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 32px 40px;
+    color: #0f172a;
+    background: #f8fafc;
+    line-height: 1.55;
+  }
+  .page {
+    max-width: 820px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 40px 44px;
+    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
+  }
+  header { border-bottom: 1px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 28px; }
+  .pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #7c3aed;
+    background: #ede9fe;
+    border-radius: 999px;
+    padding: 4px 10px;
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-size: 26px;
+    margin: 0 0 6px;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.01em;
+  }
+  .brand-line { font-size: 14px; color: #475569; margin: 4px 0 0; }
+  .meta { font-size: 12px; color: #64748b; margin-top: 4px; }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 18px 0 24px;
+  }
+  .kpi {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+    background: #f8fafc;
+  }
+  .kpi .value { font-size: 22px; font-weight: 700; color: #0f172a; }
+  .kpi .label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+  .risk-badge {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    color: white;
+  }
+  section { margin: 22px 0; }
+  section h2 {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #475569;
+    margin: 0 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  ul { margin: 0; padding-left: 20px; }
+  li { margin: 4px 0; font-size: 14px; color: #1e293b; }
+  .muted { color: #94a3b8; font-size: 13px; font-style: italic; margin: 0; }
+  .action-box {
+    border: 1px solid #c4b5fd;
+    background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin: 24px 0;
+  }
+  .action-box .action-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6d28d9;
+    margin: 0 0 6px;
+  }
+  .action-box .action-headline { font-size: 17px; font-weight: 700; color: #0f172a; margin: 0 0 10px; }
+  .action-box ul li { color: #334155; font-size: 13.5px; }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  footer {
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+    font-size: 11px;
+    color: #94a3b8;
+    text-align: right;
+  }
+  .stat-line { font-size: 13.5px; color: #334155; margin: 4px 0; }
+  .stat-line strong { color: #0f172a; }
+  @media print {
+    body { background: white; padding: 0; }
+    .page { box-shadow: none; border-radius: 0; padding: 24px 28px; max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <span class="pill">AI BRAND OS \xB7 Brief client-ready</span>
+    <h1>${escapeHtml(brief.title)}</h1>
+    ${brandLine}
+    <p class="meta">G\xE9n\xE9r\xE9 le ${generatedDate}</p>
+  </header>
+
+  <section>
+    <h2>Vue d'ensemble performance</h2>
+    <div class="grid-3">
+      <div class="kpi">
+        <div class="value">${escapeHtml(outlook)}</div>
+        <div class="label">Perspective</div>
+      </div>
+      <div class="kpi">
+        <div class="value">${escapeHtml(brief.performance_overview.profit_sustainability)}</div>
+        <div class="label">Soutenabilit\xE9 profit</div>
+      </div>
+      <div class="kpi">
+        <div class="value"><span class="risk-badge" style="background:${riskColor}">${escapeHtml(brief.performance_overview.risk_index)}</span></div>
+        <div class="label">Indice de risque</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Check profitabilit\xE9</h2>
+    <div class="grid-3">
+      <div class="kpi">
+        <div class="value">${brief.profit_check.ltv_cac_ratio}x</div>
+        <div class="label">LTV / CAC</div>
+      </div>
+      <div class="kpi">
+        <div class="value">${escapeHtml(brief.profit_check.profitability)}</div>
+        <div class="label">Profitabilit\xE9</div>
+      </div>
+      <div class="kpi">
+        <div class="value">${brief.profit_check.break_even_months}m</div>
+        <div class="label">Break-even</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="row-2">
+    <section>
+      <h2>Opportunit\xE9s de scaling</h2>
+      ${renderList(brief.scaling_opportunities, "Aucune opportunit\xE9 prioritaire d\xE9tect\xE9e cette semaine.")}
+    </section>
+    <section>
+      <h2>Signaux de risque</h2>
+      ${renderList(brief.risk_flags, "Aucun signal de risque actif.")}
+    </section>
+  </div>
+
+  <section>
+    <h2>Analyse cr\xE9ative</h2>
+    ${renderList(brief.creative_analysis, "Pas de signal cr\xE9atif notable.")}
+  </section>
+
+  <section>
+    <h2>Mise \xE0 jour r\xE9tention</h2>
+    <p class="stat-line"><strong>M+1 :</strong> ${escapeHtml(brief.retention_update.m1)}</p>
+    <p class="stat-line"><strong>M+3 :</strong> ${escapeHtml(brief.retention_update.m3)}</p>
+    <p class="stat-line"><strong>Sant\xE9 cohorte :</strong> ${escapeHtml(brief.retention_update.health)}</p>
+  </section>
+
+  <div class="action-box">
+    <p class="action-title">Action recommand\xE9e</p>
+    <p class="action-headline">${escapeHtml(actionLabel)}</p>
+    ${renderList(brief.recommended_action.rationale, "\u2014")}
+  </div>
+
+  <footer>${escapeHtml(brief.agency_footer)}</footer>
+</div>
+${autoPrintScript}
+</body>
+</html>`;
+}
+
 // src/routes/growth.ts
 var router6 = (0, import_express6.Router)();
+function buildClientReadyBrief(payload) {
+  const ltv_analysis = calculateLtv(payload.order_metrics);
+  const cohort_analysis = analyzeCohort(payload.cohort_data);
+  const seasonal_context = getSeasonalContext(payload.sector ?? "ecommerce");
+  const fatigue_report = detectCreativeFatigue(payload.creative_metrics);
+  const weekly_summary = generateWeeklyStrategicSummary({
+    ltv_analysis,
+    seasonal_context,
+    fatigue_report,
+    current_margin_stable: payload.current_margin_stable ?? true,
+    weeks_running: payload.weeks_running ?? 4
+  });
+  const risk_meter = computeRiskMeter({
+    ltv_analysis,
+    cohort_analysis,
+    fatigue_report,
+    weeks_running: payload.weeks_running ?? 4
+  });
+  return {
+    title: "Rapport Strat\xE9gique Hebdomadaire",
+    generated_at: weekly_summary.generated_at,
+    performance_overview: {
+      outlook: weekly_summary.strategic_outlook,
+      profit_sustainability: weekly_summary.profit_sustainability,
+      risk_index: risk_meter.scaling_risk_index
+    },
+    scaling_opportunities: weekly_summary.scaling_opportunities,
+    risk_flags: weekly_summary.risk_factors,
+    creative_analysis: weekly_summary.creative_signals,
+    retention_update: {
+      m1: Math.round((cohort_analysis.retention_m1 ?? 0) * 100) + "%",
+      m3: Math.round((cohort_analysis.retention_m3 ?? 0) * 100) + "%",
+      health: cohort_analysis.cohort_health
+    },
+    profit_check: {
+      ltv_cac_ratio: ltv_analysis.ltv_cac_ratio,
+      profitability: ltv_analysis.profitability_score,
+      break_even_months: ltv_analysis.break_even_months
+    },
+    recommended_action: weekly_summary.recommended_action,
+    agency_footer: `G\xE9n\xE9r\xE9 par AI BRAND OS v3.x \u2014 ${(/* @__PURE__ */ new Date()).toLocaleDateString("fr-FR")}`
+  };
+}
 router6.post("/growth/risk-meter", (req, res) => {
   const { order_metrics, cohort_data, creative_metrics, sector, weeks_running } = req.body;
   if (!order_metrics || !cohort_data || !creative_metrics) {
@@ -42547,6 +42822,20 @@ router6.post("/growth/weekly-brief", (req, res) => {
     res.status(400).json({ error: "order_metrics, cohort_data, creative_metrics requis" });
     return;
   }
+  const is_client_ready = output_mode === "client_ready";
+  if (is_client_ready) {
+    res.json(
+      buildClientReadyBrief({
+        order_metrics,
+        cohort_data,
+        creative_metrics,
+        sector,
+        weeks_running,
+        current_margin_stable
+      })
+    );
+    return;
+  }
   const ltv_analysis = calculateLtv(order_metrics);
   const cohort_analysis = analyzeCohort(cohort_data);
   const seasonal_context = getSeasonalContext(sector ?? "ecommerce");
@@ -42564,42 +42853,54 @@ router6.post("/growth/weekly-brief", (req, res) => {
     fatigue_report,
     weeks_running: weeks_running ?? 4
   });
-  const is_client_ready = output_mode === "client_ready";
-  if (is_client_ready) {
-    res.json({
-      title: "Rapport Strat\xE9gique Hebdomadaire",
-      generated_at: weekly_summary.generated_at,
-      performance_overview: {
-        outlook: weekly_summary.strategic_outlook,
-        profit_sustainability: weekly_summary.profit_sustainability,
-        risk_index: risk_meter.scaling_risk_index
-      },
-      scaling_opportunities: weekly_summary.scaling_opportunities,
-      risk_flags: weekly_summary.risk_factors,
-      creative_analysis: weekly_summary.creative_signals,
-      retention_update: {
-        m1: Math.round((cohort_analysis.retention_m1 ?? 0) * 100) + "%",
-        m3: Math.round((cohort_analysis.retention_m3 ?? 0) * 100) + "%",
-        health: cohort_analysis.cohort_health
-      },
-      profit_check: {
-        ltv_cac_ratio: ltv_analysis.ltv_cac_ratio,
-        profitability: ltv_analysis.profitability_score,
-        break_even_months: ltv_analysis.break_even_months
-      },
-      recommended_action: weekly_summary.recommended_action,
-      agency_footer: `G\xE9n\xE9r\xE9 par AI BRAND OS v3.x \u2014 ${(/* @__PURE__ */ new Date()).toLocaleDateString("fr-FR")}`
-    });
-  } else {
-    res.json({
-      weekly_summary,
-      risk_meter,
-      ltv_analysis,
-      cohort_analysis,
-      seasonal_context,
-      fatigue_report
-    });
+  res.json({
+    weekly_summary,
+    risk_meter,
+    ltv_analysis,
+    cohort_analysis,
+    seasonal_context,
+    fatigue_report
+  });
+});
+router6.post("/growth/weekly-brief/export", (req, res) => {
+  const {
+    order_metrics,
+    cohort_data,
+    creative_metrics,
+    sector,
+    weeks_running,
+    current_margin_stable,
+    brand_name
+  } = req.body;
+  if (!order_metrics || !cohort_data || !creative_metrics) {
+    res.status(400).json({ error: "order_metrics, cohort_data, creative_metrics requis" });
+    return;
   }
+  const format = String(req.query.format ?? "html").toLowerCase();
+  const download = req.query.download === "1" || req.query.download === "true";
+  const brief = buildClientReadyBrief({
+    order_metrics,
+    cohort_data,
+    creative_metrics,
+    sector,
+    weeks_running,
+    current_margin_stable
+  });
+  const html = renderBriefHtml(brief, {
+    autoPrint: format === "pdf",
+    brandName: typeof brand_name === "string" && brand_name.trim() ? brand_name.trim() : void 0
+  });
+  const dateStamp = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
+  const ext = format === "pdf" ? "pdf.html" : "html";
+  const fileName = `brief-strategique-${dateStamp}.${ext}`;
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  if (download) {
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="${fileName}"`
+    );
+  }
+  res.send(html);
 });
 router6.post("/growth/channel-optimizer", (req, res) => {
   const { channels } = req.body;

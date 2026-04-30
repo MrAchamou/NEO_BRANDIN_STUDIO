@@ -11,6 +11,7 @@ import {
   AlertTriangle, TrendingUp, Activity, BarChart2,
   Zap, ArrowUpRight, ArrowDownRight, RefreshCw,
   ChevronDown, ChevronUp, Eye, Target, Layers,
+  Download, FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -284,6 +285,63 @@ export default function GrowthBrainDashboard() {
     }
   }
 
+  const [exporting, setExporting] = useState<"html" | "pdf" | null>(null);
+
+  async function exportBrief(format: "html" | "pdf") {
+    setExporting(format);
+    try {
+      const url =
+        `${API}/api/growth/weekly-brief/export?format=${format}` +
+        (format === "html" ? "&download=1" : "");
+
+      const r = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(DEMO_PAYLOAD),
+      });
+
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+
+      const html = await r.text();
+      const dateStamp = new Date().toISOString().slice(0, 10);
+
+      if (format === "html") {
+        const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = blobUrl;
+        a.download = `brief-strategique-${dateStamp}.html`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(blobUrl);
+        toast({ title: "Brief HTML téléchargé", description: `brief-strategique-${dateStamp}.html` });
+      } else {
+        const win = window.open("", "_blank", "noopener,noreferrer");
+        if (!win) {
+          toast({
+            title: "Pop-up bloqué",
+            description: "Autorise les pop-ups pour générer le PDF.",
+            variant: "destructive",
+          });
+          return;
+        }
+        win.document.open();
+        win.document.write(html);
+        win.document.close();
+        toast({ title: "PDF prêt", description: "La fenêtre d'impression va s'ouvrir." });
+      }
+    } catch (err) {
+      toast({
+        title: "Erreur export",
+        description: err instanceof Error ? err.message : "Impossible de générer le brief",
+        variant: "destructive",
+      });
+    } finally {
+      setExporting(null);
+    }
+  }
+
   async function fetchChannels() {
     setLoading(true);
     try {
@@ -527,6 +585,40 @@ export default function GrowthBrainDashboard() {
                     <span className={`text-xs font-medium ${OUTLOOK_COLORS[briefData.performance_overview.outlook] ?? "text-muted-foreground"}`}>
                       {OUTLOOK_LABELS[briefData.performance_overview.outlook] ?? briefData.performance_overview.outlook}
                     </span>
+                  </div>
+
+                  {/* Boutons export client-ready */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="gap-1.5 border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/10 text-xs"
+                      onClick={() => exportBrief("html")}
+                      disabled={exporting !== null}
+                      data-testid="button-export-brief-html"
+                    >
+                      {exporting === "html" ? (
+                        <RefreshCw className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <Download className="w-3 h-3" />
+                      )}
+                      Télécharger HTML
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="gap-1.5 border-violet-500/30 text-violet-300 hover:bg-violet-500/10 text-xs"
+                      onClick={() => exportBrief("pdf")}
+                      disabled={exporting !== null}
+                      data-testid="button-export-brief-pdf"
+                    >
+                      {exporting === "pdf" ? (
+                        <RefreshCw className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <FileText className="w-3 h-3" />
+                      )}
+                      Télécharger PDF
+                    </Button>
                   </div>
 
                   {/* KPIs */}

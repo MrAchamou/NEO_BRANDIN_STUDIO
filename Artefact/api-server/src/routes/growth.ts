@@ -18,8 +18,67 @@ import {
   simulateNewAudience,
 } from "../growth/scenario-simulator";
 import { optimizeChannelMix, inferChannelStatuses, type ChannelMetrics } from "../growth/channel-optimizer";
+import { renderBriefHtml, type ClientReadyBrief } from "../growth/brief-export";
 
 const router = Router();
+
+/**
+ * Construit le brief client-ready à partir des entrées brutes.
+ * Mutualisé entre /weekly-brief et /weekly-brief/export.
+ */
+function buildClientReadyBrief(payload: {
+  order_metrics: OrderMetrics;
+  cohort_data: CohortDataPoint;
+  creative_metrics: PerformancePeriod[];
+  sector?: string;
+  weeks_running?: number;
+  current_margin_stable?: boolean;
+}): ClientReadyBrief {
+  const ltv_analysis = calculateLtv(payload.order_metrics);
+  const cohort_analysis = analyzeCohort(payload.cohort_data);
+  const seasonal_context = getSeasonalContext(payload.sector ?? "ecommerce");
+  const fatigue_report = detectCreativeFatigue(payload.creative_metrics);
+
+  const weekly_summary = generateWeeklyStrategicSummary({
+    ltv_analysis,
+    seasonal_context,
+    fatigue_report,
+    current_margin_stable: payload.current_margin_stable ?? true,
+    weeks_running: payload.weeks_running ?? 4,
+  });
+
+  const risk_meter = computeRiskMeter({
+    ltv_analysis,
+    cohort_analysis,
+    fatigue_report,
+    weeks_running: payload.weeks_running ?? 4,
+  });
+
+  return {
+    title: "Rapport Stratégique Hebdomadaire",
+    generated_at: weekly_summary.generated_at,
+    performance_overview: {
+      outlook: weekly_summary.strategic_outlook,
+      profit_sustainability: weekly_summary.profit_sustainability,
+      risk_index: risk_meter.scaling_risk_index,
+    },
+    scaling_opportunities: weekly_summary.scaling_opportunities,
+    risk_flags: weekly_summary.risk_factors,
+    creative_analysis: weekly_summary.creative_signals,
+    retention_update: {
+      m1: Math.round((cohort_analysis.retention_m1 ?? 0) * 100) + "%",
+      m3: Math.round((cohort_analysis.retention_m3 ?? 0) * 100) + "%",
+      health: cohort_analysis.cohort_health,
+    },
+    profit_check: {
+      ltv_cac_ratio: ltv_analysis.ltv_cac_ratio,
+      profitability: ltv_analysis.profitability_score,
+      break_even_months: ltv_analysis.break_even_months,
+    },
+    recommended_action: weekly_summary.recommended_action,
+    agency_footer: `Généré par AI BRAND OS v3.x — ${new Date().toLocaleDateString("fr-FR")}`,
+  };
+}
 
 /**
  * POST /api/growth/risk-meter
@@ -154,6 +213,22 @@ router.post("/growth/weekly-brief", (req, res) => {
     return;
   }
 
+  const is_client_ready = output_mode === "client_ready";
+
+  if (is_client_ready) {
+    res.json(
+      buildClientReadyBrief({
+        order_metrics: order_metrics as OrderMetrics,
+        cohort_data: cohort_data as CohortDataPoint,
+        creative_metrics: creative_metrics as PerformancePeriod[],
+        sector,
+        weeks_running,
+        current_margin_stable,
+      }),
+    );
+    return;
+  }
+
   const ltv_analysis = calculateLtv(order_metrics as OrderMetrics);
   const cohort_analysis = analyzeCohort(cohort_data as CohortDataPoint);
   const seasonal_context = getSeasonalContext(sector ?? "ecommerce");
@@ -174,43 +249,70 @@ router.post("/growth/weekly-brief", (req, res) => {
     weeks_running: weeks_running ?? 4,
   });
 
-  const is_client_ready = output_mode === "client_ready";
+  res.json({
+    weekly_summary,
+    risk_meter,
+    ltv_analysis,
+    cohort_analysis,
+    seasonal_context,
+    fatigue_report,
+  });
+});
 
-  if (is_client_ready) {
-    res.json({
-      title: "Rapport Stratégique Hebdomadaire",
-      generated_at: weekly_summary.generated_at,
-      performance_overview: {
-        outlook: weekly_summary.strategic_outlook,
-        profit_sustainability: weekly_summary.profit_sustainability,
-        risk_index: risk_meter.scaling_risk_index,
-      },
-      scaling_opportunities: weekly_summary.scaling_opportunities,
-      risk_flags: weekly_summary.risk_factors,
-      creative_analysis: weekly_summary.creative_signals,
-      retention_update: {
-        m1: Math.round((cohort_analysis.retention_m1 ?? 0) * 100) + "%",
-        m3: Math.round((cohort_analysis.retention_m3 ?? 0) * 100) + "%",
-        health: cohort_analysis.cohort_health,
-      },
-      profit_check: {
-        ltv_cac_ratio: ltv_analysis.ltv_cac_ratio,
-        profitability: ltv_analysis.profitability_score,
-        break_even_months: ltv_analysis.break_even_months,
-      },
-      recommended_action: weekly_summary.recommended_action,
-      agency_footer: `Généré par AI BRAND OS v3.x — ${new Date().toLocaleDateString("fr-FR")}`,
-    });
-  } else {
-    res.json({
-      weekly_summary,
-      risk_meter,
-      ltv_analysis,
-      cohort_analysis,
-      seasonal_context,
-      fatigue_report,
-    });
+/**
+ * POST /api/growth/weekly-brief/export
+ * Génère le brief client-ready au format HTML autonome (téléchargeable
+ * ou imprimable en PDF directement depuis le navigateur).
+ *
+ * Query params :
+ *   - format=html|pdf  (défaut: html)
+ *   - download=1       (force le header Content-Disposition: attachment)
+ */
+router.post("/growth/weekly-brief/export", (req, res) => {
+  const {
+    order_metrics,
+    cohort_data,
+    creative_metrics,
+    sector,
+    weeks_running,
+    current_margin_stable,
+    brand_name,
+  } = req.body;
+
+  if (!order_metrics || !cohort_data || !creative_metrics) {
+    res.status(400).json({ error: "order_metrics, cohort_data, creative_metrics requis" });
+    return;
   }
+
+  const format = String(req.query.format ?? "html").toLowerCase();
+  const download = req.query.download === "1" || req.query.download === "true";
+
+  const brief = buildClientReadyBrief({
+    order_metrics: order_metrics as OrderMetrics,
+    cohort_data: cohort_data as CohortDataPoint,
+    creative_metrics: creative_metrics as PerformancePeriod[],
+    sector,
+    weeks_running,
+    current_margin_stable,
+  });
+
+  const html = renderBriefHtml(brief, {
+    autoPrint: format === "pdf",
+    brandName: typeof brand_name === "string" && brand_name.trim() ? brand_name.trim() : undefined,
+  });
+
+  const dateStamp = new Date().toISOString().slice(0, 10);
+  const ext = format === "pdf" ? "pdf.html" : "html";
+  const fileName = `brief-strategique-${dateStamp}.${ext}`;
+
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  if (download) {
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="${fileName}"`,
+    );
+  }
+  res.send(html);
 });
 
 /**
