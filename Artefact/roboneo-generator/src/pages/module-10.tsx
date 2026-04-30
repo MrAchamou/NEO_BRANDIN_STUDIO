@@ -5,6 +5,7 @@ import {
   Target, TrendingUp, ClipboardList, ChevronDown, ChevronUp,
   AlertTriangle, ArrowUpCircle, Calendar,
 } from "lucide-react";
+import GrowthBrainDashboard from "@/components/growth-brain-dashboard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -950,6 +951,9 @@ export default function Module10() {
           </Button>
         </CardContent>
       </Card>
+
+      {/* Growth Brain Dashboard — Agency Mode */}
+      <GrowthBrainDashboard />
 
       {/* Results */}
       <AnimatePresence>

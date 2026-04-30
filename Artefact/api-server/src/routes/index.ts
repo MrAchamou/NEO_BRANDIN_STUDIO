@@ -4,6 +4,7 @@ import scrapeGmbRouter from "./scrape-gmb";
 import governanceRouter from "./governance";
 import memoryRouter from "./memory";
 import positioningRouter from "./positioning";
+import growthRouter from "./growth";
 import enhancePromptsRouter from "./openai/enhance-prompts";
 import enhancePromptsVisualRouter from "./openai/enhance-prompts-visual";
 import enhancePromptsVideoRouter from "./openai/enhance-prompts-video";
@@ -19,10 +20,11 @@ import reviewPromptRouter from "./openai/review-prompt";
 
 const router: IRouter = Router();
 
-// ── v3.0 — Routes stratégiques ─────────────────────────────────────────────
+// ── v3.x — Routes stratégiques (Agency Mode) ───────────────────────────────
 router.use(governanceRouter);
 router.use(memoryRouter);
 router.use(positioningRouter);
+router.use(growthRouter);
 
 // ── Core routes ────────────────────────────────────────────────────────────
 router.use(healthRouter);

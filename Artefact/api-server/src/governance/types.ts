@@ -106,11 +106,22 @@ export interface GovernanceReport {
   findings: GovernanceFinding[];
   rewrites: number;
   blocked: boolean;
+  /** Optionnel — brand_id associé au rapport (v3.x). */
+  brand_id?: string;
+  /** Optionnel — secteur résolu (v3.x). */
+  sector?: string;
   /** v3.0 — Présent si brand_id fourni dans les options. */
   v3?: {
     memory_block: string;
     positioning_block: string;
     positioning_conflicts_count: number;
+    archetype?: string;
+    territory?: {
+      brand_promise?: string;
+    };
+    growth_recommendation?: {
+      action?: string;
+    };
   };
 }
 

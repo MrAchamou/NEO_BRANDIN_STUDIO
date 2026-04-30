@@ -20481,27 +20481,27 @@ var require_router = __commonJS({
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var methods = METHODS.map((method) => method.toLowerCase());
-    module.exports = Router19;
+    module.exports = Router20;
     module.exports.Route = Route;
-    function Router19(options) {
-      if (!(this instanceof Router19)) {
-        return new Router19(options);
+    function Router20(options) {
+      if (!(this instanceof Router20)) {
+        return new Router20(options);
       }
       const opts = options || {};
-      function router19(req, res, next) {
-        router19.handle(req, res, next);
+      function router20(req, res, next) {
+        router20.handle(req, res, next);
       }
-      Object.setPrototypeOf(router19, this);
-      router19.caseSensitive = opts.caseSensitive;
-      router19.mergeParams = opts.mergeParams;
-      router19.params = {};
-      router19.strict = opts.strict;
-      router19.stack = [];
-      return router19;
+      Object.setPrototypeOf(router20, this);
+      router20.caseSensitive = opts.caseSensitive;
+      router20.mergeParams = opts.mergeParams;
+      router20.params = {};
+      router20.strict = opts.strict;
+      router20.stack = [];
+      return router20;
     }
-    Router19.prototype = function() {
+    Router20.prototype = function() {
     };
-    Router19.prototype.param = function param(name, fn) {
+    Router20.prototype.param = function param(name, fn) {
       if (!name) {
         throw new TypeError("argument name is required");
       }
@@ -20521,7 +20521,7 @@ var require_router = __commonJS({
       params.push(fn);
       return this;
     };
-    Router19.prototype.handle = function handle(req, res, callback) {
+    Router20.prototype.handle = function handle(req, res, callback) {
       if (!callback) {
         throw new TypeError("argument callback is required");
       }
@@ -20648,7 +20648,7 @@ var require_router = __commonJS({
         }
       }
     };
-    Router19.prototype.use = function use(handler) {
+    Router20.prototype.use = function use(handler) {
       let offset = 0;
       let path3 = "/";
       if (typeof handler !== "function") {
@@ -20681,7 +20681,7 @@ var require_router = __commonJS({
       }
       return this;
     };
-    Router19.prototype.route = function route(path3) {
+    Router20.prototype.route = function route(path3) {
       const route2 = new Route(path3);
       const layer = new Layer(path3, {
         sensitive: this.caseSensitive,
@@ -20696,7 +20696,7 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      Router19.prototype[method] = function(path3) {
+      Router20.prototype[method] = function(path3) {
         const route = this.route(path3);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
@@ -20879,13 +20879,13 @@ var require_application = __commonJS({
     var compileTrust = require_utils3().compileTrust;
     var resolve = __require("node:path").resolve;
     var once = require_once();
-    var Router19 = require_router();
+    var Router20 = require_router();
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var app2 = exports = module.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router19 = null;
+      var router20 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -20894,13 +20894,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router19 === null) {
-            router19 = new Router19({
+          if (router20 === null) {
+            router20 = new Router20({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router19;
+          return router20;
         }
       });
     };
@@ -20971,15 +20971,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router19 = this.router;
+      var router20 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router19.use(path3, fn2);
+          return router20.use(path3, fn2);
         }
         debug(".use app under %s", path3);
         fn2.mountpath = path3;
         fn2.parent = this;
-        router19.use(path3, function mounted_app(req, res, next) {
+        router20.use(path3, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -23506,7 +23506,7 @@ var require_express = __commonJS({
     var EventEmitter = __require("node:events").EventEmitter;
     var mixin = require_merge_descriptors();
     var proto = require_application();
-    var Router19 = require_router();
+    var Router20 = require_router();
     var req = require_request();
     var res = require_response();
     exports = module.exports = createApplication;
@@ -23528,8 +23528,8 @@ var require_express = __commonJS({
     exports.application = proto;
     exports.request = req;
     exports.response = res;
-    exports.Route = Router19.Route;
-    exports.Router = Router19;
+    exports.Route = Router20.Route;
+    exports.Router = Router20;
     exports.json = bodyParser.json;
     exports.raw = bodyParser.raw;
     exports.static = require_serve_static();
@@ -28388,12 +28388,12 @@ var require_logger = __commonJS({
 });
 
 // src/app.ts
-var import_express19 = __toESM(require_express2(), 1);
+var import_express20 = __toESM(require_express2(), 1);
 var import_cors = __toESM(require_lib3(), 1);
 var import_pino_http = __toESM(require_logger(), 1);
 
 // src/routes/index.ts
-var import_express18 = __toESM(require_express2(), 1);
+var import_express19 = __toESM(require_express2(), 1);
 
 // src/routes/health.ts
 var import_express = __toESM(require_express2(), 1);
@@ -40490,6 +40490,232 @@ var governance_default = router3;
 
 // src/routes/memory.ts
 var import_express4 = __toESM(require_express2(), 1);
+
+// src/memory/drift-detector.ts
+var THRESHOLDS = {
+  tone_overrides: 10,
+  claim_rejections: 5,
+  positioning_corrections: 3,
+  growth_mode_switches: 3,
+  high_impact_corrections: 4
+};
+function detectBrandDrift(brand_id) {
+  const entries = getMemoryEntries(brand_id);
+  const decisions = getDecisions(brand_id, void 0, 100);
+  const signals = [];
+  const tone_overrides = entries.filter(
+    (e) => e.type === "override" && (e.metadata?.rule_category === "tone" || e.context?.includes("ton"))
+  ).length;
+  if (tone_overrides > 0) {
+    signals.push({
+      dimension: "tone_overrides",
+      count: tone_overrides,
+      threshold: THRESHOLDS.tone_overrides,
+      severity: tone_overrides >= THRESHOLDS.tone_overrides ? "high" : tone_overrides >= 5 ? "medium" : "low",
+      detail: `${tone_overrides} override(s) de ton d\xE9tect\xE9(s)`
+    });
+  }
+  const claim_rejections = entries.filter(
+    (e) => e.type === "rejection"
+  ).length;
+  if (claim_rejections > 0) {
+    signals.push({
+      dimension: "claim_rejections",
+      count: claim_rejections,
+      threshold: THRESHOLDS.claim_rejections,
+      severity: claim_rejections >= THRESHOLDS.claim_rejections ? "high" : claim_rejections >= 3 ? "medium" : "low",
+      detail: `${claim_rejections} claim(s) rejet\xE9(s)`
+    });
+  }
+  const positioning_corrections = entries.filter(
+    (e) => e.type === "correction" && (e.module === "positioning" || e.context?.includes("position") || e.section_key?.includes("territory"))
+  ).length;
+  if (positioning_corrections > 0) {
+    signals.push({
+      dimension: "positioning_corrections",
+      count: positioning_corrections,
+      threshold: THRESHOLDS.positioning_corrections,
+      severity: positioning_corrections >= THRESHOLDS.positioning_corrections ? "high" : positioning_corrections >= 2 ? "medium" : "low",
+      detail: `${positioning_corrections} correction(s) de positionnement`
+    });
+  }
+  const growth_switches = decisions.filter((d) => d.category === "growth_mode").length;
+  if (growth_switches > 0) {
+    signals.push({
+      dimension: "growth_mode_switches",
+      count: growth_switches,
+      threshold: THRESHOLDS.growth_mode_switches,
+      severity: growth_switches >= THRESHOLDS.growth_mode_switches ? "high" : growth_switches >= 2 ? "medium" : "low",
+      detail: `${growth_switches} changement(s) de growth mode`
+    });
+  }
+  const high_impact = entries.filter((e) => e.type === "correction" && e.impact_level === "high").length;
+  if (high_impact > 0) {
+    signals.push({
+      dimension: "high_impact_corrections",
+      count: high_impact,
+      threshold: THRESHOLDS.high_impact_corrections,
+      severity: high_impact >= THRESHOLDS.high_impact_corrections ? "high" : high_impact >= 2 ? "medium" : "low",
+      detail: `${high_impact} correction(s) \xE0 impact \xE9lev\xE9`
+    });
+  }
+  const drift_score = signals.reduce((acc, s) => {
+    const ratio = Math.min(s.count / s.threshold, 1);
+    const weight = s.severity === "high" ? 3 : s.severity === "medium" ? 2 : 1;
+    return acc + ratio * weight;
+  }, 0);
+  const normalized_score = Math.min(Math.round(drift_score / (signals.length * 3 || 1) * 100), 100);
+  const drift_detected = signals.some((s) => s.count >= s.threshold) || drift_score >= 2;
+  const overall_severity = drift_detected ? normalized_score >= 80 ? "critical" : normalized_score >= 60 ? "high" : normalized_score >= 40 ? "medium" : "low" : signals.length > 0 ? "low" : "none";
+  const recalibrate_positioning = positioning_corrections >= THRESHOLDS.positioning_corrections || overall_severity === "critical" || overall_severity === "high";
+  const recommendation = buildRecommendation(overall_severity, signals, recalibrate_positioning);
+  return {
+    brand_id,
+    generated_at: (/* @__PURE__ */ new Date()).toISOString(),
+    drift_detected,
+    drift_score: normalized_score,
+    signals,
+    overall_severity,
+    recommendation,
+    recalibrate_positioning
+  };
+}
+function buildRecommendation(severity, signals, recalibrate) {
+  if (severity === "none") return "Marque stable \u2014 aucune d\xE9rive d\xE9tect\xE9e.";
+  const parts = [];
+  if (recalibrate) parts.push("Recalibrer le Positioning Lock est fortement conseill\xE9.");
+  const top = signals.filter((s) => s.severity === "high").map((s) => s.dimension);
+  if (top.length > 0) {
+    parts.push(`Dimensions critiques : ${top.join(", ")}.`);
+  }
+  if (severity === "critical") {
+    parts.push("Audit strat\xE9gique complet recommand\xE9 avant la prochaine g\xE9n\xE9ration.");
+  } else if (severity === "high") {
+    parts.push("R\xE9vision du brief client recommand\xE9e.");
+  } else if (severity === "medium") {
+    parts.push("Surveiller l'\xE9volution \u2014 revisiter dans 2 semaines.");
+  } else {
+    parts.push("Drift l\xE9ger \u2014 continuer la surveillance.");
+  }
+  return parts.join(" ");
+}
+
+// src/memory/evolution-timeline.ts
+function generateEvolutionTimeline(brand_id) {
+  const entries = getMemoryEntries(brand_id);
+  const decisions = getDecisions(brand_id, void 0, 100);
+  const profile = getMemoryProfile(brand_id);
+  const events = [];
+  for (const d of decisions) {
+    let type = "correction";
+    if (d.category === "tone") type = "tone_shift";
+    else if (d.category === "growth_mode") type = "growth_change";
+    else if (d.category === "positioning") type = "positioning";
+    events.push({
+      date: d.timestamp.slice(0, 10),
+      type,
+      title: `${d.category} : ${d.from_value} \u2192 ${d.to_value}`,
+      detail: d.rationale ?? "D\xE9cision strat\xE9gique enregistr\xE9e",
+      impact: "medium"
+    });
+  }
+  const high_corrections = entries.filter((e) => e.type === "correction" && e.impact_level === "high");
+  for (const c of high_corrections) {
+    events.push({
+      date: c.timestamp.slice(0, 10),
+      type: "correction",
+      title: `Correction majeure \u2014 ${c.module}`,
+      detail: `"${c.before.slice(0, 60)}\u2026" \u2192 "${c.after.slice(0, 60)}\u2026"`,
+      impact: "high"
+    });
+  }
+  events.sort((a, b) => a.date.localeCompare(b.date));
+  const profile_shifts = [];
+  const tone_decisions = decisions.filter((d) => d.category === "tone");
+  if (tone_decisions.length > 0) {
+    const first = tone_decisions[0];
+    const last = tone_decisions[tone_decisions.length - 1];
+    profile_shifts.push({
+      dimension: "Ton",
+      observation: tone_decisions.length > 1 ? `Ton \xE9volu\xE9 de ${first.from_value} \u2192 ${last.to_value} (${tone_decisions.length} ajustements)` : `Ton ajust\xE9 : ${first.from_value} \u2192 ${first.to_value}`
+    });
+  }
+  if (profile.growth_risk_appetite !== "conservative") {
+    profile_shifts.push({
+      dimension: "App\xE9tit au risque",
+      observation: `App\xE9tit au risque passage de conservateur \u2192 ${profile.growth_risk_appetite}`
+    });
+  }
+  if (profile.creative_complexity !== "experimental") {
+    profile_shifts.push({
+      dimension: "Complexit\xE9 cr\xE9ative",
+      observation: `Pr\xE9f\xE9rence cr\xE9ative : ${profile.creative_complexity}`
+    });
+  }
+  if (profile.urgency_tolerance) {
+    profile_shifts.push({
+      dimension: "Tol\xE9rance urgence",
+      observation: "Tol\xE9rance aux m\xE9caniques d'urgence activ\xE9e"
+    });
+  }
+  const total = entries.length + decisions.length;
+  const approvals = entries.filter((e) => e.type === "approval").length;
+  const rejections = entries.filter((e) => e.type === "rejection").length;
+  const approval_rate = total > 0 ? approvals / (approvals + rejections + 1) : 0.5;
+  const stability_score = Math.round(Math.min(approval_rate * 10 + (1 - decisions.length / 20) * 10, 10) * 10) / 10;
+  const active_since = entries.length > 0 ? entries[0].timestamp.slice(0, 10) : null;
+  const narrative_summary = buildNarrative(brand_id, profile_shifts, stability_score, total, active_since);
+  const export_markdown = buildMarkdownExport(brand_id, events, profile_shifts, narrative_summary, stability_score);
+  return {
+    brand_id,
+    generated_at: (/* @__PURE__ */ new Date()).toISOString(),
+    total_interactions: total,
+    active_since,
+    events: events.slice(-20),
+    narrative_summary,
+    profile_shifts,
+    stability_score,
+    export_markdown
+  };
+}
+function buildNarrative(brand_id, shifts, stability, total, since) {
+  if (total === 0) {
+    return `La marque ${brand_id} n'a pas encore d'historique strat\xE9gique enregistr\xE9.`;
+  }
+  const parts = [];
+  parts.push(`La marque ${brand_id} est active depuis le ${since ?? "r\xE9cemment"} (${total} interactions enregistr\xE9es).`);
+  if (shifts.length > 0) {
+    parts.push(shifts.map((s) => s.observation).join(". ") + ".");
+  }
+  if (stability >= 8) {
+    parts.push("La marque pr\xE9sente une stabilit\xE9 strat\xE9gique \xE9lev\xE9e.");
+  } else if (stability >= 5) {
+    parts.push("La marque est en phase d'ajustement strat\xE9gique.");
+  } else {
+    parts.push("La marque traverse une p\xE9riode de repositionnement actif.");
+  }
+  return parts.join(" ");
+}
+function buildMarkdownExport(brand_id, events, shifts, narrative, stability) {
+  const lines = [
+    `# Brand Evolution Report \u2014 ${brand_id}`,
+    `*G\xE9n\xE9r\xE9 le ${(/* @__PURE__ */ new Date()).toLocaleDateString("fr-FR")}*`,
+    "",
+    "## R\xE9sum\xE9 strat\xE9gique",
+    narrative,
+    "",
+    `**Score de stabilit\xE9 : ${stability}/10**`,
+    "",
+    "## \xC9volutions cl\xE9s",
+    ...shifts.map((s) => `- **${s.dimension}** : ${s.observation}`),
+    "",
+    "## Timeline",
+    ...events.map((e) => `- [${e.date}] **${e.title}** \u2014 ${e.detail}`)
+  ];
+  return lines.join("\n");
+}
+
+// src/routes/memory.ts
 var router4 = (0, import_express4.Router)();
 router4.get("/memory/profile/:brand_id", (req, res) => {
   const { brand_id } = req.params;
@@ -40559,6 +40785,16 @@ router4.delete("/memory/:brand_id", (req, res) => {
   clearMemory(brand_id);
   invalidateMemoryProfile(brand_id);
   res.json({ success: true, message: `M\xE9moire de ${brand_id} r\xE9initialis\xE9e` });
+});
+router4.get("/memory/drift/:brand_id", (req, res) => {
+  const { brand_id } = req.params;
+  const drift = detectBrandDrift(brand_id);
+  res.json(drift);
+});
+router4.get("/memory/timeline/:brand_id", (req, res) => {
+  const { brand_id } = req.params;
+  const timeline = generateEvolutionTimeline(brand_id);
+  res.json(timeline);
 });
 var memory_default = router4;
 
@@ -41162,6 +41398,306 @@ function brandTerritoryToPromptBlock(territory) {
   ].join("\n");
 }
 
+// src/positioning/density-score.ts
+var SECTOR_DOMINANT_ARCHETYPES = {
+  cosmetics: ["Innocent", "Lover", "Caregiver"],
+  fashion: ["Ruler", "Creator", "Lover"],
+  finance: ["Ruler", "Sage", "Guardian"],
+  saas: ["Sage", "Creator", "Hero"],
+  food: ["Innocent", "Caregiver", "Explorer"],
+  fitness: ["Hero", "Explorer", "Rebel"],
+  luxury: ["Ruler", "Lover", "Creator"],
+  ecommerce: ["Everyman", "Hero", "Innocent"]
+};
+var ALL_ARCHETYPES = [
+  "Innocent",
+  "Everyman",
+  "Hero",
+  "Outlaw",
+  "Explorer",
+  "Creator",
+  "Ruler",
+  "Magician",
+  "Lover",
+  "Caregiver",
+  "Jester",
+  "Sage"
+];
+function computeDensityScore(input) {
+  const sector_key = (input.sector ?? "").toLowerCase().replace(/\s/g, "_");
+  const dominant = SECTOR_DOMINANT_ARCHETYPES[sector_key] ?? SECTOR_DOMINANT_ARCHETYPES["ecommerce"];
+  const is_dominant = dominant.includes(input.archetype);
+  const dominant_count = dominant.length;
+  const category_crowding_level = dominant_count >= 3 && is_dominant ? "High" : dominant_count >= 2 && is_dominant ? "Medium" : "Low";
+  const white_space_archetypes = ALL_ARCHETYPES.filter((a) => !dominant.includes(a));
+  const white_space_opportunity_score = is_dominant ? Math.max(10 - dominant_count * 2, 2) : Math.min(8 + (white_space_archetypes.length > 5 ? 2 : 1), 10);
+  const value_bonus = (input.values?.length ?? 0) >= 3 ? 1.5 : 0.5;
+  const tone_bonus = input.tone && !["neutral", "standard"].includes(input.tone.toLowerCase()) ? 1 : 0;
+  const archetype_bonus = is_dominant ? 0 : 2;
+  const differentiation_strength = Math.min(
+    Math.round((5 + value_bonus + tone_bonus + archetype_bonus) * 10) / 10,
+    10
+  );
+  const differentiation_levers = [];
+  if (is_dominant) {
+    differentiation_levers.push(
+      `L'arch\xE9type ${input.archetype} est dominant dans ce secteur \u2014 diff\xE9rencier via l'ex\xE9cution et le ton`
+    );
+    differentiation_levers.push("Cibler un sous-segment de niche non satur\xE9");
+    differentiation_levers.push(`Consid\xE9rer un arch\xE9type secondaire : ${white_space_archetypes.slice(0, 2).join(", ")}`);
+  } else {
+    differentiation_levers.push(
+      `L'arch\xE9type ${input.archetype} est rare dans ce secteur \u2014 avantage de positionnement distinct`
+    );
+    differentiation_levers.push("Exploiter la dissonance cr\xE9ative vs la concurrence");
+    differentiation_levers.push("Construire un territoire narratif in\xE9dit");
+  }
+  const crowding_analysis = buildCrowdingAnalysis(category_crowding_level, dominant, input.archetype, sector_key);
+  return {
+    category_crowding_level,
+    differentiation_strength,
+    white_space_opportunity_score,
+    dominant_archetypes_in_sector: dominant,
+    white_space_archetypes: white_space_archetypes.slice(0, 4),
+    crowding_analysis,
+    differentiation_levers
+  };
+}
+function buildCrowdingAnalysis(level, dominant, brand_archetype, sector) {
+  const sector_label = sector.replace(/_/g, " ");
+  if (level === "High") {
+    return `Le secteur ${sector_label} est tr\xE8s satur\xE9 sur les arch\xE9types ${dominant.join(", ")}. La marque partage son arch\xE9type (${brand_archetype}) avec ses principaux concurrents \u2014 diff\xE9renciation par le ton et l'ex\xE9cution essentielle.`;
+  }
+  if (level === "Medium") {
+    return `Le secteur ${sector_label} pr\xE9sente une densit\xE9 comp\xE9titive mod\xE9r\xE9e. L'arch\xE9type ${brand_archetype} est partiellement partag\xE9 \u2014 des espaces de distinction existent.`;
+  }
+  return `Le secteur ${sector_label} offre un espace comp\xE9titif ouvert. L'arch\xE9type ${brand_archetype} repr\xE9sente une diff\xE9renciation forte dans ce contexte.`;
+}
+
+// src/positioning/stress-test.ts
+var SECTOR_TONE_MAP = {
+  cosmetics: ["elegant", "doux", "naturel", "inspirant", "premium"],
+  fashion: ["audacieux", "statement", "contemporain", "cool", "d\xE9sirable"],
+  finance: ["expert", "rassurant", "s\xE9rieux", "autoritaire", "clair"],
+  saas: ["expert", "efficace", "technique", "direct", "clair"],
+  food: ["chaleureux", "authentique", "savoureux", "naturel", "convivial"],
+  fitness: ["motivant", "\xE9nergique", "direct", "intense", "positif"]
+};
+var ARCHETYPE_EMOTIONAL_TONES = {
+  Innocent: ["espoir", "puret\xE9", "joie", "confiance"],
+  Everyman: ["chaleur", "authenticit\xE9", "simplicit\xE9", "accessibilit\xE9"],
+  Hero: ["courage", "d\xE9passement", "victoire", "force"],
+  Outlaw: ["r\xE9bellion", "transgression", "libert\xE9", "provocation"],
+  Explorer: ["d\xE9couverte", "aventure", "curiosit\xE9", "libert\xE9"],
+  Creator: ["imagination", "originalit\xE9", "vision", "expression"],
+  Ruler: ["prestige", "autorit\xE9", "excellence", "ma\xEEtrise"],
+  Magician: ["transformation", "magie", "r\xE9v\xE9lation", "puissance"],
+  Lover: ["d\xE9sir", "beaut\xE9", "sensualit\xE9", "connexion"],
+  Caregiver: ["soin", "bienveillance", "protection", "empathie"],
+  Jester: ["humour", "l\xE9g\xE8ret\xE9", "joie", "spontan\xE9it\xE9"],
+  Sage: ["sagesse", "expertise", "v\xE9rit\xE9", "clart\xE9"]
+};
+function runStressTest(input) {
+  const { brand_name, sector, tone, archetype, territory, market_map, values } = input;
+  const dimensions = [];
+  const sector_key = (sector ?? "").toLowerCase().replace(/\s/g, "_");
+  const expected_tones = SECTOR_TONE_MAP[sector_key] ?? [];
+  const tone_match = tone ? expected_tones.some((t) => tone.toLowerCase().includes(t)) : false;
+  const tone_score = expected_tones.length === 0 ? 7 : tone_match ? 9 : 5;
+  dimensions.push({
+    dimension: "Alignement Ton / Secteur",
+    score: tone_score,
+    max: 10,
+    label: tone_score >= 8 ? "Excellent" : tone_score >= 6 ? "Correct" : "\xC0 revoir",
+    observation: tone_match ? `Le ton "${tone}" est coh\xE9rent avec les standards du secteur ${sector}` : expected_tones.length > 0 ? `Le ton "${tone}" diff\xE8re des normes sectorielles \u2014 peut \xEAtre un avantage diff\xE9renciateur ou un risque` : "Secteur non r\xE9f\xE9renc\xE9 \u2014 \xE9valuation manuelle recommand\xE9e"
+  });
+  const has_tension = (territory.core_tension?.length ?? 0) > 20;
+  const has_promise = (territory.brand_promise?.length ?? 0) > 20;
+  const has_pillars = !!(territory.functional_pillar && territory.emotional_hook && territory.cultural_anchor);
+  const narrative_score = [has_tension, has_promise, has_pillars].filter(Boolean).length * 3 + 1;
+  dimensions.push({
+    dimension: "Coh\xE9rence Narrative",
+    score: Math.min(narrative_score, 10),
+    max: 10,
+    label: narrative_score >= 8 ? "Solide" : narrative_score >= 5 ? "Partielle" : "Incompl\xE8te",
+    observation: narrative_score >= 8 ? "Territoire narratif complet et articul\xE9" : "\xC9l\xE9ments manquants : " + [!has_tension && "tension", !has_promise && "promesse", !has_pillars && "piliers fonctionnels"].filter(Boolean).join(", ")
+  });
+  const expected_emotions = ARCHETYPE_EMOTIONAL_TONES[archetype] ?? [];
+  const values_lower = (values ?? []).map((v) => v.toLowerCase());
+  const emotion_matches = expected_emotions.filter(
+    (e) => values_lower.some((v) => v.includes(e) || e.includes(v))
+  ).length;
+  const emotional_consistency = Math.round(
+    expected_emotions.length > 0 ? 5 + emotion_matches / expected_emotions.length * 5 : 7
+  );
+  dimensions.push({
+    dimension: "Consistance \xC9motionnelle",
+    score: emotional_consistency,
+    max: 10,
+    label: emotional_consistency >= 8 ? "\xC9lev\xE9e" : emotional_consistency >= 6 ? "Mod\xE9r\xE9e" : "Faible",
+    observation: emotion_matches > 0 ? `${emotion_matches}/${expected_emotions.length} signaux \xE9motionnels de l'arch\xE9type ${archetype} pr\xE9sents` : `Signaux \xE9motionnels de l'arch\xE9type ${archetype} (${expected_emotions.join(", ")}) peu pr\xE9sents dans les valeurs`
+  });
+  const axes_extreme = market_map.axes.filter((a) => Math.abs(a.position) >= 1.5).length;
+  const overlap_score = Math.min(4 + axes_extreme * 2, 10);
+  const overlap_risk = overlap_score >= 8 ? "Low" : overlap_score >= 5 ? "Moderate" : "High";
+  dimensions.push({
+    dimension: "Chevauchement Concurrentiel",
+    score: overlap_score,
+    max: 10,
+    label: overlap_risk === "Low" ? "Risque faible" : overlap_risk === "Moderate" ? "Risque mod\xE9r\xE9" : "Risque \xE9lev\xE9",
+    observation: axes_extreme >= 2 ? `Positionnement diff\xE9renci\xE9 sur ${axes_extreme} axes \u2014 chevauchement limit\xE9` : "Positionnement central \u2014 risque de dilution dans la masse"
+  });
+  const clarity_score = Math.round(
+    tone_score * 0.25 + narrative_score * 0.35 + emotional_consistency * 0.25 + overlap_score * 0.15
+  );
+  dimensions.push({
+    dimension: "Clart\xE9 Strat\xE9gique",
+    score: clarity_score,
+    max: 10,
+    label: clarity_score >= 8 ? "Excellente" : clarity_score >= 6 ? "Bonne" : "\xC0 consolider",
+    observation: clarity_score >= 8 ? "La strat\xE9gie est lisible, coh\xE9rente et diff\xE9renciante" : "Des ajustements sont n\xE9cessaires pour renforcer la lisibilit\xE9"
+  });
+  const positioning_coherence = Math.round((tone_score + narrative_score) / 2 * 10) / 10;
+  const differentiation_strength = Math.round((overlap_score + emotional_consistency) / 2 * 10) / 10;
+  const strategic_clarity = clarity_score;
+  const global_score = Math.round(
+    dimensions.reduce((a, d) => a + d.score, 0) / dimensions.length * 10
+  ) / 10;
+  const verdict = global_score >= 8.5 ? "Positionnement solide \u2014 pr\xEAt pour le d\xE9ploiement" : global_score >= 7 ? "Positionnement robuste avec ajustements mineurs recommand\xE9s" : global_score >= 5.5 ? "Positionnement partiel \u2014 renforcements n\xE9cessaires avant d\xE9ploiement" : "Positionnement fragile \u2014 r\xE9vision strat\xE9gique obligatoire";
+  const recommendations = buildRecommendations(dimensions);
+  return {
+    brand_name,
+    generated_at: (/* @__PURE__ */ new Date()).toISOString(),
+    positioning_coherence,
+    differentiation_strength,
+    strategic_clarity,
+    overlap_risk,
+    emotional_consistency,
+    dimensions,
+    global_score,
+    verdict,
+    recommendations
+  };
+}
+function buildRecommendations(dimensions) {
+  return dimensions.filter((d) => d.score < 7).sort((a, b) => a.score - b.score).map((d) => `Renforcer "${d.dimension}" (${d.score}/10) : ${d.observation}`);
+}
+
+// src/positioning/strategic-compression.ts
+var ARCHETYPE_POSITIONING_TEMPLATES = {
+  Innocent: "{brand} est la marque qui redonne confiance en {sector} \xE0 travers la puret\xE9 et la sinc\xE9rit\xE9.",
+  Everyman: "{brand} est la marque accessible qui traite chaque client comme un membre de la famille.",
+  Hero: "{brand} est la marque qui aide les {sector_audience} \xE0 d\xE9passer leurs limites et atteindre l'excellence.",
+  Outlaw: "{brand} est la marque qui refuse les r\xE8gles absurdes du {sector} et cr\xE9e de nouvelles normes.",
+  Explorer: "{brand} est la marque qui emm\xE8ne les curieux l\xE0 o\xF9 aucune autre marque n'a encore os\xE9 aller.",
+  Creator: "{brand} est la marque qui transforme chaque acte en {sector} en une expression artistique.",
+  Ruler: "{brand} est la r\xE9f\xE9rence absolue du {sector} \u2014 le standard contre lequel tout est mesur\xE9.",
+  Magician: "{brand} est la marque qui transforme l'ordinaire en {sector} en quelque chose d'extraordinaire.",
+  Lover: "{brand} est la marque du d\xE9sir, de la beaut\xE9 et de la connexion \xE9motionnelle profonde.",
+  Caregiver: "{brand} est la marque bienveillante qui prend soin de chaque d\xE9tail pour ceux qui comptent.",
+  Jester: "{brand} prouve que le {sector} n'a pas \xE0 \xEAtre s\xE9rieux \u2014 et que la joie est la meilleure strat\xE9gie.",
+  Sage: "{brand} est la marque qui \xE9l\xE8ve le niveau du {sector} par la connaissance, la rigueur et la v\xE9rit\xE9."
+};
+var ARCHETYPE_MANIFESTO_PATTERNS = {
+  Innocent: "Nous croyons que la simplicit\xE9 est la forme la plus haute d'intelligence. Que la puret\xE9 n'est pas na\xEFve, elle est courageuse.",
+  Everyman: "Nous croyons que les meilleures choses de la vie sont accessibles \xE0 tous. Pas de pr\xE9tention. Pas de filtres. Juste du vrai.",
+  Hero: "Nous refusons la m\xE9diocrit\xE9. Nous croyons que chaque personne a en elle un potentiel extraordinaire. Notre mission : l'\xE9veiller.",
+  Outlaw: "Les r\xE8gles du jeu ont \xE9t\xE9 \xE9crites par ceux qui ont tout int\xE9r\xEAt \xE0 ce que rien ne change. Nous sommes l\xE0 pour les r\xE9\xE9crire.",
+  Explorer: "Il y a toujours un territoire inexplor\xE9. Un angle nouveau. Une v\xE9rit\xE9 cach\xE9e. Nous vivons pour la trouver.",
+  Creator: "Chaque produit est une \u0153uvre. Chaque d\xE9cision est artistique. Nous ne fabriquons pas \u2014 nous cr\xE9ons.",
+  Ruler: "L'excellence n'est pas un objectif. C'est un standard. Le n\xF4tre \u2014 et celui que vous m\xE9ritez.",
+  Magician: "La transformation est possible. Pas dans un futur lointain. Maintenant. C'est notre promesse.",
+  Lover: "Nous croyons que la beaut\xE9 n'est pas superficielle \u2014 elle est essentielle. Elle connecte, elle inspire, elle \xE9l\xE8ve.",
+  Caregiver: "Derri\xE8re chaque produit, il y a une personne qui compte. Nous ne l'oublions jamais.",
+  Jester: "La vie est trop courte pour prendre le s\xE9rieux au s\xE9rieux. Nos produits sourient. Et vous aussi.",
+  Sage: "Nous ne vendons pas des promesses. Nous construisons des v\xE9rit\xE9s. Fond\xE9es sur la recherche, forg\xE9es par l'exp\xE9rience."
+};
+var ARCHETYPE_ANTI_POSITIONING = {
+  Innocent: "Nous ne sommes pas une marque de luxe froide ni un discours scientifique d\xE9sincorpor\xE9.",
+  Everyman: "Nous ne cherchons pas \xE0 \xEAtre exclusifs ou \xE9litistes \u2014 le prestige n'est pas notre langage.",
+  Hero: "Nous ne glorifions pas la douleur gratuite ni l'effort sans but \u2014 chaque d\xE9fi a un sens.",
+  Outlaw: "Nous ne sommes pas destructeurs pour le plaisir \u2014 nous provocons pour construire quelque chose de meilleur.",
+  Explorer: "Nous ne promettons pas l'exotisme factice \u2014 notre exploration est authentique et purpose-driven.",
+  Creator: "Nous ne faisons pas du design pour le design \u2014 chaque \xE9l\xE9ment cr\xE9atif a une fonction strat\xE9gique.",
+  Ruler: "Nous ne sommes pas arrogants ni inaccessibles \u2014 notre excellence est au service du client.",
+  Magician: "Nous ne faisons pas de promesses irr\xE9alistes \u2014 notre magie est tangible, mesurable, r\xE9p\xE9table.",
+  Lover: "Nous ne manipulons pas le d\xE9sir \u2014 nous le cr\xE9ons authentiquement, sans dark patterns.",
+  Caregiver: "Nous ne sommes pas condescendants ni paternalistes \u2014 nous respectons l'autonomie de nos clients.",
+  Jester: "Nous ne minimisons pas les enjeux \u2014 notre l\xE9g\xE8ret\xE9 est un choix strat\xE9gique, pas une fuite.",
+  Sage: "Nous ne sommes pas p\xE9dants ni inaccessibles \u2014 la connaissance que nous partageons est actionnable."
+};
+function generateStrategicCompression(input) {
+  const { brand_name, archetype, sector, territory, values, tone, output_mode = "client_ready" } = input;
+  const sector_label = sector ?? "votre secteur";
+  const sector_audience = sector === "fitness" ? "athl\xE8tes" : sector === "saas" ? "\xE9quipes" : "clients";
+  const template = ARCHETYPE_POSITIONING_TEMPLATES[archetype];
+  const one_sentence_positioning = template.replace("{brand}", brand_name).replace("{sector}", sector_label).replace("{sector_audience}", sector_audience);
+  const value_fallbacks = (values ?? []).slice(0, 3);
+  const raw_pillars = [
+    territory.functional_pillar ?? value_fallbacks[0] ?? "Authenticit\xE9",
+    territory.emotional_hook ?? value_fallbacks[1] ?? "Excellence",
+    territory.cultural_anchor ?? value_fallbacks[2] ?? "Impact"
+  ];
+  const brand_pillars = [
+    raw_pillars[0],
+    raw_pillars[1],
+    raw_pillars[2]
+  ];
+  const anti_positioning = ARCHETYPE_ANTI_POSITIONING[archetype];
+  const manifesto_base = ARCHETYPE_MANIFESTO_PATTERNS[archetype];
+  const manifesto = output_mode === "client_ready" ? `${manifesto_base} ${territory.brand_promise.slice(0, 120)}` : manifesto_base;
+  const narrative_tension_summary = territory.core_tension?.length > 0 ? territory.core_tension : `Tension fondatrice de ${brand_name} : entre ${brand_pillars[0]} et la r\xE9alit\xE9 du march\xE9 ${sector_label}.`;
+  const export_block = buildExportBlock({
+    brand_name,
+    one_sentence_positioning,
+    brand_pillars,
+    anti_positioning,
+    manifesto,
+    narrative_tension_summary,
+    output_mode
+  });
+  return {
+    brand_name,
+    generated_at: (/* @__PURE__ */ new Date()).toISOString(),
+    output_mode,
+    one_sentence_positioning,
+    brand_pillars,
+    anti_positioning,
+    manifesto,
+    narrative_tension_summary,
+    export_block
+  };
+}
+function buildExportBlock(params) {
+  const lines = [];
+  if (params.output_mode === "client_ready") {
+    lines.push(`# Compression Strat\xE9gique \u2014 ${params.brand_name}`);
+    lines.push("");
+    lines.push("## Positionnement");
+    lines.push(params.one_sentence_positioning);
+    lines.push("");
+    lines.push("## Les 3 Piliers de Marque");
+    params.brand_pillars.forEach((p, i) => lines.push(`${i + 1}. ${p}`));
+    lines.push("");
+    lines.push("## Ce que nous ne sommes pas");
+    lines.push(params.anti_positioning);
+    lines.push("");
+    lines.push("## Notre Manifeste");
+    lines.push(params.manifesto);
+    lines.push("");
+    lines.push("## Tension Narrative");
+    lines.push(params.narrative_tension_summary);
+  } else {
+    lines.push(`[INTERNAL] ${params.brand_name}`);
+    lines.push(`POSITIONING: ${params.one_sentence_positioning}`);
+    lines.push(`PILLARS: ${params.brand_pillars.join(" | ")}`);
+    lines.push(`ANTI: ${params.anti_positioning}`);
+    lines.push(`MANIFESTO: ${params.manifesto}`);
+    lines.push(`TENSION: ${params.narrative_tension_summary}`);
+  }
+  return lines.join("\n");
+}
+
 // src/routes/positioning.ts
 var router5 = (0, import_express5.Router)();
 router5.post("/positioning/analyze", (req, res) => {
@@ -41253,10 +41789,842 @@ router5.post("/positioning/archetype", (req, res) => {
   const result = detectArchetype({ brand_name, sector, tone, values: values_array, growth_mode, description });
   res.json(result);
 });
+router5.post("/positioning/density", (req, res) => {
+  const { sector, archetype, values, tone } = req.body;
+  if (!archetype) {
+    res.status(400).json({ error: "archetype requis" });
+    return;
+  }
+  const values_array = Array.isArray(values) ? values : typeof values === "string" ? values.split(/[\n,;]/).map((v) => v.trim()).filter(Boolean) : [];
+  const result = computeDensityScore({ sector, archetype, values: values_array, tone });
+  res.json(result);
+});
+router5.post("/positioning/stress-test", (req, res) => {
+  const { brand_id, brand_name, sector, tone, values, archetype } = req.body;
+  if (!brand_name || !archetype) {
+    res.status(400).json({ error: "brand_name et archetype requis" });
+    return;
+  }
+  const lock = brand_id ? getPositioningLock(brand_id) : null;
+  const values_array = Array.isArray(values) ? values : typeof values === "string" ? values.split(/[\n,;]/).map((v) => v.trim()).filter(Boolean) : [];
+  const territory = lock?.territory ?? buildBrandTerritory(archetype, brand_name, sector ?? "");
+  const market_map = lock?.market_map ?? buildMarketMap({ sector, tone, values: values_array });
+  const result = runStressTest({
+    brand_name,
+    sector,
+    tone,
+    archetype,
+    territory,
+    market_map,
+    values: values_array
+  });
+  res.json(result);
+});
+router5.post("/positioning/compress", (req, res) => {
+  const { brand_id, brand_name, sector, tone, values, archetype, output_mode } = req.body;
+  if (!brand_name || !archetype) {
+    res.status(400).json({ error: "brand_name et archetype requis" });
+    return;
+  }
+  const lock = brand_id ? getPositioningLock(brand_id) : null;
+  const values_array = Array.isArray(values) ? values : typeof values === "string" ? values.split(/[\n,;]/).map((v) => v.trim()).filter(Boolean) : [];
+  const territory = lock?.territory ?? buildBrandTerritory(archetype, brand_name, sector ?? "");
+  const result = generateStrategicCompression({
+    brand_name,
+    archetype,
+    sector,
+    territory,
+    values: values_array,
+    tone,
+    output_mode: output_mode ?? "client_ready"
+  });
+  res.json(result);
+});
+router5.post("/positioning/compare", (req, res) => {
+  const { brand_a, brand_b } = req.body;
+  if (!brand_a?.brand_id || !brand_b?.brand_id) {
+    res.status(400).json({ error: "brand_a.brand_id et brand_b.brand_id requis" });
+    return;
+  }
+  const lock_a = getPositioningLock(brand_a.brand_id);
+  const lock_b = getPositioningLock(brand_b.brand_id);
+  if (!lock_a || !lock_b) {
+    res.status(404).json({
+      error: "Positioning lock introuvable pour une ou les deux marques",
+      missing: [!lock_a && brand_a.brand_id, !lock_b && brand_b.brand_id].filter(Boolean)
+    });
+    return;
+  }
+  const comparison = {
+    generated_at: (/* @__PURE__ */ new Date()).toISOString(),
+    brand_a: {
+      brand_id: brand_a.brand_id,
+      archetype: lock_a.archetype,
+      secondary_archetype: lock_a.secondary_archetype,
+      market_position: lock_a.market_map?.axes ?? []
+    },
+    brand_b: {
+      brand_id: brand_b.brand_id,
+      archetype: lock_b.archetype,
+      secondary_archetype: lock_b.secondary_archetype,
+      market_position: lock_b.market_map?.axes ?? []
+    },
+    archetype_overlap: lock_a.archetype === lock_b.archetype,
+    differentiation_gap: lock_a.archetype !== lock_b.archetype ? `Arch\xE9types distincts (${lock_a.archetype} vs ${lock_b.archetype}) \u2014 diff\xE9renciation naturelle forte` : `M\xEAme arch\xE9type dominant (${lock_a.archetype}) \u2014 diff\xE9renciation par l'ex\xE9cution n\xE9cessaire`
+  };
+  res.json(comparison);
+});
 var positioning_default = router5;
 
-// src/routes/openai/enhance-prompts.ts
+// src/routes/growth.ts
 var import_express6 = __toESM(require_express2(), 1);
+
+// src/growth/ltv-engine.ts
+function calculateLtv(metrics) {
+  const {
+    avg_order_value,
+    purchase_frequency_per_year,
+    customer_lifespan_years,
+    gross_margin_percent,
+    cac,
+    refund_rate_percent = 0,
+    fixed_costs_per_order = 0
+  } = metrics;
+  const effective_aov = avg_order_value * (1 - refund_rate_percent / 100);
+  const ltv = effective_aov * (gross_margin_percent / 100) * purchase_frequency_per_year * customer_lifespan_years;
+  const ltv_cac_ratio = cac > 0 ? ltv / cac : 0;
+  const contribution_margin_per_order = effective_aov * (gross_margin_percent / 100) - fixed_costs_per_order;
+  const net_profit_per_order = contribution_margin_per_order;
+  const monthly_revenue_per_customer = effective_aov * (gross_margin_percent / 100) * purchase_frequency_per_year / 12;
+  const break_even_months = monthly_revenue_per_customer > 0 ? cac / monthly_revenue_per_customer : 999;
+  const profitability_score = ltv_cac_ratio < 1 ? "negative" : ltv_cac_ratio < 2 ? "marginal" : ltv_cac_ratio < 4 ? "healthy" : "excellent";
+  const scale_recommendation = ltv_cac_ratio < 1 ? "pause" : ltv_cac_ratio < 2 ? "hold" : ltv_cac_ratio < 3 ? "scale_cautiously" : "scale_aggressively";
+  return {
+    ltv: Math.round(ltv * 100) / 100,
+    cac,
+    ltv_cac_ratio: Math.round(ltv_cac_ratio * 100) / 100,
+    break_even_months: Math.round(break_even_months * 10) / 10,
+    contribution_margin_per_order: Math.round(contribution_margin_per_order * 100) / 100,
+    net_profit_per_order: Math.round(net_profit_per_order * 100) / 100,
+    profitability_score,
+    scale_recommendation
+  };
+}
+
+// src/growth/cohort-analysis.ts
+function analyzeCohort(data) {
+  const rev0 = data.revenue_month_0;
+  if (rev0 === 0) {
+    return {
+      cohort_month: data.cohort_month,
+      customers_acquired: data.customers_acquired,
+      retention_m1: null,
+      retention_m2: null,
+      retention_m3: null,
+      drop_off_rate_m1_to_m3: null,
+      projected_annual_revenue_per_customer: 0,
+      cohort_health: "poor"
+    };
+  }
+  const retention_m1 = data.revenue_month_1 != null ? data.revenue_month_1 / rev0 : null;
+  const retention_m2 = data.revenue_month_2 != null ? data.revenue_month_2 / rev0 : null;
+  const retention_m3 = data.revenue_month_3 != null ? data.revenue_month_3 / rev0 : null;
+  const drop_off_rate_m1_to_m3 = retention_m1 != null && retention_m3 != null ? retention_m1 - retention_m3 : null;
+  const months_known = [
+    data.revenue_month_0,
+    data.revenue_month_1 ?? 0,
+    data.revenue_month_2 ?? 0,
+    data.revenue_month_3 ?? 0
+  ];
+  const known_sum = months_known.reduce((a, b) => a + b, 0);
+  const avg_monthly = known_sum / months_known.length;
+  const projected_annual_revenue_per_customer = data.customers_acquired > 0 ? avg_monthly * 12 / data.customers_acquired : 0;
+  const avg_retention = [retention_m1, retention_m2, retention_m3].filter((r) => r !== null).reduce((a, b) => a + b, 0) / Math.max([retention_m1, retention_m2, retention_m3].filter((r) => r !== null).length, 1);
+  const cohort_health = avg_retention > 0.4 ? "excellent" : avg_retention > 0.25 ? "good" : avg_retention > 0.1 ? "average" : "poor";
+  return {
+    cohort_month: data.cohort_month,
+    customers_acquired: data.customers_acquired,
+    retention_m1,
+    retention_m2,
+    retention_m3,
+    drop_off_rate_m1_to_m3,
+    projected_annual_revenue_per_customer: Math.round(projected_annual_revenue_per_customer * 100) / 100,
+    cohort_health
+  };
+}
+
+// src/growth/seasonality-model.ts
+var SECTOR_SEASONALITY = {
+  cosmetics: {
+    1: { score: 0.7, events: ["Soldes janvier", "New Year skincare"] },
+    2: { score: 0.8, events: ["Valentine's Day beauty"] },
+    3: { score: 0.9, events: ["Printemps beaut\xE9"] },
+    4: { score: 1, events: ["Routine printemps"] },
+    5: { score: 1.1, events: ["F\xEAte des m\xE8res"] },
+    6: { score: 1, events: ["Beaut\xE9 \xE9t\xE9"] },
+    7: { score: 0.8, events: ["Soldes \xE9t\xE9"] },
+    8: { score: 0.7, events: ["Vacances"] },
+    9: { score: 1.1, events: ["Rentr\xE9e beaut\xE9", "Routine automne"] },
+    10: { score: 1.2, events: ["Halloween beauty", "Routine hiver"] },
+    11: { score: 1.8, events: ["Black Friday", "Cyber Monday", "No\xEBl anticip\xE9"] },
+    12: { score: 2, events: ["No\xEBl", "F\xEAtes de fin d'ann\xE9e", "Coffrets cadeaux"] }
+  },
+  fashion: {
+    1: { score: 1, events: ["Soldes hiver"] },
+    2: { score: 0.8, events: ["Fashion Week"] },
+    3: { score: 1, events: ["Printemps mode"] },
+    4: { score: 0.9, events: ["Collections printemps"] },
+    5: { score: 1.1, events: ["F\xEAte des m\xE8res"] },
+    6: { score: 1.3, events: ["Soldes \xE9t\xE9", "Festivals"] },
+    7: { score: 1.2, events: ["Summer fashion"] },
+    8: { score: 0.7, events: ["Vacances"] },
+    9: { score: 1.3, events: ["Rentr\xE9e mode", "Fashion Week"] },
+    10: { score: 1, events: ["Collections automne"] },
+    11: { score: 1.8, events: ["Black Friday", "No\xEBl mode"] },
+    12: { score: 1.9, events: ["F\xEAtes", "Cadeaux mode"] }
+  },
+  food: {
+    1: { score: 1, events: ["New Year wellness"] },
+    2: { score: 0.9, events: ["Valentine's Day"] },
+    3: { score: 1, events: ["Ramadan"] },
+    4: { score: 1.1, events: ["P\xE2ques", "Printemps sant\xE9"] },
+    5: { score: 1, events: ["F\xEAte des m\xE8res"] },
+    6: { score: 1.1, events: ["\xC9t\xE9 lifestyle"] },
+    7: { score: 0.9, events: ["Vacances"] },
+    8: { score: 0.8, events: ["Vacances"] },
+    9: { score: 1.2, events: ["Rentr\xE9e bien-\xEAtre"] },
+    10: { score: 1, events: ["Automne"] },
+    11: { score: 1.5, events: ["Black Friday"] },
+    12: { score: 1.8, events: ["F\xEAtes", "Coffrets gourmands"] }
+  },
+  saas: {
+    1: { score: 1.2, events: ["New Year budgets", "Q1 planning"] },
+    2: { score: 1, events: ["Q1 actif"] },
+    3: { score: 1.1, events: ["Q1 cl\xF4ture", "Fin d'exercice"] },
+    4: { score: 1, events: ["Q2 planning"] },
+    5: { score: 0.9, events: [] },
+    6: { score: 1, events: ["Mi-ann\xE9e reviews"] },
+    7: { score: 0.7, events: ["Vacances"] },
+    8: { score: 0.7, events: ["Vacances"] },
+    9: { score: 1.3, events: ["Rentr\xE9e B2B", "Budget Q4 planning"] },
+    10: { score: 1.2, events: ["Q4 d\xE9but"] },
+    11: { score: 1.1, events: ["Black Friday SaaS"] },
+    12: { score: 0.9, events: ["Fin d'ann\xE9e", "Budget freeze"] }
+  },
+  finance: {
+    1: { score: 1.3, events: ["Bilan fiscal", "R\xE9solutions financi\xE8res"] },
+    2: { score: 1, events: [] },
+    3: { score: 1.2, events: ["D\xE9claration imp\xF4ts", "Fin Q1"] },
+    4: { score: 1.2, events: ["D\xE9clarations fiscales"] },
+    5: { score: 0.9, events: [] },
+    6: { score: 1, events: ["Mi-ann\xE9e"] },
+    7: { score: 0.7, events: ["Vacances"] },
+    8: { score: 0.6, events: ["Vacances"] },
+    9: { score: 1.2, events: ["Rentr\xE9e", "Budget annuel"] },
+    10: { score: 1.1, events: [] },
+    11: { score: 0.9, events: [] },
+    12: { score: 1.3, events: ["Optimisation fiscale fin d'ann\xE9e"] }
+  }
+};
+var DEFAULT_SEASONALITY = Object.fromEntries(
+  Array.from({ length: 12 }, (_, i) => [i + 1, { score: 1, events: [] }])
+);
+function getSeasonalContext(sector, month) {
+  const currentMonth = month ?? (/* @__PURE__ */ new Date()).getMonth() + 1;
+  const normalizedSector = Object.keys(SECTOR_SEASONALITY).find(
+    (k) => sector.toLowerCase().includes(k)
+  );
+  const monthMap = normalizedSector ? SECTOR_SEASONALITY[normalizedSector] : DEFAULT_SEASONALITY;
+  const monthData = monthMap[currentMonth] ?? { score: 1, events: [] };
+  const score = monthData.score;
+  const seasonality_index = score >= 1.8 ? "peak" : score >= 1.3 ? "high" : score >= 0.9 ? "neutral" : score >= 0.7 ? "low" : "very_low";
+  const scaling_multiplier = score;
+  const recommendation = seasonality_index === "peak" ? "Saison haute \u2014 budget max, cr\xE9atifs premium, fr\xE9quence \xE9lev\xE9e." : seasonality_index === "high" ? "Bonne saisonnalit\xE9 \u2014 acc\xE9l\xE8re progressivement." : seasonality_index === "neutral" ? "Saisonnalit\xE9 neutre \u2014 maintenir le cap, tester de nouveaux cr\xE9atifs." : seasonality_index === "low" ? "P\xE9riode creuse \u2014 r\xE9duire les d\xE9penses, travailler la r\xE9tention." : "Saison tr\xE8s basse \u2014 minimum viable, focus fid\xE9lisation.";
+  return {
+    month: currentMonth,
+    sector,
+    seasonality_index,
+    seasonality_score: Math.round(score * 100) / 100,
+    key_events: monthData.events,
+    scaling_multiplier,
+    recommendation
+  };
+}
+
+// src/growth/creative-fatigue-detector.ts
+var THRESHOLDS2 = {
+  ctr_decline_rate: 0.15,
+  // 15% de baisse sur 3 périodes
+  frequency_warning: 3,
+  frequency_critical: 5,
+  roas_decline_rate: 0.2,
+  // 20% de baisse
+  min_periods_for_analysis: 2
+};
+function detectCreativeFatigue(periods) {
+  const signals = [];
+  let fatigue_score = 0;
+  if (periods.length < THRESHOLDS2.min_periods_for_analysis) {
+    return {
+      creative_fatigue: false,
+      recommend_refresh: false,
+      fatigue_signals: [],
+      fatigue_score: 0,
+      urgency: "none",
+      recommended_actions: ["Donn\xE9es insuffisantes \u2014 continuer \xE0 collecter au moins 2 p\xE9riodes."]
+    };
+  }
+  if (periods.length >= 3) {
+    const ctrs = periods.slice(-3).map((p) => p.ctr);
+    const declining = ctrs[0] > ctrs[1] && ctrs[1] > ctrs[2];
+    if (declining) {
+      const decline_rate = (ctrs[0] - ctrs[2]) / ctrs[0];
+      if (decline_rate > THRESHOLDS2.ctr_decline_rate) {
+        fatigue_score += 3;
+        signals.push({
+          type: "ctr_decline",
+          description: `CTR en baisse sur 3 p\xE9riodes : ${(ctrs[0] * 100).toFixed(2)}% \u2192 ${(ctrs[2] * 100).toFixed(2)}%`,
+          severity: decline_rate > 0.3 ? "critical" : "warning",
+          value: Math.round(decline_rate * 100)
+        });
+      }
+    }
+  }
+  const lastPeriod = periods[periods.length - 1];
+  if (lastPeriod.frequency >= THRESHOLDS2.frequency_critical) {
+    fatigue_score += 4;
+    signals.push({
+      type: "frequency_high",
+      description: `Fr\xE9quence critique : ${lastPeriod.frequency.toFixed(1)}x (seuil: ${THRESHOLDS2.frequency_critical})`,
+      severity: "critical",
+      value: lastPeriod.frequency
+    });
+  } else if (lastPeriod.frequency >= THRESHOLDS2.frequency_warning) {
+    fatigue_score += 2;
+    signals.push({
+      type: "frequency_high",
+      description: `Fr\xE9quence \xE9lev\xE9e : ${lastPeriod.frequency.toFixed(1)}x (seuil: ${THRESHOLDS2.frequency_warning})`,
+      severity: "warning",
+      value: lastPeriod.frequency
+    });
+  }
+  if (periods.length >= 3) {
+    const roasTrend = periods.slice(-3).map((p) => p.roas);
+    const spendTrend = periods.slice(-3).map((p) => p.spend);
+    const roas_declining = roasTrend[0] > roasTrend[1] && roasTrend[1] > roasTrend[2];
+    const spend_stable = Math.abs(spendTrend[0] - spendTrend[2]) / Math.max(spendTrend[0], 1) < 0.2;
+    if (roas_declining && spend_stable) {
+      const roas_decline_rate = (roasTrend[0] - roasTrend[2]) / roasTrend[0];
+      if (roas_decline_rate > THRESHOLDS2.roas_decline_rate) {
+        fatigue_score += 3;
+        signals.push({
+          type: "roas_decline",
+          description: `ROAS en baisse avec budget stable : ${roasTrend[0].toFixed(1)} \u2192 ${roasTrend[2].toFixed(1)}x`,
+          severity: roas_decline_rate > 0.35 ? "critical" : "warning",
+          value: Math.round(roas_decline_rate * 100)
+        });
+      }
+    }
+  }
+  const creative_fatigue = fatigue_score >= 4;
+  const recommend_refresh = fatigue_score >= 3;
+  const urgency = fatigue_score >= 8 ? "critical" : fatigue_score >= 6 ? "high" : fatigue_score >= 4 ? "medium" : fatigue_score >= 2 ? "low" : "none";
+  const recommended_actions = [];
+  if (signals.some((s) => s.type === "ctr_decline")) {
+    recommended_actions.push("Tester de nouveaux visuels / hooks cr\xE9atifs");
+    recommended_actions.push("Rafra\xEEchir le copywriting des CTAs");
+  }
+  if (signals.some((s) => s.type === "frequency_high")) {
+    recommended_actions.push("\xC9largir l'audience cible ou exclure les acheteurs r\xE9cents");
+    recommended_actions.push("R\xE9duire le budget ou la pression d'ench\xE8res");
+  }
+  if (signals.some((s) => s.type === "roas_decline")) {
+    recommended_actions.push("Rotation cr\xE9ative imm\xE9diate \u2014 tester 3+ variantes");
+    recommended_actions.push("Revoir l'offre et la proposition de valeur");
+  }
+  if (recommended_actions.length === 0) {
+    recommended_actions.push("Aucun signe de fatigue \u2014 continuer et monitorer.");
+  }
+  return {
+    creative_fatigue,
+    recommend_refresh,
+    fatigue_signals: signals,
+    fatigue_score: Math.min(fatigue_score, 10),
+    urgency,
+    recommended_actions
+  };
+}
+
+// src/growth/strategy-recommender.ts
+function makeScalingDecision(input) {
+  const { ltv_analysis, seasonal_context, fatigue_report, current_margin_stable } = input;
+  const rationale = [];
+  const risk_factors = [];
+  const good_ltv = ltv_analysis.ltv_cac_ratio >= 3;
+  const no_fatigue = !fatigue_report.creative_fatigue;
+  const positive_seasonality = seasonal_context.seasonality_score >= 1;
+  const margin_ok = current_margin_stable;
+  if (good_ltv) rationale.push(`LTV/CAC favorable : ${ltv_analysis.ltv_cac_ratio}x \u2265 3`);
+  else risk_factors.push(`LTV/CAC insuffisant : ${ltv_analysis.ltv_cac_ratio}x < 3`);
+  if (no_fatigue) rationale.push("Aucune fatigue cr\xE9ative d\xE9tect\xE9e");
+  else risk_factors.push(`Fatigue cr\xE9ative active (score: ${fatigue_report.fatigue_score}/10)`);
+  if (positive_seasonality)
+    rationale.push(`Saisonnalit\xE9 positive : score ${seasonal_context.seasonality_score}x`);
+  else risk_factors.push(`Saisonnalit\xE9 d\xE9favorable : ${seasonal_context.seasonality_index}`);
+  if (margin_ok) rationale.push("Marge stable");
+  else risk_factors.push("Marge instable \u2014 risque de compression");
+  const conditions_met = [good_ltv, no_fatigue, positive_seasonality, margin_ok].filter(Boolean).length;
+  let action;
+  let scale_percent;
+  if (conditions_met === 4) {
+    action = "scale_aggressive";
+    scale_percent = Math.round(15 + (seasonal_context.seasonality_score - 1) * 30);
+    scale_percent = Math.min(Math.max(scale_percent, 15), 35);
+  } else if (conditions_met >= 3) {
+    action = "scale_gradual";
+    scale_percent = Math.round(10 + (seasonal_context.seasonality_score - 0.9) * 15);
+    scale_percent = Math.min(Math.max(scale_percent, 10), 20);
+  } else if (conditions_met >= 2 && good_ltv) {
+    action = "hold";
+    scale_percent = null;
+    rationale.push("Attendre r\xE9solution des risques avant scaling");
+  } else {
+    action = "pause";
+    scale_percent = null;
+    rationale.push("Trop de facteurs d\xE9favorables \u2014 pause recommand\xE9e");
+  }
+  return { action, scale_percent, rationale, risk_factors };
+}
+function generateWeeklyStrategicSummary(input) {
+  const decision = makeScalingDecision(input);
+  const { ltv_analysis, seasonal_context, fatigue_report } = input;
+  const scaling_opportunities = [];
+  const risk_factors = [...decision.risk_factors];
+  const creative_signals = fatigue_report.recommended_actions;
+  if (decision.action === "scale_aggressive" || decision.action === "scale_gradual") {
+    scaling_opportunities.push(
+      `Scaling +${decision.scale_percent}% recommand\xE9 \u2014 ${decision.rationale.join(" | ")}`
+    );
+  }
+  if (seasonal_context.key_events.length > 0) {
+    scaling_opportunities.push(`\xC9v\xE8nements cl\xE9s : ${seasonal_context.key_events.join(", ")}`);
+  }
+  const profit_sustainability = ltv_analysis.profitability_score === "excellent" ? "excellent" : ltv_analysis.profitability_score === "healthy" ? "sustainable" : ltv_analysis.profitability_score === "marginal" ? "marginal" : "unsustainable";
+  const strategic_outlook = decision.action === "scale_aggressive" ? "very_bullish" : decision.action === "scale_gradual" ? "bullish" : decision.action === "hold" ? "neutral" : "bearish";
+  return {
+    generated_at: (/* @__PURE__ */ new Date()).toISOString(),
+    strategic_outlook,
+    scaling_opportunities,
+    risk_factors,
+    creative_signals,
+    profit_sustainability,
+    recommended_action: decision
+  };
+}
+
+// src/growth/risk-meter.ts
+function computeRiskMeter(input) {
+  const { ltv_analysis, cohort_analysis, fatigue_report, weeks_running = 4 } = input;
+  const creative_fatigue_score = Math.min(
+    Math.round(fatigue_report.fatigue_score * 10),
+    100
+  );
+  const ltv_ratio = Math.min(ltv_analysis.ltv_cac_ratio / 5, 1);
+  const profitability_score = ltv_analysis.profitability_score === "excellent" ? 1 : ltv_analysis.profitability_score === "healthy" ? 0.75 : ltv_analysis.profitability_score === "marginal" ? 0.45 : 0.2;
+  const profit_stability_index = Math.round((ltv_ratio * 0.5 + profitability_score * 0.5) * 100);
+  const m1_score = (cohort_analysis.retention_m1 ?? 0) * 0.5;
+  const m3_score = (cohort_analysis.retention_m3 ?? 0) * 0.5;
+  const retention_health_score = Math.round((m1_score + m3_score) * 100);
+  const risk_inputs = [
+    creative_fatigue_score > 60 ? 1 : 0,
+    profit_stability_index < 40 ? 1 : 0,
+    retention_health_score < 30 ? 1 : 0,
+    ltv_analysis.ltv_cac_ratio < 2 ? 1 : 0
+  ];
+  const risk_count = risk_inputs.reduce((a, b) => a + b, 0);
+  const scaling_risk_index = risk_count >= 3 ? "High" : risk_count >= 2 ? "Medium" : "Low";
+  const composite_risk_score = Math.round(
+    (creative_fatigue_score * 0.3 + (100 - profit_stability_index) * 0.35 + (100 - retention_health_score) * 0.35) / 1
+  );
+  const bullets = [];
+  let action_urgency = "none";
+  if (creative_fatigue_score > 70) {
+    bullets.push(`Fatigue cr\xE9ative \xE9lev\xE9e (${creative_fatigue_score}/100) \u2014 rafra\xEEchissement cr\xE9atif urgent`);
+    action_urgency = "urgent";
+  } else if (creative_fatigue_score > 40) {
+    bullets.push(`Fatigue cr\xE9ative mod\xE9r\xE9e (${creative_fatigue_score}/100) \u2014 surveiller`);
+    if (action_urgency === "none") action_urgency = "watch";
+  }
+  if (profit_stability_index < 40) {
+    bullets.push(`Stabilit\xE9 profit faible (${profit_stability_index}/100) \u2014 r\xE9viser le mod\xE8le \xE9conomique`);
+    action_urgency = "urgent";
+  } else if (profit_stability_index < 65) {
+    bullets.push(`Marge sous tension (${profit_stability_index}/100) \u2014 surveiller les co\xFBts`);
+    if (action_urgency === "none") action_urgency = "watch";
+  } else {
+    bullets.push(`Stabilit\xE9 profit satisfaisante (${profit_stability_index}/100)`);
+  }
+  if (retention_health_score < 30) {
+    bullets.push(`R\xE9tention critique (${retention_health_score}/100) \u2014 probl\xE8me produit probable`);
+    if (action_urgency !== "urgent") action_urgency = "act";
+  } else if (retention_health_score < 55) {
+    bullets.push(`R\xE9tention perfectible (${retention_health_score}/100) \u2014 programme fid\xE9lisation conseill\xE9`);
+    if (action_urgency === "none") action_urgency = "watch";
+  } else {
+    bullets.push(`R\xE9tention saine (${retention_health_score}/100)`);
+  }
+  const headline = scaling_risk_index === "High" ? "\u26A0\uFE0F Risque de scaling \xE9lev\xE9 \u2014 action imm\xE9diate recommand\xE9e" : scaling_risk_index === "Medium" ? "\u{1F4CA} Risque mod\xE9r\xE9 \u2014 surveiller les indicateurs cl\xE9s" : "\u2705 Conditions favorables au scaling";
+  return {
+    scaling_risk_index,
+    creative_fatigue_score,
+    profit_stability_index,
+    retention_health_score,
+    composite_risk_score,
+    agency_summary: { headline, bullets, action_urgency }
+  };
+}
+
+// src/growth/scenario-simulator.ts
+function simulateBudgetChange(input, change_pct) {
+  const { ltv_analysis, fatigue_report, seasonal_context, current_roas, current_cpa } = input;
+  const fatigue_penalty = fatigue_report.creative_fatigue ? 0.85 : 1;
+  const season_multiplier = Math.max(0.85, Math.min(seasonal_context.seasonality_score, 1.2));
+  const scaling_efficiency = change_pct > 0 ? Math.max(0.7, 1 - change_pct / 200) : 1.1;
+  const projected_roas = Math.round(current_roas * fatigue_penalty * season_multiplier * scaling_efficiency * 100) / 100;
+  const projected_cpa = Math.round(current_cpa / (projected_roas / current_roas) * 100) / 100;
+  const projected_ltv_impact_pct = change_pct > 0 ? Math.round((ltv_analysis.ltv_cac_ratio >= 3 ? 8 : 3) * season_multiplier) : -5;
+  const risk_adjustment = change_pct > 30 && fatigue_report.creative_fatigue ? "higher" : change_pct < 0 ? "lower" : "neutral";
+  const confidence = ltv_analysis.profitability_score === "excellent" ? "high" : ltv_analysis.profitability_score === "healthy" ? "medium" : "low";
+  const direction = change_pct >= 0 ? `+${change_pct}%` : `${change_pct}%`;
+  return {
+    scenario: "budget_change",
+    change_description: `Budget ${direction}`,
+    projected_roas,
+    projected_cpa,
+    projected_ltv_impact_pct,
+    risk_adjustment,
+    confidence,
+    rationale: buildBudgetRationale(change_pct, fatigue_report, seasonal_context)
+  };
+}
+function simulateNewCreative(input) {
+  const { ltv_analysis, seasonal_context, current_roas, current_cpa } = input;
+  const uplift = input.fatigue_report.creative_fatigue ? 1.18 : 1.04;
+  const projected_roas = Math.round(current_roas * uplift * 100) / 100;
+  const projected_cpa = Math.round(current_cpa * (1 / uplift) * 100) / 100;
+  const projected_ltv_impact_pct = input.fatigue_report.creative_fatigue ? 12 : 3;
+  return {
+    scenario: "new_creative",
+    change_description: "Rafra\xEEchissement cr\xE9atif",
+    projected_roas,
+    projected_cpa,
+    projected_ltv_impact_pct,
+    risk_adjustment: "lower",
+    confidence: input.fatigue_report.creative_fatigue ? "high" : "medium",
+    rationale: input.fatigue_report.creative_fatigue ? `Fatigue cr\xE9ative active (score ${input.fatigue_report.fatigue_score}/10) \u2014 le rafra\xEEchissement devrait restaurer les performances \xE0 +${Math.round((uplift - 1) * 100)}%` : "Pas de fatigue d\xE9tect\xE9e \u2014 gain marginal attendu du rafra\xEEchissement"
+  };
+}
+function simulateNewAudience(input) {
+  const { ltv_analysis, current_roas, current_cpa, seasonal_context } = input;
+  const expansion_penalty = 0.8;
+  const ltv_upside = ltv_analysis.ltv_cac_ratio >= 3 ? 1.15 : 1.05;
+  const projected_roas = Math.round(current_roas * expansion_penalty * 100) / 100;
+  const projected_cpa = Math.round(current_cpa / expansion_penalty * 100) / 100;
+  const projected_ltv_impact_pct = Math.round((ltv_upside - 1) * 100);
+  const risk = ltv_analysis.ltv_cac_ratio < 2 ? "higher" : "neutral";
+  return {
+    scenario: "new_audience",
+    change_description: "Expansion nouvelle audience",
+    projected_roas,
+    projected_cpa,
+    projected_ltv_impact_pct,
+    risk_adjustment: risk,
+    confidence: "medium",
+    rationale: `Nouvelle audience : co\xFBt d'acquisition initial plus \xE9lev\xE9 (-20% ROAS estim\xE9) mais potentiel de diversification LTV +${projected_ltv_impact_pct}% si le produit r\xE9sonne`
+  };
+}
+function buildBudgetRationale(change_pct, fatigue, season) {
+  const parts = [];
+  if (change_pct > 0) {
+    if (fatigue.creative_fatigue) {
+      parts.push(`Fatigue cr\xE9ative active \u2014 scaling ${change_pct > 30 ? "agressif" : "mod\xE9r\xE9"} risqu\xE9 sans rafra\xEEchissement`);
+    } else {
+      parts.push(`Aucune fatigue cr\xE9ative \u2014 budget scalable`);
+    }
+    if (season.seasonality_score >= 1.1) {
+      parts.push(`Saisonnalit\xE9 favorable (${season.seasonality_index}) \u2014 fen\xEAtre id\xE9ale`);
+    }
+  } else {
+    parts.push("R\xE9duction budg\xE9taire \u2014 pr\xE9server les cr\xE9atifs performants");
+  }
+  return parts.join(". ");
+}
+
+// src/growth/channel-optimizer.ts
+function optimizeChannelMix(channels) {
+  const total_budget = channels.reduce((a, c) => a + c.budget_share_pct, 0);
+  const recommendations = [];
+  let underperforming = 0;
+  let overperforming = 0;
+  for (const ch of channels) {
+    let recommended = ch.budget_share_pct;
+    let action = "maintain";
+    let rationale = "";
+    if (ch.status === "underperforming") {
+      underperforming++;
+      if (ch.budget_share_pct > 20) {
+        recommended = Math.max(ch.budget_share_pct - 10, 5);
+        action = "reduce";
+        rationale = `Sous-performance sur ${ch.channel} \u2014 r\xE9duire l'exposition et analyser`;
+      } else {
+        action = "pause";
+        recommended = 0;
+        rationale = `${ch.channel} sous-performe avec une allocation r\xE9duite \u2014 consid\xE9rer une pause`;
+      }
+    } else if (ch.status === "overperforming") {
+      overperforming++;
+      recommended = Math.min(ch.budget_share_pct + 10, 50);
+      action = "increase";
+      rationale = `${ch.channel} surperforme \u2014 \xE9largir l'investissement`;
+    } else if (ch.status === "fatigue") {
+      recommended = Math.max(ch.budget_share_pct - 5, 0);
+      action = "reduce";
+      rationale = `Fatigue d\xE9tect\xE9e sur ${ch.channel} \u2014 rafra\xEEchir les cr\xE9atifs avant de scaler`;
+    } else {
+      rationale = `${ch.channel} stable \u2014 maintenir le mix actuel`;
+    }
+    const delta = recommended - ch.budget_share_pct;
+    recommendations.push({
+      channel: ch.channel,
+      current_share_pct: ch.budget_share_pct,
+      recommended_share_pct: recommended,
+      delta_pct: delta,
+      action,
+      rationale
+    });
+  }
+  const projected_total = recommendations.reduce((a, r) => a + r.recommended_share_pct, 0);
+  if (projected_total !== 100 && projected_total > 0) {
+    const scale = 100 / projected_total;
+    for (const r of recommendations) {
+      r.recommended_share_pct = Math.round(r.recommended_share_pct * scale);
+    }
+  }
+  const overall_health = underperforming >= channels.length / 2 ? "poor" : underperforming > 0 && overperforming > 0 ? "mixed" : overperforming >= channels.length / 2 ? "excellent" : "good";
+  const top_reduce = recommendations.filter((r) => r.action === "reduce" || r.action === "pause").map((r) => r.channel);
+  const top_increase = recommendations.filter((r) => r.action === "increase").map((r) => r.channel);
+  const budget_redistribution_summary = top_reduce.length > 0 || top_increase.length > 0 ? `R\xE9duire sur ${top_reduce.join(", ") || "aucun canal"}. Augmenter sur ${top_increase.join(", ") || "aucun canal"}.` : "Mix canal \xE9quilibr\xE9 \u2014 maintenir la r\xE9partition actuelle.";
+  const priority_action = recommendations.find((r) => r.action === "pause")?.rationale ?? recommendations.find((r) => r.action === "increase")?.rationale ?? "Maintenir le mix actuel et surveiller les indicateurs hebdomadaires.";
+  return {
+    generated_at: (/* @__PURE__ */ new Date()).toISOString(),
+    overall_health,
+    channel_statuses: channels,
+    recommendations,
+    budget_redistribution_summary,
+    priority_action
+  };
+}
+function inferChannelStatuses(raw) {
+  return raw.map((ch) => {
+    let status = "stable";
+    const roas_ok = ch.roas !== void 0 ? ch.roas >= 2.5 : true;
+    const ctr_ok = ch.ctr !== void 0 ? ch.ctr >= 0.01 : true;
+    const freq_ok = ch.frequency !== void 0 ? ch.frequency <= 3.5 : true;
+    if (ch.frequency !== void 0 && ch.frequency > 4.5) {
+      status = "fatigue";
+    } else if (!roas_ok && !ctr_ok) {
+      status = "underperforming";
+    } else if (ch.roas !== void 0 && ch.roas >= 4.5) {
+      status = "overperforming";
+    } else if (!freq_ok) {
+      status = "fatigue";
+    }
+    return { ...ch, status };
+  });
+}
+
+// src/routes/growth.ts
+var router6 = (0, import_express6.Router)();
+router6.post("/growth/risk-meter", (req, res) => {
+  const { order_metrics, cohort_data, creative_metrics, sector, weeks_running } = req.body;
+  if (!order_metrics || !cohort_data || !creative_metrics) {
+    res.status(400).json({
+      error: "order_metrics, cohort_data, creative_metrics requis",
+      example: {
+        order_metrics: {
+          avg_order_value: 80,
+          purchase_frequency_per_year: 3,
+          customer_lifespan_years: 2,
+          gross_margin_percent: 55,
+          cac: 40
+        },
+        cohort_data: {
+          cohort_month: "2024-01",
+          customers_acquired: 500,
+          revenue_month_0: 4e4,
+          revenue_month_1: 28e3,
+          revenue_month_2: 22e3,
+          revenue_month_3: 18e3
+        },
+        creative_metrics: [
+          { period_label: "W1", ctr: 0.025, frequency: 2.1, roas: 3.8, spend: 5e3, revenue: 19e3 },
+          { period_label: "W2", ctr: 0.018, frequency: 3.2, roas: 2.9, spend: 5e3, revenue: 14500 },
+          { period_label: "W3", ctr: 0.012, frequency: 4.8, roas: 2.1, spend: 5e3, revenue: 10500 }
+        ],
+        sector: "cosmetics",
+        weeks_running: 6
+      }
+    });
+    return;
+  }
+  const ltv_analysis = calculateLtv(order_metrics);
+  const cohort_analysis = analyzeCohort(cohort_data);
+  const seasonal_context = getSeasonalContext(sector ?? "ecommerce");
+  const fatigue_report = detectCreativeFatigue(creative_metrics);
+  const risk_meter = computeRiskMeter({
+    ltv_analysis,
+    cohort_analysis,
+    fatigue_report,
+    weeks_running: weeks_running ?? 4
+  });
+  res.json({
+    risk_meter,
+    ltv_analysis,
+    seasonal_context,
+    fatigue_detected: fatigue_report.creative_fatigue
+  });
+});
+router6.post("/growth/simulate", (req, res) => {
+  const {
+    order_metrics,
+    creative_metrics,
+    sector,
+    current_roas,
+    current_cpa,
+    current_budget,
+    scenarios,
+    budget_change_pct
+  } = req.body;
+  if (!order_metrics || !creative_metrics) {
+    res.status(400).json({ error: "order_metrics et creative_metrics requis" });
+    return;
+  }
+  const ltv_analysis = calculateLtv(order_metrics);
+  const seasonal_context = getSeasonalContext(sector ?? "ecommerce");
+  const fatigue_report = detectCreativeFatigue(creative_metrics);
+  const sim_input = {
+    ltv_analysis,
+    fatigue_report,
+    seasonal_context,
+    current_roas: current_roas ?? 3,
+    current_cpa: current_cpa ?? 40,
+    current_budget: current_budget ?? 5e3
+  };
+  const requested = Array.isArray(scenarios) ? scenarios : ["budget_change", "new_creative", "new_audience"];
+  const results = {};
+  if (requested.includes("budget_change")) {
+    results.budget_change = simulateBudgetChange(sim_input, budget_change_pct ?? 20);
+  }
+  if (requested.includes("new_creative")) {
+    results.new_creative = simulateNewCreative(sim_input);
+  }
+  if (requested.includes("new_audience")) {
+    results.new_audience = simulateNewAudience(sim_input);
+  }
+  res.json({ simulations: results, baseline: { roas: sim_input.current_roas, cpa: sim_input.current_cpa } });
+});
+router6.post("/growth/weekly-brief", (req, res) => {
+  const {
+    order_metrics,
+    cohort_data,
+    creative_metrics,
+    sector,
+    weeks_running,
+    current_margin_stable,
+    output_mode
+  } = req.body;
+  if (!order_metrics || !cohort_data || !creative_metrics) {
+    res.status(400).json({ error: "order_metrics, cohort_data, creative_metrics requis" });
+    return;
+  }
+  const ltv_analysis = calculateLtv(order_metrics);
+  const cohort_analysis = analyzeCohort(cohort_data);
+  const seasonal_context = getSeasonalContext(sector ?? "ecommerce");
+  const fatigue_report = detectCreativeFatigue(creative_metrics);
+  const weekly_summary = generateWeeklyStrategicSummary({
+    ltv_analysis,
+    seasonal_context,
+    fatigue_report,
+    current_margin_stable: current_margin_stable ?? true,
+    weeks_running: weeks_running ?? 4
+  });
+  const risk_meter = computeRiskMeter({
+    ltv_analysis,
+    cohort_analysis,
+    fatigue_report,
+    weeks_running: weeks_running ?? 4
+  });
+  const is_client_ready = output_mode === "client_ready";
+  if (is_client_ready) {
+    res.json({
+      title: "Rapport Strat\xE9gique Hebdomadaire",
+      generated_at: weekly_summary.generated_at,
+      performance_overview: {
+        outlook: weekly_summary.strategic_outlook,
+        profit_sustainability: weekly_summary.profit_sustainability,
+        risk_index: risk_meter.scaling_risk_index
+      },
+      scaling_opportunities: weekly_summary.scaling_opportunities,
+      risk_flags: weekly_summary.risk_factors,
+      creative_analysis: weekly_summary.creative_signals,
+      retention_update: {
+        m1: Math.round((cohort_analysis.retention_m1 ?? 0) * 100) + "%",
+        m3: Math.round((cohort_analysis.retention_m3 ?? 0) * 100) + "%",
+        health: cohort_analysis.cohort_health
+      },
+      profit_check: {
+        ltv_cac_ratio: ltv_analysis.ltv_cac_ratio,
+        profitability: ltv_analysis.profitability_score,
+        break_even_months: ltv_analysis.break_even_months
+      },
+      recommended_action: weekly_summary.recommended_action,
+      agency_footer: `G\xE9n\xE9r\xE9 par AI BRAND OS v3.x \u2014 ${(/* @__PURE__ */ new Date()).toLocaleDateString("fr-FR")}`
+    });
+  } else {
+    res.json({
+      weekly_summary,
+      risk_meter,
+      ltv_analysis,
+      cohort_analysis,
+      seasonal_context,
+      fatigue_report
+    });
+  }
+});
+router6.post("/growth/channel-optimizer", (req, res) => {
+  const { channels } = req.body;
+  if (!Array.isArray(channels) || channels.length === 0) {
+    res.status(400).json({
+      error: "channels requis (tableau)",
+      example: {
+        channels: [
+          { channel: "meta", roas: 2.1, ctr: 9e-3, frequency: 5.2, budget_share_pct: 45 },
+          { channel: "google", roas: 3.8, ctr: 0.032, budget_share_pct: 30 },
+          { channel: "tiktok", roas: 2.8, ctr: 0.018, frequency: 3.1, budget_share_pct: 15 },
+          { channel: "email", budget_share_pct: 10 }
+        ]
+      }
+    });
+    return;
+  }
+  const enriched = inferChannelStatuses(channels);
+  const result = optimizeChannelMix(enriched);
+  res.json(result);
+});
+var growth_default = router6;
+
+// src/routes/openai/enhance-prompts.ts
+var import_express7 = __toESM(require_express2(), 1);
 
 // ../../node_modules/.pnpm/@anthropic-ai+sdk@0.88.0_zod@3.25.76/node_modules/@anthropic-ai/sdk/internal/tslib.mjs
 function __classPrivateFieldSet2(receiver, state, value, kind, f) {
@@ -48775,7 +50143,7 @@ function runGovernancePass(draft, options) {
 }
 
 // src/routes/openai/enhance-prompts.ts
-var router6 = (0, import_express6.Router)();
+var router7 = (0, import_express7.Router)();
 function estimateTokenCount(text) {
   const trimmed = text.trim();
   if (!trimmed) return 0;
@@ -48835,7 +50203,7 @@ var LOGO_STYLE_DESCRIPTIONS = {
   futuristic: "N\xE9on, d\xE9grad\xE9s dynamiques, formes fluides. Typographie angulaire. Palette: violet (#8B5CF6), cyan (#06B6D4), magenta (#EC4899).",
   ethnic: "Color\xE9, expressif, authentique. Motifs traditionnels, richesse d\xE9corative. Palette chaude: rouge, orange, or, terre."
 };
-router6.post("/openai/enhance-prompts", async (req, res) => {
+router7.post("/openai/enhance-prompts", async (req, res) => {
   const parsed = ExtendedBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "Invalid request body", details: parsed.error.errors });
@@ -49076,11 +50444,11 @@ Commence directement par: "R\xE9dige le contenu structur\xE9 de la charte graphi
 `);
   res.end();
 });
-var enhance_prompts_default = router6;
+var enhance_prompts_default = router7;
 
 // src/routes/openai/enhance-prompts-visual.ts
-var import_express7 = __toESM(require_express2(), 1);
-var router7 = (0, import_express7.Router)();
+var import_express8 = __toESM(require_express2(), 1);
+var router8 = (0, import_express8.Router)();
 var PRODUCT_ANGLES = {
   bijou: { front: "Vue de face", profile: "Vue de profil", three_quarter: "Vue en 3/4", macro: "Macro sertissage/pierres", top: "Vue de dessus" },
   v\u00EAtement: { front: "Vue de face", back: "Vue de dos", detail_collar: "D\xE9tail col", detail_seam: "D\xE9tail coutures", three_quarter: "Vue en 3/4" },
@@ -49208,7 +50576,7 @@ function sendEvent(res, data) {
 
 `);
 }
-router7.post("/openai/enhance-prompts-visual", async (req, res) => {
+router8.post("/openai/enhance-prompts-visual", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -49534,11 +50902,11 @@ Chaque prompt visuel doit inclure un champ "negative_prompt" avec les \xE9l\xE9m
   sendEvent(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_visual_default = router7;
+var enhance_prompts_visual_default = router8;
 
 // src/routes/openai/enhance-prompts-video.ts
-var import_express8 = __toESM(require_express2(), 1);
-var router8 = (0, import_express8.Router)();
+var import_express9 = __toESM(require_express2(), 1);
+var router9 = (0, import_express9.Router)();
 var TEASER_STYLE_MAP = {
   bijou: "luxe",
   luxe: "luxe",
@@ -49608,7 +50976,7 @@ function sendEvent2(res, data) {
 
 `);
 }
-router8.post("/openai/enhance-prompts-video", async (req, res) => {
+router9.post("/openai/enhance-prompts-video", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -49983,11 +51351,11 @@ Retourne UNIQUEMENT ce JSON:
   sendEvent2(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_video_default = router8;
+var enhance_prompts_video_default = router9;
 
 // src/routes/openai/enhance-prompts-ads.ts
-var import_express9 = __toESM(require_express2(), 1);
-var router9 = (0, import_express9.Router)();
+var import_express10 = __toESM(require_express2(), 1);
+var router10 = (0, import_express10.Router)();
 var STYLE_MAP = {
   bijou: "luxueux, \xE9l\xE9gant, raffin\xE9, intemporel",
   luxe: "premium, exclusif, sophistiqu\xE9",
@@ -50016,7 +51384,7 @@ function sendEvent3(res, data) {
 
 `);
 }
-router9.post("/openai/enhance-prompts-ads", async (req, res) => {
+router10.post("/openai/enhance-prompts-ads", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -50424,11 +51792,11 @@ Retourne UNIQUEMENT ce JSON:
   sendEvent3(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_ads_default = router9;
+var enhance_prompts_ads_default = router10;
 
 // src/routes/openai/enhance-prompts-sound.ts
-var import_express10 = __toESM(require_express2(), 1);
-var router10 = (0, import_express10.Router)();
+var import_express11 = __toESM(require_express2(), 1);
+var router11 = (0, import_express11.Router)();
 var JINGLE_STYLE_MAP = {
   bijou: "orchestral \xE9l\xE9gant \u2014 harpe, cordes, piano, 80-90 BPM, intemporel",
   luxe: "orchestral majestueux \u2014 cordes, cuivres, harpe, timbales, 70-80 BPM",
@@ -50482,7 +51850,7 @@ function sendEvent4(res, data) {
 
 `);
 }
-router10.post("/openai/enhance-prompts-sound", async (req, res) => {
+router11.post("/openai/enhance-prompts-sound", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -50814,11 +52182,11 @@ Retourne UNIQUEMENT ce JSON:
   sendEvent4(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_sound_default = router10;
+var enhance_prompts_sound_default = router11;
 
 // src/routes/openai/enhance-prompts-copy.ts
-var import_express11 = __toESM(require_express2(), 1);
-var router11 = (0, import_express11.Router)();
+var import_express12 = __toESM(require_express2(), 1);
+var router12 = (0, import_express12.Router)();
 function sendEvent5(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -50832,7 +52200,7 @@ function parseJsonSafe5(text) {
     return null;
   }
 }
-router11.post("/openai/enhance-prompts-copy", async (req, res) => {
+router12.post("/openai/enhance-prompts-copy", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -51118,10 +52486,10 @@ Les 10 avis doivent:
   sendEvent5(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_copy_default = router11;
+var enhance_prompts_copy_default = router12;
 
 // src/routes/openai/enhance-prompts-launch.ts
-var import_express12 = __toESM(require_express2(), 1);
+var import_express13 = __toESM(require_express2(), 1);
 
 // src/lib/market-config.ts
 var MARKET_CONFIGS = {
@@ -51407,7 +52775,7 @@ function convertPrice(priceEur, config) {
 }
 
 // src/routes/openai/enhance-prompts-launch.ts
-var router12 = (0, import_express12.Router)();
+var router13 = (0, import_express13.Router)();
 function sendEvent6(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -51431,7 +52799,7 @@ function parseJsonSafe6(text) {
     return null;
   }
 }
-router12.post("/openai/enhance-prompts-launch", async (req, res) => {
+router13.post("/openai/enhance-prompts-launch", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -51736,11 +53104,11 @@ Adapte les actions et contenus sp\xE9cifiquement au secteur "${sector}" et \xE0 
   sendEvent6(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_launch_default = router12;
+var enhance_prompts_launch_default = router13;
 
 // src/routes/openai/enhance-prompts-chatbot.ts
-var import_express13 = __toESM(require_express2(), 1);
-var router13 = (0, import_express13.Router)();
+var import_express14 = __toESM(require_express2(), 1);
+var router14 = (0, import_express14.Router)();
 function sendEvent7(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -51754,7 +53122,7 @@ function parseJsonSafe7(text) {
     return null;
   }
 }
-router13.post("/openai/enhance-prompts-chatbot", async (req, res) => {
+router14.post("/openai/enhance-prompts-chatbot", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -51991,11 +53359,11 @@ Les gestes commerciaux peuvent inclure: remboursement, renvoi, code promo ${code
   sendEvent7(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_chatbot_default = router13;
+var enhance_prompts_chatbot_default = router14;
 
 // src/routes/openai/enhance-prompts-upsell.ts
-var import_express14 = __toESM(require_express2(), 1);
-var router14 = (0, import_express14.Router)();
+var import_express15 = __toESM(require_express2(), 1);
+var router15 = (0, import_express15.Router)();
 function sendEvent8(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -52009,7 +53377,7 @@ function parseJsonSafe8(text) {
     return null;
   }
 }
-router14.post("/openai/enhance-prompts-upsell", async (req, res) => {
+router15.post("/openai/enhance-prompts-upsell", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -52295,11 +53663,11 @@ R\xE9ponds UNIQUEMENT avec un JSON valide, sans texte avant ou apr\xE8s:
   sendEvent8(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_upsell_default = router14;
+var enhance_prompts_upsell_default = router15;
 
 // src/routes/openai/enhance-prompts-performance.ts
-var import_express15 = __toESM(require_express2(), 1);
-var router15 = (0, import_express15.Router)();
+var import_express16 = __toESM(require_express2(), 1);
+var router16 = (0, import_express16.Router)();
 function sendEvent9(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -52323,7 +53691,7 @@ var SECTOR_DEFAULTS = {
   d\u00E9coration: { ca_target: 9e3, basket_target: 120, conv_target: 2, cac_target: 28, roas_target: 2.8, margin_percent: 58, max_cpa: 24, target_cpa: 16 },
   maroquinerie: { ca_target: 12e3, basket_target: 180, conv_target: 2.2, cac_target: 38, roas_target: 3, margin_percent: 62, max_cpa: 33, target_cpa: 19 }
 };
-router15.post("/openai/enhance-prompts-performance", async (req, res) => {
+router16.post("/openai/enhance-prompts-performance", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -52637,11 +54005,11 @@ R\xE9ponds UNIQUEMENT avec un JSON valide:
   sendEvent9(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_performance_default = router15;
+var enhance_prompts_performance_default = router16;
 
 // src/routes/openai/persona-variants.ts
-var import_express16 = __toESM(require_express2(), 1);
-var router16 = (0, import_express16.Router)();
+var import_express17 = __toESM(require_express2(), 1);
+var router17 = (0, import_express17.Router)();
 var PersonaVariantsBody = objectType({
   base_prompt: stringType().min(10),
   brand_name: stringType().min(1),
@@ -52650,7 +54018,7 @@ var PersonaVariantsBody = objectType({
   values: arrayType(stringType()).default([]),
   target_demographic: stringType().nullish()
 });
-router16.post("/openai/persona-variants", async (req, res) => {
+router17.post("/openai/persona-variants", async (req, res) => {
   const parsed = PersonaVariantsBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "Invalid request body", details: parsed.error.errors });
@@ -52672,12 +54040,12 @@ router16.post("/openai/persona-variants", async (req, res) => {
     res.status(500).json({ error: "Erreur lors de la g\xE9n\xE9ration des variantes personas" });
   }
 });
-var persona_variants_default = router16;
+var persona_variants_default = router17;
 
 // src/routes/openai/review-prompt.ts
-var import_express17 = __toESM(require_express2(), 1);
-var router17 = (0, import_express17.Router)();
-router17.post("/openai/review-prompt", async (req, res) => {
+var import_express18 = __toESM(require_express2(), 1);
+var router18 = (0, import_express18.Router)();
+router18.post("/openai/review-prompt", async (req, res) => {
   const {
     content,
     section_key,
@@ -52712,28 +54080,29 @@ router17.post("/openai/review-prompt", async (req, res) => {
     res.status(500).json({ error: "Erreur lors de la review IA." });
   }
 });
-var review_prompt_default = router17;
+var review_prompt_default = router18;
 
 // src/routes/index.ts
-var router18 = (0, import_express18.Router)();
-router18.use(governance_default);
-router18.use(memory_default);
-router18.use(positioning_default);
-router18.use(health_default);
-router18.use(scrape_gmb_default);
-router18.use(enhance_prompts_default);
-router18.use(enhance_prompts_visual_default);
-router18.use(enhance_prompts_video_default);
-router18.use(enhance_prompts_ads_default);
-router18.use(enhance_prompts_sound_default);
-router18.use(enhance_prompts_copy_default);
-router18.use(enhance_prompts_launch_default);
-router18.use(enhance_prompts_chatbot_default);
-router18.use(enhance_prompts_upsell_default);
-router18.use(enhance_prompts_performance_default);
-router18.use(persona_variants_default);
-router18.use(review_prompt_default);
-var routes_default = router18;
+var router19 = (0, import_express19.Router)();
+router19.use(governance_default);
+router19.use(memory_default);
+router19.use(positioning_default);
+router19.use(growth_default);
+router19.use(health_default);
+router19.use(scrape_gmb_default);
+router19.use(enhance_prompts_default);
+router19.use(enhance_prompts_visual_default);
+router19.use(enhance_prompts_video_default);
+router19.use(enhance_prompts_ads_default);
+router19.use(enhance_prompts_sound_default);
+router19.use(enhance_prompts_copy_default);
+router19.use(enhance_prompts_launch_default);
+router19.use(enhance_prompts_chatbot_default);
+router19.use(enhance_prompts_upsell_default);
+router19.use(enhance_prompts_performance_default);
+router19.use(persona_variants_default);
+router19.use(review_prompt_default);
+var routes_default = router19;
 
 // src/lib/logger.ts
 var import_pino = __toESM(require_pino(), 1);
@@ -52754,7 +54123,7 @@ var logger = (0, import_pino.default)({
 });
 
 // src/app.ts
-var app = (0, import_express19.default)();
+var app = (0, import_express20.default)();
 app.use(
   (0, import_pino_http.default)({
     logger,
@@ -52775,8 +54144,8 @@ app.use(
   })
 );
 app.use((0, import_cors.default)());
-app.use(import_express19.default.json());
-app.use(import_express19.default.urlencoded({ extended: true }));
+app.use(import_express20.default.json());
+app.use(import_express20.default.urlencoded({ extended: true }));
 app.use("/api", routes_default);
 var app_default = app;
 

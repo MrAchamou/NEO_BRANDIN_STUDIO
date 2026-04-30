@@ -10,6 +10,8 @@ import { logCorrection, logApproval, logRejection, logGovernanceOverride, summar
 import { recordDecision, getDecisions, summarizeDecisionHistory } from "../memory/decision-history";
 import { getMemoryProfile, invalidateMemoryProfile } from "../memory/memory-profile-builder";
 import { getMemoryStats, clearMemory } from "../memory/memory-store";
+import { detectBrandDrift } from "../memory/drift-detector";
+import { generateEvolutionTimeline } from "../memory/evolution-timeline";
 
 const router = Router();
 
@@ -123,6 +125,26 @@ router.delete("/memory/:brand_id", (req, res) => {
   clearMemory(brand_id);
   invalidateMemoryProfile(brand_id);
   res.json({ success: true, message: `Mémoire de ${brand_id} réinitialisée` });
+});
+
+/**
+ * GET /api/memory/drift/:brand_id
+ * Détecte la dérive stratégique d'une marque (Agency Mode).
+ */
+router.get("/memory/drift/:brand_id", (req, res) => {
+  const { brand_id } = req.params;
+  const drift = detectBrandDrift(brand_id);
+  res.json(drift);
+});
+
+/**
+ * GET /api/memory/timeline/:brand_id
+ * Génère la timeline d'évolution stratégique — format client-ready.
+ */
+router.get("/memory/timeline/:brand_id", (req, res) => {
+  const { brand_id } = req.params;
+  const timeline = generateEvolutionTimeline(brand_id);
+  res.json(timeline);
 });
 
 export default router;
