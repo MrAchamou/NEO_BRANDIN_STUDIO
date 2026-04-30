@@ -1,0 +1,404 @@
+```md
+# 🚀 AI BRAND OS v3 — ADAPTIVE INTELLIGENCE & STRATEGIC POSITIONING UPGRADE
+## Unified Upgrade Prompt for Replit AI (Precision Architecture Mode)
+
+---
+
+# 🎯 OBJECTIVE
+
+Upgrade AI BRAND OS to version 3.0 by integrating three advanced strategic layers:
+
+1. 🧠 Brand Memory Engine  
+2. 📊 Growth Decision Brain  
+3. 🎯 Strategic Positioning Engine  
+
+The system must evolve from a governed generative engine into a **self-learning, strategy-aware, adaptive Brand Operating System**.
+
+All new layers must:
+
+- Be modular
+- Be config-driven
+- Integrate with existing Governance + Sector Intelligence layers
+- Follow the same precision and validation standards
+- Not break backward compatibility
+- Maintain universal (sector-agnostic) behavior
+
+---
+
+# 🧠 LAYER 1 — BRAND MEMORY ENGINE
+
+## 🎯 Purpose
+
+Make AI BRAND OS adaptive over time.
+
+The system must remember:
+
+- User corrections
+- Approved / rejected outputs
+- Tone preferences
+- Strategic decisions
+- Performance feedback
+- Risk tolerance shifts
+
+---
+
+## ✅ Architecture
+
+Create:
+
+```
+/workspace/lib/memory/
+  memory-store.ts
+  correction-log.ts
+  decision-history.ts
+  memory-profile-builder.ts
+```
+
+---
+
+## ✅ Core Behaviors
+
+### 1️⃣ Log Every Human Override
+
+When a user:
+- Edits generated content
+- Overrides governance correction
+- Rejects a positioning suggestion
+- Changes tone or growth_mode
+
+Store:
+
+```json
+{
+  "timestamp": "",
+  "module": "",
+  "type": "correction | approval | rejection | override",
+  "before": "",
+  "after": "",
+  "context": "",
+  "impact_level": "low | medium | high"
+}
+```
+
+---
+
+### 2️⃣ Build Dynamic Brand Memory Profile
+
+Generate evolving memory profile:
+
+```json
+{
+  "tone_intensity_preference": "low",
+  "urgency_tolerance": false,
+  "creative_complexity": "minimal",
+  "growth_risk_appetite": "conservative",
+  "design_strictness": "high"
+}
+```
+
+This profile must be recalculated periodically.
+
+---
+
+### 3️⃣ Inject Memory Into Generation
+
+Pipeline update:
+
+```
+generate()
+→ injectBrandMemory()
+→ applyGovernance()
+→ export()
+```
+
+The system must adjust future outputs based on memory profile.
+
+---
+
+# 📊 LAYER 2 — GROWTH DECISION BRAIN
+
+## 🎯 Purpose
+
+Replace static growth rules with contextual, multi-factor strategic intelligence.
+
+---
+
+## ✅ Architecture
+
+Create:
+
+```
+/workspace/lib/growth/
+  ltv-engine.ts
+  cohort-analysis.ts
+  seasonality-model.ts
+  creative-fatigue-detector.ts
+  strategy-recommender.ts
+```
+
+---
+
+## ✅ Capabilities
+
+### 1️⃣ Cohort Intelligence
+
+Track:
+
+- First purchase date
+- Days to second purchase
+- Revenue per cohort
+- Drop-off curves
+- Retention patterns
+
+---
+
+### 2️⃣ Dynamic LTV/CAC Engine
+
+Calculate:
+
+```
+LTV
+CAC
+LTV/CAC ratio
+Break-even time
+Contribution margin
+Net profit per order
+```
+
+Remove fixed CPA thresholds.
+
+---
+
+### 3️⃣ Creative Fatigue Detection
+
+If:
+
+- CTR decreases over 3 periods
+- Frequency > threshold
+- ROAS declining with stable traffic
+
+Trigger:
+
+```
+creative_fatigue = true
+recommend_refresh = true
+```
+
+---
+
+### 4️⃣ Contextual Scaling Logic
+
+Instead of:
+
+```
+if ROAS > 3.5 → scale 30%
+```
+
+Use:
+
+```
+if LTV/CAC > 3
+and creative_fatigue = false
+and seasonality positive
+and margin stable
+→ scale gradually 15–25%
+```
+
+---
+
+### 5️⃣ Weekly Strategic Summary
+
+Auto-generate:
+
+```
+📊 Strategic Outlook
+📈 Scaling Opportunities
+📉 Risk Factors
+⚠ Creative Fatigue Signals
+💰 Profit Sustainability Check
+```
+
+---
+
+# 🎯 LAYER 3 — STRATEGIC POSITIONING ENGINE
+
+## 🎯 Purpose
+
+Elevate AI BRAND OS from executor to strategist.
+
+The system must generate deep brand differentiation and narrative territory.
+
+---
+
+## ✅ Architecture
+
+Create:
+
+```
+/workspace/lib/positioning/
+  archetype-engine.ts
+  market-mapping.ts
+  competitor-analysis.ts
+  differentiation-matrix.ts
+  territory-builder.ts
+  positioning-lock.ts
+```
+
+---
+
+## ✅ Capabilities
+
+### 1️⃣ Archetype Detection
+
+Automatically identify:
+
+- Creator
+- Sage
+- Caregiver
+- Explorer
+- Ruler
+- Rebel
+- Lover
+- Hero
+
+Store result in:
+
+```
+/config/positioning-lock.json
+```
+
+---
+
+### 2️⃣ Market Mapping
+
+Map brand across 2 axes:
+
+Example:
+
+```
+Luxury ↔ Accessible
+Technical ↔ Emotional
+Minimalist ↔ Expressive
+```
+
+Detect competitive whitespace.
+
+---
+
+### 3️⃣ Differentiation Matrix
+
+Generate:
+
+| Axis | Brand | Competitor A | Competitor B |
+|------|-------|--------------|--------------|
+
+Highlight strategic opportunity zones.
+
+---
+
+### 4️⃣ Strategic Narrative Builder
+
+Produce:
+
+- Core tension
+- Brand promise
+- Emotional hook
+- Functional pillar
+- Cultural anchor
+- Anti-positioning statement
+
+---
+
+### 5️⃣ Positioning Lock Enforcement
+
+All modules must align with:
+
+```
+positioning-lock.json
+```
+
+If a module output contradicts positioning:
+- Rewrite
+- Flag
+- Block if critical
+
+---
+
+# 🔄 GLOBAL PIPELINE UPDATE (FINAL FORM)
+
+Replace current pipeline with:
+
+```
+generate()
+→ brandLock()
+→ sectorEngine()
+→ positioningEngine()
+→ memoryInjection()
+→ complianceAgent()
+→ toneEnforcer()
+→ claimFilter()
+→ pricingValidator()
+→ wcagValidator()
+→ growthBrainEvaluation()
+→ finalValidation()
+→ export()
+```
+
+No module may bypass this pipeline.
+
+---
+
+# ✅ APPLY SAME PRECISION TO MODULES 01–10
+
+For each module:
+
+- Enforce Positioning Lock
+- Inject Brand Memory
+- Apply Growth Intelligence if relevant
+- Validate against Sector rules
+- Validate pricing & profit logic
+- Validate claims & tone
+- Log all corrections
+
+---
+
+# 🧩 SUCCESS CRITERIA
+
+After implementation:
+
+✅ System learns from human corrections  
+✅ System adjusts tone dynamically  
+✅ System detects creative fatigue  
+✅ System calculates true profitability  
+✅ System recommends contextual scaling  
+✅ System generates deep positioning narratives  
+✅ All outputs align with sector + positioning + governance  
+✅ Architecture remains modular and extensible  
+
+---
+
+# 🔥 EXECUTION MODE
+
+Perform structured integration.
+
+No duplication of logic.
+No hardcoding of sector rules.
+No static scaling thresholds.
+No partial injection.
+
+Maintain universality.
+Maintain governance integrity.
+Maintain system stability.
+
+---
+
+# VERSION TARGET
+
+Upgrade system to:
+
+> **AI BRAND OS v3.0 — Adaptive Strategic Intelligence**
+
+---
+
+# END OF INSTRUCTION
+```
