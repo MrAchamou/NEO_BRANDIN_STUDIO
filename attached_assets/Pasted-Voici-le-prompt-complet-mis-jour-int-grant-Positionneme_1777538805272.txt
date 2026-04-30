@@ -1,0 +1,293 @@
+Voici le **prompt complet mis à jour**, intégrant :
+
+- ✅ Positionnement public officiel (Agency-first)
+- ✅ Système Dual AI Mode (Replit par défaut / OpenRouter clé utilisateur)
+- ✅ Activation conditionnelle depuis le frontend
+- ✅ Gouvernance intacte
+- ✅ Architecture propre et modulaire
+
+Format `.md` comme demandé 👇
+
+---
+
+```md
+# 🚀 AI BRAND OS — PUBLIC POSITIONING + DUAL AI ENGINE INTEGRATION
+## Strategic Agency Positioning + Professional Model Control Layer
+
+---
+
+# 🎯 OBJECTIVE
+
+Upgrade AI BRAND OS to:
+
+1. Establish its official public positioning as a strategic infrastructure for agencies.
+2. Integrate a dual AI engine architecture allowing:
+   - Default Replit AI model usage
+   - Optional OpenRouter-powered professional mode
+3. Maintain full governance integrity across both modes.
+4. Preserve security, modularity, and scalability.
+
+This upgrade affects:
+- Frontend
+- Backend
+- Model orchestration layer
+- Governance layer
+- Branding layer
+- Documentation
+- Security logic
+
+---
+
+# 🧠 PART 1 — PUBLIC POSITIONING (AGENCY-FIRST)
+
+---
+
+## 🏷 HERO STATEMENT
+
+Replace all legacy messaging with:
+
+> **AI BRAND OS — The Strategic Infrastructure for Modern Brand Agencies**
+
+Or French equivalent:
+
+> **AI BRAND OS — L’infrastructure stratégique des agences de marque nouvelle génération**
+
+---
+
+## 💎 CORE POSITIONING
+
+AI BRAND OS is not a prompt generator.  
+It is a Brand Operating System designed for branding and growth agencies.
+
+It structures, governs, industrializes, and scales brand creation through:
+
+- Governance Engine
+- Sector Intelligence Layer
+- Brand Memory Engine
+- Growth Decision Brain
+- Strategic Positioning Engine
+
+This is strategic infrastructure.
+
+---
+
+## 🧱 4 PUBLIC PILLARS
+
+1️⃣ Governance  
+2️⃣ Intelligence  
+3️⃣ Differentiation  
+4️⃣ Scale  
+
+---
+
+## ✅ Replace any references to:
+- “Prompt generator”
+- “Generate prompts”
+- “AI content tool”
+
+Replace with:
+- Strategic system
+- Brand infrastructure
+- Operating system
+- Governance-driven intelligence
+
+---
+
+# 🤖 PART 2 — DUAL AI ENGINE ARCHITECTURE
+
+---
+
+# 🎯 OBJECTIVE
+
+Implement a dual AI execution layer with two usage modes:
+
+### Mode A — Default (Replit Native Models)
+- Uses Replit-integrated models
+- No API key required
+- Secure, sandboxed, easy access
+- Ideal for standard agency workflows
+
+### Mode B — Professional Mode (OpenRouter)
+- Activated only if user enters OpenRouter API key
+- Allows advanced model control
+- Customizable model selection
+- Full pro flexibility
+
+---
+
+# 🧩 FRONTEND IMPLEMENTATION
+
+Add a new section in Settings or Governance Panel:
+
+## 🔐 AI Engine Configuration
+
+Two selectable options:
+
+### ✅ Option 1 — Default Mode (Replit Managed)
+Description:
+> Uses AI models managed directly by AI BRAND OS via Replit infrastructure.
+
+No configuration required.
+
+---
+
+### 🔓 Option 2 — Professional Mode (OpenRouter Integration)
+
+Add:
+
+- Toggle: “Activate Professional Mode”
+- Secure input field: OpenRouter API Key
+- Model selection dropdown:
+  - GPT-4o
+  - Claude 3 Opus
+  - Claude Sonnet
+  - Mistral Large
+  - Custom (manual entry)
+
+Security rules:
+- API key encrypted
+- Never logged
+- Stored securely (environment-based or encrypted storage)
+- Masked in UI after save
+
+Professional Mode only activates if:
+- Valid OpenRouter key is present
+- Toggle enabled
+
+If invalid → fallback to Default Mode automatically.
+
+---
+
+# 🧠 BACKEND MODEL ORCHESTRATION
+
+Create:
+
+```
+/workspace/lib/model-router.ts
+```
+
+---
+
+## ✅ Routing Logic
+
+Pseudo-flow:
+
+```
+if (professionalModeEnabled && validOpenRouterKey) {
+    routeToOpenRouterModels()
+} else {
+    useReplitNativeModels()
+}
+```
+
+---
+
+## ✅ Governance Integrity Rule
+
+IMPORTANT:
+
+Governance Layer must execute regardless of AI source.
+
+Final pipeline remains:
+
+```
+generate()
+→ brandLock()
+→ sectorEngine()
+→ positioningEngine()
+→ memoryInjection()
+→ complianceAgent()
+→ toneEnforcer()
+→ claimFilter()
+→ pricingValidator()
+→ wcagValidator()
+→ growthBrainEvaluation()
+→ finalValidation()
+→ export()
+```
+
+AI engine is only the generation source.
+Governance is non-negotiable.
+
+---
+
+# 🔐 SECURITY REQUIREMENTS
+
+- OpenRouter API keys must:
+  - Be encrypted
+  - Not appear in logs
+  - Not be sent to frontend once saved
+  - Not stored in plain text
+
+- Add rate limit protection
+- Add graceful fallback to default mode
+
+---
+
+# 📊 UI INDICATOR
+
+Display active mode in header:
+
+```
+🟢 AI Mode: Replit Managed
+```
+
+OR
+
+```
+🟣 AI Mode: Professional (OpenRouter)
+Model: Claude 3 Opus
+```
+
+Visible but not intrusive.
+
+---
+
+# ✅ SUCCESS CRITERIA
+
+After implementation:
+
+- Agencies can use AI BRAND OS immediately (no API key)
+- Advanced agencies can plug OpenRouter for deeper control
+- Governance system remains intact
+- No hallucinated pricing or claims allowed
+- Model routing modular and extensible
+- No security leaks
+- Clear UX distinction between modes
+
+---
+
+# VERSION TARGET
+
+Upgrade system to:
+
+> **AI BRAND OS v3.x — Strategic Agency Infrastructure Edition**
+
+With:
+
+- Public positioning layer
+- Dual AI execution architecture
+- Governance integrity preserved
+
+---
+
+# END OF INSTRUCTION
+```
+
+---
+
+Maintenant ton produit :
+
+- ✅ A une identité claire
+- ✅ Une cible claire
+- ✅ Une architecture sérieuse
+- ✅ Une option pro scalable
+- ✅ Une différenciation stratégique
+
+Si tu veux, prochaine étape :
+
+👉 On définit le pricing agence-first  
+👉 Ou on structure une landing page premium pour agences  
+👉 Ou on optimise l’architecture multi-client  
+
+On est dans la phase plateforme maintenant.
