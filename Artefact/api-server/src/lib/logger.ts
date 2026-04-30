@@ -8,6 +8,12 @@ export const logger = pino({
     "req.headers.authorization",
     "req.headers.cookie",
     "res.headers['set-cookie']",
+    'req.headers["x-openrouter-key"]',
+    'req.headers["x-ai-key"]',
+    "*.apiKey",
+    "*.api_key",
+    "*.openRouterKey",
+    "*.openrouter_key",
   ],
   ...(isProduction
     ? {}

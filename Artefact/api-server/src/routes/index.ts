@@ -5,6 +5,7 @@ import governanceRouter from "./governance";
 import memoryRouter from "./memory";
 import positioningRouter from "./positioning";
 import growthRouter from "./growth";
+import aiEngineRouter from "./ai-engine";
 import enhancePromptsRouter from "./openai/enhance-prompts";
 import enhancePromptsVisualRouter from "./openai/enhance-prompts-visual";
 import enhancePromptsVideoRouter from "./openai/enhance-prompts-video";
@@ -25,6 +26,7 @@ router.use(governanceRouter);
 router.use(memoryRouter);
 router.use(positioningRouter);
 router.use(growthRouter);
+router.use(aiEngineRouter);
 
 // ── Core routes ────────────────────────────────────────────────────────────
 router.use(healthRouter);

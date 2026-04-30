@@ -6,6 +6,7 @@ import {
   Globe, Users, Music2, Zap, FileText, Rocket, MessageCircle, ShoppingCart
 } from "lucide-react";
 import BrandBriefPanel from "@/components/brand-brief-panel";
+import AIModeBadge from "@/components/ai-mode-badge";
 import Module01 from "./module-01";
 import Module02 from "./module-02";
 import Module03 from "./module-03";
@@ -483,14 +484,21 @@ export default function Home() {
                 <span>Powered by RoboNeo.com</span>
               </div>
               <h1 className="text-3xl md:text-4xl font-bold font-serif gold-gradient-text leading-tight">
-                Neo Branding Studio
+                AI BRAND OS
               </h1>
-              <p className="text-muted-foreground text-sm mt-1.5 max-w-xl">
-                Génère des prompts chirurgicaux pour créer tous les assets de ta marque — 10 modules, 3 IA en temps réel.
+              <p className="text-foreground/80 text-sm mt-2 max-w-2xl font-medium">
+                L'infrastructure stratégique des agences de marque nouvelle génération.
+              </p>
+              <p className="text-muted-foreground text-xs mt-1.5 max-w-2xl leading-relaxed">
+                Brand Operating System — Governance · Intelligence · Differentiation · Scale.
+                Structure, gouverne, industrialise et scale la création de marque.
               </p>
             </div>
             <div className="hidden md:flex flex-col items-end gap-2">
-              <span className="text-xs text-muted-foreground/60 font-mono">v2.1.0</span>
+              <div className="flex items-center gap-2">
+                <AIModeBadge />
+                <span className="text-xs text-muted-foreground/60 font-mono">v3.0.0</span>
+              </div>
               <div className="flex flex-col items-end gap-1">
                 <div className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />

@@ -1,0 +1,294 @@
+Parfait.  
+Là on touche à quelque chose de **fondamental**.
+
+Si AI BRAND OS vise les agences,  
+👉 le multilingue n’est pas un “bonus”.
+
+C’est une condition d’entrée.
+
+Tu as raison :  
+Rien ne doit être codé en dur.
+
+Voici le prompt complet, structuré proprement, orienté production.
+
+---
+
+```md
+# 🌍 AI BRAND OS v3.x — FULL INTERNATIONALIZATION (i18n) UPGRADE
+## Dynamic Multi-Language Architecture (No Hardcoded Text)
+
+---
+
+# 🎯 OBJECTIVE
+
+Refactor AI BRAND OS to support 5–6 languages dynamically, with:
+
+- No hardcoded UI strings
+- No hardcoded validation messages
+- No hardcoded module labels
+- No hardcoded system notifications
+- No hardcoded governance warnings
+- No hardcoded growth insights
+- No hardcoded positioning outputs
+
+The system must support professional internationalization (i18n) architecture.
+
+Languages (initial set):
+
+- English (default)
+- French
+- Spanish
+- German
+- Italian
+- Portuguese
+
+Architecture must be extensible to more languages without code restructuring.
+
+---
+
+# 🧩 BACKEND + FRONTEND REQUIREMENTS
+
+---
+
+# 1️⃣ REMOVE ALL HARDCODED STRINGS
+
+The AI must:
+
+- Scan the entire frontend
+- Scan backend response messages
+- Scan validation errors
+- Scan governance badges
+- Scan module titles
+- Scan tooltips
+- Scan button labels
+- Scan error states
+- Scan loading states
+
+Replace all literal strings with translation keys.
+
+---
+
+# 2️⃣ CREATE TRANSLATION SYSTEM
+
+Create:
+
+```
+/workspace/i18n/
+  en.json
+  fr.json
+  es.json
+  de.json
+  it.json
+  pt.json
+```
+
+Structure example:
+
+```json
+{
+  "app": {
+    "title": "AI BRAND OS",
+    "subtitle": "Strategic Infrastructure for Modern Brand Agencies"
+  },
+  "modules": {
+    "brand_identity": "Brand Identity",
+    "visual_content": "Visual Content",
+    "video_content": "Video Content",
+    "ad_creatives": "Ad Creatives",
+    "brand_sound": "Brand Sound",
+    "copy_content": "Copy & Content",
+    "launch_ready": "Launch Ready",
+    "chatbot": "Chatbot Script",
+    "upsell": "Upsell & Cross-sell Kit",
+    "performance": "Performance Tracker"
+  },
+  "buttons": {
+    "generate": "Generate with AI",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "governance": {
+    "brand_lock_active": "Brand Lock Active",
+    "compliance_passed": "Compliance Passed",
+    "compliance_warning": "Compliance Warning"
+  }
+}
+```
+
+Each language file must contain equivalent translations.
+
+---
+
+# 3️⃣ IMPLEMENT i18n ENGINE
+
+Create:
+
+```
+/workspace/lib/i18n.ts
+```
+
+Core function:
+
+```ts
+export function t(key: string): string
+```
+
+Usage example:
+
+```tsx
+<h1>{t("app.title")}</h1>
+```
+
+No string literals allowed in JSX or components.
+
+---
+
+# 4️⃣ FRONTEND LANGUAGE SELECTOR
+
+Add global Language Selector in header:
+
+Component:
+
+```
+/workspace/components/language-selector.tsx
+```
+
+Behavior:
+
+- Dropdown menu
+- Flag icon + language name
+- Persist selection in:
+  - localStorage
+  - user session
+  - database (if logged-in user)
+
+Language switch must:
+
+- Instantly update UI
+- Not require reload
+- Not break active module state
+
+---
+
+# 5️⃣ GOVERNANCE LAYER INTERNATIONALIZATION
+
+All governance outputs must:
+
+- Use translation keys
+- Not return hardcoded English messages
+
+Example:
+
+Instead of:
+
+```
+Compliance Passed
+```
+
+Return:
+
+```
+t("governance.compliance_passed")
+```
+
+---
+
+# 6️⃣ AI OUTPUT LANGUAGE CONTROL
+
+Add to BrandBrief:
+
+```
+output_language
+```
+
+Options:
+
+- English
+- French
+- Spanish
+- German
+- Italian
+- Portuguese
+
+AI generation must adapt output language accordingly.
+
+If user selects:
+
+```
+Spanish
+```
+
+All generated content (logo prompt, guidelines, copy, positioning, reports) must be in Spanish.
+
+Governance remains language-agnostic internally.
+
+---
+
+# 7️⃣ TRANSLATION FALLBACK LOGIC
+
+If translation key missing:
+
+- Fallback to English
+- Log missing key warning (dev mode only)
+- Do not crash
+
+---
+
+# 8️⃣ PROHIBITIONS
+
+❌ No inline strings in components  
+❌ No hardcoded error messages  
+❌ No hardcoded governance alerts  
+❌ No hardcoded CTA text  
+❌ No hardcoded module titles  
+
+Everything must be key-driven.
+
+---
+
+# 9️⃣ VERSION TARGET
+
+Upgrade to:
+
+> AI BRAND OS v3.x — International Edition
+
+---
+
+# ✅ SUCCESS CRITERIA
+
+After implementation:
+
+- UI fully multilingual
+- All modules translated
+- Governance messages translated
+- Growth Brain reports translated
+- Positioning Engine outputs translated
+- User can switch language instantly
+- No hardcoded text remains
+- Adding a new language only requires adding a new JSON file
+
+---
+
+# END OF INSTRUCTION
+```
+
+---
+
+✅ Maintenant ton système est :
+
+- Gouverné
+- Sector-aware
+- Adaptive
+- Strategically positioned
+- Dual AI compatible
+- Multilingual
+
+À ce stade, on est clairement sur une plateforme.
+
+Si tu veux, prochaine étape stratégique :
+
+👉 On définit l’architecture multi-tenant (agence → clients)  
+👉 Ou on structure le pricing SaaS agence  
+👉 Ou on prépare la landing officielle  
+
+Tu es en train de construire quelque chose de sérieux.

@@ -20481,27 +20481,27 @@ var require_router = __commonJS({
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var methods = METHODS.map((method) => method.toLowerCase());
-    module.exports = Router20;
+    module.exports = Router21;
     module.exports.Route = Route;
-    function Router20(options) {
-      if (!(this instanceof Router20)) {
-        return new Router20(options);
+    function Router21(options) {
+      if (!(this instanceof Router21)) {
+        return new Router21(options);
       }
       const opts = options || {};
-      function router20(req, res, next) {
-        router20.handle(req, res, next);
+      function router21(req, res, next) {
+        router21.handle(req, res, next);
       }
-      Object.setPrototypeOf(router20, this);
-      router20.caseSensitive = opts.caseSensitive;
-      router20.mergeParams = opts.mergeParams;
-      router20.params = {};
-      router20.strict = opts.strict;
-      router20.stack = [];
-      return router20;
+      Object.setPrototypeOf(router21, this);
+      router21.caseSensitive = opts.caseSensitive;
+      router21.mergeParams = opts.mergeParams;
+      router21.params = {};
+      router21.strict = opts.strict;
+      router21.stack = [];
+      return router21;
     }
-    Router20.prototype = function() {
+    Router21.prototype = function() {
     };
-    Router20.prototype.param = function param(name, fn) {
+    Router21.prototype.param = function param(name, fn) {
       if (!name) {
         throw new TypeError("argument name is required");
       }
@@ -20521,7 +20521,7 @@ var require_router = __commonJS({
       params.push(fn);
       return this;
     };
-    Router20.prototype.handle = function handle(req, res, callback) {
+    Router21.prototype.handle = function handle(req, res, callback) {
       if (!callback) {
         throw new TypeError("argument callback is required");
       }
@@ -20648,7 +20648,7 @@ var require_router = __commonJS({
         }
       }
     };
-    Router20.prototype.use = function use(handler) {
+    Router21.prototype.use = function use(handler) {
       let offset = 0;
       let path3 = "/";
       if (typeof handler !== "function") {
@@ -20681,7 +20681,7 @@ var require_router = __commonJS({
       }
       return this;
     };
-    Router20.prototype.route = function route(path3) {
+    Router21.prototype.route = function route(path3) {
       const route2 = new Route(path3);
       const layer = new Layer(path3, {
         sensitive: this.caseSensitive,
@@ -20696,7 +20696,7 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      Router20.prototype[method] = function(path3) {
+      Router21.prototype[method] = function(path3) {
         const route = this.route(path3);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
@@ -20879,13 +20879,13 @@ var require_application = __commonJS({
     var compileTrust = require_utils3().compileTrust;
     var resolve = __require("node:path").resolve;
     var once = require_once();
-    var Router20 = require_router();
+    var Router21 = require_router();
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var app2 = exports = module.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router20 = null;
+      var router21 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -20894,13 +20894,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router20 === null) {
-            router20 = new Router20({
+          if (router21 === null) {
+            router21 = new Router21({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router20;
+          return router21;
         }
       });
     };
@@ -20971,15 +20971,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router20 = this.router;
+      var router21 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router20.use(path3, fn2);
+          return router21.use(path3, fn2);
         }
         debug(".use app under %s", path3);
         fn2.mountpath = path3;
         fn2.parent = this;
-        router20.use(path3, function mounted_app(req, res, next) {
+        router21.use(path3, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -23506,7 +23506,7 @@ var require_express = __commonJS({
     var EventEmitter = __require("node:events").EventEmitter;
     var mixin = require_merge_descriptors();
     var proto = require_application();
-    var Router20 = require_router();
+    var Router21 = require_router();
     var req = require_request();
     var res = require_response();
     exports = module.exports = createApplication;
@@ -23528,8 +23528,8 @@ var require_express = __commonJS({
     exports.application = proto;
     exports.request = req;
     exports.response = res;
-    exports.Route = Router20.Route;
-    exports.Router = Router20;
+    exports.Route = Router21.Route;
+    exports.Router = Router21;
     exports.json = bodyParser.json;
     exports.raw = bodyParser.raw;
     exports.static = require_serve_static();
@@ -28388,12 +28388,12 @@ var require_logger = __commonJS({
 });
 
 // src/app.ts
-var import_express20 = __toESM(require_express2(), 1);
+var import_express21 = __toESM(require_express2(), 1);
 var import_cors = __toESM(require_lib3(), 1);
 var import_pino_http = __toESM(require_logger(), 1);
 
 // src/routes/index.ts
-var import_express19 = __toESM(require_express2(), 1);
+var import_express20 = __toESM(require_express2(), 1);
 
 // src/routes/health.ts
 var import_express = __toESM(require_express2(), 1);
@@ -42924,8 +42924,127 @@ router6.post("/growth/channel-optimizer", (req, res) => {
 });
 var growth_default = router6;
 
-// src/routes/openai/enhance-prompts.ts
+// src/routes/ai-engine.ts
 var import_express7 = __toESM(require_express2(), 1);
+
+// src/lib/model-router.ts
+var OPENROUTER_MODELS = [
+  { id: "openai/gpt-4o", label: "GPT-4o" },
+  { id: "anthropic/claude-3-opus", label: "Claude 3 Opus" },
+  { id: "anthropic/claude-3.5-sonnet", label: "Claude Sonnet" },
+  { id: "mistralai/mistral-large", label: "Mistral Large" }
+];
+var DEFAULT_REPLIT_MODEL = "gpt-5";
+function readEngineHeaders(req) {
+  const rawMode = String(req.header("X-AI-Mode") ?? "").toLowerCase().trim();
+  const key = (req.header("X-OpenRouter-Key") ?? "").trim() || null;
+  const model = (req.header("X-AI-Model") ?? "").trim() || null;
+  const mode = rawMode === "professional_openrouter" && key ? "professional_openrouter" : "replit_managed";
+  return { mode, key, model };
+}
+function aiContextFromRequest(req) {
+  const { mode, key, model } = readEngineHeaders(req);
+  if (mode === "professional_openrouter" && key) {
+    const effectiveModel = model || OPENROUTER_MODELS[0].id;
+    const modelLabel = OPENROUTER_MODELS.find((m) => m.id === effectiveModel)?.label ?? effectiveModel;
+    return {
+      mode: "professional_openrouter",
+      model: effectiveModel,
+      label: `Professional \xB7 ${modelLabel}`,
+      client: new OpenAI({
+        apiKey: key,
+        baseURL: "https://openrouter.ai/api/v1",
+        defaultHeaders: {
+          "HTTP-Referer": "https://aibrandos.replit.app",
+          "X-Title": "AI BRAND OS"
+        }
+      })
+    };
+  }
+  return buildReplitContext();
+}
+function buildReplitContext() {
+  const apiKey = process.env["OPENAI_API_KEY"] ?? process.env["REPLIT_OPENAI_API_KEY"] ?? "";
+  return {
+    mode: "replit_managed",
+    model: DEFAULT_REPLIT_MODEL,
+    label: "Replit Managed",
+    client: new OpenAI({ apiKey })
+  };
+}
+async function validateOpenRouterKey(key) {
+  if (!key || key.length < 8) {
+    return { valid: false, reason: "Cl\xE9 manquante ou trop courte" };
+  }
+  try {
+    const r = await fetch("https://openrouter.ai/api/v1/auth/key", {
+      method: "GET",
+      headers: { Authorization: `Bearer ${key}` }
+    });
+    if (!r.ok) {
+      return {
+        valid: false,
+        reason: `OpenRouter a refus\xE9 la cl\xE9 (HTTP ${r.status})`
+      };
+    }
+    const body = await r.json();
+    return {
+      valid: true,
+      credit_left: body?.data?.limit_remaining ?? null,
+      rate_limit: body?.data?.rate_limit ?? null
+    };
+  } catch (err) {
+    return {
+      valid: false,
+      reason: err instanceof Error ? `Impossible de joindre OpenRouter : ${err.message}` : "Erreur r\xE9seau OpenRouter"
+    };
+  }
+}
+function describeContext(ctx) {
+  return { mode: ctx.mode, model: ctx.model, label: ctx.label };
+}
+
+// src/routes/ai-engine.ts
+var router7 = (0, import_express7.Router)();
+router7.get("/ai-engine/config", (req, res) => {
+  const ctx = aiContextFromRequest(req);
+  res.json({
+    active: describeContext(ctx),
+    available_models: OPENROUTER_MODELS,
+    modes: [
+      {
+        id: "replit_managed",
+        label: "Replit Managed",
+        description: "Mod\xE8les AI g\xE9r\xE9s par AI BRAND OS via l'infrastructure Replit. Aucune configuration n\xE9cessaire.",
+        requires_key: false
+      },
+      {
+        id: "professional_openrouter",
+        label: "Professional (OpenRouter)",
+        description: "Branchez votre cl\xE9 OpenRouter pour choisir librement le mod\xE8le (GPT-4o, Claude Opus, Sonnet, Mistral Large\u2026). Cl\xE9 BYOK : jamais stock\xE9e c\xF4t\xE9 serveur.",
+        requires_key: true
+      }
+    ],
+    governance_note: "La gouvernance (brand lock, sector engine, compliance, voice, claims, pricing, WCAG) est appliqu\xE9e quel que soit le moteur AI choisi."
+  });
+});
+router7.post("/ai-engine/validate", async (req, res) => {
+  const key = typeof req.body?.key === "string" ? req.body.key.trim() : "";
+  if (!key) {
+    res.status(400).json({ valid: false, reason: "key requis" });
+    return;
+  }
+  const result = await validateOpenRouterKey(key);
+  if (!result.valid) {
+    res.status(401).json(result);
+    return;
+  }
+  res.json(result);
+});
+var ai_engine_default = router7;
+
+// src/routes/openai/enhance-prompts.ts
+var import_express8 = __toESM(require_express2(), 1);
 
 // ../../node_modules/.pnpm/@anthropic-ai+sdk@0.88.0_zod@3.25.76/node_modules/@anthropic-ai/sdk/internal/tslib.mjs
 function __classPrivateFieldSet2(receiver, state, value, kind, f) {
@@ -50444,7 +50563,7 @@ function runGovernancePass(draft, options) {
 }
 
 // src/routes/openai/enhance-prompts.ts
-var router7 = (0, import_express7.Router)();
+var router8 = (0, import_express8.Router)();
 function estimateTokenCount(text) {
   const trimmed = text.trim();
   if (!trimmed) return 0;
@@ -50504,7 +50623,7 @@ var LOGO_STYLE_DESCRIPTIONS = {
   futuristic: "N\xE9on, d\xE9grad\xE9s dynamiques, formes fluides. Typographie angulaire. Palette: violet (#8B5CF6), cyan (#06B6D4), magenta (#EC4899).",
   ethnic: "Color\xE9, expressif, authentique. Motifs traditionnels, richesse d\xE9corative. Palette chaude: rouge, orange, or, terre."
 };
-router7.post("/openai/enhance-prompts", async (req, res) => {
+router8.post("/openai/enhance-prompts", async (req, res) => {
   const parsed = ExtendedBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "Invalid request body", details: parsed.error.errors });
@@ -50745,11 +50864,11 @@ Commence directement par: "R\xE9dige le contenu structur\xE9 de la charte graphi
 `);
   res.end();
 });
-var enhance_prompts_default = router7;
+var enhance_prompts_default = router8;
 
 // src/routes/openai/enhance-prompts-visual.ts
-var import_express8 = __toESM(require_express2(), 1);
-var router8 = (0, import_express8.Router)();
+var import_express9 = __toESM(require_express2(), 1);
+var router9 = (0, import_express9.Router)();
 var PRODUCT_ANGLES = {
   bijou: { front: "Vue de face", profile: "Vue de profil", three_quarter: "Vue en 3/4", macro: "Macro sertissage/pierres", top: "Vue de dessus" },
   v\u00EAtement: { front: "Vue de face", back: "Vue de dos", detail_collar: "D\xE9tail col", detail_seam: "D\xE9tail coutures", three_quarter: "Vue en 3/4" },
@@ -50877,7 +50996,7 @@ function sendEvent(res, data) {
 
 `);
 }
-router8.post("/openai/enhance-prompts-visual", async (req, res) => {
+router9.post("/openai/enhance-prompts-visual", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -51203,11 +51322,11 @@ Chaque prompt visuel doit inclure un champ "negative_prompt" avec les \xE9l\xE9m
   sendEvent(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_visual_default = router8;
+var enhance_prompts_visual_default = router9;
 
 // src/routes/openai/enhance-prompts-video.ts
-var import_express9 = __toESM(require_express2(), 1);
-var router9 = (0, import_express9.Router)();
+var import_express10 = __toESM(require_express2(), 1);
+var router10 = (0, import_express10.Router)();
 var TEASER_STYLE_MAP = {
   bijou: "luxe",
   luxe: "luxe",
@@ -51277,7 +51396,7 @@ function sendEvent2(res, data) {
 
 `);
 }
-router9.post("/openai/enhance-prompts-video", async (req, res) => {
+router10.post("/openai/enhance-prompts-video", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -51652,11 +51771,11 @@ Retourne UNIQUEMENT ce JSON:
   sendEvent2(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_video_default = router9;
+var enhance_prompts_video_default = router10;
 
 // src/routes/openai/enhance-prompts-ads.ts
-var import_express10 = __toESM(require_express2(), 1);
-var router10 = (0, import_express10.Router)();
+var import_express11 = __toESM(require_express2(), 1);
+var router11 = (0, import_express11.Router)();
 var STYLE_MAP = {
   bijou: "luxueux, \xE9l\xE9gant, raffin\xE9, intemporel",
   luxe: "premium, exclusif, sophistiqu\xE9",
@@ -51685,7 +51804,7 @@ function sendEvent3(res, data) {
 
 `);
 }
-router10.post("/openai/enhance-prompts-ads", async (req, res) => {
+router11.post("/openai/enhance-prompts-ads", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -52093,11 +52212,11 @@ Retourne UNIQUEMENT ce JSON:
   sendEvent3(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_ads_default = router10;
+var enhance_prompts_ads_default = router11;
 
 // src/routes/openai/enhance-prompts-sound.ts
-var import_express11 = __toESM(require_express2(), 1);
-var router11 = (0, import_express11.Router)();
+var import_express12 = __toESM(require_express2(), 1);
+var router12 = (0, import_express12.Router)();
 var JINGLE_STYLE_MAP = {
   bijou: "orchestral \xE9l\xE9gant \u2014 harpe, cordes, piano, 80-90 BPM, intemporel",
   luxe: "orchestral majestueux \u2014 cordes, cuivres, harpe, timbales, 70-80 BPM",
@@ -52151,7 +52270,7 @@ function sendEvent4(res, data) {
 
 `);
 }
-router11.post("/openai/enhance-prompts-sound", async (req, res) => {
+router12.post("/openai/enhance-prompts-sound", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -52483,11 +52602,11 @@ Retourne UNIQUEMENT ce JSON:
   sendEvent4(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_sound_default = router11;
+var enhance_prompts_sound_default = router12;
 
 // src/routes/openai/enhance-prompts-copy.ts
-var import_express12 = __toESM(require_express2(), 1);
-var router12 = (0, import_express12.Router)();
+var import_express13 = __toESM(require_express2(), 1);
+var router13 = (0, import_express13.Router)();
 function sendEvent5(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -52501,7 +52620,7 @@ function parseJsonSafe5(text) {
     return null;
   }
 }
-router12.post("/openai/enhance-prompts-copy", async (req, res) => {
+router13.post("/openai/enhance-prompts-copy", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -52787,10 +52906,10 @@ Les 10 avis doivent:
   sendEvent5(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_copy_default = router12;
+var enhance_prompts_copy_default = router13;
 
 // src/routes/openai/enhance-prompts-launch.ts
-var import_express13 = __toESM(require_express2(), 1);
+var import_express14 = __toESM(require_express2(), 1);
 
 // src/lib/market-config.ts
 var MARKET_CONFIGS = {
@@ -53076,7 +53195,7 @@ function convertPrice(priceEur, config) {
 }
 
 // src/routes/openai/enhance-prompts-launch.ts
-var router13 = (0, import_express13.Router)();
+var router14 = (0, import_express14.Router)();
 function sendEvent6(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -53100,7 +53219,7 @@ function parseJsonSafe6(text) {
     return null;
   }
 }
-router13.post("/openai/enhance-prompts-launch", async (req, res) => {
+router14.post("/openai/enhance-prompts-launch", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -53405,11 +53524,11 @@ Adapte les actions et contenus sp\xE9cifiquement au secteur "${sector}" et \xE0 
   sendEvent6(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_launch_default = router13;
+var enhance_prompts_launch_default = router14;
 
 // src/routes/openai/enhance-prompts-chatbot.ts
-var import_express14 = __toESM(require_express2(), 1);
-var router14 = (0, import_express14.Router)();
+var import_express15 = __toESM(require_express2(), 1);
+var router15 = (0, import_express15.Router)();
 function sendEvent7(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -53423,7 +53542,7 @@ function parseJsonSafe7(text) {
     return null;
   }
 }
-router14.post("/openai/enhance-prompts-chatbot", async (req, res) => {
+router15.post("/openai/enhance-prompts-chatbot", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -53660,11 +53779,11 @@ Les gestes commerciaux peuvent inclure: remboursement, renvoi, code promo ${code
   sendEvent7(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_chatbot_default = router14;
+var enhance_prompts_chatbot_default = router15;
 
 // src/routes/openai/enhance-prompts-upsell.ts
-var import_express15 = __toESM(require_express2(), 1);
-var router15 = (0, import_express15.Router)();
+var import_express16 = __toESM(require_express2(), 1);
+var router16 = (0, import_express16.Router)();
 function sendEvent8(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -53678,7 +53797,7 @@ function parseJsonSafe8(text) {
     return null;
   }
 }
-router15.post("/openai/enhance-prompts-upsell", async (req, res) => {
+router16.post("/openai/enhance-prompts-upsell", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -53964,11 +54083,11 @@ R\xE9ponds UNIQUEMENT avec un JSON valide, sans texte avant ou apr\xE8s:
   sendEvent8(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_upsell_default = router15;
+var enhance_prompts_upsell_default = router16;
 
 // src/routes/openai/enhance-prompts-performance.ts
-var import_express16 = __toESM(require_express2(), 1);
-var router16 = (0, import_express16.Router)();
+var import_express17 = __toESM(require_express2(), 1);
+var router17 = (0, import_express17.Router)();
 function sendEvent9(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -53992,7 +54111,7 @@ var SECTOR_DEFAULTS = {
   d\u00E9coration: { ca_target: 9e3, basket_target: 120, conv_target: 2, cac_target: 28, roas_target: 2.8, margin_percent: 58, max_cpa: 24, target_cpa: 16 },
   maroquinerie: { ca_target: 12e3, basket_target: 180, conv_target: 2.2, cac_target: 38, roas_target: 3, margin_percent: 62, max_cpa: 33, target_cpa: 19 }
 };
-router16.post("/openai/enhance-prompts-performance", async (req, res) => {
+router17.post("/openai/enhance-prompts-performance", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -54306,11 +54425,11 @@ R\xE9ponds UNIQUEMENT avec un JSON valide:
   sendEvent9(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_performance_default = router16;
+var enhance_prompts_performance_default = router17;
 
 // src/routes/openai/persona-variants.ts
-var import_express17 = __toESM(require_express2(), 1);
-var router17 = (0, import_express17.Router)();
+var import_express18 = __toESM(require_express2(), 1);
+var router18 = (0, import_express18.Router)();
 var PersonaVariantsBody = objectType({
   base_prompt: stringType().min(10),
   brand_name: stringType().min(1),
@@ -54319,7 +54438,7 @@ var PersonaVariantsBody = objectType({
   values: arrayType(stringType()).default([]),
   target_demographic: stringType().nullish()
 });
-router17.post("/openai/persona-variants", async (req, res) => {
+router18.post("/openai/persona-variants", async (req, res) => {
   const parsed = PersonaVariantsBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "Invalid request body", details: parsed.error.errors });
@@ -54341,12 +54460,12 @@ router17.post("/openai/persona-variants", async (req, res) => {
     res.status(500).json({ error: "Erreur lors de la g\xE9n\xE9ration des variantes personas" });
   }
 });
-var persona_variants_default = router17;
+var persona_variants_default = router18;
 
 // src/routes/openai/review-prompt.ts
-var import_express18 = __toESM(require_express2(), 1);
-var router18 = (0, import_express18.Router)();
-router18.post("/openai/review-prompt", async (req, res) => {
+var import_express19 = __toESM(require_express2(), 1);
+var router19 = (0, import_express19.Router)();
+router19.post("/openai/review-prompt", async (req, res) => {
   const {
     content,
     section_key,
@@ -54381,29 +54500,30 @@ router18.post("/openai/review-prompt", async (req, res) => {
     res.status(500).json({ error: "Erreur lors de la review IA." });
   }
 });
-var review_prompt_default = router18;
+var review_prompt_default = router19;
 
 // src/routes/index.ts
-var router19 = (0, import_express19.Router)();
-router19.use(governance_default);
-router19.use(memory_default);
-router19.use(positioning_default);
-router19.use(growth_default);
-router19.use(health_default);
-router19.use(scrape_gmb_default);
-router19.use(enhance_prompts_default);
-router19.use(enhance_prompts_visual_default);
-router19.use(enhance_prompts_video_default);
-router19.use(enhance_prompts_ads_default);
-router19.use(enhance_prompts_sound_default);
-router19.use(enhance_prompts_copy_default);
-router19.use(enhance_prompts_launch_default);
-router19.use(enhance_prompts_chatbot_default);
-router19.use(enhance_prompts_upsell_default);
-router19.use(enhance_prompts_performance_default);
-router19.use(persona_variants_default);
-router19.use(review_prompt_default);
-var routes_default = router19;
+var router20 = (0, import_express20.Router)();
+router20.use(governance_default);
+router20.use(memory_default);
+router20.use(positioning_default);
+router20.use(growth_default);
+router20.use(ai_engine_default);
+router20.use(health_default);
+router20.use(scrape_gmb_default);
+router20.use(enhance_prompts_default);
+router20.use(enhance_prompts_visual_default);
+router20.use(enhance_prompts_video_default);
+router20.use(enhance_prompts_ads_default);
+router20.use(enhance_prompts_sound_default);
+router20.use(enhance_prompts_copy_default);
+router20.use(enhance_prompts_launch_default);
+router20.use(enhance_prompts_chatbot_default);
+router20.use(enhance_prompts_upsell_default);
+router20.use(enhance_prompts_performance_default);
+router20.use(persona_variants_default);
+router20.use(review_prompt_default);
+var routes_default = router20;
 
 // src/lib/logger.ts
 var import_pino = __toESM(require_pino(), 1);
@@ -54413,7 +54533,13 @@ var logger = (0, import_pino.default)({
   redact: [
     "req.headers.authorization",
     "req.headers.cookie",
-    "res.headers['set-cookie']"
+    "res.headers['set-cookie']",
+    'req.headers["x-openrouter-key"]',
+    'req.headers["x-ai-key"]',
+    "*.apiKey",
+    "*.api_key",
+    "*.openRouterKey",
+    "*.openrouter_key"
   ],
   ...isProduction ? {} : {
     transport: {
@@ -54424,7 +54550,7 @@ var logger = (0, import_pino.default)({
 });
 
 // src/app.ts
-var app = (0, import_express20.default)();
+var app = (0, import_express21.default)();
 app.use(
   (0, import_pino_http.default)({
     logger,
@@ -54445,8 +54571,8 @@ app.use(
   })
 );
 app.use((0, import_cors.default)());
-app.use(import_express20.default.json());
-app.use(import_express20.default.urlencoded({ extended: true }));
+app.use(import_express21.default.json());
+app.use(import_express21.default.urlencoded({ extended: true }));
 app.use("/api", routes_default);
 var app_default = app;
 
