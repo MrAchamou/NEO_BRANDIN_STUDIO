@@ -89,7 +89,7 @@ Inclure dans chaque bundle JSON un champ "price_breakdown" :
 Tout écart entre le calcul et le prix annoncé sera rejeté par le Pricing Validator.`;
 
   const outputLang = resolveLang(req);
-  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert en stratégie e-commerce et maximisation du panier moyen pour RoboNeo.com.${pricingDirective}
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert en stratégie e-commerce et maximisation du panier moyen pour INGENIERIE DIGITALE.${pricingDirective}
 Ta mission: générer des stratégies d'upsell et cross-sell PRÉCISES et ACTIONNABLES pour augmenter le chiffre d'affaires.
 
 ${marketCtx}
@@ -137,7 +137,7 @@ Réponds UNIQUEMENT avec un JSON valide, sans texte avant ou après:
       "margin": "XX%",
       "bundle_discount": 15,
       "placement": "Page produit / Panier / Post-achat",
-      "visual_prompt": "Prompt détaillé pour générer le visuel produit sur RoboNeo. Format carré 1080x1080px, fond épuré, couleurs respectant la charte ${brand_name}, style cohérent avec la marque."
+      "visual_prompt": "Prompt détaillé pour générer le visuel produit sur la plateforme IA de votre choix. Format carré 1080x1080px, fond épuré, couleurs respectant la charte ${brand_name}, style cohérent avec la marque."
     }
   ]
 }`,
@@ -163,7 +163,7 @@ Réponds UNIQUEMENT avec un JSON valide, sans texte avant ou après:
       "savings": 0,
       "cta": "Texte du bouton d'achat",
       "best_for": "Pour qui ce bundle est idéal",
-      "visual_prompt": "Prompt pour créer le visuel bundle sur RoboNeo. Fond épuré, produits côte à côte, format 1080x1080px."
+      "visual_prompt": "Prompt pour créer le visuel bundle sur la plateforme IA cible. Fond épuré, produits côte à côte, format 1080x1080px."
     }
   ]
 }

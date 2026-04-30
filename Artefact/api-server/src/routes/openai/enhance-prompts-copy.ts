@@ -68,7 +68,7 @@ router.post("/openai/enhance-prompts-copy", async (req, res) => {
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? undefined);
   const lockHeader = brandLockHeader(lock);
   const outputLang = resolveLang(req);
-  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert copywriter et stratège de contenu pour RoboNeo.com.
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert copywriter et stratège de contenu pour INGENIERIE DIGITALE.
 Tu génères du contenu textuel ultra-professionnel, optimisé conversion, en français impeccable.
 Contexte de la marque:
 - Marque: ${brand_name}

@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { getEngineHeaders } from "@/lib/ai-engine";
+import { useModuleReports } from "@/context/module-reports-context";
+import { ExportModuleReportButton } from "@/components/export-report-button";
+import { buildSectionsReport } from "@/lib/module-report-builder";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -245,6 +248,7 @@ type FormValues = z.infer<typeof formSchema>;
 export default function Module03() {
   const { toast } = useToast();
   const { brief, updateBrief } = useBrand();
+  const { setReport, clearReport } = useModuleReports();
   const [sections, setSections] = useState<SectionResult[]>([]);
   const [streamState, setStreamState] = useState<StreamState>({ sections: {}, activeSection: null });
   const [isGenerating, setIsGenerating] = useState(false);
@@ -340,6 +344,16 @@ export default function Module03() {
   };
 
   const allDone = sections.length === 6;
+
+  const moduleReport = useMemo(() => {
+    if (!sections.length) return null;
+    return buildSectionsReport("video-content", brief, sections, { subPromptLabels: SUB_LABELS });
+  }, [sections, brief]);
+
+  useEffect(() => {
+    if (moduleReport) setReport("video-content", moduleReport);
+    else clearReport("video-content");
+  }, [moduleReport, setReport, clearReport]);
 
   const handleDownloadTXT = () => {
     if (!sections.length) return;
@@ -463,6 +477,7 @@ export default function Module03() {
                 <>
                   <Button variant="secondary" onClick={handleDownloadTXT}><FileText className="w-4 h-4 mr-2" /> TXT</Button>
                   <Button variant="luxury" onClick={handleDownloadJSON}><Download className="w-4 h-4 mr-2" /> JSON</Button>
+                  <ExportModuleReportButton report={moduleReport} variant="luxury" />
                 </>
               )}
             </div>
@@ -540,7 +555,7 @@ export default function Module03() {
           {allDone && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-4 rounded-lg border border-green-500/20 bg-green-500/5 text-center">
               <Check className="w-5 h-5 text-green-500 mx-auto mb-2" />
-              <p className="text-sm font-medium text-green-400">Génération terminée — 14 prompts vidéo prêts pour RoboNeo.com</p>
+              <p className="text-sm font-medium text-green-400">Génération terminée — 14 prompts vidéo prêts à l'emploi</p>
             </motion.div>
           )}
         </motion.div>

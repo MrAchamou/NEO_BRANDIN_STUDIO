@@ -5,7 +5,7 @@
     "subtitle": "Brand Operating System — Governance · Intelligence · Differentiation · Scale.",
     "description": "Estrutura, governa, industrializa e escala a criação de marca.",
     "version_label": "v3.0.0",
-    "powered_by": "Powered by RoboNeo.com"
+    "powered_by": "Powered by INGENIERIE DIGITALE"
   },
   "languages": {
     "en": "English",
@@ -180,6 +180,16 @@
     "invalid_key": "Chave inválida.",
     "missing_field": "Campo obrigatório em falta: {{field}}.",
     "server_error": "Erro do servidor. Tente novamente mais tarde."
+  },
+  "export": {
+    "module_button": "Exportar dossier",
+    "all_button": "Exportar tudo",
+    "module_downloaded_title": "Dossier transferido",
+    "module_downloaded_desc": "O dossier privado do módulo {{name}} está pronto.",
+    "all_downloaded_title": "Dossier completo transferido",
+    "all_downloaded_desc": "Compilação de {{count}} módulo(s) pronta para consulta.",
+    "empty_title": "Nenhum módulo para exportar",
+    "empty_desc": "Gera primeiro os prompts de pelo menos um módulo para ativar a exportação combinada."
   },
   "common": {
     "yes": "Sim",

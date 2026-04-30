@@ -1,5 +1,5 @@
 /**
- * Shared prompt utilities for all RoboNeo generation routes.
+ * Shared prompt utilities for all INGENIERIE DIGITALE generation routes.
  * Implements: Chain-of-Thought, Few-Shot Calibration, Negative Prompts, Quality Review
  * Governance-aware : injecte le Brand Lock (Fact Lock + Compliance + Voice + Mode)
  * dans tous les system prompts.
@@ -87,7 +87,7 @@ export function buildSystemPrompt(brief: EnhancedBrief, moduleLabel: string): st
     ? `\n\n⚠️ RÈGLE ABSOLUE — COULEURS CLIENT SACRÉES ⚠️\nLe client a défini ces couleurs pour sa marque: ${brief.colors}\nCes couleurs sont IMMUABLES et ont PRIORITÉ ABSOLUE sur toute palette sectorielle.\nTu DOIS les utiliser telles quelles dans tous les visuels et prompts générés.\nL'auto-détection de couleurs par secteur est DÉSACTIVÉE pour cette session.`
     : "";
 
-  return `Tu es un expert senior en création de prompts créatifs pour RoboNeo.com — la plateforme d'IA générative pour créer des assets de marque professionnels.
+  return `Tu es un expert senior en création de prompts créatifs pour INGENIERIE DIGITALE — la plateforme d'IA générative pour créer des assets de marque professionnels.
 
 ═══ IDENTITÉ DE LA MARQUE ═══
 • Nom: ${brief.brand_name}
@@ -209,7 +209,7 @@ function buildReviewPrompt(
       ? `Audience: ${brief.target_demographic || (brief as any).target_audience}` : "",
   ].filter(Boolean).join(" | ");
 
-  return `You are ${agentRole} for RoboNeo.com.
+  return `You are ${agentRole} for INGENIERIE DIGITALE.
 
 BRAND: ${brief.brand_name} | Sector: ${brief.sector} | Tone: ${brief.tone} | Values: ${valuesStr}${extras ? ` | ${extras}` : ""}
 Section: ${sectionKey}
@@ -345,7 +345,7 @@ function buildGptPassPrompt(
     brief.price           ? `Price: ${brief.price}` : "",
   ].filter(Boolean).join(" | ");
 
-  return `You are GPT Optimizer, a senior AI prompt architect for RoboNeo.com.
+  return `You are GPT Optimizer, a senior AI prompt architect for INGENIERIE DIGITALE.
 
 BRAND: ${brief.brand_name} | Sector: ${brief.sector} | Tone: ${brief.tone} | Values: ${valuesStr}${extras ? ` | ${extras}` : ""}
 Section: ${sectionKey}
@@ -382,7 +382,7 @@ function buildClaudeFinalPrompt(
     brief.product_name    ? `Product: ${brief.product_name}` : "",
   ].filter(Boolean).join(" | ");
 
-  return `You are Claude Final Auditor, a brand voice expert, creative strategist and completeness reviewer for RoboNeo.com.
+  return `You are Claude Final Auditor, a brand voice expert, creative strategist and completeness reviewer for INGENIERIE DIGITALE.
 
 BRAND: ${brief.brand_name} | Sector: ${brief.sector} | Tone: ${brief.tone} | Values: ${valuesStr}${extras ? ` | ${extras}` : ""}
 Section: ${sectionKey}

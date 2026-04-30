@@ -1,5 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { getEngineHeaders } from "@/lib/ai-engine";
+import { useModuleReports } from "@/context/module-reports-context";
+import { ExportModuleReportButton } from "@/components/export-report-button";
+import { buildModule01Report } from "@/lib/module-report-builder";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -200,6 +203,7 @@ const adaptPromptForModel = (modelName: string, sectionKey: SectionKey, prompt: 
 export default function Module01() {
   const { toast } = useToast();
   const { brief, updateBrief } = useBrand();
+  const { setReport, clearReport } = useModuleReports();
   const [result, setResult] = useState<GenerationResult | null>(null);
   const [streamState, setStreamState] = useState<StreamState>({ prompts: {}, reviews: {}, activeSection: null, completedSections: new Set() });
   const [isGenerating, setIsGenerating] = useState(false);
@@ -472,6 +476,16 @@ export default function Module01() {
     setTimeout(() => setCopiedStates((p) => ({ ...p, [id]: false })), 2000);
   };
 
+  const moduleReport = useMemo(() => {
+    if (!result) return null;
+    return buildModule01Report(brief, result, AI_MODEL_RECOMMENDATIONS as any);
+  }, [result, brief]);
+
+  useEffect(() => {
+    if (moduleReport) setReport("brand-identity", moduleReport);
+    else clearReport("brand-identity");
+  }, [moduleReport, setReport, clearReport]);
+
   const handleDownloadTXT = () => {
     if (!result) return;
     const txt = generateTxtExport(result);
@@ -614,6 +628,7 @@ export default function Module01() {
                 <>
                   <Button variant="secondary" onClick={handleDownloadTXT}><FileText className="w-4 h-4 mr-2" /> TXT</Button>
                   <Button variant="luxury" onClick={handleDownloadJSON}><Download className="w-4 h-4 mr-2" /> JSON</Button>
+                  <ExportModuleReportButton report={moduleReport} variant="luxury" />
                 </>
               )}
             </div>

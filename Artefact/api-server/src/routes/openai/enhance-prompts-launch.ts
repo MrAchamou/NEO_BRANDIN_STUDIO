@@ -154,7 +154,7 @@ Architecture conversion-first :
 • CTA répété 2-3 fois, ton mesuré ; jamais d'exclamation excessive`;
 
   const outputLang = resolveLang(req);
-  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert senior en architecture de landing pages haute conversion, développeur web et stratège de lancement pour RoboNeo.com.
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert senior en architecture de landing pages haute conversion, développeur web et stratège de lancement pour INGENIERIE DIGITALE.
 
 ═══ GROWTH MODE ACTIF : ${profile.label.toUpperCase()} ═══
 ${profile.description}

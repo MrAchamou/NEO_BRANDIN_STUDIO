@@ -102,7 +102,7 @@ router.post("/openai/enhance-prompts-chatbot", async (req, res) => {
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? undefined);
   const lockHeader = brandLockHeader(lock);
   const outputLang = resolveLang(req);
-  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert en service client, gestion de communauté et chatbot marketing pour RoboNeo.com.
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert en service client, gestion de communauté et chatbot marketing pour INGENIERIE DIGITALE.
 Tu génères des scripts de service client ultra-professionnels, empathiques et orientés conversion.
 
 ${marketCtx}

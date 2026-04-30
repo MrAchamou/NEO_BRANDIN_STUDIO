@@ -344,7 +344,7 @@ export function generateTxtExport(result: GenerationResult): string {
   const b = result.brand;
   
   return `================================================================================
-PROMPTS POUR ROBONEO.COM
+PROMPTS GÉNÉRÉS
 Marque: ${b.brand_name} | Générée le: ${date}
 ================================================================================
 

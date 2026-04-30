@@ -50127,7 +50127,7 @@ Le client a d\xE9fini ces couleurs pour sa marque: ${brief.colors}
 Ces couleurs sont IMMUABLES et ont PRIORIT\xC9 ABSOLUE sur toute palette sectorielle.
 Tu DOIS les utiliser telles quelles dans tous les visuels et prompts g\xE9n\xE9r\xE9s.
 L'auto-d\xE9tection de couleurs par secteur est D\xC9SACTIV\xC9E pour cette session.` : "";
-  return `Tu es un expert senior en cr\xE9ation de prompts cr\xE9atifs pour RoboNeo.com \u2014 la plateforme d'IA g\xE9n\xE9rative pour cr\xE9er des assets de marque professionnels.
+  return `Tu es un expert senior en cr\xE9ation de prompts cr\xE9atifs pour INGENIERIE DIGITALE \u2014 la plateforme d'IA g\xE9n\xE9rative pour cr\xE9er des assets de marque professionnels.
 
 \u2550\u2550\u2550 IDENTIT\xC9 DE LA MARQUE \u2550\u2550\u2550
 \u2022 Nom: ${brief.brand_name}
@@ -50216,7 +50216,7 @@ function buildGptPassPrompt(content, brief, sectionKey) {
     brief.product_name ? `Product: ${brief.product_name}` : "",
     brief.price ? `Price: ${brief.price}` : ""
   ].filter(Boolean).join(" | ");
-  return `You are GPT Optimizer, a senior AI prompt architect for RoboNeo.com.
+  return `You are GPT Optimizer, a senior AI prompt architect for INGENIERIE DIGITALE.
 
 BRAND: ${brief.brand_name} | Sector: ${brief.sector} | Tone: ${brief.tone} | Values: ${valuesStr}${extras ? ` | ${extras}` : ""}
 Section: ${sectionKey}
@@ -50246,7 +50246,7 @@ function buildClaudeFinalPrompt(content, brief, sectionKey) {
     brief.target_demographic || brief.target_audience ? `Audience: ${brief.target_demographic ?? brief.target_audience}` : "",
     brief.product_name ? `Product: ${brief.product_name}` : ""
   ].filter(Boolean).join(" | ");
-  return `You are Claude Final Auditor, a brand voice expert, creative strategist and completeness reviewer for RoboNeo.com.
+  return `You are Claude Final Auditor, a brand voice expert, creative strategist and completeness reviewer for INGENIERIE DIGITALE.
 
 BRAND: ${brief.brand_name} | Sector: ${brief.sector} | Tone: ${brief.tone} | Values: ${valuesStr}${extras ? ` | ${extras}` : ""}
 Section: ${sectionKey}
@@ -50958,7 +50958,7 @@ router8.post("/openai/enhance-prompts", async (req, res) => {
     {
       key: "logo",
       agent: "Brand Design Agent / Product Display Agent",
-      systemPrompt: `You are an expert in logo generation prompts for RoboNeo.com. From the reference structure provided (golden example adapted to the brand), generate an ULTRA-PRECISE prompt, structured and ready for use in image generation tools (Midjourney, DALL-E 3, Stable Diffusion XL). Respect EXACTLY the 8 sections: Artistic Direction, Recommended Typography, Symbol/Icon, Color Palette, 4 required variations, Technical Specifications, NEGATIVE_PROMPT, TECHNICAL PARAMETERS. Do NOT summarize or shorten \u2014 each section must be as detailed as the reference model. Write the entire prompt EXCLUSIVELY IN ENGLISH.`,
+      systemPrompt: `You are an expert in logo generation prompts for INGENIERIE DIGITALE. From the reference structure provided (golden example adapted to the brand), generate an ULTRA-PRECISE prompt, structured and ready for use in image generation tools (Midjourney, DALL-E 3, Stable Diffusion XL). Respect EXACTLY the 8 sections: Artistic Direction, Recommended Typography, Symbol/Icon, Color Palette, 4 required variations, Technical Specifications, NEGATIVE_PROMPT, TECHNICAL PARAMETERS. Do NOT summarize or shorten \u2014 each section must be as detailed as the reference model. Write the entire prompt EXCLUSIVELY IN ENGLISH.`,
       userPrompt: logoOptimizedPrompt
     },
     {
@@ -50972,7 +50972,7 @@ router8.post("/openai/enhance-prompts", async (req, res) => {
       agent: "Brand Design Agent",
       userPrompt: `MODULE 01.3 \u2014 TYPOGRAPHY SYSTEM
 
-Generate an ULTRA-PRECISE RoboNeo prompt for the typography system of ${brand_name}.
+Generate an ULTRA-PRECISE INGENIERIE DIGITALE prompt for the typography system of ${brand_name}.
 
 PROMPT STRUCTURE TO GENERATE:
 1. Heading font (h1/h2/h3): name + Google Fonts URL + weights + sizes (h1: 48px, h2: 36px, h3: 24px)
@@ -51004,7 +51004,7 @@ Start directly with: "Generate the complete typography system for ${brand_name}.
 
 \u26A0\uFE0F NOTE TECHNIQUE IMPORTANTE : Un LLM g\xE9n\xE8re du TEXTE structur\xE9, pas un fichier binaire PDF. Ce prompt produit le contenu textuel et structur\xE9 d'une charte graphique, destin\xE9 \xE0 \xEAtre mis en page par un outil de publication (Canva, Adobe InDesign, Figma, ou un script de g\xE9n\xE9ration PDF). Le fichier PDF final sera cr\xE9\xE9 en post-production \xE0 partir de ce contenu.
 
-G\xE9n\xE8re un prompt RoboNeo ULTRA-PR\xC9CIS pour r\xE9diger le CONTENU TEXTUEL STRUCTUR\xC9 de la charte graphique de ${brand_name} (le contenu servira de base \xE0 la g\xE9n\xE9ration PDF en post-production).
+G\xE9n\xE8re un prompt INGENIERIE DIGITALE ULTRA-PR\xC9CIS pour r\xE9diger le CONTENU TEXTUEL STRUCTUR\xC9 de la charte graphique de ${brand_name} (le contenu servira de base \xE0 la g\xE9n\xE9ration PDF en post-production).
 
 STRUCTURE DU PROMPT \xC0 G\xC9N\xC9RER:
 10 r\xE8gles graphiques obligatoires (R01 \xE0 R10):
@@ -51306,7 +51306,7 @@ router9.post("/openai/enhance-prompts-visual", async (req, res) => {
       agent: "Product Display Agent / Image Generation",
       buildUserPrompt: () => {
         const anglesList = Object.entries(angles).map(([k, v]) => `"${k}": "${v}"`).join(", ");
-        return `Tu es un expert RoboNeo en photographie produit professionnelle studio.
+        return `Tu es un expert INGENIERIE DIGITALE en photographie produit professionnelle studio.
 
 G\xE9n\xE8re exactement 5 prompts photo produit studio pour "${product_name}" (${product_type}) \u2014 Marque: ${brand_name} (${sector}).
 Couleurs: ${product_colors.join(", ") || "naturelles"}
@@ -51332,7 +51332,7 @@ Retourne UNIQUEMENT un objet JSON valide (sans markdown, sans texte):
       key: "lifestyle_photos",
       label: "Photos Lifestyle \u2014 3 Formats",
       agent: "Image Generation / Background Change",
-      buildUserPrompt: () => `Tu es un expert RoboNeo en photographie lifestyle pour r\xE9seaux sociaux premium.
+      buildUserPrompt: () => `Tu es un expert INGENIERIE DIGITALE en photographie lifestyle pour r\xE9seaux sociaux premium.
 
 G\xE9n\xE8re 3 prompts lifestyle pour "${product_name}" \u2014 Marque: ${brand_name} (${sector}).
 Audience: ${target_audience}
@@ -51372,7 +51372,7 @@ Retourne UNIQUEMENT un JSON valide:
         const isTransparent = (m) => m.includes("verre") || m.includes("cristal") || m.includes("transparent") || m.includes("acrylique");
         const focusStack0 = isTransparent(mat0Lower) ? "focus stacking: ON (5-7 couches, empilage logiciel Helicon Focus) \u2014 obligatoire pour les mat\xE9riaux transparents avec profondeur optique" : "mise au point unique sur la texture de surface, focus stacking: optionnel";
         const focusStack1 = isTransparent(mat1Lower) ? "focus stacking: ON (5-7 couches, empilage logiciel Helicon Focus) \u2014 obligatoire pour les mat\xE9riaux transparents avec profondeur optique" : "mise au point unique sur la texture de surface, focus stacking: optionnel";
-        return `Tu es un expert RoboNeo en photographie macro et texture mat\xE9riaux.
+        return `Tu es un expert INGENIERIE DIGITALE en photographie macro et texture mat\xE9riaux.
 
 G\xE9n\xE8re 2 prompts macro texture pour les mat\xE9riaux de "${product_name}" \u2014 Marque: ${brand_name}.
 
@@ -51402,7 +51402,7 @@ Retourne UNIQUEMENT un JSON valide:
       key: "before_after",
       label: "Before / After Studio",
       agent: "Portrait Retouching Agent",
-      buildUserPrompt: () => `Tu es un expert RoboNeo en cr\xE9ation de visuels Before/After pour le marketing.
+      buildUserPrompt: () => `Tu es un expert INGENIERIE DIGITALE en cr\xE9ation de visuels Before/After pour le marketing.
 
 G\xE9n\xE8re un set Before/After pour "${product_name}" \u2014 Marque: ${brand_name} (${sector}).
 
@@ -51436,7 +51436,7 @@ Retourne UNIQUEMENT un JSON valide:
       key: "virtual_tryon",
       label: "Virtual Try-On / Lookbook \u2014 2 Mod\xE8les",
       agent: "AI Wardrobe / Fashion Editorial",
-      buildUserPrompt: () => `Tu es un expert RoboNeo en direction artistique lookbook et photographie fashion editorial.
+      buildUserPrompt: () => `Tu es un expert INGENIERIE DIGITALE en direction artistique lookbook et photographie fashion editorial.
 
 G\xE9n\xE8re 2 prompts de photographie fashion editorial (style lookbook magazine) pour "${product_name}" (${tryonCategory}) \u2014 Marque: ${brand_name}.
 Note: il s'agit de photographie fashion/lookbook stylis\xE9e, pas de virtual try-on technologique au sens IA.
@@ -51466,7 +51466,7 @@ Retourne UNIQUEMENT un JSON valide:
       key: "carousel",
       label: `Carrousel ${carouselStyle.toUpperCase()} \u2014 5 Slides`,
       agent: "AI Poster Agent",
-      buildUserPrompt: () => `Tu es un expert RoboNeo en design de carrousels Instagram pour le marketing de contenu premium.
+      buildUserPrompt: () => `Tu es un expert INGENIERIE DIGITALE en design de carrousels Instagram pour le marketing de contenu premium.
 
 G\xE9n\xE8re 5 prompts visuels pour un carrousel "${carouselStyle.toUpperCase()}" pour "${product_name}" \u2014 Marque: ${brand_name} (${sector}).
 
@@ -51715,7 +51715,7 @@ Cible: ${target_audience}${yearLine} | Code promo: ${promoCode} | Dur\xE9e promo
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
   const lockHeader = brandLockHeader(lock);
   const outputLang = resolveLang(req);
-  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}You are a senior expert in advertising script creation and video generation prompts for RoboNeo.com.
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}You are a senior expert in advertising script creation and video generation prompts for INGENIERIE DIGITALE.
 LANGUAGE RULES (strictly enforced):
 \u2022 Ad scripts and voice-over texts (sections "scripts" and "voice_over"): write IN FRENCH \u2014 punchy, adapted to the ${sector} sector, direct copywriting
 \u2022 Video generation prompts (sections "short_videos", "long_video", "teaser", "thumbnails"): write EXCLUSIVELY IN ENGLISH \u2014 native vocabulary for Runway Gen-3, Pika, Kling, Midjourney, DALL-E 3
@@ -52117,7 +52117,7 @@ Couleurs: ${colorStr} | Code promo: ${promoCode} | Remise: ${discount}% | Livrai
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
   const lockHeader = brandLockHeader(lock);
   const outputLang = resolveLang(req);
-  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}You are a senior expert in digital advertising and creative prompt generation for RoboNeo.com.
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}You are a senior expert in digital advertising and creative prompt generation for INGENIERIE DIGITALE.
 You generate ultra-precise creative prompts (Meta Ads, Google Display, TikTok, Carousel) and ready-to-use ad copy.
 Always return ONLY valid JSON, without markdown, without text before or after.
 LANGUAGE RULES (strictly enforced):
@@ -52923,7 +52923,7 @@ router13.post("/openai/enhance-prompts-copy", async (req, res) => {
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
   const lockHeader = brandLockHeader(lock);
   const outputLang = resolveLang(req);
-  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert copywriter et strat\xE8ge de contenu pour RoboNeo.com.
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert copywriter et strat\xE8ge de contenu pour INGENIERIE DIGITALE.
 Tu g\xE9n\xE8res du contenu textuel ultra-professionnel, optimis\xE9 conversion, en fran\xE7ais impeccable.
 Contexte de la marque:
 - Marque: ${brand_name}
@@ -53583,7 +53583,7 @@ Architecture conversion-first :
 \u2022 Une mention d'urgence MAX, bas\xE9e sur un fait r\xE9el (offre dat\xE9e, \xE9dition limit\xE9e d\xE9clar\xE9e)
 \u2022 CTA r\xE9p\xE9t\xE9 2-3 fois, ton mesur\xE9 ; jamais d'exclamation excessive`;
   const outputLang = resolveLang(req);
-  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert senior en architecture de landing pages haute conversion, d\xE9veloppeur web et strat\xE8ge de lancement pour RoboNeo.com.
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert senior en architecture de landing pages haute conversion, d\xE9veloppeur web et strat\xE8ge de lancement pour INGENIERIE DIGITALE.
 
 \u2550\u2550\u2550 GROWTH MODE ACTIF : ${profile.label.toUpperCase()} \u2550\u2550\u2550
 ${profile.description}
@@ -53865,7 +53865,7 @@ router15.post("/openai/enhance-prompts-chatbot", async (req, res) => {
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
   const lockHeader = brandLockHeader(lock);
   const outputLang = resolveLang(req);
-  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert en service client, gestion de communaut\xE9 et chatbot marketing pour RoboNeo.com.
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert en service client, gestion de communaut\xE9 et chatbot marketing pour INGENIERIE DIGITALE.
 Tu g\xE9n\xE8res des scripts de service client ultra-professionnels, empathiques et orient\xE9s conversion.
 
 ${marketCtx}
@@ -54123,7 +54123,7 @@ Inclure dans chaque bundle JSON un champ "price_breakdown" :
   }
 Tout \xE9cart entre le calcul et le prix annonc\xE9 sera rejet\xE9 par le Pricing Validator.`;
   const outputLang = resolveLang(req);
-  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert en strat\xE9gie e-commerce et maximisation du panier moyen pour RoboNeo.com.${pricingDirective}
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert en strat\xE9gie e-commerce et maximisation du panier moyen pour INGENIERIE DIGITALE.${pricingDirective}
 Ta mission: g\xE9n\xE9rer des strat\xE9gies d'upsell et cross-sell PR\xC9CISES et ACTIONNABLES pour augmenter le chiffre d'affaires.
 
 ${marketCtx}
@@ -54170,7 +54170,7 @@ R\xE9ponds UNIQUEMENT avec un JSON valide, sans texte avant ou apr\xE8s:
       "margin": "XX%",
       "bundle_discount": 15,
       "placement": "Page produit / Panier / Post-achat",
-      "visual_prompt": "Prompt d\xE9taill\xE9 pour g\xE9n\xE9rer le visuel produit sur RoboNeo. Format carr\xE9 1080x1080px, fond \xE9pur\xE9, couleurs respectant la charte ${brand_name}, style coh\xE9rent avec la marque."
+      "visual_prompt": "Prompt d\xE9taill\xE9 pour g\xE9n\xE9rer le visuel produit sur la plateforme IA de votre choix. Format carr\xE9 1080x1080px, fond \xE9pur\xE9, couleurs respectant la charte ${brand_name}, style coh\xE9rent avec la marque."
     }
   ]
 }`
@@ -54196,7 +54196,7 @@ R\xE9ponds UNIQUEMENT avec un JSON valide, sans texte avant ou apr\xE8s:
       "savings": 0,
       "cta": "Texte du bouton d'achat",
       "best_for": "Pour qui ce bundle est id\xE9al",
-      "visual_prompt": "Prompt pour cr\xE9er le visuel bundle sur RoboNeo. Fond \xE9pur\xE9, produits c\xF4te \xE0 c\xF4te, format 1080x1080px."
+      "visual_prompt": "Prompt pour cr\xE9er le visuel bundle sur la plateforme IA cible. Fond \xE9pur\xE9, produits c\xF4te \xE0 c\xF4te, format 1080x1080px."
     }
   ]
 }
@@ -54450,7 +54450,7 @@ Valeurs verrouill\xE9es :
   \u2022 CPA cible dynamique = ${profit.target_cpa_dynamic ?? "n/a"}
 R\xC8GLE : Ces chiffres sont la SEULE source de v\xE9rit\xE9 financi\xE8re. Tout autre nombre que tu produis (ROAS, pr\xE9visions CA, etc.) doit \xEAtre coh\xE9rent avec eux. Tout chiffre absent doit \xEAtre marqu\xE9 "n/a" dans ta r\xE9ponse, jamais invent\xE9.`;
   const outputLang = resolveLang(req);
-  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert en performance marketing e-commerce et analyse de donn\xE9es pour RoboNeo.com.${profitBlock}
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert en performance marketing e-commerce et analyse de donn\xE9es pour INGENIERIE DIGITALE.${profitBlock}
 Ta mission: cr\xE9er des outils de tracking et d'optimisation PR\xC9CIS et ACTIONNABLES pour maximiser le ROI.
 
 ${marketCtx}

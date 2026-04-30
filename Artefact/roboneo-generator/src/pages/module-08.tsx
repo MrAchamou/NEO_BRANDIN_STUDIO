@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { getEngineHeaders } from "@/lib/ai-engine";
+import { useModuleReports } from "@/context/module-reports-context";
+import { ExportModuleReportButton } from "@/components/export-report-button";
+import { buildSectionsReport } from "@/lib/module-report-builder";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Copy, Download, Check, Brain,
@@ -428,6 +431,7 @@ function NegativeCommentsView({ data, streamBuffer, streaming, isActive }: {
 
 export default function Module08() {
   const { toast } = useToast();
+  const { setReport, clearReport } = useModuleReports();
   const [sections, setSections] = useState<SectionResult[]>([]);
   const [streamState, setStreamState] = useState<StreamState>({ sections: {}, activeSection: null });
   const [isGenerating, setIsGenerating] = useState(false);
@@ -563,6 +567,16 @@ export default function Module08() {
     a.click();
   };
 
+  const moduleReport = useMemo(() => {
+    if (!sections.length) return null;
+    return buildSectionsReport("chatbot-cs", brief, sections);
+  }, [sections, brief]);
+
+  useEffect(() => {
+    if (moduleReport) setReport("chatbot-cs", moduleReport);
+    else clearReport("chatbot-cs");
+  }, [moduleReport, setReport, clearReport]);
+
   const handleDownloadTXT = () => {
     if (!sections.length) return;
     let txt = `================================================================================\nCHATBOT SCRIPT MODULE 08 — NEO BRANDING STUDIO\nMarque: ${brief.brand_name} | Produit: ${brief.product_name} | Généré le: ${new Date().toLocaleString("fr-FR")}\n================================================================================\n\n`;
@@ -619,6 +633,7 @@ export default function Module08() {
                   <Button variant="outline" size="sm" onClick={handleDownloadTXT}>
                     <Download className="w-4 h-4 mr-1" /> TXT
                   </Button>
+                  <ExportModuleReportButton report={moduleReport} variant="luxury" size="sm" />
                 </>
               )}
             </div>

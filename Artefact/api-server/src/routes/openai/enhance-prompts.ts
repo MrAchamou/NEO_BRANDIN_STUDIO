@@ -129,7 +129,7 @@ router.post("/openai/enhance-prompts", async (req, res) => {
     {
       key: "logo",
       agent: "Brand Design Agent / Product Display Agent",
-      systemPrompt: `You are an expert in logo generation prompts for RoboNeo.com. From the reference structure provided (golden example adapted to the brand), generate an ULTRA-PRECISE prompt, structured and ready for use in image generation tools (Midjourney, DALL-E 3, Stable Diffusion XL). Respect EXACTLY the 8 sections: Artistic Direction, Recommended Typography, Symbol/Icon, Color Palette, 4 required variations, Technical Specifications, NEGATIVE_PROMPT, TECHNICAL PARAMETERS. Do NOT summarize or shorten — each section must be as detailed as the reference model. Write the entire prompt EXCLUSIVELY IN ENGLISH.`,
+      systemPrompt: `You are an expert in logo generation prompts for INGENIERIE DIGITALE. From the reference structure provided (golden example adapted to the brand), generate an ULTRA-PRECISE prompt, structured and ready for use in image generation tools (Midjourney, DALL-E 3, Stable Diffusion XL). Respect EXACTLY the 8 sections: Artistic Direction, Recommended Typography, Symbol/Icon, Color Palette, 4 required variations, Technical Specifications, NEGATIVE_PROMPT, TECHNICAL PARAMETERS. Do NOT summarize or shorten — each section must be as detailed as the reference model. Write the entire prompt EXCLUSIVELY IN ENGLISH.`,
       userPrompt: logoOptimizedPrompt,
     },
     {
@@ -143,7 +143,7 @@ router.post("/openai/enhance-prompts", async (req, res) => {
       agent: "Brand Design Agent",
       userPrompt: `MODULE 01.3 — TYPOGRAPHY SYSTEM
 
-Generate an ULTRA-PRECISE RoboNeo prompt for the typography system of ${brand_name}.
+Generate an ULTRA-PRECISE INGENIERIE DIGITALE prompt for the typography system of ${brand_name}.
 
 PROMPT STRUCTURE TO GENERATE:
 1. Heading font (h1/h2/h3): name + Google Fonts URL + weights + sizes (h1: 48px, h2: 36px, h3: 24px)
@@ -175,7 +175,7 @@ Start directly with: "Generate the complete typography system for ${brand_name}.
 
 ⚠️ NOTE TECHNIQUE IMPORTANTE : Un LLM génère du TEXTE structuré, pas un fichier binaire PDF. Ce prompt produit le contenu textuel et structuré d'une charte graphique, destiné à être mis en page par un outil de publication (Canva, Adobe InDesign, Figma, ou un script de génération PDF). Le fichier PDF final sera créé en post-production à partir de ce contenu.
 
-Génère un prompt RoboNeo ULTRA-PRÉCIS pour rédiger le CONTENU TEXTUEL STRUCTURÉ de la charte graphique de ${brand_name} (le contenu servira de base à la génération PDF en post-production).
+Génère un prompt INGENIERIE DIGITALE ULTRA-PRÉCIS pour rédiger le CONTENU TEXTUEL STRUCTURÉ de la charte graphique de ${brand_name} (le contenu servira de base à la génération PDF en post-production).
 
 STRUCTURE DU PROMPT À GÉNÉRER:
 10 règles graphiques obligatoires (R01 à R10):

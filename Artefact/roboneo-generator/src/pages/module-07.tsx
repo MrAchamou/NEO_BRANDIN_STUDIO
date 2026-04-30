@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { getEngineHeaders } from "@/lib/ai-engine";
+import { useModuleReports } from "@/context/module-reports-context";
+import { ExportModuleReportButton } from "@/components/export-report-button";
+import { buildModule07Report } from "@/lib/module-report-builder";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Copy, Download, Check, Brain,
@@ -556,12 +559,24 @@ function CalendarView({ data, streamBuffer, streaming, isActive }: {
 
 export default function Module07() {
   const { toast } = useToast();
+  const { setReport, clearReport } = useModuleReports();
   const [sections, setSections] = useState<SectionResult[]>([]);
   const [streamState, setStreamState] = useState<StreamState>({ sections: {}, activeSection: null });
   const [isGenerating, setIsGenerating] = useState(false);
   const [showResults, setShowResults] = useState(false);
 
   const { brief } = useBrand();
+
+  const moduleReport = useMemo(() => {
+    if (!sections.length) return null;
+    const combinedDoc = sections.find((s) => s.data?.combined_document)?.data?.combined_document as string | undefined;
+    return buildModule07Report(brief, sections, combinedDoc);
+  }, [sections, brief]);
+
+  useEffect(() => {
+    if (moduleReport) setReport("launch-assets", moduleReport);
+    else clearReport("launch-assets");
+  }, [moduleReport, setReport, clearReport]);
 
   const onSubmit = async () => {
     if (!brief.brand_name || !brief.product_name) {
@@ -869,6 +884,7 @@ export default function Module07() {
                   <Button variant="outline" size="sm" onClick={handleDownloadAll}>
                     <Download className="w-4 h-4 mr-1" /> TXT
                   </Button>
+                  <ExportModuleReportButton report={moduleReport} variant="luxury" size="sm" />
                 </>
               )}
             </div>

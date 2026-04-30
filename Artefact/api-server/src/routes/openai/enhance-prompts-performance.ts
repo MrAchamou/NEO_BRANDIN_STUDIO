@@ -113,7 +113,7 @@ Valeurs verrouillées :
 RÈGLE : Ces chiffres sont la SEULE source de vérité financière. Tout autre nombre que tu produis (ROAS, prévisions CA, etc.) doit être cohérent avec eux. Tout chiffre absent doit être marqué "n/a" dans ta réponse, jamais inventé.`;
 
   const outputLang = resolveLang(req);
-  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert en performance marketing e-commerce et analyse de données pour RoboNeo.com.${profitBlock}
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}Tu es un expert en performance marketing e-commerce et analyse de données pour INGENIERIE DIGITALE.${profitBlock}
 Ta mission: créer des outils de tracking et d'optimisation PRÉCIS et ACTIONNABLES pour maximiser le ROI.
 
 ${marketCtx}

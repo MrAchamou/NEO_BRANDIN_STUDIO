@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { getEngineHeaders } from "@/lib/ai-engine";
+import { useModuleReports } from "@/context/module-reports-context";
+import { ExportModuleReportButton } from "@/components/export-report-button";
+import { buildSectionsReport } from "@/lib/module-report-builder";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Copy, Download, ChevronRight, Check, ShoppingCart,
@@ -168,7 +171,7 @@ function CrossSellView({ data, streamBuffer, streaming, isActive }: {
 
                     {idea.visual_prompt && (
                       <div className="bg-black/30 rounded p-2.5 border border-white/5">
-                        <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1.5">Prompt visuel RoboNeo :</p>
+                        <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1.5">Prompt visuel :</p>
                         <p className="text-xs text-foreground/60 leading-relaxed font-mono">{idea.visual_prompt}</p>
                       </div>
                     )}
@@ -320,7 +323,7 @@ function BundlesView({ data, streamBuffer, streaming, isActive }: {
           {/* Visual prompt */}
           {current.visual_prompt && (
             <div className="bg-black/30 rounded p-2.5 border border-white/5">
-              <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1.5">Prompt visuel RoboNeo :</p>
+              <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1.5">Prompt visuel :</p>
               <p className="text-xs text-foreground/60 leading-relaxed font-mono">{current.visual_prompt}</p>
             </div>
           )}
@@ -658,7 +661,7 @@ function generateModule09Html(brandName: string, sects: SectionResult[]): string
           </div>
           ${idea.placement ? `<div class="card"><div class="label">Placement</div><div class="val">${esc(idea.placement)}</div></div>` : ""}
           <div class="card"><div class="label">Justification</div><div class="val">${esc(idea.justification)}</div></div>
-          ${idea.visual_prompt ? `<div class="card"><div class="label">Prompt visuel RoboNeo</div><code class="mono">${esc(idea.visual_prompt)}</code></div>` : ""}
+          ${idea.visual_prompt ? `<div class="card"><div class="label">Prompt visuel</div><code class="mono">${esc(idea.visual_prompt)}</code></div>` : ""}
         </div>
       </details>`).join("");
   };
@@ -682,7 +685,7 @@ function generateModule09Html(brandName: string, sects: SectionResult[]): string
             <div class="card"><div class="label">Bouton CTA</div><div class="val">"${esc(offer.cta)}"</div></div>
             <div class="card"><div class="label">Idéal pour</div><div class="val">${esc(offer.best_for)}</div></div>
           </div>
-          ${offer.visual_prompt ? `<div class="card"><div class="label">Prompt visuel RoboNeo</div><code class="mono">${esc(offer.visual_prompt)}</code></div>` : ""}
+          ${offer.visual_prompt ? `<div class="card"><div class="label">Prompt visuel</div><code class="mono">${esc(offer.visual_prompt)}</code></div>` : ""}
         </div>
       </details>`).join("");
   };
@@ -751,7 +754,7 @@ function generateModule09Html(brandName: string, sects: SectionResult[]): string
 </head>
 <body>
 <h1>🛒 Upsell &amp; Cross-sell Kit</h1>
-<p class="subtitle">Marque : <strong>${esc(brandName)}</strong> · Généré le ${now} · RoboNeo Branding Studio</p>
+<p class="subtitle">Marque : <strong>${esc(brandName)}</strong> · Généré le ${now} · INGENIERIE DIGITALE — Branding Studio</p>
 
 <details open>
   <summary><span class="green">①</span> ${esc(SECTION_LABELS.cross_sell)}</summary>
@@ -786,10 +789,21 @@ function downloadHtml(filename: string, html: string) {
 export default function Module09() {
   const { toast } = useToast();
   const { brief } = useBrand();
+  const { setReport, clearReport } = useModuleReports();
   const [sections, setSections] = useState<SectionResult[]>([]);
   const [streamState, setStreamState] = useState<StreamState>({ sections: {}, activeSection: null });
   const [isGenerating, setIsGenerating] = useState(false);
   const [showResults, setShowResults] = useState(false);
+
+  const moduleReport = useMemo(() => {
+    if (!sections.length) return null;
+    return buildSectionsReport("upsell-engine", brief, sections);
+  }, [sections, brief]);
+
+  useEffect(() => {
+    if (moduleReport) setReport("upsell-engine", moduleReport);
+    else clearReport("upsell-engine");
+  }, [moduleReport, setReport, clearReport]);
 
   const onSubmit = async () => {
     if (!brief.brand_name || !brief.product_name) {
@@ -1049,7 +1063,7 @@ export default function Module09() {
               <motion.div
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex justify-end pt-2"
+                className="flex justify-end gap-2 pt-2"
               >
                 <Button
                   variant="outline"
@@ -1063,6 +1077,7 @@ export default function Module09() {
                   <Download className="w-4 h-4" />
                   Télécharger le rapport HTML
                 </Button>
+                <ExportModuleReportButton report={moduleReport} variant="luxury" size="sm" />
               </motion.div>
             )}
           </motion.div>

@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { getEngineHeaders } from "@/lib/ai-engine";
+import { useModuleReports } from "@/context/module-reports-context";
+import { ExportModuleReportButton } from "@/components/export-report-button";
+import { buildSectionsReport } from "@/lib/module-report-builder";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -229,6 +232,7 @@ type FormValues = z.infer<typeof formSchema>;
 export default function Module04() {
   const { toast } = useToast();
   const { brief, updateBrief } = useBrand();
+  const { setReport, clearReport } = useModuleReports();
   const [sections, setSections] = useState<SectionResult[]>([]);
   const [streamState, setStreamState] = useState<StreamState>({ sections: {}, activeSection: null });
   const [isGenerating, setIsGenerating] = useState(false);
@@ -325,6 +329,16 @@ export default function Module04() {
 
   const allDone = sections.length === 6;
 
+  const moduleReport = useMemo(() => {
+    if (!sections.length) return null;
+    return buildSectionsReport("ad-creatives", brief, sections, { subPromptLabels: SUB_LABELS });
+  }, [sections, brief]);
+
+  useEffect(() => {
+    if (moduleReport) setReport("ad-creatives", moduleReport);
+    else clearReport("ad-creatives");
+  }, [moduleReport, setReport, clearReport]);
+
   const handleDownloadTXT = () => {
     if (!sections.length) return;
     let txt = `================================================================================\nPROMPTS MODULE 04 — AD CREATIVES — NEO BRANDING STUDIO\nMarque: ${brief.brand_name} | Produit: ${brief.product_name} | Généré le: ${new Date().toLocaleString("fr-FR")}\n================================================================================\n\n`;
@@ -413,6 +427,7 @@ export default function Module04() {
                   <Button variant="outline" size="sm" onClick={handleDownloadTXT}>
                     <Download className="w-4 h-4 mr-1" /> TXT
                   </Button>
+                  <ExportModuleReportButton report={moduleReport} variant="luxury" size="sm" />
                 </>
               )}
             </div>

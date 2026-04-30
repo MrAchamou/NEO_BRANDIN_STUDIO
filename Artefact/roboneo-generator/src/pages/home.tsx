@@ -8,6 +8,7 @@ import {
 import BrandBriefPanel from "@/components/brand-brief-panel";
 import AIModeBadge from "@/components/ai-mode-badge";
 import LanguageSelector from "@/components/language-selector";
+import { ExportAllReportsButton } from "@/components/export-report-button";
 import { useT } from "@/i18n";
 import Module01 from "./module-01";
 import Module02 from "./module-02";
@@ -358,6 +359,7 @@ export default function Home() {
               <div className="flex items-center gap-2">
                 <LanguageSelector />
                 <AIModeBadge />
+                <ExportAllReportsButton variant="luxury" size="sm" />
                 <span className="text-xs text-muted-foreground/60 font-mono">{t("app.version_label")}</span>
               </div>
               <div className="flex flex-col items-end gap-1">

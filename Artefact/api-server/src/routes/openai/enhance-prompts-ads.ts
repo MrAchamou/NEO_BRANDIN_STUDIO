@@ -109,7 +109,7 @@ Couleurs: ${colorStr} | Code promo: ${promoCode} | Remise: ${discount}% | Livrai
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? undefined);
   const lockHeader = brandLockHeader(lock);
   const outputLang = resolveLang(req);
-  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}You are a senior expert in digital advertising and creative prompt generation for RoboNeo.com.
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}You are a senior expert in digital advertising and creative prompt generation for INGENIERIE DIGITALE.
 You generate ultra-precise creative prompts (Meta Ads, Google Display, TikTok, Carousel) and ready-to-use ad copy.
 Always return ONLY valid JSON, without markdown, without text before or after.
 LANGUAGE RULES (strictly enforced):

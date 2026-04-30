@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { getEngineHeaders } from "@/lib/ai-engine";
+import { useModuleReports } from "@/context/module-reports-context";
+import { ExportModuleReportButton } from "@/components/export-report-button";
+import { buildSectionsReport } from "@/lib/module-report-builder";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Copy, Download, Check, Brain,
@@ -203,6 +206,7 @@ function SubPromptTabs({
 
 export default function Module06() {
   const { toast } = useToast();
+  const { setReport, clearReport } = useModuleReports();
   const [sections, setSections] = useState<SectionResult[]>([]);
   const [streamState, setStreamState] = useState<StreamState>({ sections: {}, activeSection: null });
   const [isGenerating, setIsGenerating] = useState(false);
@@ -319,6 +323,16 @@ export default function Module06() {
 
   const allDone = sections.length === SECTION_ORDER.length;
 
+  const moduleReport = useMemo(() => {
+    if (!sections.length) return null;
+    return buildSectionsReport("copy-writing", brief, sections, { subPromptLabels: SUB_LABELS });
+  }, [sections, brief]);
+
+  useEffect(() => {
+    if (moduleReport) setReport("copy-writing", moduleReport);
+    else clearReport("copy-writing");
+  }, [moduleReport, setReport, clearReport]);
+
   const handleDownloadTXT = () => {
     if (!sections.length) return;
     let txt = `================================================================================\nPROMPTS MODULE 06 — COPY & CONTENT — NEO BRANDING STUDIO\nMarque: ${brief.brand_name} | Produit: ${brief.product_name} | Généré le: ${new Date().toLocaleString("fr-FR")}\n================================================================================\n\n`;
@@ -387,6 +401,7 @@ export default function Module06() {
                   <Button variant="outline" size="sm" onClick={handleDownloadTXT}>
                     <Download className="w-4 h-4 mr-1" /> TXT
                   </Button>
+                  <ExportModuleReportButton report={moduleReport} variant="luxury" size="sm" />
                 </>
               )}
             </div>

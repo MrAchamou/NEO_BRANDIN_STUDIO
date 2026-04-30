@@ -172,7 +172,7 @@ router.post("/openai/enhance-prompts-visual", async (req, res) => {
       agent: "Product Display Agent / Image Generation",
       buildUserPrompt: () => {
         const anglesList = Object.entries(angles).map(([k, v]) => `"${k}": "${v}"`).join(", ");
-        return `Tu es un expert RoboNeo en photographie produit professionnelle studio.
+        return `Tu es un expert INGENIERIE DIGITALE en photographie produit professionnelle studio.
 
 Génère exactement 5 prompts photo produit studio pour "${product_name}" (${product_type}) — Marque: ${brand_name} (${sector}).
 Couleurs: ${product_colors.join(", ") || "naturelles"}
@@ -196,7 +196,7 @@ Retourne UNIQUEMENT un objet JSON valide (sans markdown, sans texte):
       key: "lifestyle_photos",
       label: "Photos Lifestyle — 3 Formats",
       agent: "Image Generation / Background Change",
-      buildUserPrompt: () => `Tu es un expert RoboNeo en photographie lifestyle pour réseaux sociaux premium.
+      buildUserPrompt: () => `Tu es un expert INGENIERIE DIGITALE en photographie lifestyle pour réseaux sociaux premium.
 
 Génère 3 prompts lifestyle pour "${product_name}" — Marque: ${brand_name} (${sector}).
 Audience: ${target_audience}
@@ -236,7 +236,7 @@ Retourne UNIQUEMENT un JSON valide:
         const isTransparent = (m: string) => m.includes("verre") || m.includes("cristal") || m.includes("transparent") || m.includes("acrylique");
         const focusStack0 = isTransparent(mat0Lower) ? "focus stacking: ON (5-7 couches, empilage logiciel Helicon Focus) — obligatoire pour les matériaux transparents avec profondeur optique" : "mise au point unique sur la texture de surface, focus stacking: optionnel";
         const focusStack1 = isTransparent(mat1Lower) ? "focus stacking: ON (5-7 couches, empilage logiciel Helicon Focus) — obligatoire pour les matériaux transparents avec profondeur optique" : "mise au point unique sur la texture de surface, focus stacking: optionnel";
-        return `Tu es un expert RoboNeo en photographie macro et texture matériaux.
+        return `Tu es un expert INGENIERIE DIGITALE en photographie macro et texture matériaux.
 
 Génère 2 prompts macro texture pour les matériaux de "${product_name}" — Marque: ${brand_name}.
 
@@ -266,7 +266,7 @@ Retourne UNIQUEMENT un JSON valide:
       key: "before_after",
       label: "Before / After Studio",
       agent: "Portrait Retouching Agent",
-      buildUserPrompt: () => `Tu es un expert RoboNeo en création de visuels Before/After pour le marketing.
+      buildUserPrompt: () => `Tu es un expert INGENIERIE DIGITALE en création de visuels Before/After pour le marketing.
 
 Génère un set Before/After pour "${product_name}" — Marque: ${brand_name} (${sector}).
 
@@ -300,7 +300,7 @@ Retourne UNIQUEMENT un JSON valide:
       key: "virtual_tryon",
       label: "Virtual Try-On / Lookbook — 2 Modèles",
       agent: "AI Wardrobe / Fashion Editorial",
-      buildUserPrompt: () => `Tu es un expert RoboNeo en direction artistique lookbook et photographie fashion editorial.
+      buildUserPrompt: () => `Tu es un expert INGENIERIE DIGITALE en direction artistique lookbook et photographie fashion editorial.
 
 Génère 2 prompts de photographie fashion editorial (style lookbook magazine) pour "${product_name}" (${tryonCategory}) — Marque: ${brand_name}.
 Note: il s'agit de photographie fashion/lookbook stylisée, pas de virtual try-on technologique au sens IA.
@@ -330,7 +330,7 @@ Retourne UNIQUEMENT un JSON valide:
       key: "carousel",
       label: `Carrousel ${carouselStyle.toUpperCase()} — 5 Slides`,
       agent: "AI Poster Agent",
-      buildUserPrompt: () => `Tu es un expert RoboNeo en design de carrousels Instagram pour le marketing de contenu premium.
+      buildUserPrompt: () => `Tu es un expert INGENIERIE DIGITALE en design de carrousels Instagram pour le marketing de contenu premium.
 
 Génère 5 prompts visuels pour un carrousel "${carouselStyle.toUpperCase()}" pour "${product_name}" — Marque: ${brand_name} (${sector}).
 

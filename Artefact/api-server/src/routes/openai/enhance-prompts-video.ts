@@ -133,7 +133,7 @@ Cible: ${target_audience}${yearLine} | Code promo: ${promoCode} | Durée promo: 
   const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? undefined);
   const lockHeader = brandLockHeader(lock);
   const outputLang = resolveLang(req);
-  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}You are a senior expert in advertising script creation and video generation prompts for RoboNeo.com.
+  const systemPrompt = `${lockHeader}${languageInstruction(outputLang)}You are a senior expert in advertising script creation and video generation prompts for INGENIERIE DIGITALE.
 LANGUAGE RULES (strictly enforced):
 • Ad scripts and voice-over texts (sections "scripts" and "voice_over"): write IN FRENCH — punchy, adapted to the ${sector} sector, direct copywriting
 • Video generation prompts (sections "short_videos", "long_video", "teaser", "thumbnails"): write EXCLUSIVELY IN ENGLISH — native vocabulary for Runway Gen-3, Pika, Kling, Midjourney, DALL-E 3

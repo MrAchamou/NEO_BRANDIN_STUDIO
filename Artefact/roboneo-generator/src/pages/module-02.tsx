@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { getEngineHeaders } from "@/lib/ai-engine";
+import { useModuleReports } from "@/context/module-reports-context";
+import { ExportModuleReportButton } from "@/components/export-report-button";
+import { buildSectionsReport } from "@/lib/module-report-builder";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -165,6 +168,7 @@ function SubPromptList({
 export default function Module02() {
   const { toast } = useToast();
   const { brief, updateBrief } = useBrand();
+  const { setReport, clearReport } = useModuleReports();
   const [sections, setSections] = useState<SectionResult[]>([]);
   const [streamState, setStreamState] = useState<StreamState>({ sections: {}, activeSection: null });
   const [isGenerating, setIsGenerating] = useState(false);
@@ -273,6 +277,16 @@ export default function Module02() {
 
   const SECTION_ORDER = ["product_photos", "lifestyle_photos", "detail_photos", "before_after", "virtual_tryon", "carousel"];
 
+  const moduleReport = useMemo(() => {
+    if (!sections.length) return null;
+    return buildSectionsReport("visual-content", brief, sections, { subPromptLabels: SUB_PROMPT_LABELS });
+  }, [sections, brief]);
+
+  useEffect(() => {
+    if (moduleReport) setReport("visual-content", moduleReport);
+    else clearReport("visual-content");
+  }, [moduleReport, setReport, clearReport]);
+
   const onSubmit = async (data: FormValues) => {
     setIsGenerating(true);
     setFormData(data);
@@ -289,7 +303,7 @@ export default function Module02() {
 
   const handleDownloadTXT = () => {
     if (!sections.length) return;
-    let txt = `================================================================================\nPROMPTS MODULE 02 — VISUAL CONTENT — ROBONEO.COM\nMarque: ${brief.brand_name} | Produit: ${brief.product_name} | Généré le: ${new Date().toLocaleString("fr-FR")}\n================================================================================\n\n`;
+    let txt = `================================================================================\nPROMPTS MODULE 02 — VISUAL CONTENT\nMarque: ${brief.brand_name} | Produit: ${brief.product_name} | Généré le: ${new Date().toLocaleString("fr-FR")}\n================================================================================\n\n`;
 
     for (const sec of sections) {
       txt += `\n--- ${sec.label.toUpperCase()} ---\nAgent: ${sec.agent}\n\n`;
@@ -398,6 +412,7 @@ export default function Module02() {
                 <>
                   <Button variant="secondary" onClick={handleDownloadTXT}><FileText className="w-4 h-4 mr-2" /> TXT</Button>
                   <Button variant="luxury" onClick={handleDownloadJSON}><Download className="w-4 h-4 mr-2" /> JSON</Button>
+                  <ExportModuleReportButton report={moduleReport} variant="luxury" />
                 </>
               )}
             </div>
@@ -486,7 +501,7 @@ export default function Module02() {
           {allDone && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-4 rounded-lg border border-green-500/20 bg-green-500/5 text-center">
               <Check className="w-5 h-5 text-green-500 mx-auto mb-2" />
-              <p className="text-sm font-medium text-green-400">Génération terminée — 19 prompts prêts pour RoboNeo.com</p>
+              <p className="text-sm font-medium text-green-400">Génération terminée — 19 prompts prêts à l'emploi</p>
             </motion.div>
           )}
         </motion.div>

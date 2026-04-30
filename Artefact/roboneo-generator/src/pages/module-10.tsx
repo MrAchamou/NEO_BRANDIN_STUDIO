@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { getEngineHeaders } from "@/lib/ai-engine";
+import { useModuleReports } from "@/context/module-reports-context";
+import { ExportModuleReportButton } from "@/components/export-report-button";
+import { buildSectionsReport } from "@/lib/module-report-builder";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Copy, Download, ChevronRight, Check, BarChart2,
@@ -771,7 +774,7 @@ function generateModule10Html(brandName: string, sstate: StreamState): string {
 </head>
 <body>
 <h1>📊 Performance Tracker</h1>
-<p class="subtitle">Marque : <strong>${esc(brandName)}</strong> · Généré le ${now} · RoboNeo Branding Studio</p>
+<p class="subtitle">Marque : <strong>${esc(brandName)}</strong> · Généré le ${now} · INGENIERIE DIGITALE — Branding Studio</p>
 
 <div class="section-wrap">
   <div class="section-title"><span style="color:#60a5fa">①</span> ${esc(SECTION_LABELS.dashboard)}</div>
@@ -806,6 +809,7 @@ function downloadHtml(filename: string, html: string) {
 export default function Module10() {
   const { toast } = useToast();
   const { brief } = useBrand();
+  const { setReport, clearReport } = useModuleReports();
 
   const [streamState, setStreamState] = useState<StreamState>({
     sections: {},
@@ -814,6 +818,29 @@ export default function Module10() {
   const [isStreaming, setIsStreaming] = useState(false);
   const [isComplete, setIsComplete]   = useState(false);
   const [activeView, setActiveView]   = useState<string>("dashboard");
+
+  const moduleReport = useMemo(() => {
+    if (!isComplete) return null;
+    const sec = SECTION_ORDER
+      .map((k) => {
+        const s = streamState.sections[k];
+        if (!s?.done) return null;
+        const dataRecord: Record<string, string> = {};
+        const data = (s.data ?? {}) as Record<string, unknown>;
+        for (const [dk, dv] of Object.entries(data)) {
+          dataRecord[dk] = typeof dv === "string" ? dv : JSON.stringify(dv, null, 2);
+        }
+        return { key: k, label: SECTION_LABELS[k] ?? k, agent: s.agent, data: dataRecord };
+      })
+      .filter(Boolean) as Array<{ key: string; label: string; agent?: string; data: Record<string, string> }>;
+    if (!sec.length) return null;
+    return buildSectionsReport("performance-analytics", brief, sec);
+  }, [isComplete, streamState.sections, brief]);
+
+  useEffect(() => {
+    if (moduleReport) setReport("performance-analytics", moduleReport);
+    else clearReport("performance-analytics");
+  }, [moduleReport, setReport, clearReport]);
 
   async function onSubmit() {
     if (!brief.brand_name) {
@@ -1058,6 +1085,7 @@ export default function Module10() {
                   <Download className="w-4 h-4" />
                   Rapport HTML
                 </Button>
+                <ExportModuleReportButton report={moduleReport} variant="luxury" size="sm" />
               </motion.div>
             )}
           </motion.div>
