@@ -1,6 +1,9 @@
 import { Router, type IRouter } from "express";
 import healthRouter from "./health";
 import scrapeGmbRouter from "./scrape-gmb";
+import governanceRouter from "./governance";
+import memoryRouter from "./memory";
+import positioningRouter from "./positioning";
 import enhancePromptsRouter from "./openai/enhance-prompts";
 import enhancePromptsVisualRouter from "./openai/enhance-prompts-visual";
 import enhancePromptsVideoRouter from "./openai/enhance-prompts-video";
@@ -16,6 +19,12 @@ import reviewPromptRouter from "./openai/review-prompt";
 
 const router: IRouter = Router();
 
+// ── v3.0 — Routes stratégiques ─────────────────────────────────────────────
+router.use(governanceRouter);
+router.use(memoryRouter);
+router.use(positioningRouter);
+
+// ── Core routes ────────────────────────────────────────────────────────────
 router.use(healthRouter);
 router.use(scrapeGmbRouter);
 router.use(enhancePromptsRouter);

@@ -106,6 +106,12 @@ export interface GovernanceReport {
   findings: GovernanceFinding[];
   rewrites: number;
   blocked: boolean;
+  /** v3.0 — Présent si brand_id fourni dans les options. */
+  v3?: {
+    memory_block: string;
+    positioning_block: string;
+    positioning_conflicts_count: number;
+  };
 }
 
 export interface GovernanceResult {

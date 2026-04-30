@@ -20481,27 +20481,27 @@ var require_router = __commonJS({
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var methods = METHODS.map((method) => method.toLowerCase());
-    module.exports = Router16;
+    module.exports = Router19;
     module.exports.Route = Route;
-    function Router16(options) {
-      if (!(this instanceof Router16)) {
-        return new Router16(options);
+    function Router19(options) {
+      if (!(this instanceof Router19)) {
+        return new Router19(options);
       }
       const opts = options || {};
-      function router16(req, res, next) {
-        router16.handle(req, res, next);
+      function router19(req, res, next) {
+        router19.handle(req, res, next);
       }
-      Object.setPrototypeOf(router16, this);
-      router16.caseSensitive = opts.caseSensitive;
-      router16.mergeParams = opts.mergeParams;
-      router16.params = {};
-      router16.strict = opts.strict;
-      router16.stack = [];
-      return router16;
+      Object.setPrototypeOf(router19, this);
+      router19.caseSensitive = opts.caseSensitive;
+      router19.mergeParams = opts.mergeParams;
+      router19.params = {};
+      router19.strict = opts.strict;
+      router19.stack = [];
+      return router19;
     }
-    Router16.prototype = function() {
+    Router19.prototype = function() {
     };
-    Router16.prototype.param = function param(name, fn) {
+    Router19.prototype.param = function param(name, fn) {
       if (!name) {
         throw new TypeError("argument name is required");
       }
@@ -20521,7 +20521,7 @@ var require_router = __commonJS({
       params.push(fn);
       return this;
     };
-    Router16.prototype.handle = function handle(req, res, callback) {
+    Router19.prototype.handle = function handle(req, res, callback) {
       if (!callback) {
         throw new TypeError("argument callback is required");
       }
@@ -20648,7 +20648,7 @@ var require_router = __commonJS({
         }
       }
     };
-    Router16.prototype.use = function use(handler) {
+    Router19.prototype.use = function use(handler) {
       let offset = 0;
       let path3 = "/";
       if (typeof handler !== "function") {
@@ -20681,7 +20681,7 @@ var require_router = __commonJS({
       }
       return this;
     };
-    Router16.prototype.route = function route(path3) {
+    Router19.prototype.route = function route(path3) {
       const route2 = new Route(path3);
       const layer = new Layer(path3, {
         sensitive: this.caseSensitive,
@@ -20696,7 +20696,7 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      Router16.prototype[method] = function(path3) {
+      Router19.prototype[method] = function(path3) {
         const route = this.route(path3);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
@@ -20879,13 +20879,13 @@ var require_application = __commonJS({
     var compileTrust = require_utils3().compileTrust;
     var resolve = __require("node:path").resolve;
     var once = require_once();
-    var Router16 = require_router();
+    var Router19 = require_router();
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var app2 = exports = module.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router16 = null;
+      var router19 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -20894,13 +20894,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router16 === null) {
-            router16 = new Router16({
+          if (router19 === null) {
+            router19 = new Router19({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router16;
+          return router19;
         }
       });
     };
@@ -20971,15 +20971,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router16 = this.router;
+      var router19 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router16.use(path3, fn2);
+          return router19.use(path3, fn2);
         }
         debug(".use app under %s", path3);
         fn2.mountpath = path3;
         fn2.parent = this;
-        router16.use(path3, function mounted_app(req, res, next) {
+        router19.use(path3, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -23506,7 +23506,7 @@ var require_express = __commonJS({
     var EventEmitter = __require("node:events").EventEmitter;
     var mixin = require_merge_descriptors();
     var proto = require_application();
-    var Router16 = require_router();
+    var Router19 = require_router();
     var req = require_request();
     var res = require_response();
     exports = module.exports = createApplication;
@@ -23528,8 +23528,8 @@ var require_express = __commonJS({
     exports.application = proto;
     exports.request = req;
     exports.response = res;
-    exports.Route = Router16.Route;
-    exports.Router = Router16;
+    exports.Route = Router19.Route;
+    exports.Router = Router19;
     exports.json = bodyParser.json;
     exports.raw = bodyParser.raw;
     exports.static = require_serve_static();
@@ -26399,7 +26399,7 @@ var require_tools = __commonJS({
     } else {
       asJsonChan = {
         hasSubscribers: false,
-        traceSync(fn, store, thisArg, ...args) {
+        traceSync(fn, store2, thisArg, ...args) {
           return fn.call(thisArg, ...args);
         }
       };
@@ -26469,8 +26469,8 @@ var require_tools = __commonJS({
       if (asJsonChan.hasSubscribers === false) {
         return _asJson.call(this, obj, msg, num, time);
       }
-      const store = { instance: this, arguments };
-      return asJsonChan.traceSync(_asJson, store, this, obj, msg, num, time);
+      const store2 = { instance: this, arguments };
+      return asJsonChan.traceSync(_asJson, store2, this, obj, msg, num, time);
     }
     function _asJson(obj, msg, num, time) {
       const stringify3 = this[stringifySym];
@@ -28388,12 +28388,12 @@ var require_logger = __commonJS({
 });
 
 // src/app.ts
-var import_express16 = __toESM(require_express2(), 1);
+var import_express19 = __toESM(require_express2(), 1);
 var import_cors = __toESM(require_lib3(), 1);
 var import_pino_http = __toESM(require_logger(), 1);
 
 // src/routes/index.ts
-var import_express15 = __toESM(require_express2(), 1);
+var import_express18 = __toESM(require_express2(), 1);
 
 // src/routes/health.ts
 var import_express = __toESM(require_express2(), 1);
@@ -39727,8 +39727,1536 @@ router2.post("/scrape-gmb", async (req, res) => {
 });
 var scrape_gmb_default = router2;
 
-// src/routes/openai/enhance-prompts.ts
+// src/routes/governance.ts
 var import_express3 = __toESM(require_express2(), 1);
+
+// src/config/sectors/cosmetics_eu.json
+var cosmetics_eu_default = {
+  id: "cosmetics_eu",
+  sector: "cosmetics",
+  region: "eu",
+  label: "Cosm\xE9tiques (Union Europ\xE9enne)",
+  regulation: "Regulation (EC) 1223/2009 + Commission Regulation (EU) 655/2013",
+  medical_claims_allowed: false,
+  financial_promises_allowed: false,
+  health_claims_allowed: false,
+  urgency_policy: {
+    allowed: false,
+    requires_real_inventory: true
+  },
+  forbidden_words: [
+    "anti-aging",
+    "anti-\xE2ge",
+    "stop aging",
+    "miracle",
+    "miraculeux",
+    "gu\xE9rit",
+    "soigne",
+    "traite",
+    "clinically proven",
+    "cliniquement prouv\xE9",
+    "100% effective",
+    "guaranteed results"
+  ],
+  tone_constraints: {
+    aggressiveness_level: "low",
+    emojis_allowed: false,
+    exclamation_limit: 0
+  },
+  requires_wcag_validation: false,
+  requires_price_lock: true,
+  requires_claim_validation: true,
+  claim_packs: [
+    "cosmetic_eu_physiological",
+    "medical_vocab",
+    "fake_certifications",
+    "fake_stats",
+    "hyperbolic",
+    "temporal_guarantees",
+    "urgency_dark_patterns"
+  ],
+  mandatory_disclaimers: [
+    "Effets cosm\xE9tiques : \xAB aide \xE0 \xBB, \xAB contribue \xE0 \xBB, \xAB visiblement \xBB."
+  ],
+  notes: "Aucune action physiologique ne peut \xEAtre revendiqu\xE9e. Toute mention de b\xE9n\xE9fice doit rester perceptive (apparence, ressenti, hydratation de surface)."
+};
+
+// src/config/sectors/fashion.json
+var fashion_default = {
+  id: "fashion",
+  sector: "fashion",
+  region: "global",
+  label: "Mode & Accessoires (g\xE9n\xE9rique)",
+  regulation: "ASA / DGCCRF / FTC \u2014 r\xE8gles g\xE9n\xE9rales sur les promesses de produits",
+  medical_claims_allowed: false,
+  financial_promises_allowed: false,
+  health_claims_allowed: false,
+  urgency_policy: {
+    allowed: true,
+    requires_real_inventory: true
+  },
+  forbidden_words: [
+    "permanent sale",
+    "always 50% off",
+    "deal of your life",
+    "free luxury",
+    "luxury for cheap",
+    "100% authentic guaranteed",
+    "investment piece guaranteed"
+  ],
+  tone_constraints: {
+    aggressiveness_level: "medium",
+    emojis_allowed: true,
+    exclamation_limit: 1
+  },
+  requires_wcag_validation: false,
+  requires_price_lock: true,
+  requires_claim_validation: true,
+  claim_packs: [
+    "fake_certifications",
+    "fake_stats",
+    "hyperbolic",
+    "urgency_dark_patterns"
+  ],
+  mandatory_disclaimers: [],
+  notes: "Mode raffin\xE9e : promesse esth\xE9tique uniquement, pas de promesse sant\xE9/dur\xE9e illimit\xE9e. L'urgence reste autoris\xE9e si elle refl\xE8te un vrai stock ou une vraie fen\xEAtre de vente."
+};
+
+// src/config/sectors/finance_eu.json
+var finance_eu_default = {
+  id: "finance_eu",
+  sector: "finance",
+  region: "eu",
+  label: "Finance & Assurance (UE)",
+  regulation: "MiFID II + AMF + DORA + GDPR \u2014 communications commerciales financi\xE8res",
+  medical_claims_allowed: false,
+  financial_promises_allowed: false,
+  health_claims_allowed: false,
+  urgency_policy: {
+    allowed: false,
+    requires_real_inventory: true
+  },
+  forbidden_words: [
+    "guaranteed returns",
+    "rendements garantis",
+    "risk-free",
+    "sans risque",
+    "no risk",
+    "100% safe",
+    "100% s\xFBr",
+    "double your money",
+    "doublez votre capital",
+    "passive income guaranteed",
+    "revenu passif garanti",
+    "get rich",
+    "devenez riche",
+    "make money fast",
+    "gagnez de l'argent rapidement",
+    "investment opportunity of a lifetime"
+  ],
+  tone_constraints: {
+    aggressiveness_level: "low",
+    emojis_allowed: false,
+    exclamation_limit: 0
+  },
+  requires_wcag_validation: true,
+  requires_price_lock: true,
+  requires_claim_validation: true,
+  claim_packs: [
+    "financial_guarantees",
+    "fake_stats",
+    "hyperbolic",
+    "fake_certifications",
+    "urgency_dark_patterns",
+    "temporal_guarantees"
+  ],
+  mandatory_disclaimers: [
+    "Les performances pass\xE9es ne pr\xE9jugent pas des performances futures.",
+    "Tout investissement comporte un risque de perte en capital."
+  ],
+  notes: "Aucune promesse de rendement, aucune garantie d'absence de risque. Disclaimers AMF obligatoires. Communication non agressive, accessibilit\xE9 WCAG AA exig\xE9e."
+};
+
+// src/config/sectors/food_eu.json
+var food_eu_default = {
+  id: "food_eu",
+  sector: "food",
+  region: "eu",
+  label: "Alimentaire & Compl\xE9ments (UE)",
+  regulation: "Regulation (EC) 1924/2006 \u2014 Nutrition & Health Claims (EFSA)",
+  medical_claims_allowed: false,
+  financial_promises_allowed: false,
+  health_claims_allowed: false,
+  urgency_policy: {
+    allowed: false,
+    requires_real_inventory: true
+  },
+  forbidden_words: [
+    "cures",
+    "gu\xE9rit",
+    "prevents disease",
+    "pr\xE9vient les maladies",
+    "boosts immunity",
+    "renforce l'immunit\xE9",
+    "detox",
+    "d\xE9toxifie",
+    "burns fat",
+    "br\xFBle les graisses",
+    "lose weight fast",
+    "perdez du poids rapidement",
+    "miracle",
+    "miraculeux",
+    "doctor approved",
+    "approuv\xE9 par les m\xE9decins",
+    "FDA approved"
+  ],
+  tone_constraints: {
+    aggressiveness_level: "low",
+    emojis_allowed: false,
+    exclamation_limit: 0
+  },
+  requires_wcag_validation: false,
+  requires_price_lock: true,
+  requires_claim_validation: true,
+  claim_packs: [
+    "food_eu_efsa",
+    "medical_vocab",
+    "health_claims",
+    "fake_certifications",
+    "fake_stats",
+    "hyperbolic",
+    "temporal_guarantees",
+    "urgency_dark_patterns"
+  ],
+  mandatory_disclaimers: [
+    "Une alimentation vari\xE9e et \xE9quilibr\xE9e et un mode de vie sain sont importants.",
+    "Les compl\xE9ments alimentaires ne se substituent pas \xE0 une alimentation \xE9quilibr\xE9e."
+  ],
+  notes: "Seuls les claims autoris\xE9s par le r\xE8glement EFSA 1924/2006 peuvent \xEAtre utilis\xE9s. Aucune all\xE9gation th\xE9rapeutique."
+};
+
+// src/config/sectors/saas.json
+var saas_default = {
+  id: "saas",
+  sector: "saas",
+  region: "global",
+  label: "SaaS & B2B Tech (g\xE9n\xE9rique)",
+  regulation: "GDPR + WCAG AA + bonnes pratiques SaaS",
+  medical_claims_allowed: false,
+  financial_promises_allowed: false,
+  health_claims_allowed: false,
+  urgency_policy: {
+    allowed: true,
+    requires_real_inventory: false
+  },
+  forbidden_words: [
+    "100% uptime",
+    "completely secure",
+    "100% s\xE9curis\xE9",
+    "unhackable",
+    "inviolable",
+    "guaranteed ROI",
+    "ROI garanti",
+    "magic AI",
+    "AI miracle",
+    "replaces your team",
+    "remplace votre \xE9quipe"
+  ],
+  tone_constraints: {
+    aggressiveness_level: "medium",
+    emojis_allowed: true,
+    exclamation_limit: 2
+  },
+  requires_wcag_validation: true,
+  requires_price_lock: true,
+  requires_claim_validation: true,
+  claim_packs: [
+    "fake_stats",
+    "hyperbolic",
+    "fake_certifications"
+  ],
+  mandatory_disclaimers: [],
+  notes: "Marketing flexible, accessibilit\xE9 WCAG AA recommand\xE9e. Pas de promesse d'uptime absolue ni de s\xE9curit\xE9 parfaite."
+};
+
+// src/governance/sector-engine.ts
+var PROFILES = {
+  cosmetics_eu: cosmetics_eu_default,
+  fashion: fashion_default,
+  fashion_global: fashion_default,
+  finance_eu: finance_eu_default,
+  food_eu: food_eu_default,
+  saas: saas_default,
+  saas_global: saas_default
+};
+var SECTOR_ALIASES = {
+  cosm\u00E9tique: "cosmetics",
+  cosmetique: "cosmetics",
+  cosmetic: "cosmetics",
+  skincare: "cosmetics",
+  beaut\u00E9: "cosmetics",
+  beaute: "cosmetics",
+  beauty: "cosmetics",
+  mode: "fashion",
+  fashion: "fashion",
+  apparel: "fashion",
+  luxe: "fashion",
+  luxury: "fashion",
+  finance: "finance",
+  banking: "finance",
+  banque: "finance",
+  insurance: "finance",
+  assurance: "finance",
+  fintech: "finance",
+  food: "food",
+  alimentaire: "food",
+  nutrition: "food",
+  supplements: "food",
+  compl\u00E9ments: "food",
+  complements: "food",
+  saas: "saas",
+  software: "saas",
+  tech: "saas",
+  b2b: "saas"
+};
+var REGION_ALIASES = {
+  eu: "eu",
+  europe: "eu",
+  european: "eu",
+  france: "eu",
+  fr: "eu",
+  ue: "eu",
+  global: "global",
+  international: "global",
+  monde: "global",
+  world: "global",
+  na: "global",
+  us: "global",
+  usa: "global",
+  apac: "global",
+  asia: "global"
+};
+function normalizeSector(input) {
+  if (!input) return "";
+  const key = input.trim().toLowerCase();
+  return SECTOR_ALIASES[key] ?? key;
+}
+function normalizeRegion(input) {
+  if (!input) return "";
+  const key = input.trim().toLowerCase();
+  return REGION_ALIASES[key] ?? key;
+}
+var DEFAULT_PROFILE = {
+  id: "default",
+  sector: "generic",
+  region: "global",
+  label: "Profil g\xE9n\xE9rique (fallback)",
+  regulation: "Bonnes pratiques marketing universelles",
+  medical_claims_allowed: false,
+  financial_promises_allowed: false,
+  health_claims_allowed: false,
+  urgency_policy: { allowed: true, requires_real_inventory: true },
+  forbidden_words: [],
+  tone_constraints: {
+    aggressiveness_level: "medium",
+    emojis_allowed: true,
+    exclamation_limit: 1
+  },
+  requires_wcag_validation: false,
+  requires_price_lock: true,
+  requires_claim_validation: true,
+  claim_packs: ["fake_stats", "hyperbolic", "fake_certifications"],
+  mandatory_disclaimers: [],
+  notes: "Aucun profil sector\xD7region trouv\xE9 \u2014 fallback g\xE9n\xE9rique appliqu\xE9."
+};
+function loadSectorProfile(sector, region) {
+  const s = normalizeSector(sector);
+  const r = normalizeRegion(region);
+  if (s) {
+    const candidates = [
+      r ? `${s}_${r}` : null,
+      s,
+      `${s}_global`
+    ].filter(Boolean);
+    for (const key of candidates) {
+      const profile = PROFILES[key];
+      if (profile) {
+        return { profile, matched: true, resolvedKey: key };
+      }
+    }
+  }
+  return { profile: DEFAULT_PROFILE, matched: false, resolvedKey: "default" };
+}
+function listSectorProfiles() {
+  const seen = /* @__PURE__ */ new Set();
+  const out = [];
+  for (const profile of Object.values(PROFILES)) {
+    if (seen.has(profile.id)) continue;
+    seen.add(profile.id);
+    out.push(profile);
+  }
+  return out;
+}
+function sectorProfileToPromptBlock(profile) {
+  const lines = [];
+  lines.push("\u2550\u2550\u2550 SECTOR INTELLIGENCE LAYER \u2550\u2550\u2550");
+  lines.push(`\u2022 Profil : ${profile.label} (${profile.id})`);
+  lines.push(`\u2022 R\xE9gulation de r\xE9f\xE9rence : ${profile.regulation}`);
+  lines.push(`\u2022 Claims m\xE9dicaux : ${profile.medical_claims_allowed ? "autoris\xE9s" : "INTERDITS"}`);
+  lines.push(`\u2022 Claims sant\xE9 : ${profile.health_claims_allowed ? "autoris\xE9s" : "INTERDITS"}`);
+  lines.push(`\u2022 Promesses financi\xE8res : ${profile.financial_promises_allowed ? "autoris\xE9es" : "INTERDITES"}`);
+  lines.push(`\u2022 Urgence commerciale : ${profile.urgency_policy.allowed ? "tol\xE9r\xE9e (stock r\xE9el obligatoire)" : "INTERDITE"}`);
+  lines.push(`\u2022 Ton : ${profile.tone_constraints.aggressiveness_level} | emojis ${profile.tone_constraints.emojis_allowed ? "OK" : "non"} | max ${profile.tone_constraints.exclamation_limit} "!"`);
+  if (profile.forbidden_words.length) {
+    lines.push(`\u2022 Mots interdits sectoriels : ${profile.forbidden_words.slice(0, 12).join(", ")}`);
+  }
+  if (profile.requires_wcag_validation) {
+    lines.push(`\u2022 WCAG AA exig\xE9 : tout choix de couleur doit passer un contraste 4.5:1 minimum.`);
+  }
+  if (profile.mandatory_disclaimers.length) {
+    lines.push(`\u2022 Disclaimers obligatoires :`);
+    profile.mandatory_disclaimers.forEach((d) => lines.push(`    \u2013 ${d}`));
+  }
+  return lines.join("\n");
+}
+
+// src/positioning/positioning-lock.ts
+var lockStore = /* @__PURE__ */ new Map();
+function setPositioningLock(brand_id, lock) {
+  const existing = lockStore.get(brand_id);
+  const full = {
+    ...lock,
+    brand_id,
+    locked_at: (/* @__PURE__ */ new Date()).toISOString(),
+    version: (existing?.version ?? 0) + 1
+  };
+  lockStore.set(brand_id, full);
+  return full;
+}
+function getPositioningLock(brand_id) {
+  return lockStore.get(brand_id) ?? null;
+}
+function clearPositioningLock(brand_id) {
+  lockStore.delete(brand_id);
+}
+function checkPositioningAlignment(brand_id, module, generated_text) {
+  const lock = lockStore.get(brand_id);
+  if (!lock) return [];
+  const conflicts = [];
+  const text_lower = generated_text.toLowerCase();
+  const anti = lock.territory.anti_positioning.toLowerCase();
+  const anti_keywords = extractKeyPhrases(anti);
+  for (const phrase of anti_keywords) {
+    if (phrase.length > 4 && text_lower.includes(phrase)) {
+      conflicts.push({
+        module,
+        conflict_type: "anti_positioning_violation",
+        detected_text: phrase,
+        reason: `Contredit l'anti-positionnement : "${lock.territory.anti_positioning}"`,
+        severity: "warning"
+      });
+    }
+  }
+  if (lock.archetype === "Innocent") {
+    const aggressive_patterns = ["disruptif", "r\xE9volution", "rebelle", "challenger", "bold"];
+    for (const pattern of aggressive_patterns) {
+      if (text_lower.includes(pattern)) {
+        conflicts.push({
+          module,
+          conflict_type: "archetype_contradiction",
+          detected_text: pattern,
+          reason: `Ton "${pattern}" incompatible avec l'arch\xE9type ${lock.archetype} (Innocent)`,
+          severity: "warning"
+        });
+      }
+    }
+  }
+  if (lock.archetype === "Rebel") {
+    const conformist_patterns = ["tradition", "classique", "historique", "institutionnel"];
+    for (const pattern of conformist_patterns) {
+      if (text_lower.includes(pattern)) {
+        conflicts.push({
+          module,
+          conflict_type: "archetype_contradiction",
+          detected_text: pattern,
+          reason: `Ton "${pattern}" incompatible avec l'arch\xE9type ${lock.archetype} (Rebel)`,
+          severity: "warning"
+        });
+      }
+    }
+  }
+  return conflicts;
+}
+function positioningLockToPromptBlock(lock) {
+  return [
+    "\u2550\u2550\u2550 POSITIONING LOCK \u2550\u2550\u2550",
+    `\u2022 Arch\xE9type primaire : ${lock.archetype}${lock.secondary_archetype ? ` | Secondaire : ${lock.secondary_archetype}` : ""}`,
+    `\u2022 Tension fondatrice : ${lock.territory.core_tension}`,
+    `\u2022 Promesse : ${lock.territory.brand_promise}`,
+    `\u2022 Anti-positionnement : ${lock.territory.anti_positioning}`,
+    `\u2022 Territoire blanc : ${lock.market_map.strategic_opportunity}`,
+    `R\xC8GLE : Tout output doit s'aligner sur cet arch\xE9type et cette promesse. Jamais en contradiction.`
+  ].join("\n");
+}
+function extractKeyPhrases(text) {
+  return text.split(/[\.\,\!\?\;\:]/).map((s) => s.trim().toLowerCase()).filter((s) => s.length > 4).slice(0, 5);
+}
+
+// src/memory/memory-store.ts
+var store = /* @__PURE__ */ new Map();
+function getEntries(brand_id) {
+  if (!store.has(brand_id)) store.set(brand_id, []);
+  return store.get(brand_id);
+}
+function recordMemoryEntry(entry) {
+  const full = {
+    ...entry,
+    id: `mem_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+    timestamp: (/* @__PURE__ */ new Date()).toISOString()
+  };
+  getEntries(entry.brand_id).push(full);
+  return full;
+}
+function getMemoryEntries(brand_id, options) {
+  let entries = [...getEntries(brand_id)];
+  if (options?.module) {
+    entries = entries.filter((e) => e.module === options.module);
+  }
+  if (options?.type) {
+    entries = entries.filter((e) => e.type === options.type);
+  }
+  if (options?.since) {
+    entries = entries.filter((e) => new Date(e.timestamp) >= options.since);
+  }
+  if (options?.limit) {
+    entries = entries.slice(-options.limit);
+  }
+  return entries;
+}
+function clearMemory(brand_id) {
+  store.delete(brand_id);
+}
+function getMemoryStats(brand_id) {
+  const entries = getEntries(brand_id);
+  return {
+    correction: entries.filter((e) => e.type === "correction").length,
+    approval: entries.filter((e) => e.type === "approval").length,
+    rejection: entries.filter((e) => e.type === "rejection").length,
+    override: entries.filter((e) => e.type === "override").length
+  };
+}
+
+// src/memory/correction-log.ts
+function logCorrection(entry) {
+  return recordMemoryEntry({
+    brand_id: entry.brand_id,
+    module: entry.module,
+    type: "correction",
+    before: entry.before,
+    after: entry.after,
+    context: entry.context ?? "",
+    impact_level: entry.impact_level ?? detectImpact(entry.before, entry.after),
+    section_key: entry.section_key
+  });
+}
+function logApproval(brand_id, module, content, section_key) {
+  return recordMemoryEntry({
+    brand_id,
+    module,
+    type: "approval",
+    before: content,
+    after: content,
+    context: "User approved output without changes",
+    impact_level: "low",
+    section_key
+  });
+}
+function logRejection(brand_id, module, content, reason, section_key) {
+  return recordMemoryEntry({
+    brand_id,
+    module,
+    type: "rejection",
+    before: content,
+    after: "",
+    context: reason ?? "User rejected output",
+    impact_level: "high",
+    section_key
+  });
+}
+function logGovernanceOverride(brand_id, module, rule_category, original, overridden_to) {
+  return recordMemoryEntry({
+    brand_id,
+    module,
+    type: "override",
+    before: original,
+    after: overridden_to,
+    context: `Governance rule overridden: ${rule_category}`,
+    impact_level: "high"
+  });
+}
+function detectImpact(before, after) {
+  if (!before || !after) return "high";
+  const ratio = Math.abs(before.length - after.length) / Math.max(before.length, 1);
+  if (ratio > 0.5) return "high";
+  if (ratio > 0.2) return "medium";
+  return "low";
+}
+function summarizeCorrectionPatterns(brand_id) {
+  const corrections = getMemoryEntries(brand_id, { type: "correction" });
+  const rejections = getMemoryEntries(brand_id, { type: "rejection" });
+  const approvals = getMemoryEntries(brand_id, { type: "approval" });
+  const total_actions = corrections.length + rejections.length + approvals.length;
+  return {
+    total_corrections: corrections.length,
+    modules_corrected: [...new Set(corrections.map((c) => c.module))],
+    high_impact_count: corrections.filter((c) => c.impact_level === "high").length,
+    rejection_rate: total_actions > 0 ? rejections.length / total_actions : 0
+  };
+}
+
+// src/memory/decision-history.ts
+var decisionStore = /* @__PURE__ */ new Map();
+function getBrandDecisions(brand_id) {
+  if (!decisionStore.has(brand_id)) decisionStore.set(brand_id, []);
+  return decisionStore.get(brand_id);
+}
+function recordDecision(brand_id, category, from_value, to_value, rationale, metadata) {
+  const decision = {
+    id: `dec_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+    timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+    brand_id,
+    category,
+    from_value,
+    to_value,
+    rationale,
+    metadata
+  };
+  getBrandDecisions(brand_id).push(decision);
+  return decision;
+}
+function getDecisions(brand_id, category, limit2 = 50) {
+  let decisions = [...getBrandDecisions(brand_id)];
+  if (category) decisions = decisions.filter((d) => d.category === category);
+  return decisions.slice(-limit2);
+}
+function summarizeDecisionHistory(brand_id) {
+  const decisions = getBrandDecisions(brand_id);
+  const byCategory = decisions.reduce(
+    (acc, d) => {
+      if (!acc[d.category]) acc[d.category] = [];
+      acc[d.category].push(d);
+      return acc;
+    },
+    {}
+  );
+  const mostChanged = Object.entries(byCategory).sort(
+    (a, b) => b[1].length - a[1].length
+  )[0];
+  return {
+    growth_mode_trajectory: (byCategory["growth_mode_change"] ?? []).map((d) => d.to_value),
+    tone_trajectory: (byCategory["tone_change"] ?? []).map((d) => d.to_value),
+    risk_trajectory: (byCategory["risk_tolerance_change"] ?? []).map((d) => d.to_value),
+    total_decisions: decisions.length,
+    most_changed_category: mostChanged ? mostChanged[0] : null
+  };
+}
+
+// src/memory/memory-profile-builder.ts
+var profileCache = /* @__PURE__ */ new Map();
+var CACHE_TTL_MS = 5 * 60 * 1e3;
+function getMemoryProfile(brand_id) {
+  const cached = profileCache.get(brand_id);
+  if (cached && cached.expires > Date.now()) return cached.profile;
+  const profile = buildMemoryProfile(brand_id);
+  profileCache.set(brand_id, { profile, expires: Date.now() + CACHE_TTL_MS });
+  return profile;
+}
+function invalidateMemoryProfile(brand_id) {
+  profileCache.delete(brand_id);
+}
+function buildMemoryProfile(brand_id) {
+  const stats = getMemoryStats(brand_id);
+  const correctionSummary = summarizeCorrectionPatterns(brand_id);
+  const decisionSummary = summarizeDecisionHistory(brand_id);
+  const total_interactions = stats.correction + stats.approval + stats.rejection + stats.override;
+  const approval_rate = total_interactions > 0 ? stats.approval / total_interactions : 0.5;
+  const rejection_rate = correctionSummary.rejection_rate;
+  const growth_trajectory = decisionSummary.growth_mode_trajectory;
+  const last_growth_mode = growth_trajectory[growth_trajectory.length - 1] ?? "premium_brand";
+  const tone_intensity = inferToneIntensity(
+    last_growth_mode,
+    stats.correction,
+    rejection_rate
+  );
+  const urgency_tolerance = rejection_rate < 0.3 && last_growth_mode !== "premium_brand";
+  const creative_complexity = inferCreativeComplexity(correctionSummary.high_impact_count);
+  const growth_risk_appetite = inferGrowthRisk(last_growth_mode, stats.override);
+  const design_strictness = inferDesignStrictness(correctionSummary.total_corrections);
+  const approved_entries = getMemoryEntries(brand_id, { type: "approval" });
+  const preferred_modules = [
+    ...new Set(approved_entries.slice(-20).map((e) => e.module))
+  ].slice(0, 5);
+  const rejected_entries = getMemoryEntries(brand_id, { type: "rejection" });
+  const rejected_patterns = rejected_entries.slice(-10).map((e) => e.context).filter(Boolean).slice(0, 5);
+  const memory_confidence = total_interactions > 50 ? "high" : total_interactions > 10 ? "medium" : "low";
+  return {
+    brand_id,
+    generated_at: (/* @__PURE__ */ new Date()).toISOString(),
+    tone_intensity_preference: tone_intensity,
+    urgency_tolerance,
+    creative_complexity,
+    growth_risk_appetite,
+    design_strictness,
+    preferred_modules,
+    rejected_patterns,
+    approval_rate,
+    total_interactions,
+    memory_confidence
+  };
+}
+function inferToneIntensity(growth_mode, corrections, rejection_rate) {
+  if (growth_mode === "aggressive_dtc") return rejection_rate > 0.4 ? "medium" : "high";
+  if (growth_mode === "premium_brand") return corrections > 10 ? "minimal" : "low";
+  if (rejection_rate > 0.5) return "low";
+  return "medium";
+}
+function inferCreativeComplexity(high_impact_corrections) {
+  if (high_impact_corrections > 10) return "minimal";
+  if (high_impact_corrections > 5) return "moderate";
+  if (high_impact_corrections > 2) return "rich";
+  return "experimental";
+}
+function inferGrowthRisk(growth_mode, overrides) {
+  if (growth_mode === "aggressive_dtc" || overrides > 5) return "aggressive";
+  if (growth_mode === "premium_brand" && overrides < 2) return "conservative";
+  return "balanced";
+}
+function inferDesignStrictness(total_corrections) {
+  if (total_corrections > 20) return "high";
+  if (total_corrections > 5) return "medium";
+  return "low";
+}
+function memoryProfileToPromptBlock(profile) {
+  if (profile.memory_confidence === "low") return "";
+  const lines = ["\u2550\u2550\u2550 BRAND MEMORY LAYER \u2550\u2550\u2550"];
+  lines.push(
+    `\u2022 Tone intensity pr\xE9f\xE9r\xE9e : ${profile.tone_intensity_preference} (confiance: ${profile.memory_confidence})`
+  );
+  lines.push(`\u2022 Tol\xE9rance urgence : ${profile.urgency_tolerance ? "oui" : "non"}`);
+  lines.push(`\u2022 Complexit\xE9 cr\xE9ative : ${profile.creative_complexity}`);
+  lines.push(`\u2022 App\xE9tit pour le risque : ${profile.growth_risk_appetite}`);
+  lines.push(`\u2022 Rigueur design : ${profile.design_strictness}`);
+  lines.push(`\u2022 Taux d'approbation historique : ${Math.round(profile.approval_rate * 100)}%`);
+  if (profile.preferred_modules.length > 0) {
+    lines.push(`\u2022 Modules pr\xE9f\xE9r\xE9s : ${profile.preferred_modules.join(", ")}`);
+  }
+  if (profile.rejected_patterns.length > 0) {
+    lines.push(`\u2022 Patterns \xE0 \xE9viter : ${profile.rejected_patterns.slice(0, 3).join(" | ")}`);
+  }
+  return lines.join("\n");
+}
+
+// src/routes/governance.ts
+var router3 = (0, import_express3.Router)();
+router3.get("/governance/profiles", (_req, res) => {
+  const profiles = listSectorProfiles().map((p) => ({
+    id: p.id,
+    label: p.label,
+    regulation: p.regulation,
+    sector: p.sector,
+    region: p.region,
+    claim_packs: p.claim_packs,
+    tone: p.tone_constraints,
+    requires_wcag: p.requires_wcag_validation,
+    requires_price_lock: p.requires_price_lock,
+    mandatory_disclaimers_count: p.mandatory_disclaimers.length
+  }));
+  res.json({ profiles, total: profiles.length });
+});
+router3.get("/governance/status", (req, res) => {
+  const brandId = req.query["brand_id"] || "default";
+  const profiles = listSectorProfiles();
+  const posLock = getPositioningLock(brandId);
+  const memProfile = getMemoryProfile(brandId);
+  res.json({
+    profiles_loaded: profiles.length,
+    positioning_lock_active: posLock !== null,
+    archetype: posLock?.archetype ?? null,
+    memory_profile: memProfile,
+    pipeline_version: "3.0"
+  });
+});
+var governance_default = router3;
+
+// src/routes/memory.ts
+var import_express4 = __toESM(require_express2(), 1);
+var router4 = (0, import_express4.Router)();
+router4.get("/memory/profile/:brand_id", (req, res) => {
+  const { brand_id } = req.params;
+  const profile = getMemoryProfile(brand_id);
+  res.json({ profile });
+});
+router4.get("/memory/stats/:brand_id", (req, res) => {
+  const { brand_id } = req.params;
+  const stats = getMemoryStats(brand_id);
+  const correction_summary = summarizeCorrectionPatterns(brand_id);
+  const decision_summary = summarizeDecisionHistory(brand_id);
+  const decisions = getDecisions(brand_id, void 0, 10);
+  res.json({ stats, correction_summary, decision_summary, recent_decisions: decisions });
+});
+router4.post("/memory/correction", (req, res) => {
+  const { brand_id, module, section_key, before, after, context, impact_level } = req.body;
+  if (!brand_id || !module || !before || !after) {
+    res.status(400).json({ error: "brand_id, module, before, after requis" });
+    return;
+  }
+  const entry = logCorrection({ brand_id, module, section_key, before, after, context, impact_level });
+  invalidateMemoryProfile(brand_id);
+  res.json({ success: true, entry });
+});
+router4.post("/memory/approval", (req, res) => {
+  const { brand_id, module, content, section_key } = req.body;
+  if (!brand_id || !module || !content) {
+    res.status(400).json({ error: "brand_id, module, content requis" });
+    return;
+  }
+  const entry = logApproval(brand_id, module, content, section_key);
+  invalidateMemoryProfile(brand_id);
+  res.json({ success: true, entry });
+});
+router4.post("/memory/rejection", (req, res) => {
+  const { brand_id, module, content, reason, section_key } = req.body;
+  if (!brand_id || !module || !content) {
+    res.status(400).json({ error: "brand_id, module, content requis" });
+    return;
+  }
+  const entry = logRejection(brand_id, module, content, reason, section_key);
+  invalidateMemoryProfile(brand_id);
+  res.json({ success: true, entry });
+});
+router4.post("/memory/override", (req, res) => {
+  const { brand_id, module, rule_category, original, overridden_to } = req.body;
+  if (!brand_id || !module || !rule_category || !original || !overridden_to) {
+    res.status(400).json({ error: "Tous les champs requis" });
+    return;
+  }
+  const entry = logGovernanceOverride(brand_id, module, rule_category, original, overridden_to);
+  invalidateMemoryProfile(brand_id);
+  res.json({ success: true, entry });
+});
+router4.post("/memory/decision", (req, res) => {
+  const { brand_id, category, from_value, to_value, rationale } = req.body;
+  if (!brand_id || !category || !from_value || !to_value) {
+    res.status(400).json({ error: "brand_id, category, from_value, to_value requis" });
+    return;
+  }
+  const decision = recordDecision(brand_id, category, from_value, to_value, rationale);
+  invalidateMemoryProfile(brand_id);
+  res.json({ success: true, decision });
+});
+router4.delete("/memory/:brand_id", (req, res) => {
+  const { brand_id } = req.params;
+  clearMemory(brand_id);
+  invalidateMemoryProfile(brand_id);
+  res.json({ success: true, message: `M\xE9moire de ${brand_id} r\xE9initialis\xE9e` });
+});
+var memory_default = router4;
+
+// src/routes/positioning.ts
+var import_express5 = __toESM(require_express2(), 1);
+
+// src/positioning/archetype-engine.ts
+var ARCHETYPE_SIGNALS = {
+  Creator: {
+    keywords: ["cr\xE9atif", "artisan", "design", "unique", "innovation", "create", "craft", "artisanal", "bespoke"],
+    sectors: ["fashion", "cosmetics", "art", "tech"],
+    tones: ["cr\xE9atif", "inspirant", "artistique"],
+    values: ["cr\xE9ativit\xE9", "authenticit\xE9", "expression"],
+    growth_modes: ["premium_brand"],
+    weight: 1
+  },
+  Sage: {
+    keywords: ["expert", "expertise", "connaissance", "science", "research", "prouv\xE9", "\xE9tude", "savoir"],
+    sectors: ["saas", "finance", "food"],
+    tones: ["expert", "\xE9ducatif", "informatif"],
+    values: ["savoir", "v\xE9rit\xE9", "intelligence"],
+    growth_modes: ["premium_brand", "balanced_growth"],
+    weight: 1
+  },
+  Caregiver: {
+    keywords: ["soin", "protection", "bienveillance", "sant\xE9", "care", "nourrir", "prot\xE9ger", "accompagner"],
+    sectors: ["cosmetics", "food", "finance"],
+    tones: ["doux", "bienveillant", "rassurant"],
+    values: ["bienveillance", "protection", "g\xE9n\xE9rosit\xE9"],
+    growth_modes: ["premium_brand", "balanced_growth"],
+    weight: 1
+  },
+  Explorer: {
+    keywords: ["aventure", "d\xE9couverte", "libert\xE9", "voyage", "explorer", "wild", "adventure", "freedom"],
+    sectors: ["fashion", "food"],
+    tones: ["aventurier", "libre", "dynamique"],
+    values: ["libert\xE9", "d\xE9couverte", "authenticit\xE9"],
+    growth_modes: ["balanced_growth", "aggressive_dtc"],
+    weight: 1
+  },
+  Ruler: {
+    keywords: ["luxe", "prestige", "excellence", "premium", "luxury", "\xE9lite", "r\xE9f\xE9rence", "leader"],
+    sectors: ["fashion", "finance"],
+    tones: ["autoritaire", "raffin\xE9", "exclusif"],
+    values: ["excellence", "prestige", "contr\xF4le"],
+    growth_modes: ["premium_brand"],
+    weight: 1
+  },
+  Rebel: {
+    keywords: ["rebelle", "disruptif", "r\xE9volution", "challenger", "anti-conformiste", "rebel", "disrupt", "bold"],
+    sectors: ["fashion", "saas"],
+    tones: ["provocateur", "audacieux", "irr\xE9v\xE9rencieux"],
+    values: ["libert\xE9", "r\xE9bellion", "changement"],
+    growth_modes: ["aggressive_dtc"],
+    weight: 1
+  },
+  Lover: {
+    keywords: ["amour", "passion", "d\xE9sir", "sensualit\xE9", "beaut\xE9", "love", "passion", "sensual", "glamour"],
+    sectors: ["cosmetics", "fashion"],
+    tones: ["sensuel", "passionn\xE9", "romantique"],
+    values: ["beaut\xE9", "passion", "connexion"],
+    growth_modes: ["premium_brand", "balanced_growth"],
+    weight: 1
+  },
+  Hero: {
+    keywords: ["performance", "r\xE9sultats", "force", "efficacit\xE9", "champion", "achieve", "results", "power"],
+    sectors: ["saas", "food", "fashion"],
+    tones: ["dynamique", "motivant", "performant"],
+    values: ["performance", "courage", "excellence"],
+    growth_modes: ["aggressive_dtc", "balanced_growth"],
+    weight: 1
+  },
+  Innocent: {
+    keywords: ["naturel", "pur", "simple", "honn\xEAte", "authentique", "pure", "natural", "clean", "transparent"],
+    sectors: ["food", "cosmetics"],
+    tones: ["simple", "honn\xEAte", "optimiste"],
+    values: ["puret\xE9", "honn\xEAtet\xE9", "simplicit\xE9"],
+    growth_modes: ["premium_brand"],
+    weight: 1
+  },
+  Jester: {
+    keywords: ["fun", "humour", "joyeux", "d\xE9cal\xE9", "playful", "funny", "entertaining", "bold"],
+    sectors: ["food", "saas"],
+    tones: ["humoristique", "d\xE9cal\xE9", "fun"],
+    values: ["joie", "humour", "l\xE9g\xE8ret\xE9"],
+    growth_modes: ["aggressive_dtc", "balanced_growth"],
+    weight: 1
+  },
+  Everyman: {
+    keywords: ["accessible", "pour tous", "quotidien", "pratique", "simple", "everyday", "accessible", "friendly"],
+    sectors: ["food", "fashion", "saas"],
+    tones: ["chaleureux", "accessible", "pragmatique"],
+    values: ["appartenance", "\xE9galit\xE9", "praticit\xE9"],
+    growth_modes: ["balanced_growth", "aggressive_dtc"],
+    weight: 1
+  },
+  Magician: {
+    keywords: ["transformation", "magie", "innovation", "r\xE9v\xE9lation", "transcendance", "transform", "magic", "reinvention"],
+    sectors: ["cosmetics", "saas", "food"],
+    tones: ["myst\xE9rieux", "visionnaire", "transformateur"],
+    values: ["transformation", "vision", "innovation"],
+    growth_modes: ["premium_brand"],
+    weight: 1
+  }
+};
+function detectArchetype(input) {
+  const text = [
+    input.brand_name ?? "",
+    input.tone ?? "",
+    (input.values ?? []).join(" "),
+    input.description ?? ""
+  ].join(" ").toLowerCase();
+  const sector = (input.sector ?? "").toLowerCase();
+  const growth_mode = input.growth_mode ?? "balanced_growth";
+  const scores = Object.entries(ARCHETYPE_SIGNALS).map(([archetype, signals]) => {
+    let score = 0;
+    for (const kw of signals.keywords) {
+      if (text.includes(kw.toLowerCase())) score += 2;
+    }
+    for (const s of signals.sectors) {
+      if (sector.includes(s)) score += 1.5;
+    }
+    for (const tone of signals.tones) {
+      if (text.includes(tone.toLowerCase())) score += 1;
+    }
+    for (const v of signals.values) {
+      if (text.includes(v.toLowerCase())) score += 1;
+    }
+    if (signals.growth_modes.includes(growth_mode)) score += 1;
+    score *= signals.weight;
+    const confidence = score >= 6 ? "high" : score >= 3 ? "medium" : "low";
+    return { archetype, score, confidence };
+  });
+  scores.sort((a, b) => b.score - a.score);
+  const primary = scores[0]?.archetype ?? "Creator";
+  const secondary = scores[1]?.score > 0 ? scores[1].archetype : null;
+  const overall_confidence = scores[0]?.score >= 6 ? "high" : scores[0]?.score >= 3 ? "medium" : "low";
+  const brand_essence = buildBrandEssence(primary);
+  const narrative_tone = buildNarrativeTone(primary);
+  return {
+    primary,
+    secondary,
+    scores,
+    confidence: overall_confidence,
+    brand_essence,
+    narrative_tone
+  };
+}
+function buildBrandEssence(archetype) {
+  const essences = {
+    Creator: "Lib\xE9rer la cr\xE9ativit\xE9 et donner forme au beau",
+    Sage: "\xC9clairer par la connaissance et l'expertise",
+    Caregiver: "Prot\xE9ger, nourrir et prendre soin",
+    Explorer: "D\xE9couvrir, s'aventurer, repousser les limites",
+    Ruler: "Diriger avec excellence et cr\xE9er l'ordre",
+    Rebel: "D\xE9fier les conventions et lib\xE9rer le possible",
+    Lover: "Cr\xE9er des connexions profondes par la beaut\xE9 et la passion",
+    Hero: "Triompher des d\xE9fis et inspirer la performance",
+    Innocent: "Pr\xE9server la puret\xE9, la simplicit\xE9 et l'authenticit\xE9",
+    Jester: "Apporter joie, l\xE9g\xE8ret\xE9 et plaisir",
+    Everyman: "Appartenir, connecter, servir tous",
+    Magician: "Transformer la r\xE9alit\xE9 et r\xE9v\xE9ler le possible"
+  };
+  return essences[archetype];
+}
+function buildNarrativeTone(archetype) {
+  const tones = {
+    Creator: "Inspirant, esth\xE9tique, artisanal",
+    Sage: "Informatif, expert, factuel",
+    Caregiver: "Chaleureux, rassurant, empathique",
+    Explorer: "Aventurier, libre, dynamique",
+    Ruler: "Autoritaire, pr\xE9cis, exclusif",
+    Rebel: "Provocateur, audacieux, irr\xE9v\xE9rencieux",
+    Lover: "Sensuel, passionn\xE9, intime",
+    Hero: "Motivant, performant, ambitieux",
+    Innocent: "Simple, honn\xEAte, optimiste",
+    Jester: "L\xE9ger, humoristique, engageant",
+    Everyman: "Accessible, pragmatique, chaleureux",
+    Magician: "Visionnaire, myst\xE9rieux, transformateur"
+  };
+  return tones[archetype];
+}
+
+// src/positioning/market-mapping.ts
+var AXIS_DEFINITIONS = [
+  {
+    name: "price_positioning",
+    left_pole: "Accessible",
+    right_pole: "Luxe",
+    signals: {
+      left_keywords: ["accessible", "abordable", "\xE9conomique", "budget", "low-cost", "everyday", "everyone"],
+      right_keywords: ["luxe", "premium", "prestige", "exclusif", "high-end", "luxury", "\xE9lite", "haut de gamme"]
+    }
+  },
+  {
+    name: "communication_style",
+    left_pole: "Technique",
+    right_pole: "\xC9motionnel",
+    signals: {
+      left_keywords: ["technique", "performance", "efficacit\xE9", "donn\xE9es", "r\xE9sultats", "prouv\xE9", "scientifique", "ingrediants"],
+      right_keywords: ["\xE9motion", "sensation", "feeling", "exp\xE9rience", "lifestyle", "\xE2me", "passion", "ressenti"]
+    }
+  },
+  {
+    name: "visual_language",
+    left_pole: "Minimaliste",
+    right_pole: "Expressif",
+    signals: {
+      left_keywords: ["minimaliste", "\xE9pur\xE9", "simple", "clean", "blanc", "neutre", "essentiel", "minimal"],
+      right_keywords: ["expressif", "color\xE9", "bold", "vibrant", "dynamique", "cr\xE9atif", "richement", "maximaliste"]
+    }
+  },
+  {
+    name: "brand_stance",
+    left_pole: "Tradition",
+    right_pole: "Innovation",
+    signals: {
+      left_keywords: ["tradition", "heritage", "artisanal", "savoir-faire", "classique", "authentique", "historique"],
+      right_keywords: ["innovation", "futur", "tech", "disruption", "nouveau", "r\xE9volutionnaire", "in\xE9dit", "next-gen"]
+    }
+  }
+];
+function buildMarketMap(input) {
+  const text = [
+    input.tone ?? "",
+    (input.values ?? []).join(" "),
+    input.description ?? "",
+    input.sector ?? ""
+  ].join(" ").toLowerCase();
+  const axes = AXIS_DEFINITIONS.map((axisDef) => {
+    const left_score = axisDef.signals.left_keywords.filter(
+      (kw) => text.includes(kw.toLowerCase())
+    ).length;
+    const right_score = axisDef.signals.right_keywords.filter(
+      (kw) => text.includes(kw.toLowerCase())
+    ).length;
+    let position = 0;
+    if (left_score + right_score > 0) {
+      position = (right_score - left_score) / (left_score + right_score);
+    }
+    if (axisDef.name === "price_positioning") {
+      if (input.price_tier === "luxury" || input.growth_mode === "premium_brand") position = Math.max(position, 0.5);
+      if (input.price_tier === "budget") position = Math.min(position, -0.5);
+    }
+    const total_signals = left_score + right_score;
+    const confidence = total_signals >= 4 ? "high" : total_signals >= 2 ? "medium" : "low";
+    return {
+      name: axisDef.name,
+      left_pole: axisDef.left_pole,
+      right_pole: axisDef.right_pole,
+      brand_position: Math.round(position * 100) / 100,
+      confidence
+    };
+  });
+  const whitespace_zones = [];
+  const price_axis = axes.find((a) => a.name === "price_positioning");
+  const comm_axis = axes.find((a) => a.name === "communication_style");
+  const visual_axis = axes.find((a) => a.name === "visual_language");
+  if (price_axis && comm_axis) {
+    if (price_axis.brand_position > 0.3 && comm_axis.brand_position < -0.2) {
+      whitespace_zones.push("Luxe technique \u2014 territoire peu occup\xE9 dans ce secteur");
+    }
+    if (price_axis.brand_position < -0.3 && comm_axis.brand_position > 0.3) {
+      whitespace_zones.push("Accessible \xE9motionnel \u2014 positionnement diff\xE9renciant");
+    }
+  }
+  if (visual_axis) {
+    if (visual_axis.brand_position < -0.4) {
+      whitespace_zones.push("Minimalisme radical \u2014 rare et m\xE9morisable dans un march\xE9 satur\xE9");
+    }
+  }
+  const competitive_density = whitespace_zones.length >= 2 ? "low" : whitespace_zones.length === 1 ? "medium" : "high";
+  const strategic_opportunity = whitespace_zones.length > 0 ? `Territoire identifi\xE9 : ${whitespace_zones[0]}` : "Positionnement central \u2014 diff\xE9renciation \xE0 construire via l'ex\xE9cution cr\xE9ative";
+  return {
+    axes,
+    whitespace_detected: whitespace_zones.length > 0,
+    whitespace_zones,
+    competitive_density,
+    strategic_opportunity
+  };
+}
+
+// src/positioning/differentiation-matrix.ts
+var SECTOR_ARCHETYPES = {
+  cosmetics: [
+    {
+      name: "Mass Market Player",
+      axes_positions: {
+        price_positioning: -0.6,
+        communication_style: 0.3,
+        visual_language: 0.2,
+        brand_stance: -0.1
+      }
+    },
+    {
+      name: "Luxury Beauty House",
+      axes_positions: {
+        price_positioning: 0.9,
+        communication_style: 0.5,
+        visual_language: -0.3,
+        brand_stance: -0.2
+      }
+    },
+    {
+      name: "Clean Beauty Brand",
+      axes_positions: {
+        price_positioning: 0.3,
+        communication_style: 0.4,
+        visual_language: -0.5,
+        brand_stance: -0.6
+      }
+    }
+  ],
+  fashion: [
+    {
+      name: "Fast Fashion",
+      axes_positions: {
+        price_positioning: -0.7,
+        communication_style: 0.5,
+        visual_language: 0.6,
+        brand_stance: 0.2
+      }
+    },
+    {
+      name: "Luxury Maison",
+      axes_positions: {
+        price_positioning: 0.95,
+        communication_style: 0.2,
+        visual_language: -0.2,
+        brand_stance: -0.4
+      }
+    },
+    {
+      name: "Mid-Market DTC",
+      axes_positions: {
+        price_positioning: 0.1,
+        communication_style: 0.4,
+        visual_language: 0.1,
+        brand_stance: 0.3
+      }
+    }
+  ],
+  saas: [
+    {
+      name: "Enterprise Legacy",
+      axes_positions: {
+        price_positioning: 0.7,
+        communication_style: -0.7,
+        visual_language: -0.4,
+        brand_stance: -0.5
+      }
+    },
+    {
+      name: "Startup Challenger",
+      axes_positions: {
+        price_positioning: -0.3,
+        communication_style: 0.3,
+        visual_language: 0.5,
+        brand_stance: 0.8
+      }
+    }
+  ],
+  food: [
+    {
+      name: "Industrial Brand",
+      axes_positions: {
+        price_positioning: -0.8,
+        communication_style: 0.2,
+        visual_language: 0.4,
+        brand_stance: -0.3
+      }
+    },
+    {
+      name: "Premium Organic",
+      axes_positions: {
+        price_positioning: 0.6,
+        communication_style: 0.3,
+        visual_language: -0.3,
+        brand_stance: -0.7
+      }
+    }
+  ],
+  finance: [
+    {
+      name: "Traditional Bank",
+      axes_positions: {
+        price_positioning: 0.2,
+        communication_style: -0.8,
+        visual_language: -0.5,
+        brand_stance: -0.8
+      }
+    },
+    {
+      name: "Fintech Disruptor",
+      axes_positions: {
+        price_positioning: -0.2,
+        communication_style: 0.4,
+        visual_language: 0.3,
+        brand_stance: 0.9
+      }
+    }
+  ]
+};
+function buildDifferentiationMatrix(brand_axes, sector) {
+  const normalizedSector = Object.keys(SECTOR_ARCHETYPES).find(
+    (k) => sector.toLowerCase().includes(k)
+  );
+  const competitors = normalizedSector ? SECTOR_ARCHETYPES[normalizedSector] : [];
+  const entries = brand_axes.map((axis) => {
+    const competitor_positions = competitors.map((comp) => ({
+      name: comp.name,
+      position: comp.axes_positions[axis.name] ?? 0
+    }));
+    const avg_competitor_pos = competitor_positions.length > 0 ? competitor_positions.reduce((a, c) => a + c.position, 0) / competitor_positions.length : 0;
+    const gap = Math.abs(axis.brand_position - avg_competitor_pos);
+    const opportunity_zone = gap >= 0.4;
+    return {
+      axis_name: axis.name,
+      left_pole: axis.left_pole,
+      right_pole: axis.right_pole,
+      brand_position: axis.brand_position,
+      competitors: competitor_positions,
+      gap: Math.round(gap * 100) / 100,
+      opportunity_zone
+    };
+  });
+  const sorted_by_gap = [...entries].sort((a, b) => b.gap - a.gap);
+  const strongest_differentiators = sorted_by_gap.slice(0, 2).filter((e) => e.opportunity_zone).map((e) => `${e.left_pole} \u2194 ${e.right_pole} (gap: ${e.gap})`);
+  const weakest_differentiators = sorted_by_gap.slice(-2).map((e) => `${e.left_pole} \u2194 ${e.right_pole} (gap: ${e.gap})`);
+  const opportunity_summary = strongest_differentiators.length > 0 ? `Avantage distinctif sur : ${strongest_differentiators.join(" | ")}` : "Positionnement proche des concurrents \u2014 diff\xE9renciation par l'ex\xE9cution n\xE9cessaire";
+  return { entries, strongest_differentiators, weakest_differentiators, opportunity_summary };
+}
+
+// src/positioning/competitor-analysis.ts
+function runCompetitorAnalysis(input) {
+  const market_map = buildMarketMap({
+    sector: input.sector,
+    tone: input.tone,
+    values: input.values,
+    growth_mode: input.growth_mode,
+    description: input.description,
+    price_tier: input.price_tier
+  });
+  const diff_matrix = buildDifferentiationMatrix(market_map.axes, input.sector ?? "");
+  const axes_summary = market_map.axes.map((a) => {
+    const label = a.brand_position > 0.3 ? a.right_pole : a.brand_position < -0.3 ? a.left_pole : `Centr\xE9 (${a.left_pole}\u2194${a.right_pole})`;
+    return `${label}`;
+  }).join(", ");
+  const market_map_summary = `Positionnement : ${axes_summary}`;
+  const differentiation_summary = diff_matrix.opportunity_summary;
+  const price_axis = market_map.axes.find((a) => a.name === "price_positioning");
+  const comm_axis = market_map.axes.find((a) => a.name === "communication_style");
+  const price_label = price_axis ? price_axis.brand_position > 0.4 ? "premium" : price_axis.brand_position < -0.4 ? "accessible" : "mid-market" : "mid-market";
+  const comm_label = comm_axis ? comm_axis.brand_position > 0.3 ? "\xE0 fort impact \xE9motionnel" : comm_axis.brand_position < -0.3 ? "\xE0 valeur technique" : "\xE9quilibr\xE9" : "\xE9quilibr\xE9";
+  const archetype_label = input.archetype ?? "Creator";
+  const brand_positioning_statement = `${input.brand_name} est une marque ${price_label}, ${comm_label}, port\xE9e par l'arch\xE9type ${archetype_label}, qui se diff\xE9rencie sur : ${diff_matrix.strongest_differentiators.join(" et ") || "l'ex\xE9cution cr\xE9ative"}.`;
+  return {
+    market_map_summary,
+    differentiation_summary,
+    whitespace_zones: market_map.whitespace_zones,
+    strongest_differentiators: diff_matrix.strongest_differentiators,
+    strategic_opportunity: market_map.strategic_opportunity,
+    competitive_density: market_map.competitive_density,
+    brand_positioning_statement
+  };
+}
+
+// src/positioning/territory-builder.ts
+var ARCHETYPE_TERRITORIES = {
+  Creator: {
+    core_tension: (brand, _) => `Entre ce qui existe et ce qui n'a pas encore \xE9t\xE9 imagin\xE9 \u2014 ${brand} ouvre le territoire du possible.`,
+    brand_promise: (brand) => `${brand} transforme chaque interaction en une opportunit\xE9 d'expression unique.`,
+    emotional_hook: "La fiert\xE9 de poss\xE9der quelque chose qui n'appartient qu'\xE0 soi.",
+    functional_pillar: (_) => "Un savoir-faire artisanal traduit en produit d'une pr\xE9cision irr\xE9prochable.",
+    cultural_anchor: "L'art comme langage universel, la cr\xE9ativit\xE9 comme acte de r\xE9sistance.",
+    anti_positioning: "Ni industriel, ni g\xE9n\xE9rique. Jamais une copie \u2014 toujours un original.",
+    tagline_direction: "Quelque chose a \xE9t\xE9 cr\xE9\xE9. Il ne reste plus qu'\xE0 le vivre."
+  },
+  Sage: {
+    core_tension: (brand, _) => `Dans un monde de bruit, ${brand} est la voix qui \xE9claire.`,
+    brand_promise: (brand) => `${brand} donne acc\xE8s \xE0 la connaissance qui compte vraiment.`,
+    emotional_hook: "La confiance que procure un savoir v\xE9rifiable.",
+    functional_pillar: (_) => "Des donn\xE9es, des preuves, une expertise indiscutable.",
+    cultural_anchor: "La v\xE9rit\xE9 comme valeur fondatrice dans un monde de raccourcis.",
+    anti_positioning: "Pas de promesses creuses. Pas de tendances. Que des faits.",
+    tagline_direction: "Ce que vous savez change tout."
+  },
+  Caregiver: {
+    core_tension: (brand, _) => `Entre le monde qui bouscule et le refuge que ${brand} construit.`,
+    brand_promise: (brand) => `${brand} veille, prot\xE8ge et nourrit \u2014 comme personne d'autre.`,
+    emotional_hook: "La s\xE9curit\xE9 d'\xEAtre entre de bonnes mains.",
+    functional_pillar: (_) => "Des formules pens\xE9es pour la douceur, la protection, le long terme.",
+    cultural_anchor: "Prendre soin de soi est un acte de respect envers les autres.",
+    anti_positioning: "Pas de performance \xE0 tout prix. L'efficacit\xE9 au service du bien-\xEAtre.",
+    tagline_direction: "Parce que vous m\xE9ritez d'\xEAtre pris en soin."
+  },
+  Explorer: {
+    core_tension: (brand, _) => `Entre la carte connue et le territoire qui reste \xE0 d\xE9couvrir \u2014 ${brand} choisit l'inconnu.`,
+    brand_promise: (brand) => `${brand} \xE9quipe chaque aventure, r\xE9elle ou int\xE9rieure.`,
+    emotional_hook: "L'adr\xE9naline de la premi\xE8re fois. La libert\xE9 sans barri\xE8re.",
+    functional_pillar: (_) => "Con\xE7u pour performer dans toutes les conditions, partout dans le monde.",
+    cultural_anchor: "Les fronti\xE8res sont des conventions. L'exploration est un \xE9tat d'esprit.",
+    anti_positioning: "Pas de confort superficiel. Pas de routine. Toujours au-del\xE0.",
+    tagline_direction: "L'horizon ne recule que si vous vous arr\xEAtez."
+  },
+  Ruler: {
+    core_tension: (brand, _) => `Entre l'excellence qui se m\xE9rite et le compromis que le monde accepte \u2014 ${brand} choisit l'excellence.`,
+    brand_promise: (brand) => `${brand} est la r\xE9f\xE9rence que les autres s'efforcent d'\xE9galer.`,
+    emotional_hook: "Le sentiment d'appartenir \xE0 une \xE9lite discr\xE8te et exigeante.",
+    functional_pillar: (_) => "La pr\xE9cision, la durabilit\xE9 et l'autorit\xE9 dans chaque d\xE9tail.",
+    cultural_anchor: "Le pouvoir v\xE9ritable ne se montre pas. Il se ressent.",
+    anti_positioning: "Pas pour tout le monde. Pas pour tout de suite. Seulement pour ceux qui comprennent.",
+    tagline_direction: "La diff\xE9rence entre le bon et le r\xE9f\xE9rent."
+  },
+  Rebel: {
+    core_tension: (brand, _) => `Entre les r\xE8gles \xE9tablies et le monde qu'il faudrait cr\xE9er \u2014 ${brand} choisit la rupture.`,
+    brand_promise: (brand) => `${brand} est pour ceux qui refusent de jouer selon les r\xE8gles de quelqu'un d'autre.`,
+    emotional_hook: "La satisfaction de dire non \xE0 la norme et oui \xE0 soi-m\xEAme.",
+    functional_pillar: (_) => "Un produit pens\xE9 pour casser les conventions, pas pour les prolonger.",
+    cultural_anchor: "La r\xE9bellion n'est pas une posture. C'est une n\xE9cessit\xE9 cr\xE9atrice.",
+    anti_positioning: "Pas sage, pas classique, pas format\xE9. Jamais.",
+    tagline_direction: "Les r\xE8gles sont faites pour ceux qui n'ont rien \xE0 dire."
+  },
+  Lover: {
+    core_tension: (brand, _) => `Entre la routine du quotidien et l'intensit\xE9 d'un instant \u2014 ${brand} cultive l'intensit\xE9.`,
+    brand_promise: (brand) => `${brand} transforme chaque moment en une exp\xE9rience qui marque.`,
+    emotional_hook: "Le frisson du d\xE9sir. La profondeur d'une connexion vraie.",
+    functional_pillar: (_) => "Des formules, des textures, des d\xE9tails pens\xE9s pour \xE9mouvoir les sens.",
+    cultural_anchor: "La beaut\xE9 n'est pas superficielle. Elle est le langage de l'\xE2me.",
+    anti_positioning: "Pas fonctionnel d'abord. L'exp\xE9rience prime sur le r\xE9sultat.",
+    tagline_direction: "Ce que vous ressentez est la v\xE9rit\xE9."
+  },
+  Hero: {
+    core_tension: (brand, _) => `Entre les obstacles qui freinent et la performance que ${brand} lib\xE8re.`,
+    brand_promise: (brand) => `${brand} \xE9quipe ceux qui refusent la m\xE9diocrit\xE9.`,
+    emotional_hook: "La fiert\xE9 de se d\xE9passer. La certitude d'avoir tout donn\xE9.",
+    functional_pillar: (_) => "Des r\xE9sultats mesurables. Une efficacit\xE9 prouv\xE9e. Aucun compromis.",
+    cultural_anchor: "La performance est un choix. Chaque jour. Sans excuses.",
+    anti_positioning: "Pas de douceur. Pas de facilit\xE9. Que de la progression.",
+    tagline_direction: "Vous \xEAtes \xE0 une d\xE9cision du prochain niveau."
+  },
+  Innocent: {
+    core_tension: (brand, _) => `Entre le monde qui complique et ${brand} qui simplifie.`,
+    brand_promise: (brand) => `${brand} prouve que ce qui est pur est aussi ce qui est puissant.`,
+    emotional_hook: "La paix d'esprit de savoir que c'est bon, vrai, et honn\xEAte.",
+    functional_pillar: (_) => "Des ingr\xE9dients propres, des processus transparents, rien \xE0 cacher.",
+    cultural_anchor: "La simplicit\xE9 est la sophistication ultime.",
+    anti_positioning: "Pas de chimie inutile. Pas de marketing vide. Que du vrai.",
+    tagline_direction: "Quand c'est bon, il n'y a rien \xE0 ajouter."
+  },
+  Jester: {
+    core_tension: (brand, _) => `Entre un monde qui se prend trop au s\xE9rieux et ${brand} qui ose rire.`,
+    brand_promise: (brand) => `${brand} prouve que le plaisir est la meilleure strat\xE9gie.`,
+    emotional_hook: "Le sourire spontan\xE9. La l\xE9g\xE8ret\xE9 qu'on n'attendait pas.",
+    functional_pillar: (_) => "Un produit qui fonctionne, mais qui surtout fait du bien au moral.",
+    cultural_anchor: "L'humour est une intelligence. La joie, une n\xE9cessit\xE9.",
+    anti_positioning: "Pas solennel, pas institutionnel. Jamais ennuyeux.",
+    tagline_direction: "La vie est trop courte pour les marques sans caract\xE8re."
+  },
+  Everyman: {
+    core_tension: (brand, _) => `Entre les marques pour les quelques-uns et ${brand} qui est pour tout le monde.`,
+    brand_promise: (brand) => `${brand} croit que la qualit\xE9 ne devrait jamais \xEAtre un privil\xE8ge.`,
+    emotional_hook: "Le sentiment d'\xEAtre compris, respect\xE9, et bien servi.",
+    functional_pillar: (_) => "Un rapport qualit\xE9/valeur qui ne trahit jamais la confiance.",
+    cultural_anchor: "Le quotidien m\xE9rite mieux que du m\xE9diocre.",
+    anti_positioning: "Pas \xE9litiste, pas inaccessible. Pour les gens r\xE9els.",
+    tagline_direction: "Fait pour vous. Vraiment."
+  },
+  Magician: {
+    core_tension: (brand, _) => `Entre ce que vous \xEAtes et ce que ${brand} peut vous aider \xE0 devenir.`,
+    brand_promise: (brand) => `${brand} catalyse des transformations que vous n'auriez pas cru possibles.`,
+    emotional_hook: "L'\xE9merveillement du changement. La magie de la r\xE9v\xE9lation.",
+    functional_pillar: (_) => "Une technologie ou une formule qui transcende les attentes.",
+    cultural_anchor: "Toute transformation commence par une vision que les autres ne partagent pas encore.",
+    anti_positioning: "Pas incr\xE9mental, pas \xE9volutif. Transformationnel ou rien.",
+    tagline_direction: "Vous ne serez plus jamais le m\xEAme."
+  }
+};
+function buildBrandTerritory(archetype, brand_name, sector) {
+  const template = ARCHETYPE_TERRITORIES[archetype];
+  return {
+    core_tension: template.core_tension(brand_name, sector),
+    brand_promise: template.brand_promise(brand_name),
+    emotional_hook: template.emotional_hook,
+    functional_pillar: template.functional_pillar(sector),
+    cultural_anchor: template.cultural_anchor,
+    anti_positioning: template.anti_positioning,
+    tagline_direction: template.tagline_direction
+  };
+}
+function brandTerritoryToPromptBlock(territory) {
+  return [
+    "\u2550\u2550\u2550 STRATEGIC POSITIONING LAYER \u2550\u2550\u2550",
+    `\u2022 Tension fondatrice : ${territory.core_tension}`,
+    `\u2022 Promesse de marque : ${territory.brand_promise}`,
+    `\u2022 Hook \xE9motionnel : ${territory.emotional_hook}`,
+    `\u2022 Pilier fonctionnel : ${territory.functional_pillar}`,
+    `\u2022 Ancre culturelle : ${territory.cultural_anchor}`,
+    `\u2022 Anti-positionnement : ${territory.anti_positioning}`,
+    `\u2022 Direction tagline : ${territory.tagline_direction}`
+  ].join("\n");
+}
+
+// src/routes/positioning.ts
+var router5 = (0, import_express5.Router)();
+router5.post("/positioning/analyze", (req, res) => {
+  const {
+    brand_id,
+    brand_name,
+    sector,
+    tone,
+    values,
+    growth_mode,
+    description,
+    price_tier
+  } = req.body;
+  if (!brand_id || !brand_name) {
+    res.status(400).json({ error: "brand_id et brand_name requis" });
+    return;
+  }
+  const values_array = Array.isArray(values) ? values : typeof values === "string" ? values.split(/[\n,;]/).map((v) => v.trim()).filter(Boolean) : [];
+  const archetype_result = detectArchetype({
+    brand_name,
+    sector,
+    tone,
+    values: values_array,
+    growth_mode,
+    description
+  });
+  const market_map = buildMarketMap({
+    sector,
+    tone,
+    values: values_array,
+    growth_mode,
+    description,
+    price_tier
+  });
+  const territory = buildBrandTerritory(
+    archetype_result.primary,
+    brand_name,
+    sector ?? ""
+  );
+  const competitor_analysis = runCompetitorAnalysis({
+    brand_name,
+    sector,
+    tone,
+    values: values_array,
+    growth_mode,
+    description,
+    archetype: archetype_result.primary,
+    price_tier
+  });
+  const lock = setPositioningLock(brand_id, {
+    archetype: archetype_result.primary,
+    secondary_archetype: archetype_result.secondary,
+    territory,
+    market_map
+  });
+  res.json({
+    archetype: archetype_result,
+    market_map,
+    territory,
+    competitor_analysis,
+    positioning_lock: lock,
+    prompt_block: brandTerritoryToPromptBlock(territory)
+  });
+});
+router5.get("/positioning/lock/:brand_id", (req, res) => {
+  const { brand_id } = req.params;
+  const lock = getPositioningLock(brand_id);
+  if (!lock) {
+    res.status(404).json({ error: "Aucun positioning lock pour cette marque", brand_id });
+    return;
+  }
+  res.json({
+    lock,
+    prompt_block: positioningLockToPromptBlock(lock)
+  });
+});
+router5.delete("/positioning/lock/:brand_id", (req, res) => {
+  const { brand_id } = req.params;
+  clearPositioningLock(brand_id);
+  res.json({ success: true, message: `Positioning lock de ${brand_id} supprim\xE9` });
+});
+router5.post("/positioning/archetype", (req, res) => {
+  const { brand_name, sector, tone, values, growth_mode, description } = req.body;
+  if (!brand_name) {
+    res.status(400).json({ error: "brand_name requis" });
+    return;
+  }
+  const values_array = Array.isArray(values) ? values : typeof values === "string" ? values.split(/[\n,;]/).map((v) => v.trim()).filter(Boolean) : [];
+  const result = detectArchetype({ brand_name, sector, tone, values: values_array, growth_mode, description });
+  res.json(result);
+});
+var positioning_default = router5;
+
+// src/routes/openai/enhance-prompts.ts
+var import_express6 = __toESM(require_express2(), 1);
 
 // ../../node_modules/.pnpm/@anthropic-ai+sdk@0.88.0_zod@3.25.76/node_modules/@anthropic-ai/sdk/internal/tslib.mjs
 function __classPrivateFieldSet2(receiver, state, value, kind, f) {
@@ -46031,7 +47559,7 @@ function runWcagValidator(palette) {
 }
 
 // src/governance/growth-modes.ts
-var PROFILES = {
+var PROFILES2 = {
   premium_brand: {
     mode: "premium_brand",
     label: "Premium Brand",
@@ -46109,388 +47637,8 @@ var PROFILES = {
   }
 };
 function getGrowthProfile(mode) {
-  if (!mode) return PROFILES.premium_brand;
-  return PROFILES[mode] ?? PROFILES.premium_brand;
-}
-
-// src/config/sectors/cosmetics_eu.json
-var cosmetics_eu_default = {
-  id: "cosmetics_eu",
-  sector: "cosmetics",
-  region: "eu",
-  label: "Cosm\xE9tiques (Union Europ\xE9enne)",
-  regulation: "Regulation (EC) 1223/2009 + Commission Regulation (EU) 655/2013",
-  medical_claims_allowed: false,
-  financial_promises_allowed: false,
-  health_claims_allowed: false,
-  urgency_policy: {
-    allowed: false,
-    requires_real_inventory: true
-  },
-  forbidden_words: [
-    "anti-aging",
-    "anti-\xE2ge",
-    "stop aging",
-    "miracle",
-    "miraculeux",
-    "gu\xE9rit",
-    "soigne",
-    "traite",
-    "clinically proven",
-    "cliniquement prouv\xE9",
-    "100% effective",
-    "guaranteed results"
-  ],
-  tone_constraints: {
-    aggressiveness_level: "low",
-    emojis_allowed: false,
-    exclamation_limit: 0
-  },
-  requires_wcag_validation: false,
-  requires_price_lock: true,
-  requires_claim_validation: true,
-  claim_packs: [
-    "cosmetic_eu_physiological",
-    "medical_vocab",
-    "fake_certifications",
-    "fake_stats",
-    "hyperbolic",
-    "temporal_guarantees",
-    "urgency_dark_patterns"
-  ],
-  mandatory_disclaimers: [
-    "Effets cosm\xE9tiques : \xAB aide \xE0 \xBB, \xAB contribue \xE0 \xBB, \xAB visiblement \xBB."
-  ],
-  notes: "Aucune action physiologique ne peut \xEAtre revendiqu\xE9e. Toute mention de b\xE9n\xE9fice doit rester perceptive (apparence, ressenti, hydratation de surface)."
-};
-
-// src/config/sectors/fashion.json
-var fashion_default = {
-  id: "fashion",
-  sector: "fashion",
-  region: "global",
-  label: "Mode & Accessoires (g\xE9n\xE9rique)",
-  regulation: "ASA / DGCCRF / FTC \u2014 r\xE8gles g\xE9n\xE9rales sur les promesses de produits",
-  medical_claims_allowed: false,
-  financial_promises_allowed: false,
-  health_claims_allowed: false,
-  urgency_policy: {
-    allowed: true,
-    requires_real_inventory: true
-  },
-  forbidden_words: [
-    "permanent sale",
-    "always 50% off",
-    "deal of your life",
-    "free luxury",
-    "luxury for cheap",
-    "100% authentic guaranteed",
-    "investment piece guaranteed"
-  ],
-  tone_constraints: {
-    aggressiveness_level: "medium",
-    emojis_allowed: true,
-    exclamation_limit: 1
-  },
-  requires_wcag_validation: false,
-  requires_price_lock: true,
-  requires_claim_validation: true,
-  claim_packs: [
-    "fake_certifications",
-    "fake_stats",
-    "hyperbolic",
-    "urgency_dark_patterns"
-  ],
-  mandatory_disclaimers: [],
-  notes: "Mode raffin\xE9e : promesse esth\xE9tique uniquement, pas de promesse sant\xE9/dur\xE9e illimit\xE9e. L'urgence reste autoris\xE9e si elle refl\xE8te un vrai stock ou une vraie fen\xEAtre de vente."
-};
-
-// src/config/sectors/finance_eu.json
-var finance_eu_default = {
-  id: "finance_eu",
-  sector: "finance",
-  region: "eu",
-  label: "Finance & Assurance (UE)",
-  regulation: "MiFID II + AMF + DORA + GDPR \u2014 communications commerciales financi\xE8res",
-  medical_claims_allowed: false,
-  financial_promises_allowed: false,
-  health_claims_allowed: false,
-  urgency_policy: {
-    allowed: false,
-    requires_real_inventory: true
-  },
-  forbidden_words: [
-    "guaranteed returns",
-    "rendements garantis",
-    "risk-free",
-    "sans risque",
-    "no risk",
-    "100% safe",
-    "100% s\xFBr",
-    "double your money",
-    "doublez votre capital",
-    "passive income guaranteed",
-    "revenu passif garanti",
-    "get rich",
-    "devenez riche",
-    "make money fast",
-    "gagnez de l'argent rapidement",
-    "investment opportunity of a lifetime"
-  ],
-  tone_constraints: {
-    aggressiveness_level: "low",
-    emojis_allowed: false,
-    exclamation_limit: 0
-  },
-  requires_wcag_validation: true,
-  requires_price_lock: true,
-  requires_claim_validation: true,
-  claim_packs: [
-    "financial_guarantees",
-    "fake_stats",
-    "hyperbolic",
-    "fake_certifications",
-    "urgency_dark_patterns",
-    "temporal_guarantees"
-  ],
-  mandatory_disclaimers: [
-    "Les performances pass\xE9es ne pr\xE9jugent pas des performances futures.",
-    "Tout investissement comporte un risque de perte en capital."
-  ],
-  notes: "Aucune promesse de rendement, aucune garantie d'absence de risque. Disclaimers AMF obligatoires. Communication non agressive, accessibilit\xE9 WCAG AA exig\xE9e."
-};
-
-// src/config/sectors/food_eu.json
-var food_eu_default = {
-  id: "food_eu",
-  sector: "food",
-  region: "eu",
-  label: "Alimentaire & Compl\xE9ments (UE)",
-  regulation: "Regulation (EC) 1924/2006 \u2014 Nutrition & Health Claims (EFSA)",
-  medical_claims_allowed: false,
-  financial_promises_allowed: false,
-  health_claims_allowed: false,
-  urgency_policy: {
-    allowed: false,
-    requires_real_inventory: true
-  },
-  forbidden_words: [
-    "cures",
-    "gu\xE9rit",
-    "prevents disease",
-    "pr\xE9vient les maladies",
-    "boosts immunity",
-    "renforce l'immunit\xE9",
-    "detox",
-    "d\xE9toxifie",
-    "burns fat",
-    "br\xFBle les graisses",
-    "lose weight fast",
-    "perdez du poids rapidement",
-    "miracle",
-    "miraculeux",
-    "doctor approved",
-    "approuv\xE9 par les m\xE9decins",
-    "FDA approved"
-  ],
-  tone_constraints: {
-    aggressiveness_level: "low",
-    emojis_allowed: false,
-    exclamation_limit: 0
-  },
-  requires_wcag_validation: false,
-  requires_price_lock: true,
-  requires_claim_validation: true,
-  claim_packs: [
-    "food_eu_efsa",
-    "medical_vocab",
-    "health_claims",
-    "fake_certifications",
-    "fake_stats",
-    "hyperbolic",
-    "temporal_guarantees",
-    "urgency_dark_patterns"
-  ],
-  mandatory_disclaimers: [
-    "Une alimentation vari\xE9e et \xE9quilibr\xE9e et un mode de vie sain sont importants.",
-    "Les compl\xE9ments alimentaires ne se substituent pas \xE0 une alimentation \xE9quilibr\xE9e."
-  ],
-  notes: "Seuls les claims autoris\xE9s par le r\xE8glement EFSA 1924/2006 peuvent \xEAtre utilis\xE9s. Aucune all\xE9gation th\xE9rapeutique."
-};
-
-// src/config/sectors/saas.json
-var saas_default = {
-  id: "saas",
-  sector: "saas",
-  region: "global",
-  label: "SaaS & B2B Tech (g\xE9n\xE9rique)",
-  regulation: "GDPR + WCAG AA + bonnes pratiques SaaS",
-  medical_claims_allowed: false,
-  financial_promises_allowed: false,
-  health_claims_allowed: false,
-  urgency_policy: {
-    allowed: true,
-    requires_real_inventory: false
-  },
-  forbidden_words: [
-    "100% uptime",
-    "completely secure",
-    "100% s\xE9curis\xE9",
-    "unhackable",
-    "inviolable",
-    "guaranteed ROI",
-    "ROI garanti",
-    "magic AI",
-    "AI miracle",
-    "replaces your team",
-    "remplace votre \xE9quipe"
-  ],
-  tone_constraints: {
-    aggressiveness_level: "medium",
-    emojis_allowed: true,
-    exclamation_limit: 2
-  },
-  requires_wcag_validation: true,
-  requires_price_lock: true,
-  requires_claim_validation: true,
-  claim_packs: [
-    "fake_stats",
-    "hyperbolic",
-    "fake_certifications"
-  ],
-  mandatory_disclaimers: [],
-  notes: "Marketing flexible, accessibilit\xE9 WCAG AA recommand\xE9e. Pas de promesse d'uptime absolue ni de s\xE9curit\xE9 parfaite."
-};
-
-// src/governance/sector-engine.ts
-var PROFILES2 = {
-  cosmetics_eu: cosmetics_eu_default,
-  fashion: fashion_default,
-  fashion_global: fashion_default,
-  finance_eu: finance_eu_default,
-  food_eu: food_eu_default,
-  saas: saas_default,
-  saas_global: saas_default
-};
-var SECTOR_ALIASES = {
-  cosm\u00E9tique: "cosmetics",
-  cosmetique: "cosmetics",
-  cosmetic: "cosmetics",
-  skincare: "cosmetics",
-  beaut\u00E9: "cosmetics",
-  beaute: "cosmetics",
-  beauty: "cosmetics",
-  mode: "fashion",
-  fashion: "fashion",
-  apparel: "fashion",
-  luxe: "fashion",
-  luxury: "fashion",
-  finance: "finance",
-  banking: "finance",
-  banque: "finance",
-  insurance: "finance",
-  assurance: "finance",
-  fintech: "finance",
-  food: "food",
-  alimentaire: "food",
-  nutrition: "food",
-  supplements: "food",
-  compl\u00E9ments: "food",
-  complements: "food",
-  saas: "saas",
-  software: "saas",
-  tech: "saas",
-  b2b: "saas"
-};
-var REGION_ALIASES = {
-  eu: "eu",
-  europe: "eu",
-  european: "eu",
-  france: "eu",
-  fr: "eu",
-  ue: "eu",
-  global: "global",
-  international: "global",
-  monde: "global",
-  world: "global",
-  na: "global",
-  us: "global",
-  usa: "global",
-  apac: "global",
-  asia: "global"
-};
-function normalizeSector(input) {
-  if (!input) return "";
-  const key = input.trim().toLowerCase();
-  return SECTOR_ALIASES[key] ?? key;
-}
-function normalizeRegion(input) {
-  if (!input) return "";
-  const key = input.trim().toLowerCase();
-  return REGION_ALIASES[key] ?? key;
-}
-var DEFAULT_PROFILE = {
-  id: "default",
-  sector: "generic",
-  region: "global",
-  label: "Profil g\xE9n\xE9rique (fallback)",
-  regulation: "Bonnes pratiques marketing universelles",
-  medical_claims_allowed: false,
-  financial_promises_allowed: false,
-  health_claims_allowed: false,
-  urgency_policy: { allowed: true, requires_real_inventory: true },
-  forbidden_words: [],
-  tone_constraints: {
-    aggressiveness_level: "medium",
-    emojis_allowed: true,
-    exclamation_limit: 1
-  },
-  requires_wcag_validation: false,
-  requires_price_lock: true,
-  requires_claim_validation: true,
-  claim_packs: ["fake_stats", "hyperbolic", "fake_certifications"],
-  mandatory_disclaimers: [],
-  notes: "Aucun profil sector\xD7region trouv\xE9 \u2014 fallback g\xE9n\xE9rique appliqu\xE9."
-};
-function loadSectorProfile(sector, region) {
-  const s = normalizeSector(sector);
-  const r = normalizeRegion(region);
-  if (s) {
-    const candidates = [
-      r ? `${s}_${r}` : null,
-      s,
-      `${s}_global`
-    ].filter(Boolean);
-    for (const key of candidates) {
-      const profile = PROFILES2[key];
-      if (profile) {
-        return { profile, matched: true, resolvedKey: key };
-      }
-    }
-  }
-  return { profile: DEFAULT_PROFILE, matched: false, resolvedKey: "default" };
-}
-function sectorProfileToPromptBlock(profile) {
-  const lines = [];
-  lines.push("\u2550\u2550\u2550 SECTOR INTELLIGENCE LAYER \u2550\u2550\u2550");
-  lines.push(`\u2022 Profil : ${profile.label} (${profile.id})`);
-  lines.push(`\u2022 R\xE9gulation de r\xE9f\xE9rence : ${profile.regulation}`);
-  lines.push(`\u2022 Claims m\xE9dicaux : ${profile.medical_claims_allowed ? "autoris\xE9s" : "INTERDITS"}`);
-  lines.push(`\u2022 Claims sant\xE9 : ${profile.health_claims_allowed ? "autoris\xE9s" : "INTERDITS"}`);
-  lines.push(`\u2022 Promesses financi\xE8res : ${profile.financial_promises_allowed ? "autoris\xE9es" : "INTERDITES"}`);
-  lines.push(`\u2022 Urgence commerciale : ${profile.urgency_policy.allowed ? "tol\xE9r\xE9e (stock r\xE9el obligatoire)" : "INTERDITE"}`);
-  lines.push(`\u2022 Ton : ${profile.tone_constraints.aggressiveness_level} | emojis ${profile.tone_constraints.emojis_allowed ? "OK" : "non"} | max ${profile.tone_constraints.exclamation_limit} "!"`);
-  if (profile.forbidden_words.length) {
-    lines.push(`\u2022 Mots interdits sectoriels : ${profile.forbidden_words.slice(0, 12).join(", ")}`);
-  }
-  if (profile.requires_wcag_validation) {
-    lines.push(`\u2022 WCAG AA exig\xE9 : tout choix de couleur doit passer un contraste 4.5:1 minimum.`);
-  }
-  if (profile.mandatory_disclaimers.length) {
-    lines.push(`\u2022 Disclaimers obligatoires :`);
-    profile.mandatory_disclaimers.forEach((d) => lines.push(`    \u2013 ${d}`));
-  }
-  return lines.join("\n");
+  if (!mode) return PROFILES2.premium_brand;
+  return PROFILES2[mode] ?? PROFILES2.premium_brand;
 }
 
 // src/governance/brand-lock.ts
@@ -46756,6 +47904,31 @@ function applyGovernance(draft, options = {}) {
     };
   }
   const findings = [];
+  let memory_block = "";
+  let positioning_block = "";
+  const positioning_conflicts = [];
+  if (options.brand_id) {
+    const memProfile = getMemoryProfile(options.brand_id);
+    memory_block = memoryProfileToPromptBlock(memProfile);
+    const posLock = getPositioningLock(options.brand_id);
+    if (posLock) {
+      positioning_block = positioningLockToPromptBlock(posLock);
+      const conflicts = checkPositioningAlignment(
+        options.brand_id,
+        options.module ?? options.sectionKey ?? "unknown",
+        draft
+      );
+      positioning_conflicts.push(...conflicts);
+      for (const conflict of conflicts) {
+        findings.push({
+          severity: conflict.severity,
+          category: "compliance.claim_forbidden",
+          match: conflict.detected_text,
+          hint: `[Positioning v3] ${conflict.reason}`
+        });
+      }
+    }
+  }
   if (!lock.sector_profile_matched) {
     findings.push({
       severity: "info",
@@ -46825,7 +47998,14 @@ function applyGovernance(draft, options = {}) {
     sector_profile_matched: lock.sector_profile_matched,
     findings,
     rewrites: findings.filter((f) => f.replacement !== void 0).length,
-    blocked
+    blocked,
+    ...options.brand_id ? {
+      v3: {
+        memory_block,
+        positioning_block,
+        positioning_conflicts_count: positioning_conflicts.length
+      }
+    } : {}
   };
   return { content: v.content, report };
 }
@@ -47595,7 +48775,7 @@ function runGovernancePass(draft, options) {
 }
 
 // src/routes/openai/enhance-prompts.ts
-var router3 = (0, import_express3.Router)();
+var router6 = (0, import_express6.Router)();
 function estimateTokenCount(text) {
   const trimmed = text.trim();
   if (!trimmed) return 0;
@@ -47655,7 +48835,7 @@ var LOGO_STYLE_DESCRIPTIONS = {
   futuristic: "N\xE9on, d\xE9grad\xE9s dynamiques, formes fluides. Typographie angulaire. Palette: violet (#8B5CF6), cyan (#06B6D4), magenta (#EC4899).",
   ethnic: "Color\xE9, expressif, authentique. Motifs traditionnels, richesse d\xE9corative. Palette chaude: rouge, orange, or, terre."
 };
-router3.post("/openai/enhance-prompts", async (req, res) => {
+router6.post("/openai/enhance-prompts", async (req, res) => {
   const parsed = ExtendedBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "Invalid request body", details: parsed.error.errors });
@@ -47896,11 +49076,11 @@ Commence directement par: "R\xE9dige le contenu structur\xE9 de la charte graphi
 `);
   res.end();
 });
-var enhance_prompts_default = router3;
+var enhance_prompts_default = router6;
 
 // src/routes/openai/enhance-prompts-visual.ts
-var import_express4 = __toESM(require_express2(), 1);
-var router4 = (0, import_express4.Router)();
+var import_express7 = __toESM(require_express2(), 1);
+var router7 = (0, import_express7.Router)();
 var PRODUCT_ANGLES = {
   bijou: { front: "Vue de face", profile: "Vue de profil", three_quarter: "Vue en 3/4", macro: "Macro sertissage/pierres", top: "Vue de dessus" },
   v\u00EAtement: { front: "Vue de face", back: "Vue de dos", detail_collar: "D\xE9tail col", detail_seam: "D\xE9tail coutures", three_quarter: "Vue en 3/4" },
@@ -48028,7 +49208,7 @@ function sendEvent(res, data) {
 
 `);
 }
-router4.post("/openai/enhance-prompts-visual", async (req, res) => {
+router7.post("/openai/enhance-prompts-visual", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -48354,11 +49534,11 @@ Chaque prompt visuel doit inclure un champ "negative_prompt" avec les \xE9l\xE9m
   sendEvent(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_visual_default = router4;
+var enhance_prompts_visual_default = router7;
 
 // src/routes/openai/enhance-prompts-video.ts
-var import_express5 = __toESM(require_express2(), 1);
-var router5 = (0, import_express5.Router)();
+var import_express8 = __toESM(require_express2(), 1);
+var router8 = (0, import_express8.Router)();
 var TEASER_STYLE_MAP = {
   bijou: "luxe",
   luxe: "luxe",
@@ -48428,7 +49608,7 @@ function sendEvent2(res, data) {
 
 `);
 }
-router5.post("/openai/enhance-prompts-video", async (req, res) => {
+router8.post("/openai/enhance-prompts-video", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -48803,11 +49983,11 @@ Retourne UNIQUEMENT ce JSON:
   sendEvent2(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_video_default = router5;
+var enhance_prompts_video_default = router8;
 
 // src/routes/openai/enhance-prompts-ads.ts
-var import_express6 = __toESM(require_express2(), 1);
-var router6 = (0, import_express6.Router)();
+var import_express9 = __toESM(require_express2(), 1);
+var router9 = (0, import_express9.Router)();
 var STYLE_MAP = {
   bijou: "luxueux, \xE9l\xE9gant, raffin\xE9, intemporel",
   luxe: "premium, exclusif, sophistiqu\xE9",
@@ -48836,7 +50016,7 @@ function sendEvent3(res, data) {
 
 `);
 }
-router6.post("/openai/enhance-prompts-ads", async (req, res) => {
+router9.post("/openai/enhance-prompts-ads", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -49244,11 +50424,11 @@ Retourne UNIQUEMENT ce JSON:
   sendEvent3(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_ads_default = router6;
+var enhance_prompts_ads_default = router9;
 
 // src/routes/openai/enhance-prompts-sound.ts
-var import_express7 = __toESM(require_express2(), 1);
-var router7 = (0, import_express7.Router)();
+var import_express10 = __toESM(require_express2(), 1);
+var router10 = (0, import_express10.Router)();
 var JINGLE_STYLE_MAP = {
   bijou: "orchestral \xE9l\xE9gant \u2014 harpe, cordes, piano, 80-90 BPM, intemporel",
   luxe: "orchestral majestueux \u2014 cordes, cuivres, harpe, timbales, 70-80 BPM",
@@ -49302,7 +50482,7 @@ function sendEvent4(res, data) {
 
 `);
 }
-router7.post("/openai/enhance-prompts-sound", async (req, res) => {
+router10.post("/openai/enhance-prompts-sound", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -49634,11 +50814,11 @@ Retourne UNIQUEMENT ce JSON:
   sendEvent4(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_sound_default = router7;
+var enhance_prompts_sound_default = router10;
 
 // src/routes/openai/enhance-prompts-copy.ts
-var import_express8 = __toESM(require_express2(), 1);
-var router8 = (0, import_express8.Router)();
+var import_express11 = __toESM(require_express2(), 1);
+var router11 = (0, import_express11.Router)();
 function sendEvent5(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -49652,7 +50832,7 @@ function parseJsonSafe5(text) {
     return null;
   }
 }
-router8.post("/openai/enhance-prompts-copy", async (req, res) => {
+router11.post("/openai/enhance-prompts-copy", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -49938,10 +51118,10 @@ Les 10 avis doivent:
   sendEvent5(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_copy_default = router8;
+var enhance_prompts_copy_default = router11;
 
 // src/routes/openai/enhance-prompts-launch.ts
-var import_express9 = __toESM(require_express2(), 1);
+var import_express12 = __toESM(require_express2(), 1);
 
 // src/lib/market-config.ts
 var MARKET_CONFIGS = {
@@ -50227,7 +51407,7 @@ function convertPrice(priceEur, config) {
 }
 
 // src/routes/openai/enhance-prompts-launch.ts
-var router9 = (0, import_express9.Router)();
+var router12 = (0, import_express12.Router)();
 function sendEvent6(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -50251,7 +51431,7 @@ function parseJsonSafe6(text) {
     return null;
   }
 }
-router9.post("/openai/enhance-prompts-launch", async (req, res) => {
+router12.post("/openai/enhance-prompts-launch", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -50556,11 +51736,11 @@ Adapte les actions et contenus sp\xE9cifiquement au secteur "${sector}" et \xE0 
   sendEvent6(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_launch_default = router9;
+var enhance_prompts_launch_default = router12;
 
 // src/routes/openai/enhance-prompts-chatbot.ts
-var import_express10 = __toESM(require_express2(), 1);
-var router10 = (0, import_express10.Router)();
+var import_express13 = __toESM(require_express2(), 1);
+var router13 = (0, import_express13.Router)();
 function sendEvent7(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -50574,7 +51754,7 @@ function parseJsonSafe7(text) {
     return null;
   }
 }
-router10.post("/openai/enhance-prompts-chatbot", async (req, res) => {
+router13.post("/openai/enhance-prompts-chatbot", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -50811,11 +51991,11 @@ Les gestes commerciaux peuvent inclure: remboursement, renvoi, code promo ${code
   sendEvent7(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_chatbot_default = router10;
+var enhance_prompts_chatbot_default = router13;
 
 // src/routes/openai/enhance-prompts-upsell.ts
-var import_express11 = __toESM(require_express2(), 1);
-var router11 = (0, import_express11.Router)();
+var import_express14 = __toESM(require_express2(), 1);
+var router14 = (0, import_express14.Router)();
 function sendEvent8(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -50829,7 +52009,7 @@ function parseJsonSafe8(text) {
     return null;
   }
 }
-router11.post("/openai/enhance-prompts-upsell", async (req, res) => {
+router14.post("/openai/enhance-prompts-upsell", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -51115,11 +52295,11 @@ R\xE9ponds UNIQUEMENT avec un JSON valide, sans texte avant ou apr\xE8s:
   sendEvent8(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_upsell_default = router11;
+var enhance_prompts_upsell_default = router14;
 
 // src/routes/openai/enhance-prompts-performance.ts
-var import_express12 = __toESM(require_express2(), 1);
-var router12 = (0, import_express12.Router)();
+var import_express15 = __toESM(require_express2(), 1);
+var router15 = (0, import_express15.Router)();
 function sendEvent9(res, data) {
   res.write(`data: ${JSON.stringify(data)}
 
@@ -51143,7 +52323,7 @@ var SECTOR_DEFAULTS = {
   d\u00E9coration: { ca_target: 9e3, basket_target: 120, conv_target: 2, cac_target: 28, roas_target: 2.8, margin_percent: 58, max_cpa: 24, target_cpa: 16 },
   maroquinerie: { ca_target: 12e3, basket_target: 180, conv_target: 2.2, cac_target: 38, roas_target: 3, margin_percent: 62, max_cpa: 33, target_cpa: 19 }
 };
-router12.post("/openai/enhance-prompts-performance", async (req, res) => {
+router15.post("/openai/enhance-prompts-performance", async (req, res) => {
   const {
     brand_name,
     sector,
@@ -51457,11 +52637,11 @@ R\xE9ponds UNIQUEMENT avec un JSON valide:
   sendEvent9(res, { type: "done" });
   res.end();
 });
-var enhance_prompts_performance_default = router12;
+var enhance_prompts_performance_default = router15;
 
 // src/routes/openai/persona-variants.ts
-var import_express13 = __toESM(require_express2(), 1);
-var router13 = (0, import_express13.Router)();
+var import_express16 = __toESM(require_express2(), 1);
+var router16 = (0, import_express16.Router)();
 var PersonaVariantsBody = objectType({
   base_prompt: stringType().min(10),
   brand_name: stringType().min(1),
@@ -51470,7 +52650,7 @@ var PersonaVariantsBody = objectType({
   values: arrayType(stringType()).default([]),
   target_demographic: stringType().nullish()
 });
-router13.post("/openai/persona-variants", async (req, res) => {
+router16.post("/openai/persona-variants", async (req, res) => {
   const parsed = PersonaVariantsBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "Invalid request body", details: parsed.error.errors });
@@ -51492,12 +52672,12 @@ router13.post("/openai/persona-variants", async (req, res) => {
     res.status(500).json({ error: "Erreur lors de la g\xE9n\xE9ration des variantes personas" });
   }
 });
-var persona_variants_default = router13;
+var persona_variants_default = router16;
 
 // src/routes/openai/review-prompt.ts
-var import_express14 = __toESM(require_express2(), 1);
-var router14 = (0, import_express14.Router)();
-router14.post("/openai/review-prompt", async (req, res) => {
+var import_express17 = __toESM(require_express2(), 1);
+var router17 = (0, import_express17.Router)();
+router17.post("/openai/review-prompt", async (req, res) => {
   const {
     content,
     section_key,
@@ -51532,25 +52712,28 @@ router14.post("/openai/review-prompt", async (req, res) => {
     res.status(500).json({ error: "Erreur lors de la review IA." });
   }
 });
-var review_prompt_default = router14;
+var review_prompt_default = router17;
 
 // src/routes/index.ts
-var router15 = (0, import_express15.Router)();
-router15.use(health_default);
-router15.use(scrape_gmb_default);
-router15.use(enhance_prompts_default);
-router15.use(enhance_prompts_visual_default);
-router15.use(enhance_prompts_video_default);
-router15.use(enhance_prompts_ads_default);
-router15.use(enhance_prompts_sound_default);
-router15.use(enhance_prompts_copy_default);
-router15.use(enhance_prompts_launch_default);
-router15.use(enhance_prompts_chatbot_default);
-router15.use(enhance_prompts_upsell_default);
-router15.use(enhance_prompts_performance_default);
-router15.use(persona_variants_default);
-router15.use(review_prompt_default);
-var routes_default = router15;
+var router18 = (0, import_express18.Router)();
+router18.use(governance_default);
+router18.use(memory_default);
+router18.use(positioning_default);
+router18.use(health_default);
+router18.use(scrape_gmb_default);
+router18.use(enhance_prompts_default);
+router18.use(enhance_prompts_visual_default);
+router18.use(enhance_prompts_video_default);
+router18.use(enhance_prompts_ads_default);
+router18.use(enhance_prompts_sound_default);
+router18.use(enhance_prompts_copy_default);
+router18.use(enhance_prompts_launch_default);
+router18.use(enhance_prompts_chatbot_default);
+router18.use(enhance_prompts_upsell_default);
+router18.use(enhance_prompts_performance_default);
+router18.use(persona_variants_default);
+router18.use(review_prompt_default);
+var routes_default = router18;
 
 // src/lib/logger.ts
 var import_pino = __toESM(require_pino(), 1);
@@ -51571,7 +52754,7 @@ var logger = (0, import_pino.default)({
 });
 
 // src/app.ts
-var app = (0, import_express16.default)();
+var app = (0, import_express19.default)();
 app.use(
   (0, import_pino_http.default)({
     logger,
@@ -51592,8 +52775,8 @@ app.use(
   })
 );
 app.use((0, import_cors.default)());
-app.use(import_express16.default.json());
-app.use(import_express16.default.urlencoded({ extended: true }));
+app.use(import_express19.default.json());
+app.use(import_express19.default.urlencoded({ extended: true }));
 app.use("/api", routes_default);
 var app_default = app;
 

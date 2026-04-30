@@ -102,18 +102,37 @@ workspace/
 │           │   ├── openai-review-client.ts  # Agent GPT (Review)
 │           │   ├── anthropic-client.ts   # Agent Claude (Review)
 │           │   └── prompt-utils.ts       # Chain-of-Thought, Few-Shot, Review
-│           └── routes/openai/
-│               ├── enhance-prompts.ts              # Module 01
-│               ├── enhance-prompts-visual.ts       # Module 02
-│               ├── enhance-prompts-video.ts        # Module 03
-│               ├── enhance-prompts-ads.ts          # Module 04
-│               ├── enhance-prompts-sound.ts        # Module 05
-│               ├── enhance-prompts-copy.ts         # Module 06
-│               ├── enhance-prompts-launch.ts       # Module 07
-│               ├── enhance-prompts-chatbot.ts      # Module 08
-│               ├── enhance-prompts-upsell.ts       # Module 09
-│               ├── enhance-prompts-performance.ts  # Module 10
-│               └── review-prompt.ts                # Review GPT vs Claude (on-demand)
+│           ├── governance/               # Pipeline gouvernance v3.0
+│           │   ├── index.ts              # Orchestrateur principal (pipeline v3)
+│           │   ├── brand-lock.ts         # Verrou factuel marque
+│           │   ├── compliance-agent.ts   # Règles conformité sectorielles
+│           │   ├── sector-engine.ts      # Profils sectoriels config-driven
+│           │   ├── voice-enforcer.ts     # Ton, emojis, exclamations
+│           │   ├── wcag-validator.ts     # Accessibilité couleurs
+│           │   └── sectors/              # JSON : cosmetics_eu, fashion, finance_eu, food_eu, saas
+│           ├── memory/                   # v3 — Brand Memory Engine
+│           │   ├── memory-store.ts       # Store central en mémoire
+│           │   ├── correction-log.ts     # Journal corrections/approbations/rejections
+│           │   ├── decision-history.ts   # Historique décisions stratégiques
+│           │   └── memory-profile-builder.ts  # Profil mémoire dynamique
+│           ├── growth/                   # v3 — Growth Decision Brain
+│           │   ├── ltv-engine.ts         # Calcul LTV/CAC dynamique
+│           │   ├── cohort-analysis.ts    # Analyse cohortes et rétention
+│           │   ├── seasonality-model.ts  # Calendrier saisonnier par secteur
+│           │   ├── creative-fatigue-detector.ts  # Détection fatigue créative
+│           │   └── strategy-recommender.ts  # Recommandation scaling contextuelle
+│           ├── positioning/              # v3 — Strategic Positioning Engine
+│           │   ├── archetype-engine.ts   # Détection archétype Jungien (12 types)
+│           │   ├── market-mapping.ts     # Cartographie 4 axes stratégiques
+│           │   ├── competitor-analysis.ts  # Analyse concurrentielle
+│           │   ├── differentiation-matrix.ts  # Matrice de différenciation
+│           │   ├── territory-builder.ts  # Territoire narratif complet
+│           │   └── positioning-lock.ts   # Verrou de positionnement
+│           └── routes/
+│               ├── governance.ts         # GET /api/governance/profiles, /status
+│               ├── memory.ts             # POST/GET /api/memory/*
+│               ├── positioning.ts        # POST/GET /api/positioning/*
+│               └── openai/               # Routes génération modules 01–10
 └── lib/
     ├── db/src/schema/                  # Drizzle ORM (PostgreSQL)
     ├── api-zod/                        # Validation Zod — schémas API
@@ -146,6 +165,8 @@ workspace/
 
 Toutes les routes sont montées sous `/api` :
 
+### Routes Génération (Modules 01–10)
+
 | Méthode | Route | Module |
 |---------|-------|--------|
 | `GET` | `/api/healthz` | Healthcheck |
@@ -160,6 +181,35 @@ Toutes les routes sont montées sous `/api` :
 | `POST` | `/api/openai/enhance-prompts-upsell` | 09 — Upsell Kit |
 | `POST` | `/api/openai/enhance-prompts-performance` | 10 — Performance Tracker |
 | `POST` | `/api/openai/review-prompt` | Review GPT vs Claude (on-demand) |
+
+### Routes Gouvernance v3.0
+
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| `GET` | `/api/governance/profiles` | Liste des profils sectoriels chargés (id, label, regulation, claim_packs…) |
+| `GET` | `/api/governance/status?brand_id=` | Statut global : profil actif, mémoire, positioning lock |
+
+### Routes Brand Memory Engine v3.0
+
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| `GET` | `/api/memory/profile/:brand_id` | Profil mémoire dynamique d'une marque |
+| `GET` | `/api/memory/stats/:brand_id` | Stats d'interactions (corrections, rejections, decisions) |
+| `POST` | `/api/memory/correction` | Log une correction humaine `{brand_id, module, before, after}` |
+| `POST` | `/api/memory/approval` | Log une approbation `{brand_id, module, content}` |
+| `POST` | `/api/memory/rejection` | Log un rejet `{brand_id, module, content, reason}` |
+| `POST` | `/api/memory/override` | Log un override de règle de gouvernance |
+| `POST` | `/api/memory/decision` | Enregistre une décision stratégique |
+| `DELETE` | `/api/memory/:brand_id` | Réinitialise la mémoire d'une marque |
+
+### Routes Strategic Positioning Engine v3.0
+
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| `POST` | `/api/positioning/analyze` | Analyse complète : archétype + carte marché + territoire + lock |
+| `POST` | `/api/positioning/archetype` | Détecte uniquement l'archétype dominant |
+| `GET` | `/api/positioning/lock/:brand_id` | Récupère le positioning lock actif |
+| `DELETE` | `/api/positioning/lock/:brand_id` | Réinitialise le positioning lock |
 
 ### Format du flux SSE
 
@@ -247,7 +297,18 @@ Chaque module permet d'exporter les prompts générés en :
 
 ## Version
 
-**v2.2.0** — Avril 2026
+**v3.0.0** — Avril 2026
+
+### v3.0.0 — AI BRAND OS — Adaptive Strategic Intelligence
+
+- **Brand Memory Engine** : le système apprend des corrections humaines, construit un profil mémoire dynamique (tone, urgence, complexité créative, risque), et l'injecte dans les générations futures via `brand_id`
+- **Growth Decision Brain** : calcul LTV/CAC dynamique, analyse de cohortes, modèle de saisonnalité par secteur (13 événements par secteur), détection de fatigue créative (CTR/ROAS/fréquence), recommandation de scaling contextuelle multi-facteur
+- **Strategic Positioning Engine** : détection automatique des 12 archétypes Jungiens, cartographie marché sur 4 axes, matrice de différenciation vs concurrents archétypes par secteur, territoire narratif complet (tension/promesse/hook/pilier/ancre), positioning lock multi-modules
+- **Route `/api/governance/profiles`** : exposition dynamique des profils sectoriels pour le frontend (id, label, regulation, claim_packs, tone)
+- **Pipeline v3 complet** : `brandLock → sectorEngine → positioningEngine → memoryInjection → complianceAgent → toneEnforcer → claimFilter → pricingValidator → wcagValidator → growthBrainEvaluation → finalValidation`
+- Rétrocompatibilité totale : les layers v3 s'activent uniquement si `brand_id` est fourni
+
+### v2.2.0 — Gouvernance Sector-Aware (base)
 
 - 10/10 modules disponibles — Brand Universe complet (46 sections)
 - Pipeline IA tri-modèles opérationnel : Cerebras + GPT + Claude + Gemini

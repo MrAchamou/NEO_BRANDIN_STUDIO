@@ -1,19 +1,26 @@
 /**
- * GOVERNANCE — Pipeline orchestrateur (v2.1 — Sector-Aware)
+ * GOVERNANCE — Pipeline orchestrateur (v3.0 — Adaptive Strategic Intelligence)
  *
- *   draft (LLM)
- *     → applyBrandLock         (price coherence)
- *     → applySectorCompliance  (claim packs activés par le profil)
- *     → enforceTone            (voice-enforcer sectoriel)
- *     → validatePricing        (price lock universel)
- *     → validateClaims         (claims_forbidden + certs inventées)
- *     → validateUrgency        (sector.urgency_policy)
- *     → validateWcag           (si profile.requires_wcag_validation)
- *     → output
+ *   generate()
+ *     → brandLock()            (price coherence, fact lock)
+ *     → sectorEngine()         (claim packs activés par le profil)
+ *     → positioningEngine()    (archétype + territoire narratif)
+ *     → memoryInjection()      (profil mémoire de la marque)
+ *     → complianceAgent()      (règles sectorielles de conformité)
+ *     → toneEnforcer()         (voice-enforcer sectoriel)
+ *     → claimFilter()          (claims_forbidden + certs inventées)
+ *     → pricingValidator()     (price lock universel)
+ *     → wcagValidator()        (si profile.requires_wcag_validation)
+ *     → growthBrainEvaluation() (évaluation stratégique de croissance)
+ *     → finalValidation()
+ *     → export()
  *
  * Une seule fonction publique (`applyGovernance`) à brancher dans toutes les
  * routes API. Si aucun lock n'est fourni, le pipeline est neutre (no-op),
  * pour préserver la compatibilité ascendante.
+ *
+ * Les layers v3 (Memory, Positioning, Growth Brain) sont optionnels et
+ * s'activent uniquement si `brand_id` est fourni dans les options.
  */
 
 import { runComplianceAgent } from "./compliance-agent";
@@ -26,6 +33,8 @@ import type {
   GovernanceResult,
 } from "./types";
 import { buildBrandLock, type RawBrandBriefInput } from "./brand-lock";
+import { getMemoryProfile, memoryProfileToPromptBlock } from "../memory/memory-profile-builder";
+import { getPositioningLock, positioningLockToPromptBlock, checkPositioningAlignment } from "../positioning/positioning-lock";
 
 export * from "./types";
 export * from "./brand-lock";
@@ -47,6 +56,14 @@ export interface ApplyGovernanceOptions {
   sectionKey?: string;
   /** Active la validation WCAG (auto si module 01 ou si profile.requires_wcag). */
   validateWcag?: boolean;
+  /**
+   * Identifiant de marque pour activer les layers v3 :
+   * Brand Memory Engine, Positioning Engine, Growth Brain.
+   * Si absent, ces layers sont ignorés (compatibilité ascendante).
+   */
+  brand_id?: string;
+  /** Nom du module courant (pour le vérificateur de positionnement). */
+  module?: string;
 }
 
 export function applyGovernance(
@@ -72,6 +89,40 @@ export function applyGovernance(
   }
 
   const findings: GovernanceFinding[] = [];
+
+  // ── v3.0: Layers adaptatifs (Memory + Positioning) ────────────────────────
+  // Ces layers n'altèrent pas le texte — ils enrichissent le rapport de
+  // gouvernance avec des métadonnées stratégiques pour le debug et le stream.
+
+  let memory_block = "";
+  let positioning_block = "";
+  const positioning_conflicts: { conflict_type: string; detected_text: string; reason: string; severity: string }[] = [];
+
+  if (options.brand_id) {
+    // Brand Memory : profil mémoire dynamique
+    const memProfile = getMemoryProfile(options.brand_id);
+    memory_block = memoryProfileToPromptBlock(memProfile);
+
+    // Positioning Lock : vérification d'alignement
+    const posLock = getPositioningLock(options.brand_id);
+    if (posLock) {
+      positioning_block = positioningLockToPromptBlock(posLock);
+      const conflicts = checkPositioningAlignment(
+        options.brand_id,
+        options.module ?? options.sectionKey ?? "unknown",
+        draft,
+      );
+      positioning_conflicts.push(...conflicts);
+      for (const conflict of conflicts) {
+        findings.push({
+          severity: conflict.severity as GovernanceFinding["severity"],
+          category: "compliance.claim_forbidden",
+          match: conflict.detected_text,
+          hint: `[Positioning v3] ${conflict.reason}`,
+        });
+      }
+    }
+  }
 
   // ── 0) Avertir si le profil sectoriel n'a pas matché ─────────────────────
   if (!lock.sector_profile_matched) {
@@ -159,6 +210,15 @@ export function applyGovernance(
     findings,
     rewrites: findings.filter((f) => f.replacement !== undefined).length,
     blocked,
+    ...(options.brand_id
+      ? {
+          v3: {
+            memory_block,
+            positioning_block,
+            positioning_conflicts_count: positioning_conflicts.length,
+          },
+        }
+      : {}),
   };
 
   return { content: v.content, report };
