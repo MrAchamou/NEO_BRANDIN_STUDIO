@@ -53,10 +53,12 @@ Toute requête vers `/api/openai/enhance-prompts*` ou `/api/growth/weekly-brief/
 | AI engine config + badge | ✅ migré |
 | Governance badge | ✅ migré |
 | Brief summary banner | ✅ migré |
-| Brand brief panel (en-tête) | ✅ migré |
+| Brand brief panel (en-tête + 8 sections + 30 listes déroulantes) | ✅ migré (6 langues, ~95 clés `brief_panel.*`) |
+| Import Google My Business (GMB) | ✅ migré |
 | Module-01 (Brand Identity) — témoin | ⚠️ partiel — formulaire à finaliser |
 | Modules 02-10 | ⏳ follow-up — pattern reproductible déjà établi |
 | Brief export HTML (10 sections) | ✅ migré (6 langues) |
+| Export cabinet privé HTML (par module + global) | ✅ migré |
 | Prompts AI (`languageInstruction`) | ✅ injecté dans 9 routes enhance-prompts |
 
 ---

@@ -17,7 +17,7 @@ Le moteur historique multi-modèles (génération streaming SSE + agents critiqu
 - Brief export : `growth/brief-export.ts` → `renderBriefHtml(brief, { lang })` traduit les 10 sections (Vue d'ensemble, KPIs, Profitabilité, Scaling, Risques, Créatif, Rétention, Action) via le catalog.
 
 ### État de couverture (snapshot v3.x)
-- Migré : header, hero, sidebar modules, AI engine config/badge, governance badge, brief summary banner, brand brief panel (en-tête), brief export (6 langues), tous les prompts AI (9 routes).
+- Migré : header, hero, sidebar modules, AI engine config/badge, governance badge, brief summary banner, **brand brief panel intégral (en-tête + 8 sections + ~30 listes déroulantes + bloc GMB import + briefs sauvegardés, ~95 clés `brief_panel.*`)**, brief export (6 langues), export cabinet privé HTML par module + global, tous les prompts AI (9 routes).
 - Partiel : module-01 (formulaire à finaliser comme témoin reproductible).
 - Follow-up : modules 02-10 (pattern établi, ~10000 LOC à migrer).
 

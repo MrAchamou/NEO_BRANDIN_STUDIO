@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import {
@@ -10,156 +10,58 @@ import { Button } from "@/components/ui/button";
 import { useBrand, BrandBrief, BRIEF_DEFAULTS } from "@/context/brand-context";
 import { useT } from "@/i18n";
 
-// ─── Helpers ───────────────────────────────────────────────────────────────────
+// ─── Static keys ───────────────────────────────────────────────────────────────
+// Les valeurs (codes) restent stables ; les libellés sont traduits via i18n.
 
-const MARKETS = [
-  { value: "international",  label: "🌍 International (Générique)", currency: "€" },
-  // Afrique
-  { value: "cote-divoire",   label: "🇨🇮 Côte d'Ivoire",            currency: "FCFA" },
-  { value: "senegal",        label: "🇸🇳 Sénégal",                  currency: "FCFA" },
-  { value: "maroc",          label: "🇲🇦 Maroc",                    currency: "DH" },
-  { value: "nigeria",        label: "🇳🇬 Nigeria",                  currency: "₦" },
-  // Europe
-  { value: "france",         label: "🇫🇷 France",                   currency: "€" },
-  { value: "belgique",       label: "🇧🇪 Belgique",                 currency: "€" },
-  { value: "suisse",         label: "🇨🇭 Suisse",                   currency: "CHF" },
-  { value: "allemagne",      label: "🇩🇪 Allemagne",                currency: "€" },
-  { value: "royaume-uni",    label: "🇬🇧 Royaume-Uni",              currency: "£" },
-  // Amérique
-  { value: "usa",            label: "🇺🇸 États-Unis",               currency: "$" },
-  { value: "canada",         label: "🇨🇦 Canada",                   currency: "CA$" },
-  // Moyen-Orient
-  { value: "emirats",        label: "🇦🇪 Émirats Arabes Unis",      currency: "AED" },
+const MARKET_KEYS: Array<{ value: string; currency: string }> = [
+  { value: "international",  currency: "€" },
+  { value: "cote-divoire",   currency: "FCFA" },
+  { value: "senegal",        currency: "FCFA" },
+  { value: "maroc",          currency: "DH" },
+  { value: "nigeria",        currency: "₦" },
+  { value: "france",         currency: "€" },
+  { value: "belgique",       currency: "€" },
+  { value: "suisse",         currency: "CHF" },
+  { value: "allemagne",      currency: "€" },
+  { value: "royaume-uni",    currency: "£" },
+  { value: "usa",            currency: "$" },
+  { value: "canada",         currency: "CA$" },
+  { value: "emirats",        currency: "AED" },
 ];
 
-const SECTORS = [
-  { value: "bijou",        label: "Bijouterie / Accessoires" },
-  { value: "luxe",         label: "Luxe / Premium" },
-  { value: "cosmétique",   label: "Cosmétique / Beauté" },
-  { value: "mode",         label: "Mode / Prêt-à-porter" },
-  { value: "tech",         label: "Tech / Électronique" },
-  { value: "fitness",      label: "Sport / Fitness" },
-  { value: "décoration",   label: "Décoration / Maison" },
-  { value: "maroquinerie", label: "Maroquinerie / Sacs" },
-];
+const SECTOR_KEYS = ["bijou", "luxe", "cosmétique", "mode", "tech", "fitness", "décoration", "maroquinerie"];
+const TONE_KEYS = ["luxe", "premium", "moderne", "minimaliste", "chaleureux", "professionnel", "streetwear", "écologique"];
+const AUDIENCE_KEYS = ["femmes-25-45", "hommes-25-45", "mixte-25-45", "jeunes-18-30", "csp-plus", "managers", "sportifs", "parents"];
+const GROWTH_MODE_KEYS = ["premium_brand", "balanced_growth", "aggressive_dtc"];
+const CURRENCY_KEYS = ["EUR", "USD", "GBP", "CHF", "CAD", "AED", "MAD", "XOF", "NGN"];
+const REGION_KEYS = ["eu", "global", "na", "apac", "mena"];
+const VISUAL_STYLE_KEYS = ["", "luxe-premium", "editorial", "minimaliste", "moderne", "chaud-naturel", "streetwear", "artisanal", "ecologique"];
+const CONTACT_CHANNEL_KEYS = ["", "email", "whatsapp", "instagram", "email-instagram", "email-whatsapp", "chat-live", "telephone", "tous"];
 
-const TONES = [
-  { value: "luxe",          label: "Luxe & Prestige" },
-  { value: "premium",       label: "Premium & Élégant" },
-  { value: "moderne",       label: "Moderne & Dynamique" },
-  { value: "minimaliste",   label: "Minimaliste & Épuré" },
-  { value: "chaleureux",    label: "Chaleureux & Bienveillant" },
-  { value: "professionnel", label: "Professionnel & Sérieux" },
-  { value: "streetwear",    label: "Streetwear & Audacieux" },
-  { value: "écologique",    label: "Écologique & Engagé" },
-];
-
-const AUDIENCES = [
-  { value: "femmes-25-45",  label: "Femmes 25-45 ans" },
-  { value: "hommes-25-45",  label: "Hommes 25-45 ans" },
-  { value: "mixte-25-45",   label: "Mixte 25-45 ans" },
-  { value: "jeunes-18-30",  label: "Jeunes 18-30 ans" },
-  { value: "csp-plus",      label: "CSP+ / Cadres" },
-  { value: "managers",      label: "Managers / Entrepreneurs" },
-  { value: "sportifs",      label: "Sportifs / Actifs" },
-  { value: "parents",       label: "Parents / Familles" },
-];
+const SECTION_KEYS = [
+  { key: "identity",    color: "text-amber-400",  dot: "bg-amber-400" },
+  { key: "product",     color: "text-violet-400", dot: "bg-violet-400" },
+  { key: "commerce",    color: "text-green-400",  dot: "bg-green-400" },
+  { key: "sav",         color: "text-orange-400", dot: "bg-orange-400" },
+  { key: "visual",      color: "text-pink-400",   dot: "bg-pink-400" },
+  { key: "performance", color: "text-blue-400",   dot: "bg-blue-400" },
+  { key: "strategie",   color: "text-red-400",    dot: "bg-red-400" },
+  { key: "gouvernance", color: "text-cyan-400",   dot: "bg-cyan-400" },
+] as const;
 
 function selectCls() {
   return "flex h-10 w-full appearance-none rounded-md border border-white/10 bg-neutral-900 text-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary [&>option]:bg-neutral-900 [&>option]:text-white";
 }
 
-// Sections du panneau brief
-const SECTIONS = [
-  {
-    key: "identity",
-    label: "Identité",
-    color: "text-amber-400",
-    dot: "bg-amber-400",
-    fields: ["brand_name", "sector", "tone", "values", "colors"],
-  },
-  {
-    key: "product",
-    label: "Produit",
-    color: "text-violet-400",
-    dot: "bg-violet-400",
-    fields: ["product_name", "product_description", "product_features", "product_colors", "product_materials", "benefits", "target_audience", "unique_feature"],
-  },
-  {
-    key: "commerce",
-    label: "Commerce",
-    color: "text-green-400",
-    dot: "bg-green-400",
-    fields: ["price", "old_price", "discount", "promo_code", "checkout_url", "shipping_info", "free_shipping"],
-  },
-  {
-    key: "sav",
-    label: "SAV",
-    color: "text-orange-400",
-    dot: "bg-orange-400",
-    fields: ["warranty", "delivery_days", "express_delivery_days", "express_price", "return_days", "support_email", "contact_channel", "sav_response_time", "sav_message", "best_seller_1", "best_seller_2"],
-  },
-  {
-    key: "visual",
-    label: "Visuel",
-    color: "text-pink-400",
-    dot: "bg-pink-400",
-    fields: ["primary_color", "secondary_color", "accent_color", "visual_style", "heading_font", "body_font"],
-  },
-  {
-    key: "performance",
-    label: "Performance",
-    color: "text-blue-400",
-    dot: "bg-blue-400",
-    fields: ["ca_target", "basket_target", "conv_target", "roas_target", "target_cpa", "margin_percent"],
-  },
-  {
-    key: "strategie",
-    label: "Stratégie",
-    color: "text-red-400",
-    dot: "bg-red-400",
-    fields: ["target_demographic", "competitors", "forbidden_keywords", "usp"],
-  },
-  {
-    key: "gouvernance",
-    label: "Gouvernance",
-    color: "text-cyan-400",
-    dot: "bg-cyan-400",
-    fields: [
-      "growth_mode", "currency", "packaging", "origin", "certifications",
-      "claims_allowed", "claims_forbidden", "voice_forbidden_words",
-      "urgency_allowed", "emojis_allowed",
-      "repeat_purchase_rate", "avg_orders_per_year", "fixed_costs_monthly",
-    ],
-  },
-] as const;
-
-const GROWTH_MODES = [
-  { value: "premium_brand",    label: "🏛️ Premium Brand — pas d'urgence, claims sobres, narratif maison" },
-  { value: "balanced_growth",  label: "⚖️ Balanced Growth — urgence raisonnée, claims mesurés (défaut)" },
-  { value: "aggressive_dtc",   label: "🚀 Aggressive DTC — promos visibles, urgence forte (sans dark patterns)" },
-];
-
-const CURRENCIES = [
-  { value: "EUR",  label: "€ — EUR" },
-  { value: "USD",  label: "$ — USD" },
-  { value: "GBP",  label: "£ — GBP" },
-  { value: "CHF",  label: "CHF — Franc suisse" },
-  { value: "CAD",  label: "CA$ — Dollar canadien" },
-  { value: "AED",  label: "AED — Dirham" },
-  { value: "MAD",  label: "DH — Dirham marocain" },
-  { value: "XOF",  label: "FCFA — Franc CFA" },
-  { value: "NGN",  label: "₦ — Naira" },
-];
-
-// Régions = clé du Sector Intelligence Layer (résout le profil JSON sector × region)
-const REGIONS = [
-  { value: "eu",     label: "🇪🇺 Europe (UE) — règles strictes (cosmetics_eu, finance_eu, food_eu)" },
-  { value: "global", label: "🌍 Global / International — règles génériques par secteur" },
-  { value: "na",     label: "🇺🇸 Amérique du Nord (FTC)" },
-  { value: "apac",   label: "🌏 Asie-Pacifique" },
-  { value: "mena",   label: "🌍 MENA" },
-];
+// Petit helper pour rendre des **bold** simples dans une chaîne i18n
+function richText(str: string, baseCls = "") {
+  const parts = str.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((p, i) =>
+    p.startsWith("**") && p.endsWith("**")
+      ? <strong key={i} className={baseCls}>{p.slice(2, -2)}</strong>
+      : <React.Fragment key={i}>{p}</React.Fragment>,
+  );
+}
 
 // ─── Field renderers ───────────────────────────────────────────────────────────
 
@@ -173,6 +75,7 @@ function FieldRow({ label, children }: { label: string; children: React.ReactNod
 }
 
 function MarketMultiSelect({ form }: { form: any }) {
+  const { t } = useT();
   const [open, setOpen] = useState(false);
   const raw: string = form.watch("market") || "international";
   const selected = raw.split(",").map(v => v.trim()).filter(Boolean);
@@ -189,8 +92,13 @@ function MarketMultiSelect({ form }: { form: any }) {
     form.setValue("market", next.join(","), { shouldDirty: true });
   }
 
-  const selectedItems = selected.map(v => MARKETS.find(m => m.value === v)).filter(Boolean) as typeof MARKETS;
+  const selectedItems = selected
+    .map(v => MARKET_KEYS.find(m => m.value === v))
+    .filter(Boolean) as typeof MARKET_KEYS;
   const currencies = [...new Set(selectedItems.map(m => m.currency))];
+  const currencyLabel = currencies.length > 1
+    ? t("brief_panel.fields.currencies_label_plural", { currencies: currencies.join(" · ") })
+    : t("brief_panel.fields.currencies_label", { currencies: currencies.join(" · ") });
 
   return (
     <div className="space-y-2">
@@ -204,7 +112,7 @@ function MarketMultiSelect({ form }: { form: any }) {
             className="inline-flex items-center gap-1 rounded bg-primary/20 px-2 py-0.5 text-xs text-primary"
             onClick={e => { e.stopPropagation(); toggle(m.value); }}
           >
-            {m.label}
+            {t(`brief_panel.lists.markets.${m.value}`)}
             <X size={10} className="opacity-60 hover:opacity-100" />
           </span>
         ))}
@@ -215,7 +123,7 @@ function MarketMultiSelect({ form }: { form: any }) {
       {open && (
         <div className="rounded-md border border-white/10 bg-neutral-950 p-2 shadow-xl">
           <div className="grid grid-cols-2 gap-1">
-            {MARKETS.map(m => {
+            {MARKET_KEYS.map(m => {
               const isActive = selected.includes(m.value);
               return (
                 <button
@@ -228,7 +136,7 @@ function MarketMultiSelect({ form }: { form: any }) {
                       : "text-white/70 hover:bg-white/5 hover:text-white"
                   }`}
                 >
-                  <span className="flex-1">{m.label}</span>
+                  <span className="flex-1">{t(`brief_panel.lists.markets.${m.value}`)}</span>
                   {isActive && <Check size={10} />}
                 </button>
               );
@@ -237,39 +145,40 @@ function MarketMultiSelect({ form }: { form: any }) {
         </div>
       )}
       <div className="flex h-9 items-center px-3 rounded-md border border-white/10 bg-primary/10 text-xs text-primary font-mono">
-        {currencies.join(" · ")} — devise{currencies.length > 1 ? "s" : ""} des marchés sélectionnés
+        {currencyLabel}
       </div>
     </div>
   );
 }
 
 function IdentitySection({ form }: { form: any }) {
+  const { t } = useT();
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      <FieldRow label="Nom de la marque *">
-        <Input {...form.register("brand_name")} placeholder="ex: LUXEOR" className="bg-black/20 h-9 text-sm" />
+      <FieldRow label={t("brief_panel.fields.brand_name")}>
+        <Input {...form.register("brand_name")} placeholder={t("brief_panel.fields.brand_name_ph")} className="bg-black/20 h-9 text-sm" />
       </FieldRow>
-      <FieldRow label="Secteur *">
+      <FieldRow label={t("brief_panel.fields.sector")}>
         <select {...form.register("sector")} className={selectCls()}>
-          {SECTORS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
+          {SECTOR_KEYS.map((s) => <option key={s} value={s}>{t(`brief_panel.lists.sectors.${s}`)}</option>)}
         </select>
       </FieldRow>
-      <FieldRow label="Ton de communication">
+      <FieldRow label={t("brief_panel.fields.tone")}>
         <select {...form.register("tone")} className={selectCls()}>
-          {TONES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+          {TONE_KEYS.map((tn) => <option key={tn} value={tn}>{t(`brief_panel.lists.tones.${tn}`)}</option>)}
         </select>
       </FieldRow>
-      <FieldRow label="Valeurs de marque">
-        <Input {...form.register("values")} placeholder="ex: excellence, prestige, authenticité" className="bg-black/20 h-9 text-sm" />
+      <FieldRow label={t("brief_panel.fields.values")}>
+        <Input {...form.register("values")} placeholder={t("brief_panel.fields.values_ph")} className="bg-black/20 h-9 text-sm" />
       </FieldRow>
       <div className="sm:col-span-2">
-        <FieldRow label="Marché / Pays cible *">
+        <FieldRow label={t("brief_panel.fields.market")}>
           <MarketMultiSelect form={form} />
         </FieldRow>
       </div>
       <div className="sm:col-span-2">
-        <FieldRow label="Couleurs de marque (HEX ou description)">
-          <Input {...form.register("colors")} placeholder="ex: #D4AF37, #1A1A1A, #FFFFFF — ou: or, noir profond, blanc" className="bg-black/20 h-9 text-sm" />
+        <FieldRow label={t("brief_panel.fields.colors")}>
+          <Input {...form.register("colors")} placeholder={t("brief_panel.fields.colors_ph")} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
       </div>
     </div>
@@ -277,36 +186,37 @@ function IdentitySection({ form }: { form: any }) {
 }
 
 function ProductSection({ form }: { form: any }) {
+  const { t } = useT();
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      <FieldRow label="Nom du produit phare">
-        <Input {...form.register("product_name")} placeholder="ex: Montre Élégance Or Rose" className="bg-black/20 h-9 text-sm" />
+      <FieldRow label={t("brief_panel.fields.product_name")}>
+        <Input {...form.register("product_name")} placeholder={t("brief_panel.fields.product_name_ph")} className="bg-black/20 h-9 text-sm" />
       </FieldRow>
-      <FieldRow label="Audience cible">
+      <FieldRow label={t("brief_panel.fields.target_audience")}>
         <select {...form.register("target_audience")} className={selectCls()}>
-          {AUDIENCES.map((a) => <option key={a.value} value={a.value}>{a.label}</option>)}
+          {AUDIENCE_KEYS.map((a) => <option key={a} value={a}>{t(`brief_panel.lists.audiences.${a}`)}</option>)}
         </select>
       </FieldRow>
       <div className="sm:col-span-2">
-        <FieldRow label="Description du produit">
-          <Input {...form.register("product_description")} placeholder="ex: Montre automatique or rose 18k, verre saphir, bracelet cuir Hermès..." className="bg-black/20 h-9 text-sm" />
+        <FieldRow label={t("brief_panel.fields.product_description")}>
+          <Input {...form.register("product_description")} placeholder={t("brief_panel.fields.product_description_ph")} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
       </div>
-      <FieldRow label="Caractéristiques clés">
-        <Input {...form.register("product_features")} placeholder="ex: or 18k, verre saphir, étanche 50m" className="bg-black/20 h-9 text-sm" />
+      <FieldRow label={t("brief_panel.fields.product_features")}>
+        <Input {...form.register("product_features")} placeholder={t("brief_panel.fields.product_features_ph")} className="bg-black/20 h-9 text-sm" />
       </FieldRow>
-      <FieldRow label="Bénéfices client">
-        <Input {...form.register("benefits")} placeholder="ex: élégance, précision, durabilité" className="bg-black/20 h-9 text-sm" />
+      <FieldRow label={t("brief_panel.fields.benefits")}>
+        <Input {...form.register("benefits")} placeholder={t("brief_panel.fields.benefits_ph")} className="bg-black/20 h-9 text-sm" />
       </FieldRow>
-      <FieldRow label="Couleurs produit">
-        <Input {...form.register("product_colors")} placeholder="ex: or rose, noir, blanc ivoire" className="bg-black/20 h-9 text-sm" />
+      <FieldRow label={t("brief_panel.fields.product_colors")}>
+        <Input {...form.register("product_colors")} placeholder={t("brief_panel.fields.product_colors_ph")} className="bg-black/20 h-9 text-sm" />
       </FieldRow>
-      <FieldRow label="Matériaux">
-        <Input {...form.register("product_materials")} placeholder="ex: acier inoxydable, verre saphir, cuir" className="bg-black/20 h-9 text-sm" />
+      <FieldRow label={t("brief_panel.fields.product_materials")}>
+        <Input {...form.register("product_materials")} placeholder={t("brief_panel.fields.product_materials_ph")} className="bg-black/20 h-9 text-sm" />
       </FieldRow>
       <div className="sm:col-span-2">
-        <FieldRow label="Caractéristique unique (différenciateur clé)">
-          <Input {...form.register("unique_feature")} placeholder="ex: Seul sérum végan made in France avec vit. C stabilisée" className="bg-black/20 h-9 text-sm" />
+        <FieldRow label={t("brief_panel.fields.unique_feature")}>
+          <Input {...form.register("unique_feature")} placeholder={t("brief_panel.fields.unique_feature_ph")} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
       </div>
     </div>
@@ -314,69 +224,59 @@ function ProductSection({ form }: { form: any }) {
 }
 
 function CommerceSection({ form }: { form: any }) {
+  const { t } = useT();
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-      <FieldRow label="Prix de vente (€)">
+      <FieldRow label={t("brief_panel.fields.price")}>
         <Input {...form.register("price")} type="number" placeholder="299" className="bg-black/20 h-9 text-sm" />
       </FieldRow>
-      <FieldRow label="Prix barré avant remise (€)">
+      <FieldRow label={t("brief_panel.fields.old_price")}>
         <Input {...form.register("old_price")} type="number" placeholder="399" className="bg-black/20 h-9 text-sm" />
       </FieldRow>
-      <FieldRow label="Réduction (%)">
+      <FieldRow label={t("brief_panel.fields.discount")}>
         <Input {...form.register("discount")} type="number" placeholder="20" className="bg-black/20 h-9 text-sm" />
       </FieldRow>
-      <FieldRow label="Code promo">
-        <Input {...form.register("promo_code")} placeholder="ex: LUXEOR20" className="bg-black/20 h-9 text-sm" />
+      <FieldRow label={t("brief_panel.fields.promo_code")}>
+        <Input {...form.register("promo_code")} placeholder={t("brief_panel.fields.promo_code_ph")} className="bg-black/20 h-9 text-sm" />
       </FieldRow>
-      <FieldRow label="Livraison offerte dès (€)">
+      <FieldRow label={t("brief_panel.fields.free_shipping")}>
         <Input {...form.register("free_shipping")} type="number" placeholder="100" className="bg-black/20 h-9 text-sm" />
       </FieldRow>
-      <FieldRow label="Stock disponible">
+      <FieldRow label={t("brief_panel.fields.stock")}>
         <Input {...form.register("stock")} type="number" placeholder="50" className="bg-black/20 h-9 text-sm" />
       </FieldRow>
       <div className="col-span-2 sm:col-span-3">
-        <FieldRow label="Info livraison (texte affiché)">
-          <Input {...form.register("shipping_info")} placeholder="ex: Livraison offerte dès 120€ — 2-4 jours ouvrés (Colissimo)" className="bg-black/20 h-9 text-sm" />
+        <FieldRow label={t("brief_panel.fields.shipping_info")}>
+          <Input {...form.register("shipping_info")} placeholder={t("brief_panel.fields.shipping_info_ph")} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
       </div>
       <div className="col-span-2 sm:col-span-3">
-        <FieldRow label="URL page de commande / checkout">
-          <Input {...form.register("checkout_url")} placeholder="ex: https://masite.com/checkout" className="bg-black/20 h-9 text-sm" />
+        <FieldRow label={t("brief_panel.fields.checkout_url")}>
+          <Input {...form.register("checkout_url")} placeholder={t("brief_panel.fields.checkout_url_ph")} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
       </div>
     </div>
   );
 }
 
-const VISUAL_STYLES = [
-  { value: "", label: "Sélectionner un style…" },
-  { value: "luxe-premium", label: "Luxe & Premium" },
-  { value: "editorial", label: "Éditorial & Magazine" },
-  { value: "minimaliste", label: "Minimaliste & Épuré" },
-  { value: "moderne", label: "Moderne & Tech" },
-  { value: "chaud-naturel", label: "Chaud & Naturel" },
-  { value: "streetwear", label: "Streetwear & Urban" },
-  { value: "artisanal", label: "Artisanal & Craft" },
-  { value: "ecologique", label: "Écologique & Organique" },
-];
-
 function VisualSection({ form }: { form: any }) {
+  const { t } = useT();
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <FieldRow label="Couleur principale (HEX) *">
+        <FieldRow label={t("brief_panel.fields.primary_color")}>
           <div className="flex gap-2">
             <input type="color" {...form.register("primary_color")} className="w-10 h-9 rounded cursor-pointer border border-white/10 bg-transparent flex-shrink-0" />
             <Input {...form.register("primary_color")} className="bg-black/20 h-9 text-sm font-mono" placeholder="#D4AF37" />
           </div>
         </FieldRow>
-        <FieldRow label="Couleur secondaire (HEX)">
+        <FieldRow label={t("brief_panel.fields.secondary_color")}>
           <div className="flex gap-2">
             <input type="color" {...form.register("secondary_color")} className="w-10 h-9 rounded cursor-pointer border border-white/10 bg-transparent flex-shrink-0" />
             <Input {...form.register("secondary_color")} className="bg-black/20 h-9 text-sm font-mono" placeholder="#9CAF88" />
           </div>
         </FieldRow>
-        <FieldRow label="Couleur d'accent (HEX)">
+        <FieldRow label={t("brief_panel.fields.accent_color")}>
           <div className="flex gap-2">
             <input type="color" {...form.register("accent_color")} className="w-10 h-9 rounded cursor-pointer border border-white/10 bg-transparent flex-shrink-0" />
             <Input {...form.register("accent_color")} className="bg-black/20 h-9 text-sm font-mono" placeholder="#D4A5A5" />
@@ -384,15 +284,15 @@ function VisualSection({ form }: { form: any }) {
         </FieldRow>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <FieldRow label="Style visuel global">
+        <FieldRow label={t("brief_panel.fields.visual_style")}>
           <select {...form.register("visual_style")} className={selectCls()}>
-            {VISUAL_STYLES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
+            {VISUAL_STYLE_KEYS.map((s) => <option key={s} value={s}>{t(`brief_panel.lists.visual_styles.${s}`)}</option>)}
           </select>
         </FieldRow>
-        <FieldRow label="Police titres">
+        <FieldRow label={t("brief_panel.fields.heading_font")}>
           <Input {...form.register("heading_font")} placeholder="Playfair Display" className="bg-black/20 h-9 text-sm" />
         </FieldRow>
-        <FieldRow label="Police texte">
+        <FieldRow label={t("brief_panel.fields.body_font")}>
           <Input {...form.register("body_font")} placeholder="Montserrat" className="bg-black/20 h-9 text-sm" />
         </FieldRow>
       </div>
@@ -400,63 +300,52 @@ function VisualSection({ form }: { form: any }) {
   );
 }
 
-const CONTACT_CHANNELS = [
-  { value: "", label: "Sélectionner un canal…" },
-  { value: "email", label: "Email" },
-  { value: "whatsapp", label: "WhatsApp" },
-  { value: "instagram", label: "Instagram DM" },
-  { value: "email-instagram", label: "Email + Instagram DM" },
-  { value: "email-whatsapp", label: "Email + WhatsApp" },
-  { value: "chat-live", label: "Chat en direct (site)" },
-  { value: "telephone", label: "Téléphone" },
-  { value: "tous", label: "Tous les canaux" },
-];
-
 function SavSection({ form }: { form: any }) {
+  const { t } = useT();
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <FieldRow label="Garantie (années)">
+        <FieldRow label={t("brief_panel.fields.warranty")}>
           <Input {...form.register("warranty")} type="number" step="any" placeholder="2" className="bg-black/20 h-9 text-sm" />
         </FieldRow>
-        <FieldRow label="Délai livraison standard (j)">
+        <FieldRow label={t("brief_panel.fields.delivery_days")}>
           <Input {...form.register("delivery_days")} type="number" placeholder="3" className="bg-black/20 h-9 text-sm" />
         </FieldRow>
-        <FieldRow label="Délai livraison express (j)">
+        <FieldRow label={t("brief_panel.fields.express_delivery_days")}>
           <Input {...form.register("express_delivery_days")} type="number" placeholder="1" className="bg-black/20 h-9 text-sm" />
         </FieldRow>
-        <FieldRow label="Prix livraison express (€)">
+        <FieldRow label={t("brief_panel.fields.express_price")}>
           <Input {...form.register("express_price")} type="number" step="any" placeholder="9.90" className="bg-black/20 h-9 text-sm" />
         </FieldRow>
-        <FieldRow label="Politique de retour (jours)">
+        <FieldRow label={t("brief_panel.fields.return_days")}>
           <Input {...form.register("return_days")} type="number" placeholder="30" className="bg-black/20 h-9 text-sm" />
         </FieldRow>
-        <FieldRow label="Délai réponse SAV">
-          <Input {...form.register("sav_response_time")} placeholder="ex: Sous 24h ouvrées" className="bg-black/20 h-9 text-sm" />
+        <FieldRow label={t("brief_panel.fields.sav_response_time")}>
+          <Input {...form.register("sav_response_time")} placeholder={t("brief_panel.fields.sav_response_time_ph")} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <FieldRow label="Email support">
-          <Input {...form.register("support_email")} type="email" placeholder="ex: support@mamarque.com" className="bg-black/20 h-9 text-sm" />
+        <FieldRow label={t("brief_panel.fields.support_email")}>
+          <Input {...form.register("support_email")} type="email" placeholder={t("brief_panel.fields.support_email_ph")} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
-        <FieldRow label="Canal de contact principal">
+        <FieldRow label={t("brief_panel.fields.contact_channel")}>
           <select {...form.register("contact_channel")} className={selectCls()}>
-            {CONTACT_CHANNELS.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
+            {CONTACT_CHANNEL_KEYS.map((c) => <option key={c} value={c}>{t(`brief_panel.lists.contact_channels.${c}`)}</option>)}
           </select>
         </FieldRow>
-        <FieldRow label="Best-seller 1">
-          <Input {...form.register("best_seller_1")} placeholder="ex: Robe Sorelle Signature" className="bg-black/20 h-9 text-sm" />
+        <FieldRow label={t("brief_panel.fields.best_seller_1")}>
+          <Input {...form.register("best_seller_1")} placeholder={t("brief_panel.fields.best_seller_1_ph")} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
-        <FieldRow label="Best-seller 2">
-          <Input {...form.register("best_seller_2")} placeholder="ex: Ensemble Lin Premium" className="bg-black/20 h-9 text-sm" />
+        <FieldRow label={t("brief_panel.fields.best_seller_2")}>
+          <Input {...form.register("best_seller_2")} placeholder={t("brief_panel.fields.best_seller_2_ph")} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
       </div>
       <div>
-        <FieldRow label="Message type SAV (modèle de réponse client)">
+        <FieldRow label={t("brief_panel.fields.sav_message")}>
           <textarea
             {...form.register("sav_message")}
             rows={3}
-            placeholder="ex: Bonjour [Prénom], merci pour votre confiance ! Votre commande #[NUM] est en cours de préparation. Notre équipe revient vers vous sous 24h. — L'équipe MAISON SORELLE"
+            placeholder={t("brief_panel.fields.sav_message_ph")}
             className="flex w-full rounded-md border border-white/10 bg-black/20 px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary resize-none"
           />
         </FieldRow>
@@ -466,17 +355,19 @@ function SavSection({ form }: { form: any }) {
 }
 
 function PerformanceSection({ form }: { form: any }) {
+  const { t } = useT();
+  const fields: Array<{ name: string; key: string; placeholder: string }> = [
+    { name: "ca_target",     key: "ca_target",     placeholder: "10000" },
+    { name: "basket_target", key: "basket_target", placeholder: "150" },
+    { name: "conv_target",   key: "conv_target",   placeholder: "2.5" },
+    { name: "roas_target",   key: "roas_target",   placeholder: "3.0" },
+    { name: "target_cpa",    key: "target_cpa",    placeholder: "15" },
+    { name: "margin_percent",key: "margin_percent",placeholder: "65" },
+  ];
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-      {[
-        { name: "ca_target",     label: "CA mensuel cible (€)", placeholder: "10000" },
-        { name: "basket_target", label: "Panier moyen cible (€)", placeholder: "150" },
-        { name: "conv_target",   label: "Taux conv. cible (%)", placeholder: "2.5" },
-        { name: "roas_target",   label: "ROAS cible (x)", placeholder: "3.0" },
-        { name: "target_cpa",    label: "CPA cible (€)", placeholder: "15" },
-        { name: "margin_percent",label: "Marge brute (%)", placeholder: "65" },
-      ].map((f) => (
-        <FieldRow key={f.name} label={f.label}>
+      {fields.map((f) => (
+        <FieldRow key={f.name} label={t(`brief_panel.fields.${f.key}`)}>
           <Input {...form.register(f.name)} type="number" step="any" placeholder={f.placeholder} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
       ))}
@@ -485,42 +376,27 @@ function PerformanceSection({ form }: { form: any }) {
 }
 
 function StrategieSection({ form }: { form: any }) {
+  const { t } = useT();
   return (
     <div className="space-y-4">
       <div className="flex items-start gap-2 px-3 py-2.5 rounded-lg border border-red-400/20 bg-red-400/5">
         <span className="text-red-400 text-xs mt-0.5">⚡</span>
         <p className="text-[11px] text-red-300/80 leading-relaxed">
-          Ces champs sont injectés dans le <strong>Chain-of-Thought</strong> de l'IA pour des prompts ultra-calibrés à ta marque. Plus le contexte est précis, plus les prompts sont chirurgicaux.
+          {richText(t("brief_panel.infos.strategie"))}
         </p>
       </div>
       <div className="grid grid-cols-1 gap-3">
-        <FieldRow label="Démographie cible précise">
-          <Input
-            {...form.register("target_demographic")}
-            placeholder="ex: Femmes 28-42 ans, revenus 50-90k€, urbaines CSP+, intérêt mode slow & luxe accessible"
-            className="bg-black/20 h-9 text-sm"
-          />
+        <FieldRow label={t("brief_panel.fields.target_demographic")}>
+          <Input {...form.register("target_demographic")} placeholder={t("brief_panel.fields.target_demographic_ph")} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
-        <FieldRow label="Concurrents directs">
-          <Input
-            {...form.register("competitors")}
-            placeholder="ex: BOSS, Calvin Klein, Sandro — se différencier sur le prix et l'authenticité"
-            className="bg-black/20 h-9 text-sm"
-          />
+        <FieldRow label={t("brief_panel.fields.competitors")}>
+          <Input {...form.register("competitors")} placeholder={t("brief_panel.fields.competitors_ph")} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
-        <FieldRow label="Mots-clés & éléments INTERDITS">
-          <Input
-            {...form.register("forbidden_keywords")}
-            placeholder="ex: 'cheap', 'économique', couleurs flashy, visuels surchargés, emoji dans les copies"
-            className="bg-black/20 h-9 text-sm"
-          />
+        <FieldRow label={t("brief_panel.fields.forbidden_keywords")}>
+          <Input {...form.register("forbidden_keywords")} placeholder={t("brief_panel.fields.forbidden_keywords_ph")} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
-        <FieldRow label="Proposition de valeur unique (USP)">
-          <Input
-            {...form.register("usp")}
-            placeholder="ex: La clean beauty à la française — naturalité, traçabilité, efficacité prouvée"
-            className="bg-black/20 h-9 text-sm"
-          />
+        <FieldRow label={t("brief_panel.fields.usp")}>
+          <Input {...form.register("usp")} placeholder={t("brief_panel.fields.usp_ph")} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
       </div>
     </div>
@@ -528,6 +404,7 @@ function StrategieSection({ form }: { form: any }) {
 }
 
 function ToggleField({ form, name, label, hint }: { form: any; name: string; label: string; hint?: string }) {
+  const { t } = useT();
   const value = String(form.watch(name) ?? "true") === "true";
   return (
     <div className="space-y-1">
@@ -541,7 +418,7 @@ function ToggleField({ form, name, label, hint }: { form: any; name: string; lab
             : "border-white/10 bg-neutral-900 text-muted-foreground"
         }`}
       >
-        {value ? "✓ Autorisé" : "✕ Interdit"}
+        {value ? t("brief_panel.toggle.allowed") : t("brief_panel.toggle.forbidden")}
         {hint && <span className="ml-2 text-[10px] opacity-60">— {hint}</span>}
       </button>
     </div>
@@ -549,82 +426,91 @@ function ToggleField({ form, name, label, hint }: { form: any; name: string; lab
 }
 
 function GouvernanceSection({ form }: { form: any }) {
+  const { t } = useT();
   return (
     <div className="space-y-4">
       <div className="flex items-start gap-2 px-3 py-2.5 rounded-lg border border-cyan-400/20 bg-cyan-400/5">
         <span className="text-cyan-400 text-xs mt-0.5">🔒</span>
         <p className="text-[11px] text-cyan-300/80 leading-relaxed">
-          La <strong>Couche Gouvernance v2.1</strong> verrouille les faits, charge un <strong>profil sectoriel × région</strong> (cosmetics_eu, fashion, finance_eu, food_eu, saas…), active dynamiquement les claim packs adaptés, enforce la voix de marque et calcule la rentabilité (LTV / CAC / break-even).
-          Ces champs sont injectés dans <strong>tous les modules</strong>.
+          {richText(t("brief_panel.infos.gouvernance"))}
         </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <FieldRow label="Région réglementaire (Sector Intelligence)">
+        <FieldRow label={t("brief_panel.fields.region")}>
           <select {...form.register("region")} className={selectCls()}>
-            {REGIONS.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
+            {REGION_KEYS.map((r) => <option key={r} value={r}>{t(`brief_panel.lists.regions.${r}`)}</option>)}
           </select>
         </FieldRow>
-        <FieldRow label="Devise par défaut">
+        <FieldRow label={t("brief_panel.fields.currency")}>
           <select {...form.register("currency")} className={selectCls()}>
-            {CURRENCIES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
+            {CURRENCY_KEYS.map((c) => <option key={c} value={c}>{t(`brief_panel.lists.currencies.${c}`)}</option>)}
           </select>
         </FieldRow>
         <div className="sm:col-span-2">
-          <FieldRow label="Mode de croissance">
+          <FieldRow label={t("brief_panel.fields.growth_mode")}>
             <select {...form.register("growth_mode")} className={selectCls()}>
-              {GROWTH_MODES.map((g) => <option key={g.value} value={g.value}>{g.label}</option>)}
+              {GROWTH_MODE_KEYS.map((g) => <option key={g} value={g}>{t(`brief_panel.lists.growth_modes.${g}`)}</option>)}
             </select>
           </FieldRow>
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <FieldRow label="Packaging factuel (volume, matériaux)">
-          <Input {...form.register("packaging")} placeholder="ex: Verre ambré 50 ml, étui carton FSC" className="bg-black/20 h-9 text-sm" />
+        <FieldRow label={t("brief_panel.fields.packaging")}>
+          <Input {...form.register("packaging")} placeholder={t("brief_panel.fields.packaging_ph")} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
-        <FieldRow label="Origine / Made in">
-          <Input {...form.register("origin")} placeholder="ex: Provence, France" className="bg-black/20 h-9 text-sm" />
+        <FieldRow label={t("brief_panel.fields.origin")}>
+          <Input {...form.register("origin")} placeholder={t("brief_panel.fields.origin_ph")} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
         <div className="sm:col-span-2">
-          <FieldRow label="Certifications réelles (séparer par virgule)">
-            <Input {...form.register("certifications")} placeholder="ex: ECOCERT COSMOS, Vegan Society, Cruelty Free" className="bg-black/20 h-9 text-sm" />
+          <FieldRow label={t("brief_panel.fields.certifications")}>
+            <Input {...form.register("certifications")} placeholder={t("brief_panel.fields.certifications_ph")} className="bg-black/20 h-9 text-sm" />
           </FieldRow>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-3">
-        <FieldRow label="Claims AUTORISÉS (preuves disponibles, séparer par virgule)">
-          <Input {...form.register("claims_allowed")} placeholder="ex: hydratation 24h (test in vivo n=32), 95% d'origine naturelle" className="bg-black/20 h-9 text-sm" />
+        <FieldRow label={t("brief_panel.fields.claims_allowed")}>
+          <Input {...form.register("claims_allowed")} placeholder={t("brief_panel.fields.claims_allowed_ph")} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
-        <FieldRow label="Claims INTERDITS (cosmétique UE / risque légal)">
-          <Input {...form.register("claims_forbidden")} placeholder="ex: anti-rides, soigne, guérit, médical, miracle" className="bg-black/20 h-9 text-sm" />
+        <FieldRow label={t("brief_panel.fields.claims_forbidden")}>
+          <Input {...form.register("claims_forbidden")} placeholder={t("brief_panel.fields.claims_forbidden_ph")} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
-        <FieldRow label="Mots interdits dans la voix de marque (séparer par virgule)">
-          <Input {...form.register("voice_forbidden_words")} placeholder="ex: pas cher, économique, soldes flash" className="bg-black/20 h-9 text-sm" />
+        <FieldRow label={t("brief_panel.fields.voice_forbidden_words")}>
+          <Input {...form.register("voice_forbidden_words")} placeholder={t("brief_panel.fields.voice_forbidden_words_ph")} className="bg-black/20 h-9 text-sm" />
         </FieldRow>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <ToggleField form={form} name="urgency_allowed" label="Urgence / countdowns" hint="false = mode premium" />
-        <ToggleField form={form} name="emojis_allowed"  label="Emojis dans les copies" />
+        <ToggleField
+          form={form}
+          name="urgency_allowed"
+          label={t("brief_panel.fields.urgency_allowed")}
+          hint={t("brief_panel.fields.urgency_allowed_hint")}
+        />
+        <ToggleField
+          form={form}
+          name="emojis_allowed"
+          label={t("brief_panel.fields.emojis_allowed")}
+        />
       </div>
 
       <div className="pt-2 border-t border-white/5">
-        <p className="text-[11px] text-cyan-300/70 mb-2 font-semibold">Profit Engine — entrées dynamiques</p>
+        <p className="text-[11px] text-cyan-300/70 mb-2 font-semibold">{t("brief_panel.infos.profit_engine_title")}</p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          <FieldRow label="Taux de réachat (%)">
+          <FieldRow label={t("brief_panel.fields.repeat_purchase_rate")}>
             <Input {...form.register("repeat_purchase_rate")} type="number" step="any" placeholder="35" className="bg-black/20 h-9 text-sm" />
           </FieldRow>
-          <FieldRow label="Commandes / an / client">
+          <FieldRow label={t("brief_panel.fields.avg_orders_per_year")}>
             <Input {...form.register("avg_orders_per_year")} type="number" step="any" placeholder="2.4" className="bg-black/20 h-9 text-sm" />
           </FieldRow>
-          <FieldRow label="Coûts fixes mensuels (€)">
+          <FieldRow label={t("brief_panel.fields.fixed_costs_monthly")}>
             <Input {...form.register("fixed_costs_monthly")} type="number" step="any" placeholder="2500" className="bg-black/20 h-9 text-sm" />
           </FieldRow>
         </div>
         <p className="text-[10px] text-muted-foreground mt-2">
-          Si vides, le moteur calcule en mode dégradé et signale les chiffres manquants au lieu de les inventer.
+          {t("brief_panel.infos.profit_engine_hint")}
         </p>
       </div>
     </div>
@@ -648,6 +534,7 @@ interface GmbImportProps {
 }
 
 function GmbImportBlock({ onImport }: GmbImportProps) {
+  const { t } = useT();
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -669,14 +556,14 @@ function GmbImportBlock({ onImport }: GmbImportProps) {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error ?? "Erreur lors du scraping.");
+        setError(data.error ?? t("brief_panel.gmb.error_default"));
         return;
       }
 
       setPlace(data.place);
       onImport(data.brief);
     } catch {
-      setError("Impossible de contacter le serveur. Vérifiez votre connexion.");
+      setError(t("brief_panel.gmb.error_network"));
     } finally {
       setLoading(false);
     }
@@ -688,8 +575,8 @@ function GmbImportBlock({ onImport }: GmbImportProps) {
       <div className="flex items-center gap-2 px-4 py-3 border-b border-amber-400/10">
         <MapPin className="w-4 h-4 text-amber-400 flex-shrink-0" />
         <div>
-          <p className="text-xs font-semibold text-amber-400">Importer depuis Google My Business</p>
-          <p className="text-[10px] text-muted-foreground">Collez votre lien GMB pour remplir le brief automatiquement</p>
+          <p className="text-xs font-semibold text-amber-400">{t("brief_panel.gmb.title")}</p>
+          <p className="text-[10px] text-muted-foreground">{t("brief_panel.gmb.subtitle")}</p>
         </div>
       </div>
 
@@ -698,7 +585,7 @@ function GmbImportBlock({ onImport }: GmbImportProps) {
         <Input
           value={url}
           onChange={(e) => { setUrl(e.target.value); setError(null); }}
-          placeholder="https://maps.app.goo.gl/... ou https://www.google.com/maps/place/..."
+          placeholder={t("brief_panel.gmb.placeholder")}
           className="bg-black/30 h-9 text-xs border-white/10 flex-1"
           onKeyDown={(e) => e.key === "Enter" && !loading && handleImport()}
         />
@@ -709,9 +596,9 @@ function GmbImportBlock({ onImport }: GmbImportProps) {
           className="h-9 px-3 text-xs gap-1.5 bg-amber-500 hover:bg-amber-400 text-black font-semibold shrink-0"
         >
           {loading ? (
-            <><Loader2 className="w-3.5 h-3.5 animate-spin" />Analyse…</>
+            <><Loader2 className="w-3.5 h-3.5 animate-spin" />{t("brief_panel.gmb.btn_loading")}</>
           ) : (
-            <><Sparkles className="w-3.5 h-3.5" />Importer</>
+            <><Sparkles className="w-3.5 h-3.5" />{t("brief_panel.gmb.btn_import")}</>
           )}
         </Button>
       </div>
@@ -744,7 +631,7 @@ function GmbImportBlock({ onImport }: GmbImportProps) {
                 {place.rating && (
                   <span className="flex items-center gap-0.5 text-[10px] text-amber-400">
                     <Star className="w-2.5 h-2.5 fill-amber-400" />
-                    {place.rating} ({place.ratingCount} avis)
+                    {place.rating} ({t("brief_panel.gmb.reviews", { count: place.ratingCount ?? 0 })})
                   </span>
                 )}
                 {place.address && (
@@ -764,7 +651,7 @@ function GmbImportBlock({ onImport }: GmbImportProps) {
             )}
           </div>
           <p className="text-[10px] text-green-400/70 mt-1.5">
-            ✓ Brief pré-rempli — vérifiez et ajustez les champs ci-dessous
+            {t("brief_panel.gmb.success_hint")}
           </p>
         </motion.div>
       )}
@@ -776,7 +663,7 @@ function GmbImportBlock({ onImport }: GmbImportProps) {
 
 export default function BrandBriefPanel() {
   const { brief, savedBriefs, updateBrief, resetBrief, restoreBrief, deleteSavedBrief, completionPct, filledCount } = useBrand();
-  const { t } = useT();
+  const { t, uiLocale } = useT();
   const [open, setOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("identity");
   const [saved, setSaved] = useState(false);
@@ -804,18 +691,26 @@ export default function BrandBriefPanel() {
   });
 
   const handleGmbImport = (imported: Partial<BrandBrief>) => {
-    // Merge imported fields into the form (only non-empty values)
     Object.entries(imported).forEach(([key, value]) => {
       if (value && typeof value === "string" && value.trim() !== "") {
         form.setValue(key as keyof BrandBrief, value, { shouldDirty: true });
       }
     });
-    // Switch to identity tab so user sees what was filled
     setActiveSection("identity");
   };
 
   const isComplete = completionPct >= 80;
   const recentBriefs = savedBriefs.slice(0, 5);
+
+  // Map locale → BCP 47 pour l'affichage de la date
+  const dateLocale = useMemo(() => {
+    const map: Record<string, string> = {
+      fr: "fr-FR", en: "en-US", es: "es-ES", de: "de-DE", it: "it-IT", pt: "pt-PT",
+    };
+    return map[uiLocale] ?? "en-US";
+  }, [uiLocale]);
+
+  const sectorLabel = brief.sector ? t(`brief_panel.lists.sectors.${brief.sector}`) : "";
 
   return (
     <div className="mb-6 rounded-2xl border border-white/8 bg-card/40 backdrop-blur-sm overflow-hidden">
@@ -832,7 +727,7 @@ export default function BrandBriefPanel() {
             </p>
             <p className="text-[11px] text-muted-foreground">
               {brief.brand_name
-                ? `${brief.brand_name} · ${SECTORS.find(s => s.value === brief.sector)?.label ?? brief.sector}`
+                ? `${brief.brand_name} · ${sectorLabel || brief.sector}`
                 : t("brief.subtitle_global")}
             </p>
           </div>
@@ -854,7 +749,7 @@ export default function BrandBriefPanel() {
           </div>
           {isComplete ? (
             <span className="flex items-center gap-1 text-[11px] text-green-400 bg-green-400/10 border border-green-400/20 rounded-full px-2 py-0.5">
-              <Check className="w-3 h-3" />Brief complet
+              <Check className="w-3 h-3" />{t("brief_panel.completion_complete")}
             </span>
           ) : (
             <span className="flex items-center gap-1 text-[11px] text-amber-400 bg-amber-400/10 border border-amber-400/20 rounded-full px-2 py-0.5">
@@ -885,8 +780,8 @@ export default function BrandBriefPanel() {
                   <div className="flex items-center gap-2">
                     <History className="w-4 h-4 text-primary flex-shrink-0" />
                     <div>
-                      <p className="text-xs font-semibold text-foreground">Briefs sauvegardés automatiquement</p>
-                      <p className="text-[10px] text-muted-foreground">Retrouvez et réutilisez vos derniers briefs de marque</p>
+                      <p className="text-xs font-semibold text-foreground">{t("brief_panel.saved_briefs_title")}</p>
+                      <p className="text-[10px] text-muted-foreground">{t("brief_panel.saved_briefs_subtitle")}</p>
                     </div>
                   </div>
                   <span className="text-[10px] text-muted-foreground/60">{savedBriefs.length}/12</span>
@@ -913,7 +808,7 @@ export default function BrandBriefPanel() {
                             {item.subtitle && <span className="truncate">{item.subtitle}</span>}
                             <span className="flex items-center gap-1 flex-shrink-0">
                               <Clock className="w-2.5 h-2.5" />
-                              {new Date(item.updatedAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                              {new Date(item.updatedAt).toLocaleDateString(dateLocale, { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
                             </span>
                           </div>
                         </button>
@@ -921,7 +816,7 @@ export default function BrandBriefPanel() {
                           type="button"
                           onClick={() => deleteSavedBrief(item.id)}
                           className="p-1.5 rounded-md text-muted-foreground/50 hover:text-red-400 hover:bg-red-400/10 transition-colors"
-                          aria-label={`Supprimer le brief ${item.title}`}
+                          aria-label={t("brief_panel.saved_briefs_delete", { title: item.title })}
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -931,7 +826,7 @@ export default function BrandBriefPanel() {
                 ) : (
                   <div className="px-4 py-3">
                     <p className="text-[11px] text-muted-foreground">
-                      Aucun brief archivé pour l’instant. Dès que vous remplissez un brief, il est sauvegardé ici automatiquement.
+                      {t("brief_panel.saved_briefs_empty")}
                     </p>
                   </div>
                 )}
@@ -939,7 +834,7 @@ export default function BrandBriefPanel() {
 
               {/* Section tabs */}
               <div className="flex gap-0.5 px-5 pt-2 pb-2 overflow-x-auto scrollbar-none border-t border-white/5">
-                {SECTIONS.map((s) => (
+                {SECTION_KEYS.map((s) => (
                   <button
                     key={s.key}
                     onClick={() => setActiveSection(s.key)}
@@ -950,7 +845,7 @@ export default function BrandBriefPanel() {
                     }`}
                   >
                     <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${activeSection === s.key ? s.dot : "bg-white/20"}`} />
-                    {s.label}
+                    {t(`brief_panel.sections.${s.key}`)}
                   </button>
                 ))}
               </div>
@@ -975,7 +870,7 @@ export default function BrandBriefPanel() {
                   className="flex items-center gap-1.5 text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors"
                 >
                   <RotateCcw className="w-3 h-3" />
-                  Réinitialiser
+                  {t("brief_panel.reset_button")}
                 </button>
                 <div className="flex items-center gap-3">
                   {saved && (
@@ -986,12 +881,12 @@ export default function BrandBriefPanel() {
                       className="flex items-center gap-1 text-xs text-green-400"
                     >
                       <Check className="w-3.5 h-3.5" />
-                      Sauvegardé !
+                      {t("brief_panel.saved_toast")}
                     </motion.span>
                   )}
                   <Button size="sm" onClick={onSave} className="h-8 px-4 text-xs gap-1.5">
                     <Check className="w-3.5 h-3.5" />
-                    Appliquer à tous les modules
+                    {t("brief_panel.save_button")}
                   </Button>
                 </div>
               </div>

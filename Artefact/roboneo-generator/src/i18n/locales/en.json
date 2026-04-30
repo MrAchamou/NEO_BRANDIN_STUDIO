@@ -57,58 +57,108 @@
     "toast_key_cleared_desc": "Back to Replit Managed mode."
   },
   "modules": {
-    "section_title": "MODULES",
-    "progress_label": "{{done}}/{{total}}",
     "1": {
       "name": "Brand Identity",
       "tagline": "Build the visual DNA of your brand — logo, colors, typography and full graphic charter.",
-      "variants": ["Logo", "Palette", "Typography", "Charter"]
+      "variants": [
+        "Logo",
+        "Palette",
+        "Typography",
+        "Charter"
+      ]
     },
     "2": {
       "name": "Visual Content",
       "tagline": "Photography, lifestyle, product and editorial visuals to fuel all your channels.",
-      "variants": ["Photo", "Lifestyle", "Detail", "Before/After"]
+      "variants": [
+        "Photo",
+        "Lifestyle",
+        "Detail",
+        "Before/After"
+      ]
     },
     "3": {
       "name": "Video Content",
       "tagline": "TikTok, YouTube, teaser and product scripts ready for production.",
-      "variants": ["Script", "TikTok", "YouTube", "Teaser"]
+      "variants": [
+        "Script",
+        "TikTok",
+        "YouTube",
+        "Teaser"
+      ]
     },
     "4": {
       "name": "Ad Creatives",
       "tagline": "High-conversion paid creatives for Meta, Google, TikTok and carousels.",
-      "variants": ["Meta", "Google", "TikTok", "Carousel"]
+      "variants": [
+        "Meta",
+        "Google",
+        "TikTok",
+        "Carousel"
+      ]
     },
     "5": {
       "name": "Brand Sound",
       "tagline": "Sonic identity — jingle, voice-over, soundtrack and brand mood.",
-      "variants": ["Jingle", "Voice", "Mood", "Track"]
+      "variants": [
+        "Jingle",
+        "Voice",
+        "Mood",
+        "Track"
+      ]
     },
     "6": {
       "name": "Copy & Content",
       "tagline": "Strategic copywriting — slogans, manifestos, web copy and editorial.",
-      "variants": ["Slogan", "Manifesto", "Web", "Editorial"]
+      "variants": [
+        "Slogan",
+        "Manifesto",
+        "Web",
+        "Editorial"
+      ]
     },
     "7": {
       "name": "Launch Ready",
       "tagline": "Full launch kit — emails, landing, social and press release.",
-      "variants": ["Emails", "Landing", "Social", "PR"]
+      "variants": [
+        "Emails",
+        "Landing",
+        "Social",
+        "PR"
+      ]
     },
     "8": {
       "name": "Chatbot Script",
       "tagline": "Conversational scripts for support, sales and post-purchase.",
-      "variants": ["Support", "Sales", "Post-purchase", "FAQ"]
+      "variants": [
+        "Support",
+        "Sales",
+        "Post-purchase",
+        "FAQ"
+      ]
     },
     "9": {
       "name": "Upsell Kit",
       "tagline": "Strategic upsell and cross-sell offers across the customer journey.",
-      "variants": ["Upsell", "Cross-sell", "Bundle", "Loyalty"]
+      "variants": [
+        "Upsell",
+        "Cross-sell",
+        "Bundle",
+        "Loyalty"
+      ]
     },
     "10": {
       "name": "Performance",
       "tagline": "KPI tracking, reports and optimization actions for the brand.",
-      "variants": ["KPI", "Report", "Insights", "Actions"]
-    }
+      "variants": [
+        "KPI",
+        "Report",
+        "Insights",
+        "Actions"
+      ]
+    },
+    "section_title": "MODULES",
+    "progress_label": "{{done}}/{{total}}"
   },
   "brief": {
     "title_global": "Global Brand Brief",
@@ -198,5 +248,234 @@
     "required": "(required)",
     "and": "and",
     "or": "or"
+  },
+  "brief_panel": {
+    "save_button": "Apply to all modules",
+    "saved_toast": "Saved!",
+    "reset_button": "Reset",
+    "saved_briefs_title": "Auto-saved briefs",
+    "saved_briefs_subtitle": "Retrieve and reuse your latest brand briefs",
+    "saved_briefs_empty": "No brief archived yet. As soon as you fill a brief, it is saved here automatically.",
+    "saved_briefs_delete": "Delete brief {{title}}",
+    "completion_complete": "Brief complete",
+    "gmb": {
+      "title": "Import from Google My Business",
+      "subtitle": "Paste your GMB link to fill the brief automatically",
+      "placeholder": "https://maps.app.goo.gl/... or https://www.google.com/maps/place/...",
+      "btn_import": "Import",
+      "btn_loading": "Analyzing…",
+      "error_default": "Error during scraping.",
+      "error_network": "Cannot reach the server. Check your connection.",
+      "reviews": "{{count}} reviews",
+      "success_hint": "✓ Brief pre-filled — review and adjust the fields below"
+    },
+    "sections": {
+      "identity": "Identity",
+      "product": "Product",
+      "commerce": "Commerce",
+      "sav": "Support",
+      "visual": "Visual",
+      "performance": "Performance",
+      "strategie": "Strategy",
+      "gouvernance": "Governance"
+    },
+    "fields": {
+      "brand_name": "Brand name *",
+      "brand_name_ph": "e.g. LUXEOR",
+      "sector": "Sector *",
+      "tone": "Communication tone",
+      "values": "Brand values",
+      "values_ph": "e.g. excellence, prestige, authenticity",
+      "market": "Market / target country *",
+      "colors": "Brand colors (HEX or description)",
+      "colors_ph": "e.g. #D4AF37, #1A1A1A, #FFFFFF — or: gold, deep black, white",
+      "currencies_label": "{{currencies}} — currency of selected markets",
+      "currencies_label_plural": "{{currencies}} — currencies of selected markets",
+      "product_name": "Flagship product name",
+      "product_name_ph": "e.g. Rose Gold Elegance Watch",
+      "target_audience": "Target audience",
+      "product_description": "Product description",
+      "product_description_ph": "e.g. 18k rose gold automatic watch, sapphire crystal, Hermès leather strap…",
+      "product_features": "Key features",
+      "product_features_ph": "e.g. 18k gold, sapphire crystal, 50m water-resistant",
+      "benefits": "Customer benefits",
+      "benefits_ph": "e.g. elegance, precision, durability",
+      "product_colors": "Product colors",
+      "product_colors_ph": "e.g. rose gold, black, ivory white",
+      "product_materials": "Materials",
+      "product_materials_ph": "e.g. stainless steel, sapphire, leather",
+      "unique_feature": "Unique feature (key differentiator)",
+      "unique_feature_ph": "e.g. Only vegan serum made in France with stabilized vitamin C",
+      "price": "Selling price (€)",
+      "old_price": "Crossed-out price (€)",
+      "discount": "Discount (%)",
+      "promo_code": "Promo code",
+      "promo_code_ph": "e.g. LUXEOR20",
+      "free_shipping": "Free shipping over (€)",
+      "stock": "Available stock",
+      "shipping_info": "Shipping info (displayed text)",
+      "shipping_info_ph": "e.g. Free shipping over 120€ — 2-4 business days",
+      "checkout_url": "Checkout / order URL",
+      "checkout_url_ph": "e.g. https://mysite.com/checkout",
+      "warranty": "Warranty (years)",
+      "delivery_days": "Standard delivery (days)",
+      "express_delivery_days": "Express delivery (days)",
+      "express_price": "Express delivery price (€)",
+      "return_days": "Return policy (days)",
+      "sav_response_time": "Support response time",
+      "sav_response_time_ph": "e.g. Within 24 business hours",
+      "support_email": "Support email",
+      "support_email_ph": "e.g. support@mybrand.com",
+      "contact_channel": "Main contact channel",
+      "best_seller_1": "Best-seller 1",
+      "best_seller_1_ph": "e.g. Sorelle Signature Dress",
+      "best_seller_2": "Best-seller 2",
+      "best_seller_2_ph": "e.g. Premium Linen Set",
+      "sav_message": "Standard support message (reply template)",
+      "sav_message_ph": "e.g. Hello [First name], thank you for your trust! Order #[NUM] is being prepared.",
+      "primary_color": "Primary color (HEX) *",
+      "secondary_color": "Secondary color (HEX)",
+      "accent_color": "Accent color (HEX)",
+      "visual_style": "Overall visual style",
+      "heading_font": "Heading font",
+      "body_font": "Body font",
+      "ca_target": "Monthly revenue target (€)",
+      "basket_target": "Average basket target (€)",
+      "conv_target": "Conversion rate target (%)",
+      "roas_target": "ROAS target (x)",
+      "target_cpa": "Target CPA (€)",
+      "margin_percent": "Gross margin (%)",
+      "target_demographic": "Precise target demographic",
+      "target_demographic_ph": "e.g. Women 28-42, income 50-90k€, urban professionals, slow fashion & accessible luxury",
+      "competitors": "Direct competitors",
+      "competitors_ph": "e.g. BOSS, Calvin Klein, Sandro — differentiate on price and authenticity",
+      "forbidden_keywords": "FORBIDDEN keywords & elements",
+      "forbidden_keywords_ph": "e.g. 'cheap', 'budget', flashy colors, cluttered visuals, emojis in copy",
+      "usp": "Unique value proposition (USP)",
+      "usp_ph": "e.g. French clean beauty — natural, traceable, proven efficacy",
+      "region": "Regulatory region (Sector Intelligence)",
+      "currency": "Default currency",
+      "growth_mode": "Growth mode",
+      "packaging": "Factual packaging (volume, materials)",
+      "packaging_ph": "e.g. 50 ml amber glass, FSC cardboard sleeve",
+      "origin": "Origin / Made in",
+      "origin_ph": "e.g. Provence, France",
+      "certifications": "Real certifications (comma-separated)",
+      "certifications_ph": "e.g. ECOCERT COSMOS, Vegan Society, Cruelty Free",
+      "claims_allowed": "ALLOWED claims (with proof, comma-separated)",
+      "claims_allowed_ph": "e.g. 24h hydration (in vivo n=32), 95% naturally derived",
+      "claims_forbidden": "FORBIDDEN claims (EU cosmetics / legal risk)",
+      "claims_forbidden_ph": "e.g. anti-aging, cures, heals, medical, miracle",
+      "voice_forbidden_words": "Forbidden brand-voice words (comma-separated)",
+      "voice_forbidden_words_ph": "e.g. cheap, budget, flash sale",
+      "urgency_allowed": "Urgency / countdowns",
+      "urgency_allowed_hint": "false = premium mode",
+      "emojis_allowed": "Emojis in copy",
+      "repeat_purchase_rate": "Repeat purchase rate (%)",
+      "avg_orders_per_year": "Orders / year / customer",
+      "fixed_costs_monthly": "Monthly fixed costs (€)"
+    },
+    "toggle": {
+      "allowed": "✓ Allowed",
+      "forbidden": "✕ Forbidden"
+    },
+    "infos": {
+      "strategie": "These fields are injected into the AI's **Chain-of-Thought** for prompts ultra-calibrated to your brand. The more precise the context, the sharper the prompts.",
+      "gouvernance": "The **Governance Layer v2.1** locks facts, loads a **sector × region profile**, dynamically activates suitable claim packs, enforces brand voice and computes profitability (LTV / CAC / break-even). These fields are injected into **all modules**.",
+      "profit_engine_title": "Profit Engine — dynamic inputs",
+      "profit_engine_hint": "If empty, the engine runs in degraded mode and flags missing numbers instead of inventing them."
+    },
+    "lists": {
+      "markets": {
+        "international": "🌍 International (Generic)",
+        "cote-divoire": "🇨🇮 Ivory Coast",
+        "senegal": "🇸🇳 Senegal",
+        "maroc": "🇲🇦 Morocco",
+        "nigeria": "🇳🇬 Nigeria",
+        "france": "🇫🇷 France",
+        "belgique": "🇧🇪 Belgium",
+        "suisse": "🇨🇭 Switzerland",
+        "allemagne": "🇩🇪 Germany",
+        "royaume-uni": "🇬🇧 United Kingdom",
+        "usa": "🇺🇸 United States",
+        "canada": "🇨🇦 Canada",
+        "emirats": "🇦🇪 United Arab Emirates"
+      },
+      "sectors": {
+        "bijou": "Jewelry / Accessories",
+        "luxe": "Luxury / Premium",
+        "cosmétique": "Cosmetics / Beauty",
+        "mode": "Fashion / Apparel",
+        "tech": "Tech / Electronics",
+        "fitness": "Sport / Fitness",
+        "décoration": "Home / Decor",
+        "maroquinerie": "Leather goods / Bags"
+      },
+      "tones": {
+        "luxe": "Luxury & Prestige",
+        "premium": "Premium & Elegant",
+        "moderne": "Modern & Dynamic",
+        "minimaliste": "Minimalist & Refined",
+        "chaleureux": "Warm & Caring",
+        "professionnel": "Professional & Serious",
+        "streetwear": "Streetwear & Bold",
+        "écologique": "Eco & Engaged"
+      },
+      "audiences": {
+        "femmes-25-45": "Women 25-45",
+        "hommes-25-45": "Men 25-45",
+        "mixte-25-45": "Mixed 25-45",
+        "jeunes-18-30": "Youth 18-30",
+        "csp-plus": "Executives / Pros",
+        "managers": "Managers / Entrepreneurs",
+        "sportifs": "Athletes / Active",
+        "parents": "Parents / Families"
+      },
+      "growth_modes": {
+        "premium_brand": "🏛️ Premium Brand — no urgency, sober claims, in-house narrative",
+        "balanced_growth": "⚖️ Balanced Growth — measured urgency, balanced claims (default)",
+        "aggressive_dtc": "🚀 Aggressive DTC — visible promos, strong urgency (no dark patterns)"
+      },
+      "currencies": {
+        "EUR": "€ — EUR",
+        "USD": "$ — USD",
+        "GBP": "£ — GBP",
+        "CHF": "CHF — Swiss Franc",
+        "CAD": "CA$ — Canadian Dollar",
+        "AED": "AED — Dirham",
+        "MAD": "DH — Moroccan Dirham",
+        "XOF": "FCFA — CFA Franc",
+        "NGN": "₦ — Naira"
+      },
+      "regions": {
+        "eu": "🇪🇺 Europe (EU) — strict rules (cosmetics_eu, finance_eu, food_eu)",
+        "global": "🌍 Global / International — generic per-sector rules",
+        "na": "🇺🇸 North America (FTC)",
+        "apac": "🌏 Asia-Pacific",
+        "mena": "🌍 MENA"
+      },
+      "visual_styles": {
+        "": "Select a style…",
+        "luxe-premium": "Luxury & Premium",
+        "editorial": "Editorial & Magazine",
+        "minimaliste": "Minimalist & Refined",
+        "moderne": "Modern & Tech",
+        "chaud-naturel": "Warm & Natural",
+        "streetwear": "Streetwear & Urban",
+        "artisanal": "Artisanal & Craft",
+        "ecologique": "Eco & Organic"
+      },
+      "contact_channels": {
+        "": "Select a channel…",
+        "email": "Email",
+        "whatsapp": "WhatsApp",
+        "instagram": "Instagram DM",
+        "email-instagram": "Email + Instagram DM",
+        "email-whatsapp": "Email + WhatsApp",
+        "chat-live": "Live chat (website)",
+        "telephone": "Phone",
+        "tous": "All channels"
+      }
+    }
   }
 }

@@ -57,58 +57,108 @@
     "toast_key_cleared_desc": "Vuelta al modo Replit Managed."
   },
   "modules": {
-    "section_title": "MÓDULOS",
-    "progress_label": "{{done}}/{{total}}",
     "1": {
       "name": "Brand Identity",
       "tagline": "Crea el ADN visual de tu marca — logo, colores, tipografía y manual gráfico completo.",
-      "variants": ["Logo", "Paleta", "Tipografía", "Manual"]
+      "variants": [
+        "Logo",
+        "Paleta",
+        "Tipografía",
+        "Manual"
+      ]
     },
     "2": {
       "name": "Visual Content",
       "tagline": "Fotografía, lifestyle, producto y visuales editoriales para alimentar todos tus canales.",
-      "variants": ["Foto", "Lifestyle", "Detalle", "Antes/Después"]
+      "variants": [
+        "Foto",
+        "Lifestyle",
+        "Detalle",
+        "Antes/Después"
+      ]
     },
     "3": {
       "name": "Video Content",
       "tagline": "Guiones para TikTok, YouTube, teaser y producto listos para producción.",
-      "variants": ["Guion", "TikTok", "YouTube", "Teaser"]
+      "variants": [
+        "Guion",
+        "TikTok",
+        "YouTube",
+        "Teaser"
+      ]
     },
     "4": {
       "name": "Ad Creatives",
       "tagline": "Creatividades pagadas de alta conversión para Meta, Google, TikTok y carruseles.",
-      "variants": ["Meta", "Google", "TikTok", "Carrusel"]
+      "variants": [
+        "Meta",
+        "Google",
+        "TikTok",
+        "Carrusel"
+      ]
     },
     "5": {
       "name": "Brand Sound",
       "tagline": "Identidad sonora — jingle, voz, banda sonora y mood de marca.",
-      "variants": ["Jingle", "Voz", "Mood", "Track"]
+      "variants": [
+        "Jingle",
+        "Voz",
+        "Mood",
+        "Track"
+      ]
     },
     "6": {
       "name": "Copy & Content",
       "tagline": "Copywriting estratégico — eslóganes, manifiestos, web y editorial.",
-      "variants": ["Eslogan", "Manifiesto", "Web", "Editorial"]
+      "variants": [
+        "Eslogan",
+        "Manifiesto",
+        "Web",
+        "Editorial"
+      ]
     },
     "7": {
       "name": "Launch Ready",
       "tagline": "Kit de lanzamiento completo — emails, landing, social y nota de prensa.",
-      "variants": ["Emails", "Landing", "Social", "Prensa"]
+      "variants": [
+        "Emails",
+        "Landing",
+        "Social",
+        "Prensa"
+      ]
     },
     "8": {
       "name": "Chatbot Script",
       "tagline": "Guiones conversacionales para soporte, ventas y postventa.",
-      "variants": ["Soporte", "Ventas", "Postventa", "FAQ"]
+      "variants": [
+        "Soporte",
+        "Ventas",
+        "Postventa",
+        "FAQ"
+      ]
     },
     "9": {
       "name": "Upsell Kit",
       "tagline": "Ofertas estratégicas de upsell y cross-sell a lo largo del recorrido del cliente.",
-      "variants": ["Upsell", "Cross-sell", "Bundle", "Fidelización"]
+      "variants": [
+        "Upsell",
+        "Cross-sell",
+        "Bundle",
+        "Fidelización"
+      ]
     },
     "10": {
       "name": "Performance",
       "tagline": "Seguimiento de KPIs, informes y acciones de optimización para la marca.",
-      "variants": ["KPI", "Informe", "Insights", "Acciones"]
-    }
+      "variants": [
+        "KPI",
+        "Informe",
+        "Insights",
+        "Acciones"
+      ]
+    },
+    "section_title": "MÓDULOS",
+    "progress_label": "{{done}}/{{total}}"
   },
   "brief": {
     "title_global": "Brief Global de Marca",
@@ -198,5 +248,234 @@
     "required": "(requerido)",
     "and": "y",
     "or": "o"
+  },
+  "brief_panel": {
+    "save_button": "Aplicar a todos los módulos",
+    "saved_toast": "¡Guardado!",
+    "reset_button": "Reiniciar",
+    "saved_briefs_title": "Briefs guardados automáticamente",
+    "saved_briefs_subtitle": "Recupera y reutiliza tus últimos briefs de marca",
+    "saved_briefs_empty": "Aún no hay briefs archivados. Tan pronto rellenes uno, se guardará aquí automáticamente.",
+    "saved_briefs_delete": "Eliminar el brief {{title}}",
+    "completion_complete": "Brief completo",
+    "gmb": {
+      "title": "Importar desde Google My Business",
+      "subtitle": "Pega tu enlace GMB para rellenar el brief automáticamente",
+      "placeholder": "https://maps.app.goo.gl/... o https://www.google.com/maps/place/...",
+      "btn_import": "Importar",
+      "btn_loading": "Analizando…",
+      "error_default": "Error durante el scraping.",
+      "error_network": "Imposible contactar al servidor. Verifica tu conexión.",
+      "reviews": "{{count}} reseñas",
+      "success_hint": "✓ Brief pre-rellenado — revisa y ajusta los campos a continuación"
+    },
+    "sections": {
+      "identity": "Identidad",
+      "product": "Producto",
+      "commerce": "Comercio",
+      "sav": "Soporte",
+      "visual": "Visual",
+      "performance": "Rendimiento",
+      "strategie": "Estrategia",
+      "gouvernance": "Gobernanza"
+    },
+    "fields": {
+      "brand_name": "Nombre de la marca *",
+      "brand_name_ph": "ej: LUXEOR",
+      "sector": "Sector *",
+      "tone": "Tono de comunicación",
+      "values": "Valores de marca",
+      "values_ph": "ej: excelencia, prestigio, autenticidad",
+      "market": "Mercado / país objetivo *",
+      "colors": "Colores de marca (HEX o descripción)",
+      "colors_ph": "ej: #D4AF37, #1A1A1A, #FFFFFF — o: oro, negro profundo, blanco",
+      "currencies_label": "{{currencies}} — moneda de los mercados seleccionados",
+      "currencies_label_plural": "{{currencies}} — monedas de los mercados seleccionados",
+      "product_name": "Nombre del producto estrella",
+      "product_name_ph": "ej: Reloj Elegancia Oro Rosa",
+      "target_audience": "Audiencia objetivo",
+      "product_description": "Descripción del producto",
+      "product_description_ph": "ej: Reloj automático oro rosa 18k, cristal zafiro, correa de cuero…",
+      "product_features": "Características clave",
+      "product_features_ph": "ej: oro 18k, cristal zafiro, sumergible 50m",
+      "benefits": "Beneficios para el cliente",
+      "benefits_ph": "ej: elegancia, precisión, durabilidad",
+      "product_colors": "Colores del producto",
+      "product_colors_ph": "ej: oro rosa, negro, blanco marfil",
+      "product_materials": "Materiales",
+      "product_materials_ph": "ej: acero inoxidable, zafiro, cuero",
+      "unique_feature": "Característica única (diferenciador clave)",
+      "unique_feature_ph": "ej: Único sérum vegano made in France con vit. C estabilizada",
+      "price": "Precio de venta (€)",
+      "old_price": "Precio tachado (€)",
+      "discount": "Descuento (%)",
+      "promo_code": "Código promo",
+      "promo_code_ph": "ej: LUXEOR20",
+      "free_shipping": "Envío gratis desde (€)",
+      "stock": "Stock disponible",
+      "shipping_info": "Info de envío (texto mostrado)",
+      "shipping_info_ph": "ej: Envío gratis desde 120€ — 2-4 días laborables",
+      "checkout_url": "URL de checkout / pedido",
+      "checkout_url_ph": "ej: https://misite.com/checkout",
+      "warranty": "Garantía (años)",
+      "delivery_days": "Entrega estándar (días)",
+      "express_delivery_days": "Entrega exprés (días)",
+      "express_price": "Precio entrega exprés (€)",
+      "return_days": "Política de devolución (días)",
+      "sav_response_time": "Tiempo de respuesta soporte",
+      "sav_response_time_ph": "ej: En menos de 24h laborables",
+      "support_email": "Email soporte",
+      "support_email_ph": "ej: support@mimarca.com",
+      "contact_channel": "Canal principal de contacto",
+      "best_seller_1": "Best-seller 1",
+      "best_seller_1_ph": "ej: Vestido Sorelle Signature",
+      "best_seller_2": "Best-seller 2",
+      "best_seller_2_ph": "ej: Conjunto Lino Premium",
+      "sav_message": "Mensaje tipo soporte (plantilla de respuesta)",
+      "sav_message_ph": "ej: Hola [Nombre], ¡gracias por tu confianza! Tu pedido #[NUM] está en preparación.",
+      "primary_color": "Color principal (HEX) *",
+      "secondary_color": "Color secundario (HEX)",
+      "accent_color": "Color de acento (HEX)",
+      "visual_style": "Estilo visual global",
+      "heading_font": "Tipografía títulos",
+      "body_font": "Tipografía texto",
+      "ca_target": "Objetivo de ingresos mensuales (€)",
+      "basket_target": "Objetivo cesta media (€)",
+      "conv_target": "Tasa de conversión objetivo (%)",
+      "roas_target": "ROAS objetivo (x)",
+      "target_cpa": "CPA objetivo (€)",
+      "margin_percent": "Margen bruto (%)",
+      "target_demographic": "Demografía objetivo precisa",
+      "target_demographic_ph": "ej: Mujeres 28-42, ingresos 50-90k€, urbanas profesionales, moda slow & lujo accesible",
+      "competitors": "Competidores directos",
+      "competitors_ph": "ej: BOSS, Calvin Klein, Sandro — diferenciarse en precio y autenticidad",
+      "forbidden_keywords": "Palabras y elementos PROHIBIDOS",
+      "forbidden_keywords_ph": "ej: 'barato', 'económico', colores chillones, visuales recargados, emojis en copies",
+      "usp": "Propuesta única de valor (USP)",
+      "usp_ph": "ej: Clean beauty francesa — naturalidad, trazabilidad, eficacia probada",
+      "region": "Región regulatoria (Sector Intelligence)",
+      "currency": "Moneda por defecto",
+      "growth_mode": "Modo de crecimiento",
+      "packaging": "Packaging factual (volumen, materiales)",
+      "packaging_ph": "ej: Vidrio ámbar 50 ml, cartón FSC",
+      "origin": "Origen / Made in",
+      "origin_ph": "ej: Provence, Francia",
+      "certifications": "Certificaciones reales (separadas por coma)",
+      "certifications_ph": "ej: ECOCERT COSMOS, Vegan Society, Cruelty Free",
+      "claims_allowed": "Claims PERMITIDOS (con prueba, separados por coma)",
+      "claims_allowed_ph": "ej: hidratación 24h (test in vivo n=32), 95% origen natural",
+      "claims_forbidden": "Claims PROHIBIDOS (cosmética UE / riesgo legal)",
+      "claims_forbidden_ph": "ej: antiarrugas, cura, sana, médico, milagro",
+      "voice_forbidden_words": "Palabras prohibidas en la voz de marca (separadas por coma)",
+      "voice_forbidden_words_ph": "ej: barato, económico, oferta flash",
+      "urgency_allowed": "Urgencia / cuentas atrás",
+      "urgency_allowed_hint": "false = modo premium",
+      "emojis_allowed": "Emojis en los copies",
+      "repeat_purchase_rate": "Tasa de recompra (%)",
+      "avg_orders_per_year": "Pedidos / año / cliente",
+      "fixed_costs_monthly": "Costes fijos mensuales (€)"
+    },
+    "toggle": {
+      "allowed": "✓ Permitido",
+      "forbidden": "✕ Prohibido"
+    },
+    "infos": {
+      "strategie": "Estos campos se inyectan en la **Cadena de Pensamiento** de la IA para prompts ultra-calibrados a tu marca. Cuanto más preciso el contexto, más quirúrgicos los prompts.",
+      "gouvernance": "La **Capa de Gobernanza v2.1** bloquea hechos, carga un **perfil sectorial × región**, activa dinámicamente claim packs adaptados, refuerza la voz de marca y calcula la rentabilidad (LTV / CAC / break-even). Estos campos se inyectan en **todos los módulos**.",
+      "profit_engine_title": "Profit Engine — entradas dinámicas",
+      "profit_engine_hint": "Si están vacías, el motor calcula en modo degradado y señala las cifras faltantes en lugar de inventarlas."
+    },
+    "lists": {
+      "markets": {
+        "international": "🌍 Internacional (Genérico)",
+        "cote-divoire": "🇨🇮 Costa de Marfil",
+        "senegal": "🇸🇳 Senegal",
+        "maroc": "🇲🇦 Marruecos",
+        "nigeria": "🇳🇬 Nigeria",
+        "france": "🇫🇷 Francia",
+        "belgique": "🇧🇪 Bélgica",
+        "suisse": "🇨🇭 Suiza",
+        "allemagne": "🇩🇪 Alemania",
+        "royaume-uni": "🇬🇧 Reino Unido",
+        "usa": "🇺🇸 Estados Unidos",
+        "canada": "🇨🇦 Canadá",
+        "emirats": "🇦🇪 Emiratos Árabes Unidos"
+      },
+      "sectors": {
+        "bijou": "Joyería / Accesorios",
+        "luxe": "Lujo / Premium",
+        "cosmétique": "Cosmética / Belleza",
+        "mode": "Moda / Prêt-à-porter",
+        "tech": "Tech / Electrónica",
+        "fitness": "Deporte / Fitness",
+        "décoration": "Decoración / Hogar",
+        "maroquinerie": "Marroquinería / Bolsos"
+      },
+      "tones": {
+        "luxe": "Lujo & Prestigio",
+        "premium": "Premium & Elegante",
+        "moderne": "Moderno & Dinámico",
+        "minimaliste": "Minimalista & Depurado",
+        "chaleureux": "Cálido & Cercano",
+        "professionnel": "Profesional & Serio",
+        "streetwear": "Streetwear & Audaz",
+        "écologique": "Ecológico & Comprometido"
+      },
+      "audiences": {
+        "femmes-25-45": "Mujeres 25-45",
+        "hommes-25-45": "Hombres 25-45",
+        "mixte-25-45": "Mixto 25-45",
+        "jeunes-18-30": "Jóvenes 18-30",
+        "csp-plus": "Ejecutivos / Pro",
+        "managers": "Managers / Emprendedores",
+        "sportifs": "Deportistas / Activos",
+        "parents": "Padres / Familias"
+      },
+      "growth_modes": {
+        "premium_brand": "🏛️ Premium Brand — sin urgencia, claims sobrios, narrativa propia",
+        "balanced_growth": "⚖️ Balanced Growth — urgencia razonada, claims medidos (defecto)",
+        "aggressive_dtc": "🚀 Aggressive DTC — promos visibles, urgencia fuerte (sin dark patterns)"
+      },
+      "currencies": {
+        "EUR": "€ — EUR",
+        "USD": "$ — USD",
+        "GBP": "£ — GBP",
+        "CHF": "CHF — Franco suizo",
+        "CAD": "CA$ — Dólar canadiense",
+        "AED": "AED — Dírham",
+        "MAD": "DH — Dírham marroquí",
+        "XOF": "FCFA — Franco CFA",
+        "NGN": "₦ — Naira"
+      },
+      "regions": {
+        "eu": "🇪🇺 Europa (UE) — reglas estrictas (cosmetics_eu, finance_eu, food_eu)",
+        "global": "🌍 Global / Internacional — reglas genéricas por sector",
+        "na": "🇺🇸 América del Norte (FTC)",
+        "apac": "🌏 Asia-Pacífico",
+        "mena": "🌍 MENA"
+      },
+      "visual_styles": {
+        "": "Selecciona un estilo…",
+        "luxe-premium": "Lujo & Premium",
+        "editorial": "Editorial & Revista",
+        "minimaliste": "Minimalista & Depurado",
+        "moderne": "Moderno & Tech",
+        "chaud-naturel": "Cálido & Natural",
+        "streetwear": "Streetwear & Urbano",
+        "artisanal": "Artesanal & Craft",
+        "ecologique": "Ecológico & Orgánico"
+      },
+      "contact_channels": {
+        "": "Selecciona un canal…",
+        "email": "Email",
+        "whatsapp": "WhatsApp",
+        "instagram": "Instagram DM",
+        "email-instagram": "Email + Instagram DM",
+        "email-whatsapp": "Email + WhatsApp",
+        "chat-live": "Chat en vivo (sitio)",
+        "telephone": "Teléfono",
+        "tous": "Todos los canales"
+      }
+    }
   }
 }
