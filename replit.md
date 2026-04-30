@@ -1,10 +1,115 @@
-# Neo Branding Studio — v2.0.0
+# Neo Branding Studio — v2.1.0
 
 ## Vue d'ensemble
 
 Générateur de prompts IA "chirurgicaux" pour l'écosystème RoboNeo.com. L'utilisateur remplit un **Brief Global de Marque** unique et l'IA génère des prompts créatifs ultra-précis en temps réel via streaming SSE (Server-Sent Events), section par section, pour 10 modules complets couvrant l'intégralité de l'univers de marque.
 
 **Préférence utilisateur : toujours répondre en français.**
+
+## Couche Sector Intelligence v2.1.0 — Adaptation par secteur × région
+
+Au-dessus du Trust Engine, une seconde couche **purement config-driven** adapte le comportement de l'IA selon le secteur et la région. Aucun secteur n'est codé en dur — ajouter un fichier JSON suffit pour activer un nouveau marché.
+
+### Structure
+```
+Artefact/api-server/src/
+  config/sectors/
+    cosmetics_eu.json   ← EU 1223/2009 + 655/2013 (claims physio interdits)
+    fashion.json        ← générique mode (urgence ok, claims esthétiques)
+    finance_eu.json     ← MiFID + AMF (zéro garantie de rendement, WCAG AA)
+    food_eu.json        ← EFSA 1924/2006 (claims santé alimentaires bloqués)
+    saas.json           ← B2B Tech (uptime / sécurité absolue interdits)
+  governance/
+    sector-engine.ts    ← loadSectorProfile(sector, region) avec fallback en cascade
+    wcag-validator.ts   ← contraste WCAG AA + suggestion d'ajustement automatique
+```
+
+### Schéma `SectorProfile`
+```jsonc
+{
+  "id": "cosmetics_eu",
+  "sector": "cosmetics",
+  "region": "eu",
+  "label": "Cosmétiques (Union Européenne)",
+  "regulation": "Regulation (EC) 1223/2009 + Commission Regulation (EU) 655/2013",
+  "medical_claims_allowed": false,
+  "financial_promises_allowed": false,
+  "health_claims_allowed": false,
+  "urgency_policy": { "allowed": false, "requires_real_inventory": true },
+  "forbidden_words": ["anti-aging", "miracle", "guérit", …],
+  "tone_constraints": {
+    "aggressiveness_level": "low",   // low | medium | high
+    "emojis_allowed": false,
+    "exclamation_limit": 0
+  },
+  "requires_wcag_validation": false,
+  "requires_price_lock": true,
+  "requires_claim_validation": true,
+  "claim_packs": ["cosmetic_eu_physiological", "medical_vocab",
+                  "fake_certifications", "fake_stats", …],
+  "mandatory_disclaimers": ["Effets cosmétiques : « aide à », …"]
+}
+```
+
+### Cascade de résolution
+`loadSectorProfile(sector, region)` essaie dans l'ordre :
+1. `{sector}_{region}` (ex. `cosmetics_eu`)
+2. `{sector}` (ex. `fashion`)
+3. `{sector}_global` (ex. `saas_global`)
+4. **DEFAULT_PROFILE** (générique, permissif côté ton mais protections universelles activées)
+
+Le matching est insensible à la casse et passe par des **alias** (`cosmétique`, `beauté`, `skincare` → `cosmetics` ; `france`, `ue`, `europe` → `eu`).
+
+### Claim Packs activés par profil
+Chaque profil liste les `claim_packs` qui pilotent dynamiquement le `compliance-agent`. Les packs disponibles :
+
+| Pack | Déclencheurs | Exemples |
+|---|---|---|
+| `cosmetic_eu_physiological` | cosmetics_eu | "anti-aging", "reduces wrinkles", "boosts collagen" |
+| `medical_vocab` | !medical_claims_allowed | "cures", "heals", "doctor approved" |
+| `health_claims` | !health_claims_allowed | "boosts immunity", "prevents disease" |
+| `food_eu_efsa` | food_eu | "detox", "burns fat", "lose 10kg" |
+| `financial_guarantees` | !financial_promises_allowed | "guaranteed returns", "risk-free", "double your money" |
+| `fake_certifications` | requires_claim_validation | ECOCERT/COSMOS/FDA quand non déclarés dans le lock |
+| `fake_stats` | universel | "92% of women", "clinically proven" |
+| `hyperbolic` | universel | "miracle", "magic" |
+| `temporal_guarantees` | finance_eu, food_eu, cosmetics_eu | "in 7 days", "in 24 hours" |
+| `urgency_dark_patterns` | !urgency_policy.allowed | "only 3 left", "X people viewing" |
+
+Les flags du profil **forcent automatiquement** l'activation du pack correspondant (un JSON peut omettre un pack — il sera quand même injecté si le flag l'exige).
+
+### Voice — intersection sector × growth_mode
+Le `BrandLockVoice` final est l'**intersection la plus stricte** des deux couches :
+- **forbidden_words** : union (sector + growth_mode + brief custom)
+- **urgency_allowed** : `false` si l'un des deux interdit
+- **emojis_allowed** : `false` si l'un des deux interdit
+- **max_exclamation_marks** : `min(growth_mode, sector.exclamation_limit)`
+- **aggressiveness_level** : imposé par le sector profile
+
+Concrètement, un **finance_eu + aggressive_dtc** finit aussi strict que **finance_eu + premium_brand** (le sector gagne).
+
+### WCAG validator
+Activé quand `requires_wcag_validation: true` (finance_eu, saas) ou explicitement par le caller. Vérifie chaque couleur de marque (primary / secondary / accent) contre le fond, calcule le ratio de contraste WCAG 2.1, signale les paires < 4.5:1 et **suggère automatiquement** une teinte assombrie ou éclaircie atteignant le seuil.
+
+### Pipeline complet (v2.1)
+```
+draft (LLM)
+  → buildBrandLock() ← intègre sector_profile snapshot
+  → applyGovernance()
+       ├── runComplianceAgent     (claim packs activés par le profil)
+       ├── runVoiceEnforcer       (voice = intersection sector × growth_mode)
+       ├── price-lock validator   (si requires_price_lock)
+       ├── runWcagValidator       (si requires_wcag_validation)
+       └── disclaimers check      (mandatory_disclaimers)
+  → SSE event "governance" enrichi { sector_profile_id, sector_profile_matched, … }
+```
+
+### Extensibilité
+Ajouter un nouveau marché = **2 étapes** :
+1. Créer `Artefact/api-server/src/config/sectors/{sector}_{region}.json`
+2. L'importer dans `sector-engine.ts` (ligne `import xxx from "../config/sectors/xxx.json"` + entrée dans `PROFILES`)
+
+Aucune autre modification du moteur. Aucun template dupliqué. Tous les comportements (claims, ton, urgence, WCAG, disclaimers) sont déduits du JSON.
 
 ## Couche Gouvernance v2.0.0 — Trust Engine
 

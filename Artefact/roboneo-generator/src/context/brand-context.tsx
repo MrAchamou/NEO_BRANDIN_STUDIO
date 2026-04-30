@@ -72,6 +72,8 @@ export interface BrandBrief {
   market: string;
 
   // ─── Gouvernance & Conformité (v2 — Fact Lock + Compliance + Voice) ────
+  // ─── Sector Intelligence (v2.1 — config-driven sector × region) ────────
+  region: string;                  // eu, global, na, apac… → résout le profil sectoriel
   growth_mode: string;             // premium_brand | balanced_growth | aggressive_dtc
   currency: string;                // EUR, USD, FCFA…
   packaging: string;               // ex. "Verre ambré 50 ml, étui carton FSC"
@@ -104,6 +106,8 @@ export function governanceFields(brief: BrandBrief): Record<string, unknown> {
     v ? v.split(",").map((s) => s.trim()).filter(Boolean) : undefined;
 
   return {
+    region: brief.region || brief.market || undefined,
+    market: brief.market || undefined,
     growth_mode: brief.growth_mode || undefined,
     currency: brief.currency || undefined,
     packaging: brief.packaging || undefined,
@@ -182,6 +186,7 @@ export const BRIEF_DEFAULTS: BrandBrief = {
   usp: "",
   colors: "",
   market: "international",
+  region: "eu",
   growth_mode: "balanced_growth",
   currency: "EUR",
   packaging: "",

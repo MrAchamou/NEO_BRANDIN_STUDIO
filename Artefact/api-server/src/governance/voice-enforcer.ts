@@ -1,14 +1,26 @@
 /**
- * GOVERNANCE — Brand Voice Enforcer
+ * GOVERNANCE — Sector-Aware Brand Voice Enforcer
  *
  * Empêche le tone drift (langage DTC agressif, urgence non autorisée,
- * exclamations excessives, emojis). Calibré par le mode de croissance et
- * par les mots interdits déclarés dans le brief.
+ * exclamations excessives, emojis). Les contraintes sont l'intersection :
+ *
+ *   limite la plus stricte entre :
+ *     • le mode de croissance (premium / balanced / aggressive)
+ *     • le profil sectoriel (cosmetics_eu / finance_eu / saas / …)
+ *
+ * Autrement dit : le profil sectoriel ne peut que durcir les règles, jamais
+ * les assouplir au-delà du growth_mode.
  */
 
 import type { BrandLock, GovernanceFinding } from "./types";
 
 const EMOJI_REGEX = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu;
+
+const AGGRESSIVE_PATTERNS: Array<{ pattern: RegExp; replacement: string }> = [
+  { pattern: /\b(BUY\s+NOW|GRAB\s+IT|GET\s+IT\s+NOW)\b/g, replacement: "Discover" },
+  { pattern: /\b(MASSIVE|HUGE|INSANE|CRAZY|WILD)\s+(deal|discount|offer|sale)\b/gi, replacement: "notable offer" },
+  { pattern: /\b(YOU\s+MUST|YOU\s+NEED\s+TO|YOU\s+HAVE\s+TO)\s+(buy|get|order)\b/gi, replacement: "you may consider to discover" },
+];
 
 export interface VoiceOutcome {
   content: string;
@@ -19,7 +31,7 @@ export function runVoiceEnforcer(input: string, lock: BrandLock): VoiceOutcome {
   const findings: GovernanceFinding[] = [];
   let content = input;
 
-  // ── 1) Mots interdits ──────────────────────────────────────────────────
+  // ── 1) Mots interdits (déjà fusionnés dans lock.voice via brand-lock) ──
   for (const word of lock.voice.forbidden_words) {
     if (!word.trim()) continue;
     const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -31,7 +43,7 @@ export function runVoiceEnforcer(input: string, lock: BrandLock): VoiceOutcome {
         severity: lock.voice.urgency_allowed ? "info" : "warning",
         category: "voice.forbidden_word",
         match: m,
-        hint: `Forbidden by ${lock.mode} voice profile`,
+        hint: `Interdit par le profil ${lock.mode} / ${lock.sector_profile.id}`,
       });
     }
     content = content.replace(re, "");
@@ -43,10 +55,9 @@ export function runVoiceEnforcer(input: string, lock: BrandLock): VoiceOutcome {
     findings.push({
       severity: "warning",
       category: "voice.exclamation_overload",
-      match: `${excl.length} exclamation marks (max ${lock.voice.max_exclamation_marks})`,
-      hint: `Exceeded ${lock.mode} voice profile`,
+      match: `${excl.length} exclamations (max ${lock.voice.max_exclamation_marks})`,
+      hint: `Limite imposée par ${lock.mode} / ${lock.sector_profile.id}`,
     });
-    // Lissage : on remplace les exclamations supplémentaires par un point
     let kept = 0;
     content = content.replace(/!/g, () => {
       kept += 1;
@@ -61,14 +72,32 @@ export function runVoiceEnforcer(input: string, lock: BrandLock): VoiceOutcome {
       findings.push({
         severity: "info",
         category: "voice.emoji_used",
-        match: `${found.length} emoji(s) removed`,
-        hint: `${lock.mode} voice profile disallows emojis`,
+        match: `${found.length} emoji(s) supprimé(s)`,
+        hint: `Profil ${lock.sector_profile.id} interdit les emojis`,
       });
       content = content.replace(EMOJI_REGEX, "");
     }
   }
 
-  // ── 4) Urgence — si interdite, scrub des patterns d'urgence chiffrés ──
+  // ── 4) Niveau d'agressivité — si "low", on lisse les patterns DTC ───────
+  if ((lock.voice.aggressiveness_level ?? "medium") === "low") {
+    for (const { pattern, replacement } of AGGRESSIVE_PATTERNS) {
+      const matches = content.match(pattern);
+      if (!matches) continue;
+      for (const m of matches) {
+        findings.push({
+          severity: "warning",
+          category: "voice.aggressiveness_too_high",
+          match: m,
+          replacement,
+          hint: `Niveau d'agressivité "low" exigé par ${lock.sector_profile.id}`,
+        });
+      }
+      content = content.replace(pattern, replacement);
+    }
+  }
+
+  // ── 5) Urgence — si interdite, scrub des patterns d'urgence chiffrés ──
   if (!lock.voice.urgency_allowed) {
     const urgencyPatterns = [
       /\b(only)\s+\d+\s+(left|remaining|in\s+stock|available)\b/gi,
@@ -85,7 +114,7 @@ export function runVoiceEnforcer(input: string, lock: BrandLock): VoiceOutcome {
           severity: "warning",
           category: "voice.urgency_blocked",
           match: hit,
-          hint: `Urgency pattern blocked by ${lock.mode} mode`,
+          hint: `Urgence bloquée par le mode ${lock.mode} / profil ${lock.sector_profile.id}`,
         });
       }
       content = content.replace(p, "");

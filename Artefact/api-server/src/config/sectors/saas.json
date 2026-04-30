@@ -1,0 +1,42 @@
+{
+  "id": "saas",
+  "sector": "saas",
+  "region": "global",
+  "label": "SaaS & B2B Tech (générique)",
+  "regulation": "GDPR + WCAG AA + bonnes pratiques SaaS",
+  "medical_claims_allowed": false,
+  "financial_promises_allowed": false,
+  "health_claims_allowed": false,
+  "urgency_policy": {
+    "allowed": true,
+    "requires_real_inventory": false
+  },
+  "forbidden_words": [
+    "100% uptime",
+    "completely secure",
+    "100% sécurisé",
+    "unhackable",
+    "inviolable",
+    "guaranteed ROI",
+    "ROI garanti",
+    "magic AI",
+    "AI miracle",
+    "replaces your team",
+    "remplace votre équipe"
+  ],
+  "tone_constraints": {
+    "aggressiveness_level": "medium",
+    "emojis_allowed": true,
+    "exclamation_limit": 2
+  },
+  "requires_wcag_validation": true,
+  "requires_price_lock": true,
+  "requires_claim_validation": true,
+  "claim_packs": [
+    "fake_stats",
+    "hyperbolic",
+    "fake_certifications"
+  ],
+  "mandatory_disclaimers": [],
+  "notes": "Marketing flexible, accessibilité WCAG AA recommandée. Pas de promesse d'uptime absolue ni de sécurité parfaite."
+}

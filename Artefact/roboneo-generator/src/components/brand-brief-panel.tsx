@@ -151,6 +151,15 @@ const CURRENCIES = [
   { value: "NGN",  label: "₦ — Naira" },
 ];
 
+// Régions = clé du Sector Intelligence Layer (résout le profil JSON sector × region)
+const REGIONS = [
+  { value: "eu",     label: "🇪🇺 Europe (UE) — règles strictes (cosmetics_eu, finance_eu, food_eu)" },
+  { value: "global", label: "🌍 Global / International — règles génériques par secteur" },
+  { value: "na",     label: "🇺🇸 Amérique du Nord (FTC)" },
+  { value: "apac",   label: "🌏 Asie-Pacifique" },
+  { value: "mena",   label: "🌍 MENA" },
+];
+
 // ─── Field renderers ───────────────────────────────────────────────────────────
 
 function FieldRow({ label, children }: { label: string; children: React.ReactNode }) {
@@ -544,15 +553,15 @@ function GouvernanceSection({ form }: { form: any }) {
       <div className="flex items-start gap-2 px-3 py-2.5 rounded-lg border border-cyan-400/20 bg-cyan-400/5">
         <span className="text-cyan-400 text-xs mt-0.5">🔒</span>
         <p className="text-[11px] text-cyan-300/80 leading-relaxed">
-          La <strong>Couche Gouvernance</strong> verrouille les faits, applique la conformité (UE Cosmétique, dark patterns), enforce la voix de marque, et calcule dynamiquement la rentabilité (LTV / CAC / break-even).
+          La <strong>Couche Gouvernance v2.1</strong> verrouille les faits, charge un <strong>profil sectoriel × région</strong> (cosmetics_eu, fashion, finance_eu, food_eu, saas…), active dynamiquement les claim packs adaptés, enforce la voix de marque et calcule la rentabilité (LTV / CAC / break-even).
           Ces champs sont injectés dans <strong>tous les modules</strong>.
         </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <FieldRow label="Mode de croissance">
-          <select {...form.register("growth_mode")} className={selectCls()}>
-            {GROWTH_MODES.map((g) => <option key={g.value} value={g.value}>{g.label}</option>)}
+        <FieldRow label="Région réglementaire (Sector Intelligence)">
+          <select {...form.register("region")} className={selectCls()}>
+            {REGIONS.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
           </select>
         </FieldRow>
         <FieldRow label="Devise par défaut">
@@ -560,6 +569,13 @@ function GouvernanceSection({ form }: { form: any }) {
             {CURRENCIES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
           </select>
         </FieldRow>
+        <div className="sm:col-span-2">
+          <FieldRow label="Mode de croissance">
+            <select {...form.register("growth_mode")} className={selectCls()}>
+              {GROWTH_MODES.map((g) => <option key={g.value} value={g.value}>{g.label}</option>)}
+            </select>
+          </FieldRow>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

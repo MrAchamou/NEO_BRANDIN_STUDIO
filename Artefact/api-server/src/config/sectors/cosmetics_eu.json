@@ -1,0 +1,49 @@
+{
+  "id": "cosmetics_eu",
+  "sector": "cosmetics",
+  "region": "eu",
+  "label": "Cosmétiques (Union Européenne)",
+  "regulation": "Regulation (EC) 1223/2009 + Commission Regulation (EU) 655/2013",
+  "medical_claims_allowed": false,
+  "financial_promises_allowed": false,
+  "health_claims_allowed": false,
+  "urgency_policy": {
+    "allowed": false,
+    "requires_real_inventory": true
+  },
+  "forbidden_words": [
+    "anti-aging",
+    "anti-âge",
+    "stop aging",
+    "miracle",
+    "miraculeux",
+    "guérit",
+    "soigne",
+    "traite",
+    "clinically proven",
+    "cliniquement prouvé",
+    "100% effective",
+    "guaranteed results"
+  ],
+  "tone_constraints": {
+    "aggressiveness_level": "low",
+    "emojis_allowed": false,
+    "exclamation_limit": 0
+  },
+  "requires_wcag_validation": false,
+  "requires_price_lock": true,
+  "requires_claim_validation": true,
+  "claim_packs": [
+    "cosmetic_eu_physiological",
+    "medical_vocab",
+    "fake_certifications",
+    "fake_stats",
+    "hyperbolic",
+    "temporal_guarantees",
+    "urgency_dark_patterns"
+  ],
+  "mandatory_disclaimers": [
+    "Effets cosmétiques : « aide à », « contribue à », « visiblement »."
+  ],
+  "notes": "Aucune action physiologique ne peut être revendiquée. Toute mention de bénéfice doit rester perceptive (apparence, ressenti, hydratation de surface)."
+}

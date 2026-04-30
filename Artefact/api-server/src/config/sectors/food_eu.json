@@ -1,0 +1,56 @@
+{
+  "id": "food_eu",
+  "sector": "food",
+  "region": "eu",
+  "label": "Alimentaire & Compléments (UE)",
+  "regulation": "Regulation (EC) 1924/2006 — Nutrition & Health Claims (EFSA)",
+  "medical_claims_allowed": false,
+  "financial_promises_allowed": false,
+  "health_claims_allowed": false,
+  "urgency_policy": {
+    "allowed": false,
+    "requires_real_inventory": true
+  },
+  "forbidden_words": [
+    "cures",
+    "guérit",
+    "prevents disease",
+    "prévient les maladies",
+    "boosts immunity",
+    "renforce l'immunité",
+    "detox",
+    "détoxifie",
+    "burns fat",
+    "brûle les graisses",
+    "lose weight fast",
+    "perdez du poids rapidement",
+    "miracle",
+    "miraculeux",
+    "doctor approved",
+    "approuvé par les médecins",
+    "FDA approved"
+  ],
+  "tone_constraints": {
+    "aggressiveness_level": "low",
+    "emojis_allowed": false,
+    "exclamation_limit": 0
+  },
+  "requires_wcag_validation": false,
+  "requires_price_lock": true,
+  "requires_claim_validation": true,
+  "claim_packs": [
+    "food_eu_efsa",
+    "medical_vocab",
+    "health_claims",
+    "fake_certifications",
+    "fake_stats",
+    "hyperbolic",
+    "temporal_guarantees",
+    "urgency_dark_patterns"
+  ],
+  "mandatory_disclaimers": [
+    "Une alimentation variée et équilibrée et un mode de vie sain sont importants.",
+    "Les compléments alimentaires ne se substituent pas à une alimentation équilibrée."
+  ],
+  "notes": "Seuls les claims autorisés par le règlement EFSA 1924/2006 peuvent être utilisés. Aucune allégation thérapeutique."
+}

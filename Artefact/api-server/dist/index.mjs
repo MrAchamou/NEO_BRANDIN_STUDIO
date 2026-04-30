@@ -45567,7 +45567,7 @@ var CLAIM_RULES = [
     severity: "critical",
     replacement: "supports firmer-looking skin",
     hint: "EU 1223/2009 \u2014 physiological action forbidden",
-    scope: "cosmetic_eu"
+    pack: "cosmetic_eu_physiological"
   },
   {
     pattern: /\breduces?\s+wrinkles?\b/gi,
@@ -45575,7 +45575,7 @@ var CLAIM_RULES = [
     severity: "critical",
     replacement: "helps skin appear smoother",
     hint: "EU 655/2013 \u2014 wrinkle reduction is a physiological claim",
-    scope: "cosmetic_eu"
+    pack: "cosmetic_eu_physiological"
   },
   {
     pattern: /\b(fades?|removes?|erases?)\s+(dark\s+spots?|hyperpigmentation|age\s+spots?)\b/gi,
@@ -45583,15 +45583,15 @@ var CLAIM_RULES = [
     severity: "critical",
     replacement: "helps improve the appearance of uneven tone",
     hint: "EU 655/2013 \u2014 pigmentation claim restricted",
-    scope: "cosmetic_eu"
+    pack: "cosmetic_eu_physiological"
   },
   {
-    pattern: /\banti[-\s]?aging\b/gi,
+    pattern: /\banti[-\s]?(aging|âge|age)\b/gi,
     category: "compliance.claim_forbidden",
     severity: "critical",
     replacement: "age-defying look",
     hint: "Anti-aging is a forbidden physiological claim in EU cosmetics",
-    scope: "cosmetic_eu"
+    pack: "cosmetic_eu_physiological"
   },
   {
     pattern: /\bstop(s)?\s+aging\b/gi,
@@ -45599,93 +45599,181 @@ var CLAIM_RULES = [
     severity: "critical",
     replacement: "supports a youthful-looking complexion",
     hint: "Stopping aging is biologically false and forbidden",
-    scope: "cosmetic_eu"
+    pack: "cosmetic_eu_physiological"
   },
+  // ── Vocabulaire médical générique ─────────────────────────────────────────
   {
-    pattern: /\b(repairs?|heals?|cures?|treats?)\s+(skin|acne|eczema|rosacea|psoriasis)\b/gi,
+    pattern: /\b(repairs?|heals?|cures?|treats?|guérit|soigne|traite)\s+(skin|acne|eczema|rosacea|psoriasis|peau|ac?né)\b/gi,
     category: "compliance.medical_vocab",
     severity: "critical",
     replacement: "helps soothe the look of skin",
-    hint: "Medical vocabulary forbidden in EU cosmetics",
-    scope: "cosmetic_eu"
+    hint: "Medical vocabulary forbidden when medical_claims_allowed=false",
+    pack: "medical_vocab"
   },
   {
-    pattern: /\b(dermatologist|clinically)\s+(proven|tested)\b/gi,
+    pattern: /\b(doctor|médecin|dermatologist|dermatologue)[-\s]?(approved|recommended|prescribed)\b/gi,
+    category: "compliance.medical_vocab",
+    severity: "critical",
+    replacement: "expert-recommended",
+    hint: "Endorsement m\xE9dical interdit sans preuve r\xE9glementaire",
+    pack: "medical_vocab"
+  },
+  // ── Health claims (compléments, food, wellness) ──────────────────────────
+  {
+    pattern: /\b(boosts?|renforce|strengthens?)\s+(immunity|immune\s+system|immunité)\b/gi,
+    category: "compliance.health_claim",
+    severity: "critical",
+    replacement: "contributes to overall wellbeing",
+    hint: "Health claim non autoris\xE9 sans validation r\xE9glementaire",
+    pack: "health_claims"
+  },
+  {
+    pattern: /\b(prevents?|cures?|fights?|prévient|combat)\s+(disease|illness|cancer|covid|flu|maladie)\b/gi,
+    category: "compliance.health_claim",
+    severity: "critical",
+    replacement: "supports general wellness",
+    hint: "All\xE9gation th\xE9rapeutique interdite",
+    pack: "health_claims"
+  },
+  // ── EFSA / food spécifiques UE ───────────────────────────────────────────
+  {
+    pattern: /\b(detox|détoxifie|cleanses?\s+the\s+body|purifie\s+l['’]organisme)\b/gi,
+    category: "compliance.efsa_violation",
+    severity: "critical",
+    replacement: "soutient le bien-\xEAtre au quotidien",
+    hint: "EFSA \u2014 claims detox non autoris\xE9s (R\xE8glement 1924/2006)",
+    pack: "food_eu_efsa"
+  },
+  {
+    pattern: /\b(burns?\s+fat|brûle\s+les\s+graisses|fat[-\s]burning)\b/gi,
+    category: "compliance.efsa_violation",
+    severity: "critical",
+    replacement: "s'inscrit dans une routine \xE9quilibr\xE9e",
+    hint: "EFSA \u2014 claim minceur non valid\xE9 interdit",
+    pack: "food_eu_efsa"
+  },
+  {
+    pattern: /\b(lose\s+\d+\s+(kg|lbs|pounds)|perdez\s+\d+\s+kg)\b/gi,
+    category: "compliance.efsa_violation",
+    severity: "critical",
+    replacement: "accompagne vos objectifs",
+    hint: "EFSA \u2014 promesse chiffr\xE9e de perte de poids interdite",
+    pack: "food_eu_efsa"
+  },
+  // ── Promesses financières (finance, fintech, crypto) ─────────────────────
+  {
+    pattern: /\b(guaranteed?|garanti)\s+(returns?|profits?|income|rendements?|gains?)\b/gi,
+    category: "compliance.financial_promise",
+    severity: "critical",
+    replacement: "potential performance",
+    hint: "AMF / MiFID \u2014 aucune garantie de rendement n'est autoris\xE9e",
+    pack: "financial_guarantees"
+  },
+  {
+    pattern: /\b(risk[-\s]?free|sans\s+risque|no\s+risk|zéro\s+risque)\b/gi,
+    category: "compliance.financial_promise",
+    severity: "critical",
+    replacement: "avec un profil de risque ma\xEEtris\xE9",
+    hint: "Toute communication financi\xE8re doit mentionner un risque de perte",
+    pack: "financial_guarantees"
+  },
+  {
+    pattern: /\b(double\s+your\s+(money|capital)|doublez\s+votre\s+(capital|argent))\b/gi,
+    category: "compliance.financial_promise",
+    severity: "critical",
+    replacement: "viser une performance long terme",
+    hint: "Promesse irr\xE9aliste interdite (AMF)",
+    pack: "financial_guarantees"
+  },
+  {
+    pattern: /\b(get\s+rich(\s+quick)?|devenez?\s+riche(\s+rapidement)?)\b/gi,
+    category: "compliance.financial_promise",
+    severity: "critical",
+    replacement: "construire votre strat\xE9gie patrimoniale",
+    hint: "Slogan d'enrichissement rapide interdit",
+    pack: "financial_guarantees"
+  },
+  // ── Stats fabriquées (universel) ─────────────────────────────────────────
+  {
+    pattern: /\b(dermatologist|clinically|cliniquement)\s+(proven|tested|prouvé|testé)\b/gi,
     category: "compliance.fake_stat",
     severity: "warning",
     replacement: "tested under expert supervision",
-    hint: "\u201CClinically proven\u201D requires study metadata in EU",
-    scope: "all"
+    hint: "\xAB Cliniquement prouv\xE9 \xBB exige des m\xE9tadonn\xE9es d'\xE9tude",
+    pack: "fake_stats"
   },
   {
-    pattern: /\bin\s+(\d+)\s+(days?|weeks?|hours?)\b/gi,
-    category: "compliance.temporal_guarantee",
-    severity: "warning",
-    replacement: "over time",
-    hint: "Temporal efficacy guarantees are restricted",
-    scope: "cosmetic_eu"
-  },
-  {
-    pattern: /\b(\d{2,3})\s*%\s+of\s+(users|women|customers|people)\b/gi,
+    pattern: /\b(\d{2,3})\s*%\s+of\s+(users|women|customers|people|utilisateurs|femmes|clients)\b/gi,
     category: "compliance.fake_stat",
     severity: "critical",
     replacement: "many users",
-    hint: "Fabricated user statistics are forbidden without verifiable study",
-    scope: "all"
+    hint: "Statistiques utilisateurs fabriqu\xE9es interdites sans \xE9tude v\xE9rifiable",
+    pack: "fake_stats"
   },
   {
-    pattern: /\b(guaranteed|guaranteed\s+results|100\s*%\s+(satisfaction|effective))\b/gi,
+    pattern: /\b(guaranteed\s+results|résultats\s+garantis|100\s*%\s+(satisfaction|effective|efficace))\b/gi,
     category: "compliance.fake_stat",
     severity: "critical",
     replacement: "designed to deliver",
-    hint: "Outcome guarantees forbidden",
-    scope: "all"
+    hint: "Garanties de r\xE9sultat interdites",
+    pack: "fake_stats"
   },
+  // ── Hyperboles ───────────────────────────────────────────────────────────
   {
-    pattern: /\b(miracle|magic|miraculous)\b/gi,
+    pattern: /\b(miracle|magic|miraculous|miraculeux|magique)\b/gi,
     category: "compliance.claim_forbidden",
     severity: "warning",
     replacement: "remarkable",
-    hint: "Hyperbolic terms misleading \u2014 EU 655/2013",
-    scope: "all"
+    hint: "Termes hyperboliques trompeurs (EU 655/2013 / DGCCRF)",
+    pack: "hyperbolic"
   },
-  // ── Dark patterns — urgence et stock fabriqués ───────────────────────────
+  // ── Garanties temporelles ────────────────────────────────────────────────
+  {
+    pattern: /\bin\s+(\d+)\s+(days?|weeks?|hours?|jours?|semaines?|heures?)\b/gi,
+    category: "compliance.temporal_guarantee",
+    severity: "warning",
+    replacement: "over time",
+    hint: "Garanties temporelles d'efficacit\xE9 restreintes",
+    pack: "temporal_guarantees"
+  },
+  // ── Dark patterns d'urgence ──────────────────────────────────────────────
   {
     pattern: /\bonly\s+(\d{1,3})\s+(left|remaining|in\s+stock)\b/gi,
     category: "compliance.fake_urgency",
     severity: "warning",
     replacement: "limited inventory",
-    hint: "Real-time stock claims must reflect actual inventory",
-    scope: "all"
+    hint: "Stock temps r\xE9el doit refl\xE9ter l'inventaire r\xE9el",
+    pack: "urgency_dark_patterns"
   },
   {
     pattern: /\b(\d{1,3})\s+people\s+are\s+viewing\s+this\b/gi,
     category: "compliance.fake_urgency",
     severity: "warning",
     replacement: "popular product",
-    hint: "Live viewer counters are dark patterns when fabricated",
-    scope: "all"
+    hint: "Compteurs de visiteurs en direct sont des dark patterns s'ils sont fabriqu\xE9s",
+    pack: "urgency_dark_patterns"
   },
   {
-    pattern: /\b(hurry|act\s+fast|last\s+chance|don['’]t\s+miss)\b/gi,
+    pattern: /\b(hurry|act\s+fast|last\s+chance|don['’]t\s+miss|dépêchez|dernière\s+chance)\b/gi,
     category: "compliance.fake_urgency",
     severity: "info",
     replacement: "discover",
-    hint: "Urgency wording reduced unless growth_mode allows it",
-    scope: "all"
+    hint: "Urgence att\xE9nu\xE9e selon profil sectoriel",
+    pack: "urgency_dark_patterns"
   }
 ];
-var CERT_PATTERN = /\b(ECOCERT|COSMOS|VEGAN\s+SOCIETY|LEAPING\s+BUNNY|CRUELTY[-\s]?FREE|ORGANIC|BIO|FAIRTRADE|ISO\s*\d+|CE\s+CERTIFIED|FDA\s+APPROVED|USDA\s+ORGANIC)\b/gi;
-function isCosmeticEU(lock) {
-  const sector = lock.brand.sector.toLowerCase();
-  return ["cosm\xE9tique", "cosmetic", "cosmetics", "skincare", "beaut\xE9", "beauty"].includes(sector);
-}
+var CERT_PATTERN = /\b(ECOCERT|COSMOS|VEGAN\s+SOCIETY|LEAPING\s+BUNNY|CRUELTY[-\s]?FREE|ORGANIC|BIO|FAIRTRADE|ISO\s*\d+|CE\s+CERTIFIED|FDA\s+APPROVED|USDA\s+ORGANIC|AB\s+AGRICULTURE\s+BIOLOGIQUE)\b/gi;
 function runComplianceAgent(input, lock) {
   const findings = [];
-  const cosmeticEU = isCosmeticEU(lock);
   let content = input;
+  const profile = lock.sector_profile;
+  const enabledPacks = new Set(profile.claim_packs);
+  if (!profile.medical_claims_allowed) enabledPacks.add("medical_vocab");
+  if (!profile.health_claims_allowed) enabledPacks.add("health_claims");
+  if (!profile.financial_promises_allowed) enabledPacks.add("financial_guarantees");
+  if (!profile.urgency_policy.allowed) enabledPacks.add("urgency_dark_patterns");
   for (const rule of CLAIM_RULES) {
-    if (rule.scope === "cosmetic_eu" && !cosmeticEU) continue;
+    if (!enabledPacks.has(rule.pack)) continue;
     const matches = content.match(rule.pattern);
     if (!matches) continue;
     for (const m of matches) {
@@ -45694,10 +45782,26 @@ function runComplianceAgent(input, lock) {
         category: rule.category,
         match: m,
         replacement: rule.replacement,
-        hint: rule.hint
+        hint: `[${rule.pack}] ${rule.hint}`
       });
     }
     content = content.replace(rule.pattern, rule.replacement);
+  }
+  for (const word of profile.forbidden_words) {
+    if (!word.trim()) continue;
+    const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const re = new RegExp(`\\b${escaped}\\b`, "gi");
+    const matches = content.match(re);
+    if (!matches) continue;
+    for (const m of matches) {
+      findings.push({
+        severity: "critical",
+        category: "compliance.sector_forbidden_word",
+        match: m,
+        hint: `Mot interdit par le profil ${profile.id}`
+      });
+    }
+    content = content.replace(re, "");
   }
   for (const claim of lock.product.claims_forbidden) {
     if (!claim.trim()) continue;
@@ -45711,12 +45815,12 @@ function runComplianceAgent(input, lock) {
         category: "compliance.claim_forbidden",
         match: m,
         replacement: "[claim removed]",
-        hint: "Claim explicitly forbidden by brand brief"
+        hint: "Claim explicitement interdit dans le brief"
       });
     }
     content = content.replace(re, "");
   }
-  if (lock.product.certifications.length === 0) {
+  if (profile.requires_claim_validation && lock.product.certifications.length === 0) {
     const found = content.match(CERT_PATTERN);
     if (found) {
       const seen = /* @__PURE__ */ new Set();
@@ -45728,7 +45832,7 @@ function runComplianceAgent(input, lock) {
           severity: "critical",
           category: "compliance.fake_certification",
           match: f,
-          hint: "No certification declared in brand lock \u2014 references removed"
+          hint: "Aucune certification d\xE9clar\xE9e dans le lock \u2014 r\xE9f\xE9rence supprim\xE9e"
         });
       }
       content = content.replace(CERT_PATTERN, "");
@@ -45739,6 +45843,11 @@ function runComplianceAgent(input, lock) {
 
 // src/governance/voice-enforcer.ts
 var EMOJI_REGEX = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu;
+var AGGRESSIVE_PATTERNS = [
+  { pattern: /\b(BUY\s+NOW|GRAB\s+IT|GET\s+IT\s+NOW)\b/g, replacement: "Discover" },
+  { pattern: /\b(MASSIVE|HUGE|INSANE|CRAZY|WILD)\s+(deal|discount|offer|sale)\b/gi, replacement: "notable offer" },
+  { pattern: /\b(YOU\s+MUST|YOU\s+NEED\s+TO|YOU\s+HAVE\s+TO)\s+(buy|get|order)\b/gi, replacement: "you may consider to discover" }
+];
 function runVoiceEnforcer(input, lock) {
   const findings = [];
   let content = input;
@@ -45753,7 +45862,7 @@ function runVoiceEnforcer(input, lock) {
         severity: lock.voice.urgency_allowed ? "info" : "warning",
         category: "voice.forbidden_word",
         match: m,
-        hint: `Forbidden by ${lock.mode} voice profile`
+        hint: `Interdit par le profil ${lock.mode} / ${lock.sector_profile.id}`
       });
     }
     content = content.replace(re, "");
@@ -45763,8 +45872,8 @@ function runVoiceEnforcer(input, lock) {
     findings.push({
       severity: "warning",
       category: "voice.exclamation_overload",
-      match: `${excl.length} exclamation marks (max ${lock.voice.max_exclamation_marks})`,
-      hint: `Exceeded ${lock.mode} voice profile`
+      match: `${excl.length} exclamations (max ${lock.voice.max_exclamation_marks})`,
+      hint: `Limite impos\xE9e par ${lock.mode} / ${lock.sector_profile.id}`
     });
     let kept = 0;
     content = content.replace(/!/g, () => {
@@ -45778,10 +45887,26 @@ function runVoiceEnforcer(input, lock) {
       findings.push({
         severity: "info",
         category: "voice.emoji_used",
-        match: `${found.length} emoji(s) removed`,
-        hint: `${lock.mode} voice profile disallows emojis`
+        match: `${found.length} emoji(s) supprim\xE9(s)`,
+        hint: `Profil ${lock.sector_profile.id} interdit les emojis`
       });
       content = content.replace(EMOJI_REGEX, "");
+    }
+  }
+  if ((lock.voice.aggressiveness_level ?? "medium") === "low") {
+    for (const { pattern, replacement } of AGGRESSIVE_PATTERNS) {
+      const matches = content.match(pattern);
+      if (!matches) continue;
+      for (const m of matches) {
+        findings.push({
+          severity: "warning",
+          category: "voice.aggressiveness_too_high",
+          match: m,
+          replacement,
+          hint: `Niveau d'agressivit\xE9 "low" exig\xE9 par ${lock.sector_profile.id}`
+        });
+      }
+      content = content.replace(pattern, replacement);
     }
   }
   if (!lock.voice.urgency_allowed) {
@@ -45801,7 +45926,7 @@ function runVoiceEnforcer(input, lock) {
           severity: "warning",
           category: "voice.urgency_blocked",
           match: hit,
-          hint: `Urgency pattern blocked by ${lock.mode} mode`
+          hint: `Urgence bloqu\xE9e par le mode ${lock.mode} / profil ${lock.sector_profile.id}`
         });
       }
       content = content.replace(p, "");
@@ -45809,6 +45934,100 @@ function runVoiceEnforcer(input, lock) {
   }
   content = content.replace(/[ \t]{2,}/g, " ").replace(/\s+([,.;:!?])/g, "$1").replace(/\(\s+\)/g, "").replace(/\[\s*\]/g, "");
   return { content, findings };
+}
+
+// src/governance/wcag-validator.ts
+function hexToRgb(hex) {
+  const h = hex.trim().replace(/^#/, "");
+  if (!/^([0-9a-f]{3}|[0-9a-f]{6})$/i.test(h)) return null;
+  const full = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  const r = parseInt(full.slice(0, 2), 16);
+  const g = parseInt(full.slice(2, 4), 16);
+  const b = parseInt(full.slice(4, 6), 16);
+  return [r, g, b];
+}
+function rgbToHex(r, g, b) {
+  const c = (n) => Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, "0");
+  return `#${c(r)}${c(g)}${c(b)}`;
+}
+function relativeLuminance(rgb) {
+  const channel = (v) => {
+    const s = v / 255;
+    return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+  };
+  const [r, g, b] = rgb.map(channel);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+function contrastRatio(fg, bg) {
+  const f = hexToRgb(fg);
+  const b = hexToRgb(bg);
+  if (!f || !b) return null;
+  const lf = relativeLuminance(f);
+  const lb = relativeLuminance(b);
+  const light = Math.max(lf, lb);
+  const dark = Math.min(lf, lb);
+  return (light + 0.05) / (dark + 0.05);
+}
+function adjustColor(hex, factor) {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return hex;
+  const [r, g, b] = rgb.map((v) => v * factor);
+  return rgbToHex(r, g, b);
+}
+function suggestAccessibleColor(fg, bg, targetRatio = 4.5) {
+  const start = contrastRatio(fg, bg);
+  if (start === null) return null;
+  if (start >= targetRatio) return fg;
+  for (const direction of [0.85, 1.15]) {
+    let current = fg;
+    for (let i = 0; i < 16; i++) {
+      current = adjustColor(current, direction);
+      const ratio = contrastRatio(current, bg);
+      if (ratio !== null && ratio >= targetRatio) {
+        return current;
+      }
+    }
+  }
+  return null;
+}
+function runWcagValidator(palette) {
+  const bg = palette.background?.trim() || "#ffffff";
+  const candidates = [
+    { label: "primary", fg: palette.primary },
+    { label: "secondary", fg: palette.secondary },
+    { label: "accent", fg: palette.accent }
+  ];
+  const pairs = [];
+  const findings = [];
+  for (const { label, fg } of candidates) {
+    if (!fg) continue;
+    const ratio = contrastRatio(fg, bg);
+    if (ratio === null) {
+      findings.push({
+        severity: "info",
+        category: "wcag.invalid_color",
+        match: `${label}=${fg}`,
+        hint: "Format couleur invalide (attendu #rrggbb ou #rgb)."
+      });
+      continue;
+    }
+    const passesAA = ratio >= 4.5;
+    const passesAALarge = ratio >= 3;
+    let suggestedFg;
+    if (!passesAA) {
+      const suggestion = suggestAccessibleColor(fg, bg, 4.5);
+      if (suggestion) suggestedFg = suggestion;
+      findings.push({
+        severity: passesAALarge ? "warning" : "critical",
+        category: "wcag.contrast_low",
+        match: `${label} ${fg} on ${bg} (ratio ${ratio.toFixed(2)})`,
+        replacement: suggestedFg,
+        hint: passesAALarge ? "Suffisant pour titre large (\u2265 18pt bold), insuffisant pour le corps de texte (WCAG AA 4.5:1)." : `Contraste tr\xE8s faible \u2014 passez \xE0 ${suggestedFg ?? "une teinte plus fonc\xE9e"} pour atteindre 4.5:1.`
+      });
+    }
+    pairs.push({ label, fg, bg, ratio, passesAA, passesAALarge, suggestedFg });
+  }
+  return { pairs, findings };
 }
 
 // src/governance/growth-modes.ts
@@ -45894,10 +46113,391 @@ function getGrowthProfile(mode) {
   return PROFILES[mode] ?? PROFILES.premium_brand;
 }
 
+// src/config/sectors/cosmetics_eu.json
+var cosmetics_eu_default = {
+  id: "cosmetics_eu",
+  sector: "cosmetics",
+  region: "eu",
+  label: "Cosm\xE9tiques (Union Europ\xE9enne)",
+  regulation: "Regulation (EC) 1223/2009 + Commission Regulation (EU) 655/2013",
+  medical_claims_allowed: false,
+  financial_promises_allowed: false,
+  health_claims_allowed: false,
+  urgency_policy: {
+    allowed: false,
+    requires_real_inventory: true
+  },
+  forbidden_words: [
+    "anti-aging",
+    "anti-\xE2ge",
+    "stop aging",
+    "miracle",
+    "miraculeux",
+    "gu\xE9rit",
+    "soigne",
+    "traite",
+    "clinically proven",
+    "cliniquement prouv\xE9",
+    "100% effective",
+    "guaranteed results"
+  ],
+  tone_constraints: {
+    aggressiveness_level: "low",
+    emojis_allowed: false,
+    exclamation_limit: 0
+  },
+  requires_wcag_validation: false,
+  requires_price_lock: true,
+  requires_claim_validation: true,
+  claim_packs: [
+    "cosmetic_eu_physiological",
+    "medical_vocab",
+    "fake_certifications",
+    "fake_stats",
+    "hyperbolic",
+    "temporal_guarantees",
+    "urgency_dark_patterns"
+  ],
+  mandatory_disclaimers: [
+    "Effets cosm\xE9tiques : \xAB aide \xE0 \xBB, \xAB contribue \xE0 \xBB, \xAB visiblement \xBB."
+  ],
+  notes: "Aucune action physiologique ne peut \xEAtre revendiqu\xE9e. Toute mention de b\xE9n\xE9fice doit rester perceptive (apparence, ressenti, hydratation de surface)."
+};
+
+// src/config/sectors/fashion.json
+var fashion_default = {
+  id: "fashion",
+  sector: "fashion",
+  region: "global",
+  label: "Mode & Accessoires (g\xE9n\xE9rique)",
+  regulation: "ASA / DGCCRF / FTC \u2014 r\xE8gles g\xE9n\xE9rales sur les promesses de produits",
+  medical_claims_allowed: false,
+  financial_promises_allowed: false,
+  health_claims_allowed: false,
+  urgency_policy: {
+    allowed: true,
+    requires_real_inventory: true
+  },
+  forbidden_words: [
+    "permanent sale",
+    "always 50% off",
+    "deal of your life",
+    "free luxury",
+    "luxury for cheap",
+    "100% authentic guaranteed",
+    "investment piece guaranteed"
+  ],
+  tone_constraints: {
+    aggressiveness_level: "medium",
+    emojis_allowed: true,
+    exclamation_limit: 1
+  },
+  requires_wcag_validation: false,
+  requires_price_lock: true,
+  requires_claim_validation: true,
+  claim_packs: [
+    "fake_certifications",
+    "fake_stats",
+    "hyperbolic",
+    "urgency_dark_patterns"
+  ],
+  mandatory_disclaimers: [],
+  notes: "Mode raffin\xE9e : promesse esth\xE9tique uniquement, pas de promesse sant\xE9/dur\xE9e illimit\xE9e. L'urgence reste autoris\xE9e si elle refl\xE8te un vrai stock ou une vraie fen\xEAtre de vente."
+};
+
+// src/config/sectors/finance_eu.json
+var finance_eu_default = {
+  id: "finance_eu",
+  sector: "finance",
+  region: "eu",
+  label: "Finance & Assurance (UE)",
+  regulation: "MiFID II + AMF + DORA + GDPR \u2014 communications commerciales financi\xE8res",
+  medical_claims_allowed: false,
+  financial_promises_allowed: false,
+  health_claims_allowed: false,
+  urgency_policy: {
+    allowed: false,
+    requires_real_inventory: true
+  },
+  forbidden_words: [
+    "guaranteed returns",
+    "rendements garantis",
+    "risk-free",
+    "sans risque",
+    "no risk",
+    "100% safe",
+    "100% s\xFBr",
+    "double your money",
+    "doublez votre capital",
+    "passive income guaranteed",
+    "revenu passif garanti",
+    "get rich",
+    "devenez riche",
+    "make money fast",
+    "gagnez de l'argent rapidement",
+    "investment opportunity of a lifetime"
+  ],
+  tone_constraints: {
+    aggressiveness_level: "low",
+    emojis_allowed: false,
+    exclamation_limit: 0
+  },
+  requires_wcag_validation: true,
+  requires_price_lock: true,
+  requires_claim_validation: true,
+  claim_packs: [
+    "financial_guarantees",
+    "fake_stats",
+    "hyperbolic",
+    "fake_certifications",
+    "urgency_dark_patterns",
+    "temporal_guarantees"
+  ],
+  mandatory_disclaimers: [
+    "Les performances pass\xE9es ne pr\xE9jugent pas des performances futures.",
+    "Tout investissement comporte un risque de perte en capital."
+  ],
+  notes: "Aucune promesse de rendement, aucune garantie d'absence de risque. Disclaimers AMF obligatoires. Communication non agressive, accessibilit\xE9 WCAG AA exig\xE9e."
+};
+
+// src/config/sectors/food_eu.json
+var food_eu_default = {
+  id: "food_eu",
+  sector: "food",
+  region: "eu",
+  label: "Alimentaire & Compl\xE9ments (UE)",
+  regulation: "Regulation (EC) 1924/2006 \u2014 Nutrition & Health Claims (EFSA)",
+  medical_claims_allowed: false,
+  financial_promises_allowed: false,
+  health_claims_allowed: false,
+  urgency_policy: {
+    allowed: false,
+    requires_real_inventory: true
+  },
+  forbidden_words: [
+    "cures",
+    "gu\xE9rit",
+    "prevents disease",
+    "pr\xE9vient les maladies",
+    "boosts immunity",
+    "renforce l'immunit\xE9",
+    "detox",
+    "d\xE9toxifie",
+    "burns fat",
+    "br\xFBle les graisses",
+    "lose weight fast",
+    "perdez du poids rapidement",
+    "miracle",
+    "miraculeux",
+    "doctor approved",
+    "approuv\xE9 par les m\xE9decins",
+    "FDA approved"
+  ],
+  tone_constraints: {
+    aggressiveness_level: "low",
+    emojis_allowed: false,
+    exclamation_limit: 0
+  },
+  requires_wcag_validation: false,
+  requires_price_lock: true,
+  requires_claim_validation: true,
+  claim_packs: [
+    "food_eu_efsa",
+    "medical_vocab",
+    "health_claims",
+    "fake_certifications",
+    "fake_stats",
+    "hyperbolic",
+    "temporal_guarantees",
+    "urgency_dark_patterns"
+  ],
+  mandatory_disclaimers: [
+    "Une alimentation vari\xE9e et \xE9quilibr\xE9e et un mode de vie sain sont importants.",
+    "Les compl\xE9ments alimentaires ne se substituent pas \xE0 une alimentation \xE9quilibr\xE9e."
+  ],
+  notes: "Seuls les claims autoris\xE9s par le r\xE8glement EFSA 1924/2006 peuvent \xEAtre utilis\xE9s. Aucune all\xE9gation th\xE9rapeutique."
+};
+
+// src/config/sectors/saas.json
+var saas_default = {
+  id: "saas",
+  sector: "saas",
+  region: "global",
+  label: "SaaS & B2B Tech (g\xE9n\xE9rique)",
+  regulation: "GDPR + WCAG AA + bonnes pratiques SaaS",
+  medical_claims_allowed: false,
+  financial_promises_allowed: false,
+  health_claims_allowed: false,
+  urgency_policy: {
+    allowed: true,
+    requires_real_inventory: false
+  },
+  forbidden_words: [
+    "100% uptime",
+    "completely secure",
+    "100% s\xE9curis\xE9",
+    "unhackable",
+    "inviolable",
+    "guaranteed ROI",
+    "ROI garanti",
+    "magic AI",
+    "AI miracle",
+    "replaces your team",
+    "remplace votre \xE9quipe"
+  ],
+  tone_constraints: {
+    aggressiveness_level: "medium",
+    emojis_allowed: true,
+    exclamation_limit: 2
+  },
+  requires_wcag_validation: true,
+  requires_price_lock: true,
+  requires_claim_validation: true,
+  claim_packs: [
+    "fake_stats",
+    "hyperbolic",
+    "fake_certifications"
+  ],
+  mandatory_disclaimers: [],
+  notes: "Marketing flexible, accessibilit\xE9 WCAG AA recommand\xE9e. Pas de promesse d'uptime absolue ni de s\xE9curit\xE9 parfaite."
+};
+
+// src/governance/sector-engine.ts
+var PROFILES2 = {
+  cosmetics_eu: cosmetics_eu_default,
+  fashion: fashion_default,
+  fashion_global: fashion_default,
+  finance_eu: finance_eu_default,
+  food_eu: food_eu_default,
+  saas: saas_default,
+  saas_global: saas_default
+};
+var SECTOR_ALIASES = {
+  cosm\u00E9tique: "cosmetics",
+  cosmetique: "cosmetics",
+  cosmetic: "cosmetics",
+  skincare: "cosmetics",
+  beaut\u00E9: "cosmetics",
+  beaute: "cosmetics",
+  beauty: "cosmetics",
+  mode: "fashion",
+  fashion: "fashion",
+  apparel: "fashion",
+  luxe: "fashion",
+  luxury: "fashion",
+  finance: "finance",
+  banking: "finance",
+  banque: "finance",
+  insurance: "finance",
+  assurance: "finance",
+  fintech: "finance",
+  food: "food",
+  alimentaire: "food",
+  nutrition: "food",
+  supplements: "food",
+  compl\u00E9ments: "food",
+  complements: "food",
+  saas: "saas",
+  software: "saas",
+  tech: "saas",
+  b2b: "saas"
+};
+var REGION_ALIASES = {
+  eu: "eu",
+  europe: "eu",
+  european: "eu",
+  france: "eu",
+  fr: "eu",
+  ue: "eu",
+  global: "global",
+  international: "global",
+  monde: "global",
+  world: "global",
+  na: "global",
+  us: "global",
+  usa: "global",
+  apac: "global",
+  asia: "global"
+};
+function normalizeSector(input) {
+  if (!input) return "";
+  const key = input.trim().toLowerCase();
+  return SECTOR_ALIASES[key] ?? key;
+}
+function normalizeRegion(input) {
+  if (!input) return "";
+  const key = input.trim().toLowerCase();
+  return REGION_ALIASES[key] ?? key;
+}
+var DEFAULT_PROFILE = {
+  id: "default",
+  sector: "generic",
+  region: "global",
+  label: "Profil g\xE9n\xE9rique (fallback)",
+  regulation: "Bonnes pratiques marketing universelles",
+  medical_claims_allowed: false,
+  financial_promises_allowed: false,
+  health_claims_allowed: false,
+  urgency_policy: { allowed: true, requires_real_inventory: true },
+  forbidden_words: [],
+  tone_constraints: {
+    aggressiveness_level: "medium",
+    emojis_allowed: true,
+    exclamation_limit: 1
+  },
+  requires_wcag_validation: false,
+  requires_price_lock: true,
+  requires_claim_validation: true,
+  claim_packs: ["fake_stats", "hyperbolic", "fake_certifications"],
+  mandatory_disclaimers: [],
+  notes: "Aucun profil sector\xD7region trouv\xE9 \u2014 fallback g\xE9n\xE9rique appliqu\xE9."
+};
+function loadSectorProfile(sector, region) {
+  const s = normalizeSector(sector);
+  const r = normalizeRegion(region);
+  if (s) {
+    const candidates = [
+      r ? `${s}_${r}` : null,
+      s,
+      `${s}_global`
+    ].filter(Boolean);
+    for (const key of candidates) {
+      const profile = PROFILES2[key];
+      if (profile) {
+        return { profile, matched: true, resolvedKey: key };
+      }
+    }
+  }
+  return { profile: DEFAULT_PROFILE, matched: false, resolvedKey: "default" };
+}
+function sectorProfileToPromptBlock(profile) {
+  const lines = [];
+  lines.push("\u2550\u2550\u2550 SECTOR INTELLIGENCE LAYER \u2550\u2550\u2550");
+  lines.push(`\u2022 Profil : ${profile.label} (${profile.id})`);
+  lines.push(`\u2022 R\xE9gulation de r\xE9f\xE9rence : ${profile.regulation}`);
+  lines.push(`\u2022 Claims m\xE9dicaux : ${profile.medical_claims_allowed ? "autoris\xE9s" : "INTERDITS"}`);
+  lines.push(`\u2022 Claims sant\xE9 : ${profile.health_claims_allowed ? "autoris\xE9s" : "INTERDITS"}`);
+  lines.push(`\u2022 Promesses financi\xE8res : ${profile.financial_promises_allowed ? "autoris\xE9es" : "INTERDITES"}`);
+  lines.push(`\u2022 Urgence commerciale : ${profile.urgency_policy.allowed ? "tol\xE9r\xE9e (stock r\xE9el obligatoire)" : "INTERDITE"}`);
+  lines.push(`\u2022 Ton : ${profile.tone_constraints.aggressiveness_level} | emojis ${profile.tone_constraints.emojis_allowed ? "OK" : "non"} | max ${profile.tone_constraints.exclamation_limit} "!"`);
+  if (profile.forbidden_words.length) {
+    lines.push(`\u2022 Mots interdits sectoriels : ${profile.forbidden_words.slice(0, 12).join(", ")}`);
+  }
+  if (profile.requires_wcag_validation) {
+    lines.push(`\u2022 WCAG AA exig\xE9 : tout choix de couleur doit passer un contraste 4.5:1 minimum.`);
+  }
+  if (profile.mandatory_disclaimers.length) {
+    lines.push(`\u2022 Disclaimers obligatoires :`);
+    profile.mandatory_disclaimers.forEach((d) => lines.push(`    \u2013 ${d}`));
+  }
+  return lines.join("\n");
+}
+
 // src/governance/brand-lock.ts
 function toList(value) {
   if (!value) return [];
-  return value.split(/[\n,;|]/g).map((s) => s.trim()).filter(Boolean);
+  if (Array.isArray(value)) return value.map((x) => String(x).trim()).filter(Boolean);
+  return String(value).split(/[\n,;|]/g).map((s) => s.trim()).filter(Boolean);
 }
 function toValuesList(value) {
   if (Array.isArray(value)) return value.map(String).filter(Boolean);
@@ -45916,18 +46516,58 @@ function toBool(value, fallback) {
   if (["false", "0", "no", "non", "off"].includes(s)) return false;
   return fallback;
 }
+function intersectVoice(modeVoice, profileTone, profileForbidden, customForbidden, briefUrgency, briefEmojis, profileUrgencyAllowed) {
+  const merged = Array.from(
+    /* @__PURE__ */ new Set([
+      ...modeVoice.forbidden_words,
+      ...profileForbidden,
+      ...customForbidden
+    ])
+  );
+  let urgency = modeVoice.urgency_allowed;
+  if (!profileUrgencyAllowed) urgency = false;
+  else if (briefUrgency !== void 0) urgency = briefUrgency && modeVoice.urgency_allowed;
+  let emojis = modeVoice.emojis_allowed;
+  if (!profileTone.emojis_allowed) emojis = false;
+  else if (briefEmojis !== void 0) emojis = briefEmojis && modeVoice.emojis_allowed;
+  const excl = Math.min(modeVoice.max_exclamation_marks, profileTone.exclamation_limit);
+  return {
+    forbidden_words: merged,
+    urgency_allowed: urgency,
+    max_exclamation_marks: excl,
+    emojis_allowed: emojis,
+    aggressiveness_level: profileTone.aggressiveness_level
+  };
+}
 function buildBrandLock(input) {
   const raw = input ?? {};
   const mode = raw.growth_mode || "premium_brand";
   const profile = getGrowthProfile(mode);
+  const sector = raw.sector?.trim().toLowerCase() ?? "";
+  const region = (raw.region ?? raw.market ?? "")?.toString().trim().toLowerCase();
+  const sectorLookup = loadSectorProfile(sector, region);
+  const sectorProfile = sectorLookup.profile;
   const customForbidden = toList(raw.voice_forbidden_words);
-  const mergedForbidden = Array.from(
-    /* @__PURE__ */ new Set([...profile.voice.forbidden_words, ...customForbidden])
+  const briefUrgency = raw.urgency_allowed === void 0 || raw.urgency_allowed === "" ? void 0 : toBool(raw.urgency_allowed, true);
+  const briefEmojis = raw.emojis_allowed === void 0 || raw.emojis_allowed === "" ? void 0 : toBool(raw.emojis_allowed, true);
+  const modeVoice = {
+    ...profile.voice,
+    aggressiveness_level: "medium"
+  };
+  const voice = intersectVoice(
+    modeVoice,
+    sectorProfile.tone_constraints,
+    sectorProfile.forbidden_words,
+    customForbidden,
+    briefUrgency,
+    briefEmojis,
+    sectorProfile.urgency_policy.allowed
   );
   return {
     brand: {
       name: raw.brand_name?.trim() ?? "",
-      sector: raw.sector?.trim().toLowerCase() ?? "",
+      sector,
+      region: region || sectorProfile.region,
       tone: raw.tone?.trim().toLowerCase() ?? "",
       values: toValuesList(raw.values)
     },
@@ -45948,15 +46588,13 @@ function buildBrandLock(input) {
       primary: raw.primary_color?.trim() || void 0,
       secondary: raw.secondary_color?.trim() || void 0,
       accent: raw.accent_color?.trim() || void 0,
+      background: raw.background_color?.trim() || void 0,
       raw: raw.colors?.trim() || void 0
     },
-    voice: {
-      forbidden_words: mergedForbidden,
-      urgency_allowed: toBool(raw.urgency_allowed, profile.voice.urgency_allowed),
-      max_exclamation_marks: profile.voice.max_exclamation_marks,
-      emojis_allowed: toBool(raw.emojis_allowed, profile.voice.emojis_allowed)
-    },
-    mode
+    voice,
+    mode,
+    sector_profile: sectorProfile,
+    sector_profile_matched: sectorLookup.matched
   };
 }
 function brandLockToPromptBlock(lock) {
@@ -45964,7 +46602,7 @@ function brandLockToPromptBlock(lock) {
   const p = lock.product;
   const lines = [];
   lines.push("\u2550\u2550\u2550 BRAND LOCK (FACT LOCK ENGINE \u2014 IMMUABLE) \u2550\u2550\u2550");
-  lines.push(`\u2022 Brand: ${lock.brand.name || "(non d\xE9fini)"} | Sector: ${lock.brand.sector || "n/a"} | Tone: ${lock.brand.tone || "n/a"}`);
+  lines.push(`\u2022 Brand: ${lock.brand.name || "(non d\xE9fini)"} | Sector: ${lock.brand.sector || "n/a"} | Region: ${lock.brand.region || "n/a"} | Tone: ${lock.brand.tone || "n/a"}`);
   if (lock.brand.values.length) {
     lines.push(`\u2022 Values: ${lock.brand.values.join(", ")}`);
   }
@@ -45995,17 +46633,23 @@ function brandLockToPromptBlock(lock) {
       lock.colors.primary && `primary ${lock.colors.primary}`,
       lock.colors.secondary && `secondary ${lock.colors.secondary}`,
       lock.colors.accent && `accent ${lock.colors.accent}`,
+      lock.colors.background && `background ${lock.colors.background}`,
       lock.colors.raw
     ].filter(Boolean);
     lines.push(`\u2022 Brand colors (SACRED): ${colorParts.join(" | ")}`);
+  }
+  lines.push("");
+  lines.push(sectorProfileToPromptBlock(lock.sector_profile));
+  if (!lock.sector_profile_matched) {
+    lines.push(`  \u26A0 Aucun profil d\xE9di\xE9 pour ${lock.brand.sector || "?"} \xD7 ${lock.brand.region || "?"} \u2014 fallback g\xE9n\xE9rique.`);
   }
   lines.push("");
   lines.push(`\u2550\u2550\u2550 GROWTH MODE: ${profile.label.toUpperCase()} \u2550\u2550\u2550`);
   lines.push(`${profile.description}`);
   lines.push(`\u2022 CTA style: ${profile.cta_style}`);
   lines.push(`\u2022 Urgency tolerance: ${profile.urgency_tolerance}`);
-  lines.push(`\u2022 Max exclamation marks per output: ${profile.voice.max_exclamation_marks}`);
-  lines.push(`\u2022 Emojis allowed: ${profile.voice.emojis_allowed ? "yes (sparingly)" : "no"}`);
+  lines.push(`\u2022 Max exclamation marks per output: ${lock.voice.max_exclamation_marks}`);
+  lines.push(`\u2022 Emojis allowed: ${lock.voice.emojis_allowed ? "yes (sparingly)" : "no"}`);
   lines.push("");
   lines.push("\u2550\u2550\u2550 ABSOLUTE RULES \u2550\u2550\u2550");
   lines.push("1. Never modify the product price, currency, margin, packaging or origin.");
@@ -46019,6 +46663,9 @@ function brandLockToPromptBlock(lock) {
   }
   lines.push("6. Never include fake testimonials, fake media mentions, or fake reviews.");
   lines.push("7. If a fact is not in this lock, OMIT it. Do not infer, do not assume.");
+  if (lock.sector_profile.mandatory_disclaimers.length) {
+    lines.push("8. Append the mandatory disclaimers verbatim where appropriate (footer, legal section, ad disclaimers).");
+  }
   return lines.join("\n");
 }
 
@@ -46100,6 +46747,8 @@ function applyGovernance(draft, options = {}) {
       report: {
         pass: true,
         mode: "premium_brand",
+        sector_profile_id: "default",
+        sector_profile_matched: false,
         findings: [],
         rewrites: 0,
         blocked: false
@@ -46107,11 +46756,19 @@ function applyGovernance(draft, options = {}) {
     };
   }
   const findings = [];
+  if (!lock.sector_profile_matched) {
+    findings.push({
+      severity: "info",
+      category: "sector.profile_missing",
+      match: `${lock.brand.sector || "?"} \xD7 ${lock.brand.region || "?"}`,
+      hint: "Profil sectoriel non trouv\xE9 \u2014 fallback g\xE9n\xE9rique appliqu\xE9 (cr\xE9ez un fichier JSON dans /config/sectors/ pour activer les r\xE8gles d\xE9di\xE9es)."
+    });
+  }
   const c = runComplianceAgent(draft, lock);
   findings.push(...c.findings);
   const v = runVoiceEnforcer(c.content, lock);
   findings.push(...v.findings);
-  if (lock.product.price !== void 0) {
+  if (lock.sector_profile.requires_price_lock && lock.product.price !== void 0) {
     const priceLocked = lock.product.price;
     const currency = lock.product.currency ?? "EUR";
     const acceptable = /* @__PURE__ */ new Set([priceLocked]);
@@ -46138,10 +46795,34 @@ function applyGovernance(draft, options = {}) {
       });
     }
   }
+  const shouldValidateWcag = options.validateWcag ?? lock.sector_profile.requires_wcag_validation;
+  if (shouldValidateWcag) {
+    const w = runWcagValidator({
+      primary: lock.colors.primary,
+      secondary: lock.colors.secondary,
+      accent: lock.colors.accent,
+      background: lock.colors.background
+    });
+    findings.push(...w.findings);
+  }
+  for (const disclaimer of lock.sector_profile.mandatory_disclaimers) {
+    const fragment = disclaimer.split(" ").slice(0, 4).join(" ").toLowerCase();
+    if (!fragment) continue;
+    if (!v.content.toLowerCase().includes(fragment)) {
+      findings.push({
+        severity: "info",
+        category: "sector.disclaimer_missing",
+        match: disclaimer,
+        hint: `Disclaimer recommand\xE9 par le profil ${lock.sector_profile.id} \u2014 \xE0 inclure dans la version finale.`
+      });
+    }
+  }
   const blocked = findings.some((f) => f.severity === "critical");
   const report = {
     pass: findings.length === 0,
     mode: lock.mode,
+    sector_profile_id: lock.sector_profile.id,
+    sector_profile_matched: lock.sector_profile_matched,
     findings,
     rewrites: findings.filter((f) => f.replacement !== void 0).length,
     blocked
@@ -46156,6 +46837,8 @@ function summarizeReport(report) {
   return {
     pass: report.pass,
     mode: report.mode,
+    sector_profile_id: report.sector_profile_id,
+    sector_profile_matched: report.sector_profile_matched,
     total_findings: report.findings.length,
     critical,
     warning,
@@ -46717,7 +47400,7 @@ var SECTOR_PALETTES = {
 function parseHexColors2(colorStr) {
   return (colorStr.match(/#[0-9A-Fa-f]{6}/g) ?? []).slice(0, 3);
 }
-function hexToRgb(hex) {
+function hexToRgb2(hex) {
   const clean = hex.replace("#", "");
   const r = parseInt(clean.slice(0, 2), 16);
   const g = parseInt(clean.slice(2, 4), 16);
@@ -46768,9 +47451,9 @@ function buildPalettePrompt(brief) {
   const sector = brief.sector.toLowerCase();
   const palette = SECTOR_PALETTES[sector] ?? SECTOR_PALETTES["tech"];
   const clientHexes = brief.brandColors ? parseHexColors2(brief.brandColors) : [];
-  const primary = clientHexes[0] ? { ...palette.primary, hex: clientHexes[0], rgb: hexToRgb(clientHexes[0]) } : brief.primaryColorHint ? { ...palette.primary, hex: brief.primaryColorHint, rgb: hexToRgb(brief.primaryColorHint) } : palette.primary;
-  const secondary = clientHexes[1] ? { ...palette.secondary, hex: clientHexes[1], rgb: hexToRgb(clientHexes[1]) } : palette.secondary;
-  const accent = clientHexes[2] ? { ...palette.accent, hex: clientHexes[2], rgb: hexToRgb(clientHexes[2]) } : palette.accent;
+  const primary = clientHexes[0] ? { ...palette.primary, hex: clientHexes[0], rgb: hexToRgb2(clientHexes[0]) } : brief.primaryColorHint ? { ...palette.primary, hex: brief.primaryColorHint, rgb: hexToRgb2(brief.primaryColorHint) } : palette.primary;
+  const secondary = clientHexes[1] ? { ...palette.secondary, hex: clientHexes[1], rgb: hexToRgb2(clientHexes[1]) } : palette.secondary;
+  const accent = clientHexes[2] ? { ...palette.accent, hex: clientHexes[2], rgb: hexToRgb2(clientHexes[2]) } : palette.accent;
   const { neutrals } = palette;
   const clientColorsInstruction = brief.brandColors ? `\u26A0\uFE0F ABSOLUTE RULE \u2014 CLIENT-IMPOSED COLORS:
 The client has defined these colors for their brand: ${brief.brandColors}

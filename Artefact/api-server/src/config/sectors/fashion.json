@@ -1,0 +1,39 @@
+{
+  "id": "fashion",
+  "sector": "fashion",
+  "region": "global",
+  "label": "Mode & Accessoires (générique)",
+  "regulation": "ASA / DGCCRF / FTC — règles générales sur les promesses de produits",
+  "medical_claims_allowed": false,
+  "financial_promises_allowed": false,
+  "health_claims_allowed": false,
+  "urgency_policy": {
+    "allowed": true,
+    "requires_real_inventory": true
+  },
+  "forbidden_words": [
+    "permanent sale",
+    "always 50% off",
+    "deal of your life",
+    "free luxury",
+    "luxury for cheap",
+    "100% authentic guaranteed",
+    "investment piece guaranteed"
+  ],
+  "tone_constraints": {
+    "aggressiveness_level": "medium",
+    "emojis_allowed": true,
+    "exclamation_limit": 1
+  },
+  "requires_wcag_validation": false,
+  "requires_price_lock": true,
+  "requires_claim_validation": true,
+  "claim_packs": [
+    "fake_certifications",
+    "fake_stats",
+    "hyperbolic",
+    "urgency_dark_patterns"
+  ],
+  "mandatory_disclaimers": [],
+  "notes": "Mode raffinée : promesse esthétique uniquement, pas de promesse santé/durée illimitée. L'urgence reste autorisée si elle reflète un vrai stock ou une vraie fenêtre de vente."
+}

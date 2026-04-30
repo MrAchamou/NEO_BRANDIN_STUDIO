@@ -1,0 +1,53 @@
+{
+  "id": "finance_eu",
+  "sector": "finance",
+  "region": "eu",
+  "label": "Finance & Assurance (UE)",
+  "regulation": "MiFID II + AMF + DORA + GDPR — communications commerciales financières",
+  "medical_claims_allowed": false,
+  "financial_promises_allowed": false,
+  "health_claims_allowed": false,
+  "urgency_policy": {
+    "allowed": false,
+    "requires_real_inventory": true
+  },
+  "forbidden_words": [
+    "guaranteed returns",
+    "rendements garantis",
+    "risk-free",
+    "sans risque",
+    "no risk",
+    "100% safe",
+    "100% sûr",
+    "double your money",
+    "doublez votre capital",
+    "passive income guaranteed",
+    "revenu passif garanti",
+    "get rich",
+    "devenez riche",
+    "make money fast",
+    "gagnez de l'argent rapidement",
+    "investment opportunity of a lifetime"
+  ],
+  "tone_constraints": {
+    "aggressiveness_level": "low",
+    "emojis_allowed": false,
+    "exclamation_limit": 0
+  },
+  "requires_wcag_validation": true,
+  "requires_price_lock": true,
+  "requires_claim_validation": true,
+  "claim_packs": [
+    "financial_guarantees",
+    "fake_stats",
+    "hyperbolic",
+    "fake_certifications",
+    "urgency_dark_patterns",
+    "temporal_guarantees"
+  ],
+  "mandatory_disclaimers": [
+    "Les performances passées ne préjugent pas des performances futures.",
+    "Tout investissement comporte un risque de perte en capital."
+  ],
+  "notes": "Aucune promesse de rendement, aucune garantie d'absence de risque. Disclaimers AMF obligatoires. Communication non agressive, accessibilité WCAG AA exigée."
+}

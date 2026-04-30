@@ -490,7 +490,7 @@ export default function Home() {
               </p>
             </div>
             <div className="hidden md:flex flex-col items-end gap-2">
-              <span className="text-xs text-muted-foreground/60 font-mono">v2.0.0</span>
+              <span className="text-xs text-muted-foreground/60 font-mono">v2.1.0</span>
               <div className="flex flex-col items-end gap-1">
                 <div className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
