@@ -1,0 +1,389 @@
+```md
+# 🧠 NEO BRANDING STUDIO — SYSTEM UPGRADE PROMPT  
+## Advanced Governance, Compliance & Brand Intelligence Layer  
+**For Replit AI Integration (Full-Stack Refactor Mode)**
+
+---
+
+## 🎯 OBJECTIVE
+
+Upgrade the existing Neo Branding Studio system to an **enterprise-grade Brand Operating System** by fixing all identified weaknesses across Modules 02–10.
+
+The goal is to transform the current architecture into:
+
+> ✅ A legally compliant  
+> ✅ Fact-locked  
+> ✅ Brand-consistent  
+> ✅ Scalable  
+> ✅ Enterprise-ready AI Brand Engine  
+
+The system must maintain its creative strength while adding **governance, validation, and strategic intelligence layers**.
+
+---
+
+# 🔒 1. IMPLEMENT A GLOBAL "FACT LOCK ENGINE"
+
+## ✅ Purpose
+Ensure absolute consistency across all modules once brand/product data is defined.
+
+## ✅ Requirements
+
+Create a centralized configuration file:
+
+```
+/workspace/config/brand-lock.json
+```
+
+### Structure Example:
+
+```json
+{
+  "brand": {
+    "name": "MAISON SORELLE",
+    "tone": "luxury_minimal",
+    "sector": "cosmetics_eu"
+  },
+  "product": {
+    "name": "Sérum Éclat Vitaminé",
+    "size": "30ml",
+    "price": 79,
+    "currency": "EUR",
+    "margin_percent": 65,
+    "claims_allowed": [
+      "improves appearance of radiance",
+      "helps skin feel hydrated",
+      "supports luminous-looking skin"
+    ],
+    "claims_forbidden": [
+      "boosts collagen",
+      "reduces wrinkles",
+      "fades dark spots",
+      "anti-aging",
+      "clinically proven",
+      "guaranteed results"
+    ],
+    "certifications": [],
+    "origin": "Made in France",
+    "packaging": "opaque violet glass bottle",
+    "colors": {
+      "primary": "#F5F0E8",
+      "secondary": "#D4A5A5",
+      "accent": "#9CAF88"
+    }
+  }
+}
+```
+
+---
+
+## ✅ Enforcement Rules
+
+1. No module may:
+   - Modify product price
+   - Invent certifications
+   - Change packaging
+   - Add new claims
+   - Generate urgency or stock numbers without validation
+
+2. All modules must import:
+```ts
+import brandLock from "@/config/brand-lock.json"
+```
+
+3. If output conflicts with brand-lock:
+   - Auto-rewrite
+   - Log warning
+   - Prevent export
+
+---
+
+# ⚖️ 2. IMPLEMENT "EU COSMETIC COMPLIANCE AGENT"
+
+## ✅ Objective
+Ensure full compliance with:
+
+- Regulation (EC) No 1223/2009
+- Commission Regulation (EU) No 655/2013 (Cosmetic Claims)
+
+---
+
+## ✅ System Layer
+
+Create:
+
+```
+/workspace/lib/compliance-agent.ts
+```
+
+---
+
+## ✅ Core Rules
+
+### Block Automatically:
+- Temporal guarantees ("in 7 days")
+- Physiological claims ("stimulates collagen")
+- Medical vocabulary
+- Fabricated statistics ("97% of users")
+- Fake urgency ("Only 7 left")
+- Fake reviews
+- "Clinically proven" without study metadata
+
+---
+
+## ✅ Replace With Safe Language
+
+Convert:
+- "Reduces wrinkles" → "Helps skin appear smoother"
+- "Boosts collagen" → "Supports firmer-looking skin"
+- "Fades dark spots" → "Helps improve the appearance of uneven tone"
+
+---
+
+## ✅ Output Check Pipeline
+
+Every module must pass through:
+
+```
+generateContent()
+→ complianceAgent.validate()
+→ brandVoiceEnforcer.check()
+→ export()
+```
+
+---
+
+# 🎙 3. IMPLEMENT "BRAND VOICE ENFORCER"
+
+## ✅ Purpose
+Prevent tone drift (aggressive DTC language).
+
+---
+
+## ✅ Tone Definition
+
+Create:
+
+```
+/workspace/config/brand-voice.json
+```
+
+```json
+{
+  "style": "luxury_minimal",
+  "forbidden_words": [
+    "buy now",
+    "act fast",
+    "limited stock",
+    "guaranteed",
+    "magic",
+    "anti-aging",
+    "stop aging"
+  ],
+  "urgency_allowed": false,
+  "max_exclamation_marks": 0,
+  "emojis_allowed": false
+}
+```
+
+---
+
+## ✅ Enforcement
+
+If module copy violates:
+
+- Rewrite automatically
+- Remove urgency
+- Remove exaggerated tone
+- Normalize to refined language
+
+---
+
+# 💰 4. IMPLEMENT DYNAMIC PROFIT ENGINE (LTV / CAC / MARGIN)
+
+Upgrade Performance Tracker to include:
+
+- LTV
+- LTV/CAC ratio
+- Break-even point
+- Payback period
+- Gross profit after ads
+
+---
+
+## ✅ Add to Dashboard
+
+```
+LTV (€)
+Repeat purchase rate (%)
+Average reorder interval (days)
+LTV / CAC ratio
+Profit per order (€)
+```
+
+---
+
+## ✅ Dynamic CPA Rule
+
+Instead of static:
+
+```
+CPA max = 18€
+```
+
+Use:
+
+```
+CPA max = (AOV × margin %) × acquisition_ratio
+```
+
+Example:
+
+```
+CPA max = 79 × 0.65 × 0.5 = 25.67€
+```
+
+---
+
+# 📦 5. FIX PRICING CONSISTENCY IN UPSELL MODULE
+
+All bundles must calculate dynamically:
+
+```ts
+bundlePrice = sum(productPrices) × (1 - discount)
+```
+
+Never hardcode numbers.
+
+No "undefined" badges allowed.
+
+---
+
+# 🚫 6. REMOVE DARK PATTERNS
+
+Disable:
+
+- Fake stock counters
+- Fake countdown timers
+- Fake testimonials
+- Fake media mentions
+- Fake certifications
+
+Replace with:
+
+- Real shipping info
+- Real guarantee terms
+- Real return policy
+- Transparent messaging
+
+---
+
+# 🧠 7. IMPLEMENT GLOBAL OUTPUT VALIDATION PIPELINE
+
+Before final export:
+
+```
+validateProductConsistency()
+validateCompliance()
+validateBrandTone()
+validatePricing()
+validateLegalClaims()
+```
+
+If any fail → block output.
+
+---
+
+# 🚀 8. UPGRADE LANDING PAGE SYSTEM
+
+Replace aggressive DTC structure with:
+
+### ✅ Luxury Conversion Model
+
+- Emotional storytelling
+- Ingredient transparency
+- Ritual explanation
+- Subtle proof
+- No fake urgency
+- No inflated numbers
+
+---
+
+# 📊 9. ADVANCED GROWTH MODE OPTIONS
+
+Add system modes:
+
+```json
+{
+  "mode": "premium_brand" | "balanced_growth" | "aggressive_dtc"
+}
+```
+
+Each mode changes:
+
+- Tone
+- Urgency tolerance
+- KPI thresholds
+- CTA style
+
+Default = premium_brand
+
+---
+
+# 🧩 10. ARCHITECTURAL REFACTORING
+
+Ensure:
+
+- All modules depend on shared config
+- No hardcoded values
+- No duplicate logic
+- Centralized validation layer
+- Logs for compliance violations
+- Metrics for rejected outputs
+
+---
+
+# ✅ SUCCESS CRITERIA
+
+The upgraded system must:
+
+- Generate zero illegal cosmetic claims
+- Maintain pricing consistency across modules
+- Never fabricate data
+- Enforce brand tone automatically
+- Dynamically calculate profitability
+- Produce enterprise-level outputs
+
+---
+
+# 🔥 FINAL INSTRUCTION TO REPLIT AI
+
+Refactor the entire Neo Branding Studio system to integrate:
+
+- Fact Lock Engine
+- EU Compliance Agent
+- Brand Voice Enforcer
+- Dynamic Profit Engine
+- Centralized Validation Pipeline
+
+Maintain creative strength while enforcing governance.
+
+The result must behave as:
+
+> An autonomous AI Brand Governance & Growth System.
+
+Do not partially implement.  
+Refactor systematically.
+
+```
+
+---
+
+If you want, I can now:
+
+- Write the technical implementation spec in TypeScript
+- Or write the system architecture diagram explanation
+- Or create a simplified “lite version” of this prompt for iterative refactor
+
+You’re no longer building a tool.
+
+You’re building an AI Brand OS.
