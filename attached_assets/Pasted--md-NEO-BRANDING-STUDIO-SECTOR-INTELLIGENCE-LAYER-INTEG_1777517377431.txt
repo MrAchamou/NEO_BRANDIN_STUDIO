@@ -1,0 +1,300 @@
+```md
+# 🧠 NEO BRANDING STUDIO — SECTOR INTELLIGENCE LAYER INTEGRATION
+## Unified Upgrade Prompt for Replit AI (Full System Refactor Mode)
+
+---
+
+## 🎯 OBJECTIVE
+
+Refactor Neo Branding Studio into a **sector-adaptive AI Brand Operating System** by implementing a dynamic **Sector Intelligence Layer** that:
+
+- Keeps the core engine universal
+- Dynamically modifies behavior based on sector + region
+- Activates appropriate compliance, tone, and claim filters
+- Prevents duplication of templates
+- Maintains scalability and extensibility
+
+This upgrade must preserve the current multi-agent architecture (Cerebras → GPT → Claude → Gemini) while adding a structured behavioral modifier layer.
+
+---
+
+# 🧩 1. CREATE A SECTOR INTELLIGENCE ARCHITECTURE
+
+## ✅ Directory Structure
+
+Create the following structure:
+
+```
+/workspace/config/
+  brand-lock.json
+  sectors/
+    cosmetics_eu.json
+    fashion.json
+    finance_eu.json
+    food_eu.json
+    saas.json
+
+/workspace/lib/
+  sector-engine.ts
+  compliance-agent.ts
+  tone-enforcer.ts
+  claim-filter.ts
+  validation-pipeline.ts
+```
+
+---
+
+# 🧠 2. DEFINE SECTOR PROFILE SCHEMA
+
+Each sector file must follow this schema:
+
+```json
+{
+  "sector": "string",
+  "region": "string",
+  "regulation": "string",
+  "medical_claims_allowed": false,
+  "financial_promises_allowed": false,
+  "health_claims_allowed": false,
+  "urgency_policy": {
+    "allowed": false,
+    "requires_real_inventory": true
+  },
+  "forbidden_words": [],
+  "tone_constraints": {
+    "aggressiveness_level": "low | medium | high",
+    "emojis_allowed": false,
+    "exclamation_limit": 0
+  },
+  "requires_wcag_validation": true,
+  "requires_price_lock": true,
+  "requires_claim_validation": true
+}
+```
+
+---
+
+# 🛡 3. IMPLEMENT SECTOR ENGINE
+
+Create:
+
+```
+/workspace/lib/sector-engine.ts
+```
+
+### Responsibilities:
+
+1. Load sector profile dynamically:
+
+```ts
+export function loadSectorProfile(sector: string, region: string) {
+  return require(`@/config/sectors/${sector}_${region}.json`)
+}
+```
+
+2. Inject behavior into:
+   - compliance-agent
+   - tone-enforcer
+   - claim-filter
+   - validation-pipeline
+
+3. Prevent module execution if sector profile is missing.
+
+---
+
+# ⚖️ 4. CONNECT SECTOR ENGINE TO BRAND LOCK
+
+Update `brand-lock.json`:
+
+```json
+{
+  "brand": {
+    "name": "ATELIER LUCIOLE",
+    "sector": "fashion",
+    "region": "eu"
+  }
+}
+```
+
+At runtime:
+
+```ts
+const sectorProfile = loadSectorProfile(brand.sector, brand.region)
+initializeCompliance(sectorProfile)
+```
+
+---
+
+# 🚨 5. MODIFY COMPLIANCE AGENT (DYNAMIC)
+
+Update `compliance-agent.ts`:
+
+Instead of hardcoded cosmetic rules:
+
+```ts
+if (sectorProfile.medical_claims_allowed === false) {
+  blockMedicalClaims()
+}
+```
+
+If:
+
+```ts
+if (sectorProfile.financial_promises_allowed === false) {
+  blockFinancialGuarantees()
+}
+```
+
+If:
+
+```ts
+if (sectorProfile.health_claims_allowed === false) {
+  blockHealthClaims()
+}
+```
+
+All filters must be sector-aware.
+
+---
+
+# 🎙 6. MODIFY TONE ENFORCER (SECTOR-AWARE)
+
+Update tone-enforcer.ts:
+
+```ts
+if (sectorProfile.tone_constraints.aggressiveness_level === "low") {
+  removeAggressiveLanguage()
+}
+```
+
+```ts
+if (!sectorProfile.tone_constraints.emojis_allowed) {
+  stripEmojis()
+}
+```
+
+```ts
+if (exclamationCount > sectorProfile.tone_constraints.exclamation_limit) {
+  normalizePunctuation()
+}
+```
+
+---
+
+# 🔒 7. VALIDATION PIPELINE (FINAL GATE)
+
+Create:
+
+```
+/workspace/lib/validation-pipeline.ts
+```
+
+Pipeline order:
+
+```
+generate()
+→ applyBrandLock()
+→ applySectorCompliance()
+→ enforceTone()
+→ validatePricing()
+→ validateClaims()
+→ validateUrgency()
+→ export()
+```
+
+If any validation fails:
+- Auto-rewrite
+- Log violation
+- Block export if critical
+
+---
+
+# 💰 8. ENSURE PRICE LOCK SYSTEM IS SECTOR-AWARE
+
+If:
+
+```json
+"requires_price_lock": true
+```
+
+Then:
+- No module can modify price
+- Bundles calculate dynamically
+- No hardcoded values allowed
+
+---
+
+# 📊 9. WCAG ENFORCEMENT (IF REQUIRED)
+
+If:
+
+```json
+"requires_wcag_validation": true
+```
+
+Then:
+- Palette generator must calculate luminance
+- Suggest safe adjustments
+- Block invalid combinations
+
+---
+
+# 🧠 10. ENSURE EXTENSIBILITY
+
+The system must allow adding a new sector by:
+
+1. Adding a new JSON file in `/config/sectors`
+2. No modification of core engine required
+
+No duplication of templates.
+
+Behavior must be purely configuration-driven.
+
+---
+
+# 🚀 11. FINAL SYSTEM BEHAVIOR
+
+After integration:
+
+- Cosmetics EU → strict medical claim blocking
+- Fashion → tone refinement + no discount language
+- Finance → guarantee removal + risk disclaimers
+- Food EU → EFSA health claim control
+- SaaS → marketing flexibility allowed
+
+Core engine remains identical.
+
+---
+
+# ✅ SUCCESS CRITERIA
+
+The upgraded Neo Branding Studio must:
+
+- Remain fully universal
+- Adapt behavior by sector automatically
+- Prevent illegal claims dynamically
+- Prevent tone drift
+- Lock pricing globally
+- Scale to new industries without architecture changes
+
+---
+
+# 🔥 EXECUTION MODE
+
+Refactor the entire system to integrate:
+
+- Sector Intelligence Layer
+- Dynamic Compliance Injection
+- Tone Enforcement Adaptation
+- Universal Validation Pipeline
+
+Maintain modularity.
+Avoid code duplication.
+Do not hardcode sector logic.
+
+System must be config-driven.
+
+---
+
+# END OF INSTRUCTION
+```

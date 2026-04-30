@@ -1,6 +1,9 @@
 import { Router, type IRouter } from "express";
 import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
 import { getMarketConfig, buildMarketContext } from "../../lib/market-config";
+import { brandLockHeader } from "../../lib/prompt-utils";
+import { buildBrandLock, computeProfit } from "../../governance";
+import { runGovernancePass, extractBriefInputFromBody } from "../../governance/sse-helper";
 
 const router: IRouter = Router();
 
@@ -82,7 +85,33 @@ router.post("/openai/enhance-prompts-performance", async (req, res) => {
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
 
-  const systemPrompt = `Tu es un expert en performance marketing e-commerce et analyse de données pour RoboNeo.com.
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? undefined);
+  const lockHeader = brandLockHeader(lock);
+
+  // ── Dynamic Profit Engine : LTV, CAC, break-even, max CPA dynamique ───
+  const profit = computeProfit(lock, {
+    aov: ctx.basket_target,
+    margin_percent: ctx.margin_percent,
+    repeat_purchase_rate: Number(req.body?.repeat_purchase_rate) || undefined,
+    avg_orders_per_year: Number(req.body?.avg_orders_per_year) || undefined,
+    cac: ctx.cac_target,
+    fixed_costs_monthly: Number(req.body?.fixed_costs_monthly) || undefined,
+  });
+
+  const profitBlock = `\n\n═══ DYNAMIC PROFIT ENGINE — VALEURS CALCULÉES (NE PAS RECALCULER) ═══
+${profit.formula_explanations.length > 0 ? profit.formula_explanations.map((l) => `  • ${l}`).join("\n") : "  (Inputs incomplets — la rubrique Profit doit signaler les manques sans inventer de chiffres)"}
+Valeurs verrouillées :
+  • AOV               = ${profit.aov ?? "n/a"}
+  • Profit par commande = ${profit.gross_profit_per_order ?? "n/a"}
+  • LTV               = ${profit.ltv ?? "n/a"}
+  • LTV / CAC         = ${profit.ltv_cac_ratio ?? "n/a"}
+  • Payback (orders)  = ${profit.payback_period_orders ?? "n/a"}
+  • Break-even / mois = ${profit.break_even_orders_monthly ?? "n/a"}
+  • CPA max dynamique = ${profit.max_cpa_dynamic ?? "n/a"}
+  • CPA cible dynamique = ${profit.target_cpa_dynamic ?? "n/a"}
+RÈGLE : Ces chiffres sont la SEULE source de vérité financière. Tout autre nombre que tu produis (ROAS, prévisions CA, etc.) doit être cohérent avec eux. Tout chiffre absent doit être marqué "n/a" dans ta réponse, jamais inventé.`;
+
+  const systemPrompt = `${lockHeader}Tu es un expert en performance marketing e-commerce et analyse de données pour RoboNeo.com.${profitBlock}
 Ta mission: créer des outils de tracking et d'optimisation PRÉCIS et ACTIONNABLES pour maximiser le ROI.
 
 ${marketCtx}
@@ -322,6 +351,8 @@ Réponds UNIQUEMENT avec un JSON valide:
         }
       }
 
+      const govResult = runGovernancePass(fullContent, { res, sectionKey: section.key, lock });
+      fullContent = govResult.content;
       const parsed = parseJsonSafe(fullContent);
 
       sendEvent(res, {
@@ -331,6 +362,8 @@ Réponds UNIQUEMENT avec un JSON valide:
         fullContent,
         data: parsed ?? {},
         context: ctx,
+        profit_engine: profit,
+        governance: govResult.summary,
       });
     } catch (err) {
       req.log.error({ err, section: section.key }, "Error generating performance section");

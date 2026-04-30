@@ -70,9 +70,57 @@ export interface BrandBrief {
 
   // Marché / Pays cible (adapte devise, délais, contexte local)
   market: string;
+
+  // ─── Gouvernance & Conformité (v2 — Fact Lock + Compliance + Voice) ────
+  growth_mode: string;             // premium_brand | balanced_growth | aggressive_dtc
+  currency: string;                // EUR, USD, FCFA…
+  packaging: string;               // ex. "Verre ambré 50 ml, étui carton FSC"
+  origin: string;                  // ex. "Provence, France"
+  certifications: string;          // ex. "ECOCERT COSMOS, Vegan Society"
+  claims_allowed: string;          // claims explicitement autorisés
+  claims_forbidden: string;        // claims explicitement interdits
+  voice_forbidden_words: string;   // mots interdits supplémentaires
+  urgency_allowed: string;         // "true" | "false"
+  emojis_allowed: string;          // "true" | "false"
+
+  // Profit Engine (module 10)
+  repeat_purchase_rate: string;    // % de clients qui repassent commande
+  avg_orders_per_year: string;     // fréquence moyenne par an
+  fixed_costs_monthly: string;     // coûts fixes mensuels
 }
 
 export type BriefField = keyof BrandBrief;
+
+// ─── Governance payload helper ────────────────────────────────────────────────
+// Spread this into every API body so the backend receives everything needed by
+// `extractBriefInputFromBody` (Brand Lock, Compliance, Profit Engine, etc.).
+export function governanceFields(brief: BrandBrief): Record<string, unknown> {
+  const num = (v: string) => {
+    if (!v) return undefined;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : undefined;
+  };
+  const list = (v: string) =>
+    v ? v.split(",").map((s) => s.trim()).filter(Boolean) : undefined;
+
+  return {
+    growth_mode: brief.growth_mode || undefined,
+    currency: brief.currency || undefined,
+    packaging: brief.packaging || undefined,
+    origin: brief.origin || undefined,
+    certifications: list(brief.certifications),
+    claims_allowed: list(brief.claims_allowed),
+    claims_forbidden: list(brief.claims_forbidden),
+    voice_forbidden_words: list(brief.voice_forbidden_words),
+    urgency_allowed: brief.urgency_allowed === "" ? undefined : brief.urgency_allowed !== "false",
+    emojis_allowed: brief.emojis_allowed === "" ? undefined : brief.emojis_allowed !== "false",
+    repeat_purchase_rate: num(brief.repeat_purchase_rate),
+    avg_orders_per_year: num(brief.avg_orders_per_year),
+    fixed_costs_monthly: num(brief.fixed_costs_monthly),
+    margin_percent: num(brief.margin_percent),
+    product_price: num(brief.product_price) ?? num(brief.price),
+  };
+}
 
 export interface SavedBrandBrief {
   id: string;
@@ -134,6 +182,19 @@ export const BRIEF_DEFAULTS: BrandBrief = {
   usp: "",
   colors: "",
   market: "international",
+  growth_mode: "balanced_growth",
+  currency: "EUR",
+  packaging: "",
+  origin: "",
+  certifications: "",
+  claims_allowed: "",
+  claims_forbidden: "",
+  voice_forbidden_words: "",
+  urgency_allowed: "true",
+  emojis_allowed: "true",
+  repeat_purchase_rate: "",
+  avg_orders_per_year: "",
+  fixed_costs_monthly: "",
 };
 
 // Champs "importants" dont la complétude est mesurée

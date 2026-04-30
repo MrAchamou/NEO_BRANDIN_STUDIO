@@ -1,6 +1,8 @@
 import { Router, type IRouter } from "express";
 import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
-import { buildSystemPrompt, buildNegativePrompt, reviewPromptQuality, type EnhancedBrief } from "../../lib/prompt-utils";
+import { buildSystemPrompt, buildNegativePrompt, brandLockHeader, reviewPromptQuality, type EnhancedBrief } from "../../lib/prompt-utils";
+import { buildBrandLock } from "../../governance";
+import { runGovernancePass, extractBriefInputFromBody } from "../../governance/sse-helper";
 
 const router: IRouter = Router();
 
@@ -113,7 +115,9 @@ Style musiques de fond: ${bgmStyle}`;
   const colorPriorityBlock = brand_colors
     ? `\nL'identité visuelle de la marque utilise ces couleurs: ${brand_colors}. Le rendu sonore doit traduire cette palette chromatique en émotions musicales cohérentes.`
     : "";
-  const systemPrompt = `You are a senior sound art director, expert in brand sonic identity and audio prompt generation for AI tools (Suno, Udio, ElevenLabs, Adobe Podcast).
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? undefined);
+  const lockHeader = brandLockHeader(lock);
+  const systemPrompt = `${lockHeader}You are a senior sound art director, expert in brand sonic identity and audio prompt generation for AI tools (Suno, Udio, ElevenLabs, Adobe Podcast).
 You generate ultra-precise audio prompts and complete creative briefs for every sonic asset of a brand.
 Always return ONLY valid JSON, without markdown, without text before or after.
 LANGUAGE RULES (strictly enforced):
@@ -398,6 +402,8 @@ Retourne UNIQUEMENT ce JSON:
       } catch {
         console.warn(`[Review] ${section.key} — review échoué, Cerebras conservé`);
       }
+      const govResult = runGovernancePass(reviewedContent, { res, sectionKey: section.key, lock });
+      reviewedContent = govResult.content;
       const parsed = parseJsonSafe(reviewedContent);
       sendEvent(res, {
         type: "section_done",
@@ -406,6 +412,7 @@ Retourne UNIQUEMENT ce JSON:
         agent: reviewAgent,
         data: parsed ?? {},
         rawContent: reviewedContent,
+        governance: govResult.summary,
       });
     } catch (err) {
       sendEvent(res, { type: "section_error", key: section.key, error: err instanceof Error ? err.message : "Erreur inconnue" });

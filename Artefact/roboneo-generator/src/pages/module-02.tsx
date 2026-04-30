@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { useBrand } from "@/context/brand-context";
+import { useBrand, governanceFields } from "@/context/brand-context";
 import BriefSummaryBanner from "@/components/brief-summary-banner";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -19,6 +19,9 @@ interface SectionResult {
   agent: string;
   data: Record<string, string>;
   rawContent: string;
+  governance?: any;
+  pricing_validator?: any;
+  profit_engine?: any;
   carouselStyle?: string;
 }
 
@@ -184,6 +187,7 @@ export default function Module02() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        ...governanceFields(brief),
         brand_name: brief.brand_name,
         sector: brief.sector,
         product_type: data.product_type,
@@ -236,7 +240,7 @@ export default function Module02() {
             }));
           } else if (event.type === "section_done") {
             const sec: SectionResult = {
-              key: event.key, label: event.label, agent: event.agent,
+              key: event.key, governance: event.governance, pricing_validator: event.pricing_validator, profit_engine: event.profit_engine, label: event.label, agent: event.agent,
               data: event.data ?? {}, rawContent: event.rawContent ?? "",
               carouselStyle: event.carouselStyle,
             };

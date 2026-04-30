@@ -6,6 +6,56 @@ Générateur de prompts IA "chirurgicaux" pour l'écosystème RoboNeo.com. L'uti
 
 **Préférence utilisateur : toujours répondre en français.**
 
+## Couche Gouvernance v2.0.0 — Trust Engine
+
+Pipeline de garde-fous appliqué par chaque module avant émission du résultat. Voir `Artefact/api-server/src/governance/`.
+
+```
+Brand Brief (Frontend)
+   │  → governanceFields(brief) injecté dans chaque payload SSE
+   ▼
+extractBriefInputFromBody(req.body)
+   │
+   ▼
+buildBrandLock()  → faits verrouillés (nom, prix, devise, packaging, origine,
+   │                certifications, claims autorisés / interdits, voice rules)
+   ▼
+brandLockHeader() → préfixé en tête de TOUS les system prompts
+   │
+   ▼
+[Génération Cerebras + Optimizer + Audit]
+   │
+   ▼
+runGovernancePass(content, { lock, sectionKey })
+   │     ├── brand-lock         : vérifie noms, prix, devise (auto-patch des coquilles)
+   │     ├── compliance-agent   : claims interdits cosmétique UE, anti-dark-patterns
+   │     ├── voice-enforcer     : tonalité, mots interdits, emojis selon growth_mode
+   │     ├── profit-engine      : LTV / CAC / break-even / CPA dynamique (module 10)
+   │     └── pricing-validator  : checkBundlePrice() vérifie les calculs de bundles (module 09)
+   ▼
+SSE event "governance"  +  section_done payload enrichi
+{
+  ok, blocked, passes[], findings[], patches_applied[], notes[]
+}
+```
+
+### Growth Modes (`growth-modes.ts`)
+- **premium_brand** : zéro urgence, claims sobres, narratif maison, pas d'emojis
+- **balanced_growth** *(défaut)* : urgence raisonnée, claims mesurés
+- **aggressive_dtc** : promos visibles, urgence forte (mais sans dark patterns)
+
+### Modules câblés
+Tous (01 → 10) appellent `buildBrandLock` + `brandLockHeader` + `runGovernancePass`.
+- **07 (Launch)** : branche entre landing luxe / balanced / DTC selon `growth_mode`
+- **09 (Upsell)** : injecte un Pricing Engine et valide `bundle_price` via `checkBundlePrice`
+- **10 (Performance)** : injecte les valeurs verrouillées du `computeProfit` (LTV, payback, CPA dynamique) en interdisant à l'IA de recalculer
+
+### Frontend
+- `BrandBrief` étendu : `growth_mode`, `currency`, `packaging`, `origin`, `certifications`, `claims_allowed`, `claims_forbidden`, `voice_forbidden_words`, `urgency_allowed`, `emojis_allowed`, `repeat_purchase_rate`, `avg_orders_per_year`, `fixed_costs_monthly`
+- Nouvelle section **Gouvernance** dans `brand-brief-panel.tsx` (onglet cyan)
+- Helper `governanceFields(brief)` étalé dans chaque payload des modules
+- Composant `governance-badge.tsx` prêt à afficher findings/patches dans tout module
+
 ## Pipeline IA Multi-Modèles
 
 ```

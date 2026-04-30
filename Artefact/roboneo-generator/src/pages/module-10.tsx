@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { useBrand } from "@/context/brand-context";
+import { useBrand, governanceFields } from "@/context/brand-context";
 import BriefSummaryBanner from "@/components/brief-summary-banner";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -827,6 +827,7 @@ export default function Module10() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          ...governanceFields(brief),
           brand_name:    brief.brand_name,
           sector:        brief.sector,
           ca_target:     brief.ca_target ? Number(brief.ca_target) : undefined,

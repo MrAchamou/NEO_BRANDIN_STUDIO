@@ -1,6 +1,8 @@
 import { Router, type IRouter } from "express";
 import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
-import { buildSystemPrompt, buildNegativePrompt, reviewPromptQuality, type EnhancedBrief } from "../../lib/prompt-utils";
+import { buildSystemPrompt, buildNegativePrompt, brandLockHeader, reviewPromptQuality, type EnhancedBrief } from "../../lib/prompt-utils";
+import { buildBrandLock } from "../../governance";
+import { runGovernancePass, extractBriefInputFromBody } from "../../governance/sse-helper";
 
 const router: IRouter = Router();
 
@@ -127,7 +129,9 @@ Cible: ${target_audience}${yearLine} | Code promo: ${promoCode} | Durée promo: 
   const colorPriorityBlock = brand_colors
     ? `\n⚠️ RÈGLE ABSOLUE COULEURS: Le client impose ces couleurs de marque: ${brand_colors}. Ces couleurs sont SACRÉES — les utiliser EXACTEMENT dans tous les visuels vidéo décrits.`
     : "";
-  const systemPrompt = `You are a senior expert in advertising script creation and video generation prompts for RoboNeo.com.
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? undefined);
+  const lockHeader = brandLockHeader(lock);
+  const systemPrompt = `${lockHeader}You are a senior expert in advertising script creation and video generation prompts for RoboNeo.com.
 LANGUAGE RULES (strictly enforced):
 • Ad scripts and voice-over texts (sections "scripts" and "voice_over"): write IN FRENCH — punchy, adapted to the ${sector} sector, direct copywriting
 • Video generation prompts (sections "short_videos", "long_video", "teaser", "thumbnails"): write EXCLUSIVELY IN ENGLISH — native vocabulary for Runway Gen-3, Pika, Kling, Midjourney, DALL-E 3
@@ -436,6 +440,8 @@ Retourne UNIQUEMENT ce JSON:
       } catch {
         console.warn(`[Review] ${section.key} — review échoué, Cerebras conservé`);
       }
+      const govResult = runGovernancePass(reviewedContent, { res, sectionKey: section.key, lock });
+      reviewedContent = govResult.content;
       const parsed = parseJsonSafe(reviewedContent);
       sendEvent(res, {
         type: "section_done",
@@ -444,6 +450,7 @@ Retourne UNIQUEMENT ce JSON:
         agent: reviewAgent,
         data: parsed ?? {},
         rawContent: reviewedContent,
+        governance: govResult.summary,
         meta: {
           teaserStyle: section.key === "teaser" ? teaserStyle : undefined,
           thumbnailType: section.key === "thumbnails" ? thumbnailType : undefined,

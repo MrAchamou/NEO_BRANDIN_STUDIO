@@ -1,6 +1,8 @@
 import { Router, type IRouter } from "express";
 import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
-import { buildSystemPrompt, buildNegativePrompt, reviewPromptQuality, type EnhancedBrief } from "../../lib/prompt-utils";
+import { buildSystemPrompt, buildNegativePrompt, brandLockHeader, reviewPromptQuality, type EnhancedBrief } from "../../lib/prompt-utils";
+import { buildBrandLock } from "../../governance";
+import { runGovernancePass, extractBriefInputFromBody } from "../../governance/sse-helper";
 
 const router: IRouter = Router();
 
@@ -103,7 +105,9 @@ Couleurs: ${colorStr} | Code promo: ${promoCode} | Remise: ${discount}% | Livrai
   const colorPriorityBlock = colors.length > 0
     ? `\n⚠️ RÈGLE ABSOLUE COULEURS: Le client impose ces couleurs: ${colorStr}. Ces couleurs sont IMMUABLES — les utiliser EXACTEMENT dans toutes les créations publicitaires. L'auto-détection par secteur est DÉSACTIVÉE.`
     : "";
-  const systemPrompt = `You are a senior expert in digital advertising and creative prompt generation for RoboNeo.com.
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? undefined);
+  const lockHeader = brandLockHeader(lock);
+  const systemPrompt = `${lockHeader}You are a senior expert in digital advertising and creative prompt generation for RoboNeo.com.
 You generate ultra-precise creative prompts (Meta Ads, Google Display, TikTok, Carousel) and ready-to-use ad copy.
 Always return ONLY valid JSON, without markdown, without text before or after.
 LANGUAGE RULES (strictly enforced):
@@ -457,6 +461,8 @@ Retourne UNIQUEMENT ce JSON:
       } catch {
         console.warn(`[Review] ${section.key} — review échoué, Cerebras conservé`);
       }
+      const govResult = runGovernancePass(reviewedContent, { res, sectionKey: section.key, lock });
+      reviewedContent = govResult.content;
       const parsed = parseJsonSafe(reviewedContent);
       sendEvent(res, {
         type: "section_done",
@@ -465,6 +471,7 @@ Retourne UNIQUEMENT ce JSON:
         agent: reviewAgent,
         data: parsed ?? {},
         rawContent: reviewedContent,
+        governance: govResult.summary,
       });
     } catch (err) {
       sendEvent(res, { type: "section_error", key: section.key, error: err instanceof Error ? err.message : "Erreur inconnue" });

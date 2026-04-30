@@ -1,6 +1,9 @@
 import { Router, type IRouter } from "express";
 import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
 import { getMarketConfig, buildMarketContext, convertPrice } from "../../lib/market-config";
+import { brandLockHeader } from "../../lib/prompt-utils";
+import { buildBrandLock, checkBundlePrice } from "../../governance";
+import { runGovernancePass, extractBriefInputFromBody } from "../../governance/sse-helper";
 
 const router: IRouter = Router();
 
@@ -63,7 +66,28 @@ router.post("/openai/enhance-prompts-upsell", async (req, res) => {
     ? `- Charte couleurs SACRÉE (respecter dans TOUS les visuels produits): ${brand_colors}`
     : "";
 
-  const systemPrompt = `Tu es un expert en stratégie e-commerce et maximisation du panier moyen pour RoboNeo.com.
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? undefined);
+  const lockHeader = brandLockHeader(lock);
+
+  // ── Bloc Pricing Consistency : verrouille le calcul mathématique des bundles
+  const lockedPrice = lock.product.price ?? product_price;
+  const lockedCurrency = lock.product.currency ?? localCurrency ?? "EUR";
+  const pricingDirective = `\n\n═══ DYNAMIC PRICING ENGINE — RÈGLE MATHÉMATIQUE ABSOLUE ═══
+Le prix unitaire VERROUILLÉ est ${lockedPrice} ${lockedCurrency}. Tout bundle DOIT être calculé exactement comme suit :
+  bundle_price = unit_price × quantity × (1 - discount_percent / 100)
+Exemple — 3 unités à ${lockedPrice} ${lockedCurrency} avec 15% de remise :
+  ${lockedPrice} × 3 × 0.85 = ${(lockedPrice * 3 * 0.85).toFixed(2)} ${lockedCurrency}
+Inclure dans chaque bundle JSON un champ "price_breakdown" :
+  {
+    "unit_price": ${lockedPrice},
+    "quantity": <int>,
+    "subtotal": <unit_price × quantity>,
+    "discount_percent": <int>,
+    "bundle_price": <calculé strictement>
+  }
+Tout écart entre le calcul et le prix annoncé sera rejeté par le Pricing Validator.`;
+
+  const systemPrompt = `${lockHeader}Tu es un expert en stratégie e-commerce et maximisation du panier moyen pour RoboNeo.com.${pricingDirective}
 Ta mission: générer des stratégies d'upsell et cross-sell PRÉCISES et ACTIONNABLES pour augmenter le chiffre d'affaires.
 
 ${marketCtx}
@@ -264,7 +288,32 @@ Réponds UNIQUEMENT avec un JSON valide, sans texte avant ou après:
         }
       }
 
+      const govResult = runGovernancePass(fullContent, { res, sectionKey: section.key, lock });
+      fullContent = govResult.content;
       const parsed = parseJsonSafe(fullContent);
+
+      // ── Pricing Validator : vérifie la cohérence mathématique des bundles
+      const pricingFindings: Array<{ name: string; expected: number; claimed: number; diff: number }> = [];
+      if (parsed && Array.isArray((parsed as any).bundles)) {
+        for (const b of (parsed as any).bundles as Array<Record<string, any>>) {
+          const breakdown = b.price_breakdown as Record<string, any> | undefined;
+          if (!breakdown) continue;
+          const unit = Number(breakdown.unit_price);
+          const qty = Number(breakdown.quantity);
+          const disc = Number(breakdown.discount_percent ?? 0);
+          const claimed = Number(breakdown.bundle_price ?? b.bundle_price);
+          if ([unit, qty, claimed].some((n) => !Number.isFinite(n))) continue;
+          const check = checkBundlePrice(Array(qty).fill(unit), disc, claimed);
+          if (!check.ok) {
+            pricingFindings.push({
+              name: String(b.name ?? "bundle"),
+              expected: check.expected,
+              claimed,
+              diff: check.diff,
+            });
+          }
+        }
+      }
 
       sendEvent(res, {
         type: "section_done",
@@ -272,6 +321,11 @@ Réponds UNIQUEMENT avec un JSON valide, sans texte avant ou après:
         agent: section.agent,
         fullContent,
         data: parsed ?? {},
+        governance: govResult.summary,
+        pricing_validator: {
+          ok: pricingFindings.length === 0,
+          mismatches: pricingFindings,
+        },
       });
     } catch (err) {
       req.log.error({ err, section: section.key }, "Error generating upsell section");

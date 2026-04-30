@@ -1,6 +1,8 @@
 import { Router, type IRouter } from "express";
 import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
-import { reviewPromptQuality, type EnhancedBrief } from "../../lib/prompt-utils";
+import { reviewPromptQuality, brandLockHeader, type EnhancedBrief } from "../../lib/prompt-utils";
+import { buildBrandLock } from "../../governance";
+import { runGovernancePass, extractBriefInputFromBody } from "../../governance/sse-helper";
 
 const router: IRouter = Router();
 
@@ -62,7 +64,9 @@ router.post("/openai/enhance-prompts-copy", async (req, res) => {
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
 
-  const systemPrompt = `Tu es un expert copywriter et stratège de contenu pour RoboNeo.com.
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? undefined);
+  const lockHeader = brandLockHeader(lock);
+  const systemPrompt = `${lockHeader}Tu es un expert copywriter et stratège de contenu pour RoboNeo.com.
 Tu génères du contenu textuel ultra-professionnel, optimisé conversion, en français impeccable.
 Contexte de la marque:
 - Marque: ${brand_name}
@@ -304,6 +308,8 @@ Les 10 avis doivent:
       } catch {
         console.warn(`[Review] ${section.key} — review échoué, Cerebras conservé`);
       }
+      const govResult = runGovernancePass(reviewedContent, { res, sectionKey: section.key, lock });
+      reviewedContent = govResult.content;
       const parsed = parseJsonSafe(reviewedContent);
 
       sendEvent(res, {
@@ -313,6 +319,7 @@ Les 10 avis doivent:
         agent: reviewAgent,
         data: parsed ?? { raw: reviewedContent },
         rawContent: reviewedContent,
+        governance: govResult.summary,
       });
     } catch (err) {
       req.log.error({ err, section: section.key }, "Error generating copy section");

@@ -1,7 +1,9 @@
 import { Router, type IRouter } from "express";
 import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
 import { getMarketConfig, buildMarketContext, convertPrice } from "../../lib/market-config";
-import { reviewPromptQuality, type EnhancedBrief } from "../../lib/prompt-utils";
+import { reviewPromptQuality, brandLockHeader, type EnhancedBrief } from "../../lib/prompt-utils";
+import { buildBrandLock, getGrowthProfile } from "../../governance";
+import { runGovernancePass, extractBriefInputFromBody } from "../../governance/sse-helper";
 
 const router: IRouter = Router();
 
@@ -114,7 +116,47 @@ router.post("/openai/enhance-prompts-launch", async (req, res) => {
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
 
-  const systemPrompt = `Tu es un expert senior en architecture de landing pages haute conversion, développeur web et stratège de lancement pour RoboNeo.com.
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? undefined);
+  const lockHeader = brandLockHeader(lock);
+  const profile = getGrowthProfile(lock.mode);
+
+  // ── Branchement Landing : Luxury vs Balanced vs DTC ─────────────────────
+  const landingDirective =
+    lock.mode === "premium_brand"
+      ? `\n\n═══ LANDING PAGE — MODE PREMIUM BRAND (LUXURY) ═══
+Architecture immersive éditoriale :
+• Hero plein écran (100vh), typographie sérif raffinée, asset hero fixe ou parallax très lent
+• Storytelling marque AVANT bénéfices produit : origine, savoir-faire, philosophie
+• Section Ingrédients/Matériaux nobles avec macro photos + provenance (si déclarée dans le lock)
+• Rituel d'usage en 3-4 étapes avec photographie éditoriale
+• Preuve sociale subtile : citations expertes, presse confidentielle (UNIQUEMENT si déclarée)
+• AUCUN compteur countdown, AUCUN "X personnes regardent", AUCUN "Plus que N en stock"
+• CTA discret, verbes nobles : « Découvrir », « Explorer », « Vivre l'expérience »
+• Palette monochrome ou bichromie + accent métal (cuivre/or)
+• Espaces blancs généreux, ratio whitespace ≥ 50%`
+      : lock.mode === "aggressive_dtc"
+      ? `\n\n═══ LANDING PAGE — MODE AGGRESSIVE DTC ═══
+Architecture conversion-first :
+• Hero impact (≤ 70vh) + value proposition explicite + bénéfice chiffré (si déclaré)
+• Social proof immédiat (logos média, étoiles, count clients SI réels et déclarés)
+• Urgence assumée mais HONNÊTE : promo réelle, deadline réelle, stock réel
+• CTA principal au-dessus du pli, répété toutes les 1.5 sections
+• Comparaison concurrents (factuelle), grid bénéfices avec icônes
+• FAQ détaillée pour lever objections, garantie satisfaction visible
+• Sticky CTA mobile, exit-intent allowed (pas de dark pattern, valeur claire)`
+      : `\n\n═══ LANDING PAGE — MODE BALANCED GROWTH ═══
+Équilibre image / conversion :
+• Hero éditorial (80vh) + value prop nette + 1 CTA primaire sobre
+• Storytelling court (1 section) puis bénéfices produit structurés
+• Social proof modéré et toujours vérifiable
+• Une mention d'urgence MAX, basée sur un fait réel (offre datée, édition limitée déclarée)
+• CTA répété 2-3 fois, ton mesuré ; jamais d'exclamation excessive`;
+
+  const systemPrompt = `${lockHeader}Tu es un expert senior en architecture de landing pages haute conversion, développeur web et stratège de lancement pour RoboNeo.com.
+
+═══ GROWTH MODE ACTIF : ${profile.label.toUpperCase()} ═══
+${profile.description}
+CTA style attendu : ${profile.cta_style}${landingDirective}
 
 ${marketCtx}
 
@@ -283,6 +325,8 @@ Adapte les actions et contenus spécifiquement au secteur "${sector}" et à la m
         }
       }
 
+      const govResult = runGovernancePass(fullContent, { res, sectionKey: section.key, lock });
+      fullContent = govResult.content;
       const parsed = parseJsonSafe(fullContent);
 
       sendEvent(res, {
@@ -292,6 +336,7 @@ Adapte les actions et contenus spécifiquement au secteur "${sector}" et à la m
         agent: section.agent,
         data: parsed ?? { raw: fullContent },
         rawContent: fullContent,
+        governance: govResult.summary,
       });
 
       // ── Automatic GPT + Claude review for landing_page ─────────────────────

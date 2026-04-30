@@ -1,11 +1,18 @@
 /**
  * Shared prompt utilities for all RoboNeo generation routes.
  * Implements: Chain-of-Thought, Few-Shot Calibration, Negative Prompts, Quality Review
+ * Governance-aware : injecte le Brand Lock (Fact Lock + Compliance + Voice + Mode)
+ * dans tous les system prompts.
  */
 
 import { getClaudeClient, CLAUDE_MODEL } from "./anthropic-client";
 import { getGptReviewClient, GPT_MODEL } from "./openai-review-client";
 import { geminiAI, GEMINI_MODEL_PRO } from "./gemini-client";
+import {
+  brandLockToPromptBlock,
+  brandLockToCompactBlock,
+  type BrandLock,
+} from "../governance";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -123,6 +130,38 @@ Tu ne dois JAMAIS inventer ni supposer:
 • Des certifications, labels ou récompenses non mentionnés dans le brief
 • Toute information factuelle absente du brief client
 Si une donnée n'est pas explicitement fournie dans le brief, OMETS-LA totalement. N'invente rien, n'assume rien. Utilise uniquement ce qui est dans le brief.`;
+}
+
+// ─── Governance-aware system prompt builder ──────────────────────────────────
+
+/**
+ * Variante "verrouillée" du system prompt : injecte le Brand Lock (Fact Lock
+ * Engine + Compliance Agent + Voice Enforcer + Growth Mode) en tête du prompt.
+ * Si `lock` est nul, retombe sur `buildSystemPrompt` standard.
+ */
+export function buildSystemPromptWithLock(
+  brief: EnhancedBrief,
+  moduleLabel: string,
+  lock: BrandLock | null | undefined,
+): string {
+  const base = buildSystemPrompt(brief, moduleLabel);
+  if (!lock) return base;
+  return `${brandLockToPromptBlock(lock)}\n\n${base}`;
+}
+
+/**
+ * Préfixe compact du Brand Lock — à coller en tête d'un system prompt déjà
+ * dense (modules JSON-only par exemple). Renvoie une chaîne vide si pas de lock.
+ */
+export function brandLockHeader(lock: BrandLock | null | undefined): string {
+  if (!lock) return "";
+  return `${brandLockToPromptBlock(lock)}\n\n`;
+}
+
+/** Variante compacte pour les routes très chargées. */
+export function brandLockHeaderCompact(lock: BrandLock | null | undefined): string {
+  if (!lock) return "";
+  return `${brandLockToCompactBlock(lock)}\n\n`;
 }
 
 // ─── Few-Shot Examples by Module ─────────────────────────────────────────────

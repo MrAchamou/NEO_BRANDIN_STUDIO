@@ -119,7 +119,37 @@ const SECTIONS = [
     dot: "bg-red-400",
     fields: ["target_demographic", "competitors", "forbidden_keywords", "usp"],
   },
+  {
+    key: "gouvernance",
+    label: "Gouvernance",
+    color: "text-cyan-400",
+    dot: "bg-cyan-400",
+    fields: [
+      "growth_mode", "currency", "packaging", "origin", "certifications",
+      "claims_allowed", "claims_forbidden", "voice_forbidden_words",
+      "urgency_allowed", "emojis_allowed",
+      "repeat_purchase_rate", "avg_orders_per_year", "fixed_costs_monthly",
+    ],
+  },
 ] as const;
+
+const GROWTH_MODES = [
+  { value: "premium_brand",    label: "🏛️ Premium Brand — pas d'urgence, claims sobres, narratif maison" },
+  { value: "balanced_growth",  label: "⚖️ Balanced Growth — urgence raisonnée, claims mesurés (défaut)" },
+  { value: "aggressive_dtc",   label: "🚀 Aggressive DTC — promos visibles, urgence forte (sans dark patterns)" },
+];
+
+const CURRENCIES = [
+  { value: "EUR",  label: "€ — EUR" },
+  { value: "USD",  label: "$ — USD" },
+  { value: "GBP",  label: "£ — GBP" },
+  { value: "CHF",  label: "CHF — Franc suisse" },
+  { value: "CAD",  label: "CA$ — Dollar canadien" },
+  { value: "AED",  label: "AED — Dirham" },
+  { value: "MAD",  label: "DH — Dirham marocain" },
+  { value: "XOF",  label: "FCFA — Franc CFA" },
+  { value: "NGN",  label: "₦ — Naira" },
+];
 
 // ─── Field renderers ───────────────────────────────────────────────────────────
 
@@ -487,6 +517,103 @@ function StrategieSection({ form }: { form: any }) {
   );
 }
 
+function ToggleField({ form, name, label, hint }: { form: any; name: string; label: string; hint?: string }) {
+  const value = String(form.watch(name) ?? "true") === "true";
+  return (
+    <div className="space-y-1">
+      <label className="text-[11px] text-muted-foreground uppercase tracking-wider">{label}</label>
+      <button
+        type="button"
+        onClick={() => form.setValue(name, value ? "false" : "true", { shouldDirty: true })}
+        className={`h-9 w-full rounded-md border px-3 text-xs font-medium transition-colors text-left ${
+          value
+            ? "border-cyan-400/30 bg-cyan-400/10 text-cyan-300"
+            : "border-white/10 bg-neutral-900 text-muted-foreground"
+        }`}
+      >
+        {value ? "✓ Autorisé" : "✕ Interdit"}
+        {hint && <span className="ml-2 text-[10px] opacity-60">— {hint}</span>}
+      </button>
+    </div>
+  );
+}
+
+function GouvernanceSection({ form }: { form: any }) {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-start gap-2 px-3 py-2.5 rounded-lg border border-cyan-400/20 bg-cyan-400/5">
+        <span className="text-cyan-400 text-xs mt-0.5">🔒</span>
+        <p className="text-[11px] text-cyan-300/80 leading-relaxed">
+          La <strong>Couche Gouvernance</strong> verrouille les faits, applique la conformité (UE Cosmétique, dark patterns), enforce la voix de marque, et calcule dynamiquement la rentabilité (LTV / CAC / break-even).
+          Ces champs sont injectés dans <strong>tous les modules</strong>.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <FieldRow label="Mode de croissance">
+          <select {...form.register("growth_mode")} className={selectCls()}>
+            {GROWTH_MODES.map((g) => <option key={g.value} value={g.value}>{g.label}</option>)}
+          </select>
+        </FieldRow>
+        <FieldRow label="Devise par défaut">
+          <select {...form.register("currency")} className={selectCls()}>
+            {CURRENCIES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
+          </select>
+        </FieldRow>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <FieldRow label="Packaging factuel (volume, matériaux)">
+          <Input {...form.register("packaging")} placeholder="ex: Verre ambré 50 ml, étui carton FSC" className="bg-black/20 h-9 text-sm" />
+        </FieldRow>
+        <FieldRow label="Origine / Made in">
+          <Input {...form.register("origin")} placeholder="ex: Provence, France" className="bg-black/20 h-9 text-sm" />
+        </FieldRow>
+        <div className="sm:col-span-2">
+          <FieldRow label="Certifications réelles (séparer par virgule)">
+            <Input {...form.register("certifications")} placeholder="ex: ECOCERT COSMOS, Vegan Society, Cruelty Free" className="bg-black/20 h-9 text-sm" />
+          </FieldRow>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-3">
+        <FieldRow label="Claims AUTORISÉS (preuves disponibles, séparer par virgule)">
+          <Input {...form.register("claims_allowed")} placeholder="ex: hydratation 24h (test in vivo n=32), 95% d'origine naturelle" className="bg-black/20 h-9 text-sm" />
+        </FieldRow>
+        <FieldRow label="Claims INTERDITS (cosmétique UE / risque légal)">
+          <Input {...form.register("claims_forbidden")} placeholder="ex: anti-rides, soigne, guérit, médical, miracle" className="bg-black/20 h-9 text-sm" />
+        </FieldRow>
+        <FieldRow label="Mots interdits dans la voix de marque (séparer par virgule)">
+          <Input {...form.register("voice_forbidden_words")} placeholder="ex: pas cher, économique, soldes flash" className="bg-black/20 h-9 text-sm" />
+        </FieldRow>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <ToggleField form={form} name="urgency_allowed" label="Urgence / countdowns" hint="false = mode premium" />
+        <ToggleField form={form} name="emojis_allowed"  label="Emojis dans les copies" />
+      </div>
+
+      <div className="pt-2 border-t border-white/5">
+        <p className="text-[11px] text-cyan-300/70 mb-2 font-semibold">Profit Engine — entrées dynamiques</p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <FieldRow label="Taux de réachat (%)">
+            <Input {...form.register("repeat_purchase_rate")} type="number" step="any" placeholder="35" className="bg-black/20 h-9 text-sm" />
+          </FieldRow>
+          <FieldRow label="Commandes / an / client">
+            <Input {...form.register("avg_orders_per_year")} type="number" step="any" placeholder="2.4" className="bg-black/20 h-9 text-sm" />
+          </FieldRow>
+          <FieldRow label="Coûts fixes mensuels (€)">
+            <Input {...form.register("fixed_costs_monthly")} type="number" step="any" placeholder="2500" className="bg-black/20 h-9 text-sm" />
+          </FieldRow>
+        </div>
+        <p className="text-[10px] text-muted-foreground mt-2">
+          Si vides, le moteur calcule en mode dégradé et signale les chiffres manquants au lieu de les inventer.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 // ─── GMB Import Block ──────────────────────────────────────────────────────────
 
 interface GmbPlace {
@@ -819,6 +946,7 @@ export default function BrandBriefPanel() {
                 {activeSection === "visual"      && <VisualSection      form={form} />}
                 {activeSection === "performance" && <PerformanceSection form={form} />}
                 {activeSection === "strategie"   && <StrategieSection   form={form} />}
+                {activeSection === "gouvernance" && <GouvernanceSection form={form} />}
               </div>
 
               {/* Footer actions */}

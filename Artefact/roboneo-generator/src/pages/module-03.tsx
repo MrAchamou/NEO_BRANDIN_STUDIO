@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { useBrand } from "@/context/brand-context";
+import { useBrand, governanceFields } from "@/context/brand-context";
 import BriefSummaryBanner from "@/components/brief-summary-banner";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -23,6 +23,9 @@ interface SectionResult {
   agent: string;
   data: Record<string, unknown>;
   rawContent: string;
+  governance?: any;
+  pricing_validator?: any;
+  profit_engine?: any;
 }
 
 interface StreamState {
@@ -267,6 +270,7 @@ export default function Module03() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          ...governanceFields(brief),
           brand_name: brief.brand_name,
           sector: brief.sector,
           product_name: brief.product_name,
@@ -312,7 +316,7 @@ export default function Module03() {
                 sections: { ...p.sections, [event.key]: { ...p.sections[event.key], buffer: (p.sections[event.key]?.buffer ?? "") + event.content } },
               }));
             } else if (event.type === "section_done") {
-              const sec: SectionResult = { key: event.key, label: event.label, agent: event.agent, data: event.data ?? {}, rawContent: event.rawContent ?? "" };
+              const sec: SectionResult = { key: event.key, governance: event.governance, pricing_validator: event.pricing_validator, profit_engine: event.profit_engine, label: event.label, agent: event.agent, data: event.data ?? {}, rawContent: event.rawContent ?? "" };
               finalSections.push(sec);
               setStreamState((p) => ({
                 activeSection: null,

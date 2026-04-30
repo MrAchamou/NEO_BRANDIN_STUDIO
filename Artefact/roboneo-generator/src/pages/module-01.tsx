@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { generatePrompts, type BrandBrief, type GenerationResult, generateTxtExport } from "@/lib/prompt-generator";
 import { useToast } from "@/hooks/use-toast";
-import { useBrand } from "@/context/brand-context";
+import { useBrand, governanceFields } from "@/context/brand-context";
 import BriefSummaryBanner from "@/components/brief-summary-banner";
 
 const STYLES = ["auto-detect", "luxe", "minimal", "street", "tech", "artisanal", "vintage", "playful", "corporate", "nature", "editorial", "futuristic", "ethnic"];
@@ -242,6 +242,7 @@ export default function Module01() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        ...governanceFields(brief),
         brand_name: brief.brand_name,
         sector: brief.sector,
         tone: brief.tone,

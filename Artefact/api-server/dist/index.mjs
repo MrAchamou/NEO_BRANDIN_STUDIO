@@ -45558,6 +45558,613 @@ function getGptReviewClient() {
   return gptReviewClientInstance;
 }
 
+// src/governance/compliance-agent.ts
+var CLAIM_RULES = [
+  // ── Cosmétique EU — claims physiologiques / médicaux ──────────────────────
+  {
+    pattern: /\b(boosts?|stimulates?)\s+(collagen|elastin)\b/gi,
+    category: "compliance.claim_forbidden",
+    severity: "critical",
+    replacement: "supports firmer-looking skin",
+    hint: "EU 1223/2009 \u2014 physiological action forbidden",
+    scope: "cosmetic_eu"
+  },
+  {
+    pattern: /\breduces?\s+wrinkles?\b/gi,
+    category: "compliance.claim_forbidden",
+    severity: "critical",
+    replacement: "helps skin appear smoother",
+    hint: "EU 655/2013 \u2014 wrinkle reduction is a physiological claim",
+    scope: "cosmetic_eu"
+  },
+  {
+    pattern: /\b(fades?|removes?|erases?)\s+(dark\s+spots?|hyperpigmentation|age\s+spots?)\b/gi,
+    category: "compliance.claim_forbidden",
+    severity: "critical",
+    replacement: "helps improve the appearance of uneven tone",
+    hint: "EU 655/2013 \u2014 pigmentation claim restricted",
+    scope: "cosmetic_eu"
+  },
+  {
+    pattern: /\banti[-\s]?aging\b/gi,
+    category: "compliance.claim_forbidden",
+    severity: "critical",
+    replacement: "age-defying look",
+    hint: "Anti-aging is a forbidden physiological claim in EU cosmetics",
+    scope: "cosmetic_eu"
+  },
+  {
+    pattern: /\bstop(s)?\s+aging\b/gi,
+    category: "compliance.claim_forbidden",
+    severity: "critical",
+    replacement: "supports a youthful-looking complexion",
+    hint: "Stopping aging is biologically false and forbidden",
+    scope: "cosmetic_eu"
+  },
+  {
+    pattern: /\b(repairs?|heals?|cures?|treats?)\s+(skin|acne|eczema|rosacea|psoriasis)\b/gi,
+    category: "compliance.medical_vocab",
+    severity: "critical",
+    replacement: "helps soothe the look of skin",
+    hint: "Medical vocabulary forbidden in EU cosmetics",
+    scope: "cosmetic_eu"
+  },
+  {
+    pattern: /\b(dermatologist|clinically)\s+(proven|tested)\b/gi,
+    category: "compliance.fake_stat",
+    severity: "warning",
+    replacement: "tested under expert supervision",
+    hint: "\u201CClinically proven\u201D requires study metadata in EU",
+    scope: "all"
+  },
+  {
+    pattern: /\bin\s+(\d+)\s+(days?|weeks?|hours?)\b/gi,
+    category: "compliance.temporal_guarantee",
+    severity: "warning",
+    replacement: "over time",
+    hint: "Temporal efficacy guarantees are restricted",
+    scope: "cosmetic_eu"
+  },
+  {
+    pattern: /\b(\d{2,3})\s*%\s+of\s+(users|women|customers|people)\b/gi,
+    category: "compliance.fake_stat",
+    severity: "critical",
+    replacement: "many users",
+    hint: "Fabricated user statistics are forbidden without verifiable study",
+    scope: "all"
+  },
+  {
+    pattern: /\b(guaranteed|guaranteed\s+results|100\s*%\s+(satisfaction|effective))\b/gi,
+    category: "compliance.fake_stat",
+    severity: "critical",
+    replacement: "designed to deliver",
+    hint: "Outcome guarantees forbidden",
+    scope: "all"
+  },
+  {
+    pattern: /\b(miracle|magic|miraculous)\b/gi,
+    category: "compliance.claim_forbidden",
+    severity: "warning",
+    replacement: "remarkable",
+    hint: "Hyperbolic terms misleading \u2014 EU 655/2013",
+    scope: "all"
+  },
+  // ── Dark patterns — urgence et stock fabriqués ───────────────────────────
+  {
+    pattern: /\bonly\s+(\d{1,3})\s+(left|remaining|in\s+stock)\b/gi,
+    category: "compliance.fake_urgency",
+    severity: "warning",
+    replacement: "limited inventory",
+    hint: "Real-time stock claims must reflect actual inventory",
+    scope: "all"
+  },
+  {
+    pattern: /\b(\d{1,3})\s+people\s+are\s+viewing\s+this\b/gi,
+    category: "compliance.fake_urgency",
+    severity: "warning",
+    replacement: "popular product",
+    hint: "Live viewer counters are dark patterns when fabricated",
+    scope: "all"
+  },
+  {
+    pattern: /\b(hurry|act\s+fast|last\s+chance|don['’]t\s+miss)\b/gi,
+    category: "compliance.fake_urgency",
+    severity: "info",
+    replacement: "discover",
+    hint: "Urgency wording reduced unless growth_mode allows it",
+    scope: "all"
+  }
+];
+var CERT_PATTERN = /\b(ECOCERT|COSMOS|VEGAN\s+SOCIETY|LEAPING\s+BUNNY|CRUELTY[-\s]?FREE|ORGANIC|BIO|FAIRTRADE|ISO\s*\d+|CE\s+CERTIFIED|FDA\s+APPROVED|USDA\s+ORGANIC)\b/gi;
+function isCosmeticEU(lock) {
+  const sector = lock.brand.sector.toLowerCase();
+  return ["cosm\xE9tique", "cosmetic", "cosmetics", "skincare", "beaut\xE9", "beauty"].includes(sector);
+}
+function runComplianceAgent(input, lock) {
+  const findings = [];
+  const cosmeticEU = isCosmeticEU(lock);
+  let content = input;
+  for (const rule of CLAIM_RULES) {
+    if (rule.scope === "cosmetic_eu" && !cosmeticEU) continue;
+    const matches = content.match(rule.pattern);
+    if (!matches) continue;
+    for (const m of matches) {
+      findings.push({
+        severity: rule.severity,
+        category: rule.category,
+        match: m,
+        replacement: rule.replacement,
+        hint: rule.hint
+      });
+    }
+    content = content.replace(rule.pattern, rule.replacement);
+  }
+  for (const claim of lock.product.claims_forbidden) {
+    if (!claim.trim()) continue;
+    const escaped = claim.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const re = new RegExp(escaped, "gi");
+    const matches = content.match(re);
+    if (!matches) continue;
+    for (const m of matches) {
+      findings.push({
+        severity: "critical",
+        category: "compliance.claim_forbidden",
+        match: m,
+        replacement: "[claim removed]",
+        hint: "Claim explicitly forbidden by brand brief"
+      });
+    }
+    content = content.replace(re, "");
+  }
+  if (lock.product.certifications.length === 0) {
+    const found = content.match(CERT_PATTERN);
+    if (found) {
+      const seen = /* @__PURE__ */ new Set();
+      for (const f of found) {
+        const key = f.toLowerCase();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        findings.push({
+          severity: "critical",
+          category: "compliance.fake_certification",
+          match: f,
+          hint: "No certification declared in brand lock \u2014 references removed"
+        });
+      }
+      content = content.replace(CERT_PATTERN, "");
+    }
+  }
+  return { content, findings };
+}
+
+// src/governance/voice-enforcer.ts
+var EMOJI_REGEX = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu;
+function runVoiceEnforcer(input, lock) {
+  const findings = [];
+  let content = input;
+  for (const word of lock.voice.forbidden_words) {
+    if (!word.trim()) continue;
+    const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const re = new RegExp(`\\b${escaped}\\b`, "gi");
+    const matches = content.match(re);
+    if (!matches) continue;
+    for (const m of matches) {
+      findings.push({
+        severity: lock.voice.urgency_allowed ? "info" : "warning",
+        category: "voice.forbidden_word",
+        match: m,
+        hint: `Forbidden by ${lock.mode} voice profile`
+      });
+    }
+    content = content.replace(re, "");
+  }
+  const excl = content.match(/!/g);
+  if (excl && excl.length > lock.voice.max_exclamation_marks) {
+    findings.push({
+      severity: "warning",
+      category: "voice.exclamation_overload",
+      match: `${excl.length} exclamation marks (max ${lock.voice.max_exclamation_marks})`,
+      hint: `Exceeded ${lock.mode} voice profile`
+    });
+    let kept = 0;
+    content = content.replace(/!/g, () => {
+      kept += 1;
+      return kept <= lock.voice.max_exclamation_marks ? "!" : ".";
+    });
+  }
+  if (!lock.voice.emojis_allowed) {
+    const found = content.match(EMOJI_REGEX);
+    if (found) {
+      findings.push({
+        severity: "info",
+        category: "voice.emoji_used",
+        match: `${found.length} emoji(s) removed`,
+        hint: `${lock.mode} voice profile disallows emojis`
+      });
+      content = content.replace(EMOJI_REGEX, "");
+    }
+  }
+  if (!lock.voice.urgency_allowed) {
+    const urgencyPatterns = [
+      /\b(only)\s+\d+\s+(left|remaining|in\s+stock|available)\b/gi,
+      /\b(hurry|act\s+fast|last\s+chance|don['’]t\s+miss(\s+out)?)\b/gi,
+      /\b(\d+)\s+people\s+(are\s+)?(viewing|watching|browsing)\b/gi,
+      /\b(sold\s+out\s+soon|selling\s+fast|going\s+fast)\b/gi,
+      /\b(\d{1,2})\s*:\s*(\d{2})\s*:\s*(\d{2})\b/g
+      // countdowns 00:00:00
+    ];
+    for (const p of urgencyPatterns) {
+      const m = content.match(p);
+      if (!m) continue;
+      for (const hit of m) {
+        findings.push({
+          severity: "warning",
+          category: "voice.urgency_blocked",
+          match: hit,
+          hint: `Urgency pattern blocked by ${lock.mode} mode`
+        });
+      }
+      content = content.replace(p, "");
+    }
+  }
+  content = content.replace(/[ \t]{2,}/g, " ").replace(/\s+([,.;:!?])/g, "$1").replace(/\(\s+\)/g, "").replace(/\[\s*\]/g, "");
+  return { content, findings };
+}
+
+// src/governance/growth-modes.ts
+var PROFILES = {
+  premium_brand: {
+    mode: "premium_brand",
+    label: "Premium Brand",
+    description: "Storytelling raffin\xE9, transparence ingr\xE9dient, rituel, preuve subtile. Z\xE9ro urgence, z\xE9ro dark pattern.",
+    voice: {
+      forbidden_words: [
+        "buy now",
+        "act fast",
+        "limited stock",
+        "guaranteed",
+        "magic",
+        "anti-aging",
+        "stop aging",
+        "hurry up",
+        "don't miss",
+        "last chance",
+        "only X left",
+        "selling fast",
+        "clinically proven"
+      ],
+      urgency_allowed: false,
+      max_exclamation_marks: 0,
+      emojis_allowed: false
+    },
+    cta_style: "Discover \u2022 Explore \u2022 Experience",
+    acquisition_ratio: 0.5,
+    urgency_tolerance: "none",
+    kpi_thresholds: { min_roas: 2.5, min_ltv_cac_ratio: 3 }
+  },
+  balanced_growth: {
+    mode: "balanced_growth",
+    label: "Balanced Growth",
+    description: "\xC9quilibre conversion / image. Urgence bas\xE9e sur des faits r\xE9els, social proof transparent.",
+    voice: {
+      forbidden_words: [
+        "magic",
+        "guaranteed results",
+        "anti-aging",
+        "stop aging",
+        "clinically proven",
+        "miracle",
+        "secret formula"
+      ],
+      urgency_allowed: true,
+      max_exclamation_marks: 1,
+      emojis_allowed: false
+    },
+    cta_style: "Shop the collection \u2022 Add to cart \u2022 Start your ritual",
+    acquisition_ratio: 0.6,
+    urgency_tolerance: "low",
+    kpi_thresholds: { min_roas: 2, min_ltv_cac_ratio: 2.5 }
+  },
+  aggressive_dtc: {
+    mode: "aggressive_dtc",
+    label: "Aggressive DTC",
+    description: "Posture DTC dynamique : urgence assum\xE9e, social proof, hooks forts. Dark patterns toujours interdits.",
+    voice: {
+      forbidden_words: [
+        "magic",
+        "miracle",
+        "anti-aging",
+        "stop aging",
+        "clinically proven",
+        "guaranteed results",
+        "100% sure"
+      ],
+      urgency_allowed: true,
+      max_exclamation_marks: 2,
+      emojis_allowed: true
+    },
+    cta_style: "Shop now \u2022 Claim your offer \u2022 Get yours today",
+    acquisition_ratio: 0.7,
+    urgency_tolerance: "high",
+    kpi_thresholds: { min_roas: 1.8, min_ltv_cac_ratio: 2 }
+  }
+};
+function getGrowthProfile(mode) {
+  if (!mode) return PROFILES.premium_brand;
+  return PROFILES[mode] ?? PROFILES.premium_brand;
+}
+
+// src/governance/brand-lock.ts
+function toList(value) {
+  if (!value) return [];
+  return value.split(/[\n,;|]/g).map((s) => s.trim()).filter(Boolean);
+}
+function toValuesList(value) {
+  if (Array.isArray(value)) return value.map(String).filter(Boolean);
+  return toList(value ?? "");
+}
+function toNumber(value) {
+  if (value === void 0 || value === null || value === "") return void 0;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : void 0;
+}
+function toBool(value, fallback) {
+  if (value === void 0 || value === null || value === "") return fallback;
+  if (typeof value === "boolean") return value;
+  const s = String(value).trim().toLowerCase();
+  if (["true", "1", "yes", "oui", "on"].includes(s)) return true;
+  if (["false", "0", "no", "non", "off"].includes(s)) return false;
+  return fallback;
+}
+function buildBrandLock(input) {
+  const raw = input ?? {};
+  const mode = raw.growth_mode || "premium_brand";
+  const profile = getGrowthProfile(mode);
+  const customForbidden = toList(raw.voice_forbidden_words);
+  const mergedForbidden = Array.from(
+    /* @__PURE__ */ new Set([...profile.voice.forbidden_words, ...customForbidden])
+  );
+  return {
+    brand: {
+      name: raw.brand_name?.trim() ?? "",
+      sector: raw.sector?.trim().toLowerCase() ?? "",
+      tone: raw.tone?.trim().toLowerCase() ?? "",
+      values: toValuesList(raw.values)
+    },
+    product: {
+      name: raw.product_name?.trim() || void 0,
+      size: raw.product_size?.trim() || void 0,
+      price: toNumber(raw.product_price ?? raw.price),
+      old_price: toNumber(raw.old_price),
+      currency: raw.currency?.trim() || "EUR",
+      margin_percent: toNumber(raw.margin_percent),
+      packaging: raw.packaging?.trim() || void 0,
+      origin: raw.origin?.trim() || void 0,
+      certifications: toList(raw.certifications),
+      claims_allowed: toList(raw.claims_allowed),
+      claims_forbidden: toList(raw.claims_forbidden)
+    },
+    colors: {
+      primary: raw.primary_color?.trim() || void 0,
+      secondary: raw.secondary_color?.trim() || void 0,
+      accent: raw.accent_color?.trim() || void 0,
+      raw: raw.colors?.trim() || void 0
+    },
+    voice: {
+      forbidden_words: mergedForbidden,
+      urgency_allowed: toBool(raw.urgency_allowed, profile.voice.urgency_allowed),
+      max_exclamation_marks: profile.voice.max_exclamation_marks,
+      emojis_allowed: toBool(raw.emojis_allowed, profile.voice.emojis_allowed)
+    },
+    mode
+  };
+}
+function brandLockToPromptBlock(lock) {
+  const profile = getGrowthProfile(lock.mode);
+  const p = lock.product;
+  const lines = [];
+  lines.push("\u2550\u2550\u2550 BRAND LOCK (FACT LOCK ENGINE \u2014 IMMUABLE) \u2550\u2550\u2550");
+  lines.push(`\u2022 Brand: ${lock.brand.name || "(non d\xE9fini)"} | Sector: ${lock.brand.sector || "n/a"} | Tone: ${lock.brand.tone || "n/a"}`);
+  if (lock.brand.values.length) {
+    lines.push(`\u2022 Values: ${lock.brand.values.join(", ")}`);
+  }
+  if (p.name) lines.push(`\u2022 Product: ${p.name}${p.size ? ` (${p.size})` : ""}`);
+  if (p.price !== void 0) {
+    lines.push(`\u2022 Price: ${p.price} ${p.currency} (IMMUABLE \u2014 never alter, never round, never invent old price)`);
+  }
+  if (p.margin_percent !== void 0) {
+    lines.push(`\u2022 Margin: ${p.margin_percent}% (gross)`);
+  }
+  if (p.packaging) lines.push(`\u2022 Packaging: ${p.packaging} (IMMUABLE)`);
+  if (p.origin) lines.push(`\u2022 Origin: ${p.origin}`);
+  if (p.certifications.length) {
+    lines.push(`\u2022 Certifications (only these): ${p.certifications.join(", ")}`);
+  } else {
+    lines.push(`\u2022 Certifications: NONE \u2014 never claim any certification, label or award.`);
+  }
+  if (p.claims_allowed.length) {
+    lines.push(`\u2022 Claims allowed (use ONLY these or paraphrase within them):`);
+    p.claims_allowed.forEach((c) => lines.push(`    \u2713 ${c}`));
+  }
+  if (p.claims_forbidden.length) {
+    lines.push(`\u2022 Claims forbidden (NEVER use, even as paraphrase):`);
+    p.claims_forbidden.forEach((c) => lines.push(`    \u2717 ${c}`));
+  }
+  if (lock.colors.raw || lock.colors.primary) {
+    const colorParts = [
+      lock.colors.primary && `primary ${lock.colors.primary}`,
+      lock.colors.secondary && `secondary ${lock.colors.secondary}`,
+      lock.colors.accent && `accent ${lock.colors.accent}`,
+      lock.colors.raw
+    ].filter(Boolean);
+    lines.push(`\u2022 Brand colors (SACRED): ${colorParts.join(" | ")}`);
+  }
+  lines.push("");
+  lines.push(`\u2550\u2550\u2550 GROWTH MODE: ${profile.label.toUpperCase()} \u2550\u2550\u2550`);
+  lines.push(`${profile.description}`);
+  lines.push(`\u2022 CTA style: ${profile.cta_style}`);
+  lines.push(`\u2022 Urgency tolerance: ${profile.urgency_tolerance}`);
+  lines.push(`\u2022 Max exclamation marks per output: ${profile.voice.max_exclamation_marks}`);
+  lines.push(`\u2022 Emojis allowed: ${profile.voice.emojis_allowed ? "yes (sparingly)" : "no"}`);
+  lines.push("");
+  lines.push("\u2550\u2550\u2550 ABSOLUTE RULES \u2550\u2550\u2550");
+  lines.push("1. Never modify the product price, currency, margin, packaging or origin.");
+  lines.push("2. Never invent certifications, awards, study results, statistics, founding dates, customer numbers.");
+  lines.push("3. Never use forbidden claims \u2014 not even paraphrased.");
+  if (!lock.voice.urgency_allowed) {
+    lines.push("4. Never fabricate urgency: no fake stock, no fake countdown, no 'only X left', no 'last chance'.");
+  }
+  if (!lock.voice.emojis_allowed) {
+    lines.push("5. Do not use emojis in the output.");
+  }
+  lines.push("6. Never include fake testimonials, fake media mentions, or fake reviews.");
+  lines.push("7. If a fact is not in this lock, OMIT it. Do not infer, do not assume.");
+  return lines.join("\n");
+}
+
+// src/governance/profit-engine.ts
+function safeNumber(value) {
+  if (value === void 0 || value === null) return void 0;
+  return Number.isFinite(value) ? value : void 0;
+}
+function computeProfit(lock, raw) {
+  const profile = getGrowthProfile(lock.mode);
+  const aov = safeNumber(raw.aov ?? lock.product.price);
+  const marginPct = safeNumber(raw.margin_percent ?? lock.product.margin_percent);
+  const margin = marginPct !== void 0 ? marginPct / 100 : void 0;
+  const repeat = safeNumber(raw.repeat_purchase_rate);
+  const ordersPerYear = safeNumber(raw.avg_orders_per_year);
+  const cac = safeNumber(raw.cac);
+  const acquisitionRatio = profile.acquisition_ratio;
+  const grossPerOrder = aov !== void 0 && margin !== void 0 ? aov * margin : null;
+  let ltv = null;
+  if (aov !== void 0 && repeat !== void 0 && ordersPerYear !== void 0) {
+    const repeatFraction = repeat > 1 ? repeat / 100 : repeat;
+    ltv = aov * (1 + repeatFraction * ordersPerYear);
+  }
+  const ltvCacRatio = ltv !== null && cac !== void 0 && cac > 0 ? ltv / cac : null;
+  const payback = cac !== void 0 && grossPerOrder && grossPerOrder > 0 ? cac / grossPerOrder : null;
+  const maxCpa = aov !== void 0 && margin !== void 0 ? aov * margin * acquisitionRatio : null;
+  const targetCpa = maxCpa !== null ? maxCpa * 0.6 : null;
+  const breakEven = grossPerOrder && grossPerOrder > 0 && raw.fixed_costs_monthly ? raw.fixed_costs_monthly / grossPerOrder : null;
+  const explanations = [];
+  if (grossPerOrder !== null) {
+    explanations.push(`Gross profit per order = AOV \xD7 margin = ${aov} \xD7 ${(margin * 100).toFixed(0)}% = ${grossPerOrder.toFixed(2)}`);
+  }
+  if (ltv !== null) {
+    explanations.push(`LTV = AOV \xD7 (1 + repeat_rate \xD7 orders_per_year) = ${ltv.toFixed(2)}`);
+  }
+  if (ltvCacRatio !== null) {
+    explanations.push(`LTV / CAC = ${ltv.toFixed(2)} / ${cac} = ${ltvCacRatio.toFixed(2)}`);
+  }
+  if (maxCpa !== null) {
+    explanations.push(
+      `Max CPA = AOV \xD7 margin \xD7 acquisition_ratio(${acquisitionRatio}) = ${maxCpa.toFixed(2)}`
+    );
+  }
+  if (targetCpa !== null) {
+    explanations.push(`Target CPA = max CPA \xD7 0.6 = ${targetCpa.toFixed(2)}`);
+  }
+  if (breakEven !== null) {
+    explanations.push(`Break-even monthly orders = fixed_costs / gross_per_order = ${breakEven.toFixed(1)}`);
+  }
+  return {
+    aov: aov ?? null,
+    gross_profit_per_order: grossPerOrder !== null ? round2(grossPerOrder) : null,
+    ltv: ltv !== null ? round2(ltv) : null,
+    ltv_cac_ratio: ltvCacRatio !== null ? round2(ltvCacRatio) : null,
+    payback_period_orders: payback !== null ? round2(payback) : null,
+    break_even_orders_monthly: breakEven !== null ? round2(breakEven) : null,
+    max_cpa_dynamic: maxCpa !== null ? round2(maxCpa) : null,
+    target_cpa_dynamic: targetCpa !== null ? round2(targetCpa) : null,
+    acquisition_ratio: acquisitionRatio,
+    formula_explanations: explanations
+  };
+}
+function round2(n) {
+  return Math.round(n * 100) / 100;
+}
+function checkBundlePrice(productPrices, discountPercent, bundlePriceClaimed) {
+  const sum = productPrices.reduce((a, b) => a + b, 0);
+  const expected = round2(sum * (1 - discountPercent / 100));
+  const diff = round2(bundlePriceClaimed - expected);
+  return { ok: Math.abs(diff) < 0.02, expected, diff };
+}
+
+// src/governance/index.ts
+function applyGovernance(draft, options = {}) {
+  const lock = options.lock ?? (options.briefInput ? buildBrandLock(options.briefInput) : null);
+  if (!lock) {
+    return {
+      content: draft,
+      report: {
+        pass: true,
+        mode: "premium_brand",
+        findings: [],
+        rewrites: 0,
+        blocked: false
+      }
+    };
+  }
+  const findings = [];
+  const c = runComplianceAgent(draft, lock);
+  findings.push(...c.findings);
+  const v = runVoiceEnforcer(c.content, lock);
+  findings.push(...v.findings);
+  if (lock.product.price !== void 0) {
+    const priceLocked = lock.product.price;
+    const currency = lock.product.currency ?? "EUR";
+    const acceptable = /* @__PURE__ */ new Set([priceLocked]);
+    if (lock.product.old_price !== void 0) acceptable.add(lock.product.old_price);
+    const priceRegex = /(\d{2,5})(?:[.,](\d{2}))?\s*(€|EUR|USD|\$|GBP|£|FCFA|CHF|AED|DH|CA\$|₦)/gi;
+    const seen = /* @__PURE__ */ new Set();
+    let match;
+    while ((match = priceRegex.exec(v.content)) !== null) {
+      const intPart = parseInt(match[1], 10);
+      if (!Number.isFinite(intPart)) continue;
+      if (intPart > 5e3) continue;
+      if (acceptable.has(intPart)) continue;
+      if (intPart >= priceLocked * 1.5 - 50 && intPart <= priceLocked * 4 + 50) {
+        continue;
+      }
+      const key = `${intPart}|${match[3]}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      findings.push({
+        severity: "warning",
+        category: "facts.price_mismatch",
+        match: match[0],
+        hint: `Locked price is ${priceLocked} ${currency} \u2014 this looks like an off-lock price`
+      });
+    }
+  }
+  const blocked = findings.some((f) => f.severity === "critical");
+  const report = {
+    pass: findings.length === 0,
+    mode: lock.mode,
+    findings,
+    rewrites: findings.filter((f) => f.replacement !== void 0).length,
+    blocked
+  };
+  return { content: v.content, report };
+}
+function summarizeReport(report) {
+  const critical = report.findings.filter((f) => f.severity === "critical").length;
+  const warning = report.findings.filter((f) => f.severity === "warning").length;
+  const info = report.findings.filter((f) => f.severity === "info").length;
+  const categories = Array.from(new Set(report.findings.map((f) => f.category)));
+  return {
+    pass: report.pass,
+    mode: report.mode,
+    total_findings: report.findings.length,
+    critical,
+    warning,
+    info,
+    rewrites: report.rewrites,
+    categories
+  };
+}
+
 // src/lib/prompt-utils.ts
 var SECTOR_NEGATIVES = {
   bijou: ["plastique", "grossier", "bon march\xE9", "clip art", "pixelis\xE9", "amateur", "d\xE9form\xE9", "flou", "stock photo g\xE9n\xE9rique"],
@@ -45642,6 +46249,12 @@ Tu ne dois JAMAIS inventer ni supposer:
 \u2022 Des certifications, labels ou r\xE9compenses non mentionn\xE9s dans le brief
 \u2022 Toute information factuelle absente du brief client
 Si une donn\xE9e n'est pas explicitement fournie dans le brief, OMETS-LA totalement. N'invente rien, n'assume rien. Utilise uniquement ce qui est dans le brief.`;
+}
+function brandLockHeader(lock) {
+  if (!lock) return "";
+  return `${brandLockToPromptBlock(lock)}
+
+`;
 }
 function parseAgentReview(text, content, agentName) {
   const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
@@ -46272,6 +46885,32 @@ Color auto-detection is DISABLED.
 \`\`\``;
 }
 
+// src/governance/sse-helper.ts
+function extractBriefInputFromBody(body) {
+  if (!body || typeof body !== "object") return null;
+  return body.governance ?? body.brand_lock ?? body;
+}
+function runGovernancePass(draft, options) {
+  const { res, sectionKey, ...rest } = options;
+  const result = applyGovernance(draft, rest);
+  const summary = summarizeReport(result.report);
+  res.write(
+    `data: ${JSON.stringify({
+      type: "governance",
+      key: sectionKey,
+      summary,
+      findings: result.report.findings.slice(0, 12)
+    })}
+
+`
+  );
+  return {
+    content: result.content,
+    summary,
+    blocked: result.report.blocked
+  };
+}
+
 // src/routes/openai/enhance-prompts.ts
 var router3 = (0, import_express3.Router)();
 function estimateTokenCount(text) {
@@ -46367,7 +47006,9 @@ router3.post("/openai/enhance-prompts", async (req, res) => {
   };
   const negativeBlock = buildNegativePrompt(sector, tone);
   const moduleLabel = "MODULE 01 \u2014 Brand Identity (Logo, Palette, Typographie, Charte Graphique)";
-  const systemPrompt = buildSystemPrompt(brief, moduleLabel);
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
+  const lockHeader = brandLockHeader(lock);
+  const systemPrompt = `${lockHeader}${buildSystemPrompt(brief, moduleLabel)}`;
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
@@ -46470,7 +47111,8 @@ Commence directement par: "R\xE9dige le contenu structur\xE9 de la charte graphi
 `);
       let fullContent = "";
       const qwenStartedAt = Date.now();
-      const activeSystemPrompt = section.systemPrompt ?? systemPrompt;
+      const baseSection = section.systemPrompt;
+      const activeSystemPrompt = baseSection ? `${lockHeader}${baseSection}` : systemPrompt;
       const stream = await cerebrasStream({
         model: CEREBRAS_MODEL,
         max_tokens: 8192,
@@ -46522,6 +47164,12 @@ Commence directement par: "R\xE9dige le contenu structur\xE9 de la charte graphi
         } catch {
         }
       }
+      const govResult = runGovernancePass(fullContent, {
+        res,
+        sectionKey: section.key,
+        lock
+      });
+      fullContent = govResult.content;
       res.write(
         `data: ${JSON.stringify({
           type: "section_done",
@@ -46529,6 +47177,7 @@ Commence directement par: "R\xE9dige le contenu structur\xE9 de la charte graphi
           agent: section.agent,
           fullContent,
           review: reviewData,
+          governance: govResult.summary,
           metrics: {
             qwen_ms: qwenMs,
             qwen_output_tokens: qwenOutputTokens,
@@ -46951,7 +47600,9 @@ Ces couleurs sont SACR\xC9ES \u2014 les utiliser EXACTEMENT dans tous les visuel
 \u2022 INTERDIT d'inventer ou d'imposer une ethnie, couleur de peau ou morphologie non mentionn\xE9e dans le brief.
 \u2022 Les profils g\xE9n\xE9riques de la base sont IGNOR\xC9S si une cible pr\xE9cise est fournie.
 \u2022 Toujours \xE9crire explicitement la couleur de peau, la coiffure et le style culturel du sujet dans chaque prompt.` : "";
-  const systemPrompt = `${baseSysPrompt}${colorPriorityBlock}${audienceNote}
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
+  const lockHeader = brandLockHeader(lock);
+  const systemPrompt = `${lockHeader}${baseSysPrompt}${colorPriorityBlock}${audienceNote}
 
 IMPORTANT: Tu retournes UNIQUEMENT du JSON valide, sans aucun markdown, sans texte avant ou apr\xE8s le JSON.
 Chaque prompt visuel doit inclure un champ "negative_prompt" avec les \xE9l\xE9ments \xE0 \xE9viter: "${negativePart}"`;
@@ -46996,6 +47647,8 @@ Chaque prompt visuel doit inclure un champ "negative_prompt" avec les \xE9l\xE9m
       } catch {
         console.warn(`[Review] ${section.key} \u2014 review \xE9chou\xE9, Cerebras conserv\xE9`);
       }
+      const govResult = runGovernancePass(reviewedContent, { res, sectionKey: section.key, lock });
+      reviewedContent = govResult.content;
       const parsed = parseJsonSafe(reviewedContent);
       sendEvent(res, {
         type: "section_done",
@@ -47004,6 +47657,7 @@ Chaque prompt visuel doit inclure un champ "negative_prompt" avec les \xE9l\xE9m
         agent: reviewAgent,
         data: parsed ?? {},
         rawContent: reviewedContent,
+        governance: govResult.summary,
         carouselStyle: section.key === "carousel" ? carouselStyle : void 0
       });
     } catch (err) {
@@ -47135,7 +47789,9 @@ Cible: ${target_audience}${yearLine} | Code promo: ${promoCode} | Dur\xE9e promo
   res.setHeader("X-Accel-Buffering", "no");
   const colorPriorityBlock = brand_colors ? `
 \u26A0\uFE0F R\xC8GLE ABSOLUE COULEURS: Le client impose ces couleurs de marque: ${brand_colors}. Ces couleurs sont SACR\xC9ES \u2014 les utiliser EXACTEMENT dans tous les visuels vid\xE9o d\xE9crits.` : "";
-  const systemPrompt = `You are a senior expert in advertising script creation and video generation prompts for RoboNeo.com.
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
+  const lockHeader = brandLockHeader(lock);
+  const systemPrompt = `${lockHeader}You are a senior expert in advertising script creation and video generation prompts for RoboNeo.com.
 LANGUAGE RULES (strictly enforced):
 \u2022 Ad scripts and voice-over texts (sections "scripts" and "voice_over"): write IN FRENCH \u2014 punchy, adapted to the ${sector} sector, direct copywriting
 \u2022 Video generation prompts (sections "short_videos", "long_video", "teaser", "thumbnails"): write EXCLUSIVELY IN ENGLISH \u2014 native vocabulary for Runway Gen-3, Pika, Kling, Midjourney, DALL-E 3
@@ -47440,6 +48096,8 @@ Retourne UNIQUEMENT ce JSON:
       } catch {
         console.warn(`[Review] ${section.key} \u2014 review \xE9chou\xE9, Cerebras conserv\xE9`);
       }
+      const govResult = runGovernancePass(reviewedContent, { res, sectionKey: section.key, lock });
+      reviewedContent = govResult.content;
       const parsed = parseJsonSafe2(reviewedContent);
       sendEvent2(res, {
         type: "section_done",
@@ -47448,6 +48106,7 @@ Retourne UNIQUEMENT ce JSON:
         agent: reviewAgent,
         data: parsed ?? {},
         rawContent: reviewedContent,
+        governance: govResult.summary,
         meta: {
           teaserStyle: section.key === "teaser" ? teaserStyle : void 0,
           thumbnailType: section.key === "thumbnails" ? thumbnailType : void 0,
@@ -47531,7 +48190,9 @@ Couleurs: ${colorStr} | Code promo: ${promoCode} | Remise: ${discount}% | Livrai
   res.setHeader("X-Accel-Buffering", "no");
   const colorPriorityBlock = colors.length > 0 ? `
 \u26A0\uFE0F R\xC8GLE ABSOLUE COULEURS: Le client impose ces couleurs: ${colorStr}. Ces couleurs sont IMMUABLES \u2014 les utiliser EXACTEMENT dans toutes les cr\xE9ations publicitaires. L'auto-d\xE9tection par secteur est D\xC9SACTIV\xC9E.` : "";
-  const systemPrompt = `You are a senior expert in digital advertising and creative prompt generation for RoboNeo.com.
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
+  const lockHeader = brandLockHeader(lock);
+  const systemPrompt = `${lockHeader}You are a senior expert in digital advertising and creative prompt generation for RoboNeo.com.
 You generate ultra-precise creative prompts (Meta Ads, Google Display, TikTok, Carousel) and ready-to-use ad copy.
 Always return ONLY valid JSON, without markdown, without text before or after.
 LANGUAGE RULES (strictly enforced):
@@ -47881,6 +48542,8 @@ Retourne UNIQUEMENT ce JSON:
       } catch {
         console.warn(`[Review] ${section.key} \u2014 review \xE9chou\xE9, Cerebras conserv\xE9`);
       }
+      const govResult = runGovernancePass(reviewedContent, { res, sectionKey: section.key, lock });
+      reviewedContent = govResult.content;
       const parsed = parseJsonSafe3(reviewedContent);
       sendEvent3(res, {
         type: "section_done",
@@ -47888,7 +48551,8 @@ Retourne UNIQUEMENT ce JSON:
         label: section.label,
         agent: reviewAgent,
         data: parsed ?? {},
-        rawContent: reviewedContent
+        rawContent: reviewedContent,
+        governance: govResult.summary
       });
     } catch (err) {
       sendEvent3(res, { type: "section_error", key: section.key, error: err instanceof Error ? err.message : "Erreur inconnue" });
@@ -47985,7 +48649,9 @@ Style musiques de fond: ${bgmStyle}`;
   res.setHeader("X-Accel-Buffering", "no");
   const colorPriorityBlock = brand_colors ? `
 L'identit\xE9 visuelle de la marque utilise ces couleurs: ${brand_colors}. Le rendu sonore doit traduire cette palette chromatique en \xE9motions musicales coh\xE9rentes.` : "";
-  const systemPrompt = `You are a senior sound art director, expert in brand sonic identity and audio prompt generation for AI tools (Suno, Udio, ElevenLabs, Adobe Podcast).
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
+  const lockHeader = brandLockHeader(lock);
+  const systemPrompt = `${lockHeader}You are a senior sound art director, expert in brand sonic identity and audio prompt generation for AI tools (Suno, Udio, ElevenLabs, Adobe Podcast).
 You generate ultra-precise audio prompts and complete creative briefs for every sonic asset of a brand.
 Always return ONLY valid JSON, without markdown, without text before or after.
 LANGUAGE RULES (strictly enforced):
@@ -48266,6 +48932,8 @@ Retourne UNIQUEMENT ce JSON:
       } catch {
         console.warn(`[Review] ${section.key} \u2014 review \xE9chou\xE9, Cerebras conserv\xE9`);
       }
+      const govResult = runGovernancePass(reviewedContent, { res, sectionKey: section.key, lock });
+      reviewedContent = govResult.content;
       const parsed = parseJsonSafe4(reviewedContent);
       sendEvent4(res, {
         type: "section_done",
@@ -48273,7 +48941,8 @@ Retourne UNIQUEMENT ce JSON:
         label: section.label,
         agent: reviewAgent,
         data: parsed ?? {},
-        rawContent: reviewedContent
+        rawContent: reviewedContent,
+        governance: govResult.summary
       });
     } catch (err) {
       sendEvent4(res, { type: "section_error", key: section.key, error: err instanceof Error ? err.message : "Erreur inconnue" });
@@ -48325,7 +48994,9 @@ router8.post("/openai/enhance-prompts-copy", async (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
-  const systemPrompt = `Tu es un expert copywriter et strat\xE8ge de contenu pour RoboNeo.com.
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
+  const lockHeader = brandLockHeader(lock);
+  const systemPrompt = `${lockHeader}Tu es un expert copywriter et strat\xE8ge de contenu pour RoboNeo.com.
 Tu g\xE9n\xE8res du contenu textuel ultra-professionnel, optimis\xE9 conversion, en fran\xE7ais impeccable.
 Contexte de la marque:
 - Marque: ${brand_name}
@@ -48560,6 +49231,8 @@ Les 10 avis doivent:
       } catch {
         console.warn(`[Review] ${section.key} \u2014 review \xE9chou\xE9, Cerebras conserv\xE9`);
       }
+      const govResult = runGovernancePass(reviewedContent, { res, sectionKey: section.key, lock });
+      reviewedContent = govResult.content;
       const parsed = parseJsonSafe5(reviewedContent);
       sendEvent5(res, {
         type: "section_done",
@@ -48567,7 +49240,8 @@ Les 10 avis doivent:
         label: section.label,
         agent: reviewAgent,
         data: parsed ?? { raw: reviewedContent },
-        rawContent: reviewedContent
+        rawContent: reviewedContent,
+        governance: govResult.summary
       });
     } catch (err) {
       req.log.error({ err, section: section.key }, "Error generating copy section");
@@ -48947,7 +49621,45 @@ router9.post("/openai/enhance-prompts-launch", async (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
-  const systemPrompt = `Tu es un expert senior en architecture de landing pages haute conversion, d\xE9veloppeur web et strat\xE8ge de lancement pour RoboNeo.com.
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
+  const lockHeader = brandLockHeader(lock);
+  const profile = getGrowthProfile(lock.mode);
+  const landingDirective = lock.mode === "premium_brand" ? `
+
+\u2550\u2550\u2550 LANDING PAGE \u2014 MODE PREMIUM BRAND (LUXURY) \u2550\u2550\u2550
+Architecture immersive \xE9ditoriale :
+\u2022 Hero plein \xE9cran (100vh), typographie s\xE9rif raffin\xE9e, asset hero fixe ou parallax tr\xE8s lent
+\u2022 Storytelling marque AVANT b\xE9n\xE9fices produit : origine, savoir-faire, philosophie
+\u2022 Section Ingr\xE9dients/Mat\xE9riaux nobles avec macro photos + provenance (si d\xE9clar\xE9e dans le lock)
+\u2022 Rituel d'usage en 3-4 \xE9tapes avec photographie \xE9ditoriale
+\u2022 Preuve sociale subtile : citations expertes, presse confidentielle (UNIQUEMENT si d\xE9clar\xE9e)
+\u2022 AUCUN compteur countdown, AUCUN "X personnes regardent", AUCUN "Plus que N en stock"
+\u2022 CTA discret, verbes nobles : \xAB D\xE9couvrir \xBB, \xAB Explorer \xBB, \xAB Vivre l'exp\xE9rience \xBB
+\u2022 Palette monochrome ou bichromie + accent m\xE9tal (cuivre/or)
+\u2022 Espaces blancs g\xE9n\xE9reux, ratio whitespace \u2265 50%` : lock.mode === "aggressive_dtc" ? `
+
+\u2550\u2550\u2550 LANDING PAGE \u2014 MODE AGGRESSIVE DTC \u2550\u2550\u2550
+Architecture conversion-first :
+\u2022 Hero impact (\u2264 70vh) + value proposition explicite + b\xE9n\xE9fice chiffr\xE9 (si d\xE9clar\xE9)
+\u2022 Social proof imm\xE9diat (logos m\xE9dia, \xE9toiles, count clients SI r\xE9els et d\xE9clar\xE9s)
+\u2022 Urgence assum\xE9e mais HONN\xCATE : promo r\xE9elle, deadline r\xE9elle, stock r\xE9el
+\u2022 CTA principal au-dessus du pli, r\xE9p\xE9t\xE9 toutes les 1.5 sections
+\u2022 Comparaison concurrents (factuelle), grid b\xE9n\xE9fices avec ic\xF4nes
+\u2022 FAQ d\xE9taill\xE9e pour lever objections, garantie satisfaction visible
+\u2022 Sticky CTA mobile, exit-intent allowed (pas de dark pattern, valeur claire)` : `
+
+\u2550\u2550\u2550 LANDING PAGE \u2014 MODE BALANCED GROWTH \u2550\u2550\u2550
+\xC9quilibre image / conversion :
+\u2022 Hero \xE9ditorial (80vh) + value prop nette + 1 CTA primaire sobre
+\u2022 Storytelling court (1 section) puis b\xE9n\xE9fices produit structur\xE9s
+\u2022 Social proof mod\xE9r\xE9 et toujours v\xE9rifiable
+\u2022 Une mention d'urgence MAX, bas\xE9e sur un fait r\xE9el (offre dat\xE9e, \xE9dition limit\xE9e d\xE9clar\xE9e)
+\u2022 CTA r\xE9p\xE9t\xE9 2-3 fois, ton mesur\xE9 ; jamais d'exclamation excessive`;
+  const systemPrompt = `${lockHeader}Tu es un expert senior en architecture de landing pages haute conversion, d\xE9veloppeur web et strat\xE8ge de lancement pour RoboNeo.com.
+
+\u2550\u2550\u2550 GROWTH MODE ACTIF : ${profile.label.toUpperCase()} \u2550\u2550\u2550
+${profile.description}
+CTA style attendu : ${profile.cta_style}${landingDirective}
 
 ${marketCtx}
 
@@ -49110,6 +49822,8 @@ Adapte les actions et contenus sp\xE9cifiquement au secteur "${sector}" et \xE0 
           sendEvent6(res, { type: "chunk", key: section.key, content });
         }
       }
+      const govResult = runGovernancePass(fullContent, { res, sectionKey: section.key, lock });
+      fullContent = govResult.content;
       const parsed = parseJsonSafe6(fullContent);
       sendEvent6(res, {
         type: "section_done",
@@ -49117,7 +49831,8 @@ Adapte les actions et contenus sp\xE9cifiquement au secteur "${sector}" et \xE0 
         label: section.label,
         agent: section.agent,
         data: parsed ?? { raw: fullContent },
-        rawContent: fullContent
+        rawContent: fullContent,
+        governance: govResult.summary
       });
       if (section.useReview && parsed && typeof parsed.combined_document === "string") {
         const combinedDoc = parsed.combined_document;
@@ -49219,7 +49934,9 @@ router10.post("/openai/enhance-prompts-chatbot", async (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
-  const systemPrompt = `Tu es un expert en service client, gestion de communaut\xE9 et chatbot marketing pour RoboNeo.com.
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
+  const lockHeader = brandLockHeader(lock);
+  const systemPrompt = `${lockHeader}Tu es un expert en service client, gestion de communaut\xE9 et chatbot marketing pour RoboNeo.com.
 Tu g\xE9n\xE8res des scripts de service client ultra-professionnels, empathiques et orient\xE9s conversion.
 
 ${marketCtx}
@@ -49387,6 +50104,8 @@ Les gestes commerciaux peuvent inclure: remboursement, renvoi, code promo ${code
       } catch {
         console.warn(`[Review] ${section.key} \u2014 review \xE9chou\xE9, Cerebras conserv\xE9`);
       }
+      const govResult = runGovernancePass(reviewedContent, { res, sectionKey: section.key, lock });
+      reviewedContent = govResult.content;
       const parsed = parseJsonSafe7(reviewedContent);
       sendEvent7(res, {
         type: "section_done",
@@ -49394,7 +50113,8 @@ Les gestes commerciaux peuvent inclure: remboursement, renvoi, code promo ${code
         label: section.label,
         agent: reviewAgent,
         data: parsed ?? { raw: reviewedContent },
-        rawContent: reviewedContent
+        rawContent: reviewedContent,
+        governance: govResult.summary
       });
     } catch (err) {
       req.log.error({ err, section: section.key }, "Error generating chatbot section");
@@ -49453,7 +50173,27 @@ router11.post("/openai/enhance-prompts-upsell", async (req, res) => {
   const featuresStr = product_features.length > 0 ? product_features.join(", ") : "non sp\xE9cifi\xE9es";
   const valuesStr = values.length > 0 ? values.join(", ") : "qualit\xE9, confiance, \xE9l\xE9gance";
   const brandColorsBlock = brand_colors ? `- Charte couleurs SACR\xC9E (respecter dans TOUS les visuels produits): ${brand_colors}` : "";
-  const systemPrompt = `Tu es un expert en strat\xE9gie e-commerce et maximisation du panier moyen pour RoboNeo.com.
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
+  const lockHeader = brandLockHeader(lock);
+  const lockedPrice = lock.product.price ?? product_price;
+  const lockedCurrency = lock.product.currency ?? localCurrency ?? "EUR";
+  const pricingDirective = `
+
+\u2550\u2550\u2550 DYNAMIC PRICING ENGINE \u2014 R\xC8GLE MATH\xC9MATIQUE ABSOLUE \u2550\u2550\u2550
+Le prix unitaire VERROUILL\xC9 est ${lockedPrice} ${lockedCurrency}. Tout bundle DOIT \xEAtre calcul\xE9 exactement comme suit :
+  bundle_price = unit_price \xD7 quantity \xD7 (1 - discount_percent / 100)
+Exemple \u2014 3 unit\xE9s \xE0 ${lockedPrice} ${lockedCurrency} avec 15% de remise :
+  ${lockedPrice} \xD7 3 \xD7 0.85 = ${(lockedPrice * 3 * 0.85).toFixed(2)} ${lockedCurrency}
+Inclure dans chaque bundle JSON un champ "price_breakdown" :
+  {
+    "unit_price": ${lockedPrice},
+    "quantity": <int>,
+    "subtotal": <unit_price \xD7 quantity>,
+    "discount_percent": <int>,
+    "bundle_price": <calcul\xE9 strictement>
+  }
+Tout \xE9cart entre le calcul et le prix annonc\xE9 sera rejet\xE9 par le Pricing Validator.`;
+  const systemPrompt = `${lockHeader}Tu es un expert en strat\xE9gie e-commerce et maximisation du panier moyen pour RoboNeo.com.${pricingDirective}
 Ta mission: g\xE9n\xE9rer des strat\xE9gies d'upsell et cross-sell PR\xC9CISES et ACTIONNABLES pour augmenter le chiffre d'affaires.
 
 ${marketCtx}
@@ -49648,13 +50388,41 @@ R\xE9ponds UNIQUEMENT avec un JSON valide, sans texte avant ou apr\xE8s:
           sendEvent8(res, { type: "chunk", key: section.key, content });
         }
       }
+      const govResult = runGovernancePass(fullContent, { res, sectionKey: section.key, lock });
+      fullContent = govResult.content;
       const parsed = parseJsonSafe8(fullContent);
+      const pricingFindings = [];
+      if (parsed && Array.isArray(parsed.bundles)) {
+        for (const b of parsed.bundles) {
+          const breakdown = b.price_breakdown;
+          if (!breakdown) continue;
+          const unit = Number(breakdown.unit_price);
+          const qty = Number(breakdown.quantity);
+          const disc = Number(breakdown.discount_percent ?? 0);
+          const claimed = Number(breakdown.bundle_price ?? b.bundle_price);
+          if ([unit, qty, claimed].some((n) => !Number.isFinite(n))) continue;
+          const check = checkBundlePrice(Array(qty).fill(unit), disc, claimed);
+          if (!check.ok) {
+            pricingFindings.push({
+              name: String(b.name ?? "bundle"),
+              expected: check.expected,
+              claimed,
+              diff: check.diff
+            });
+          }
+        }
+      }
       sendEvent8(res, {
         type: "section_done",
         key: section.key,
         agent: section.agent,
         fullContent,
-        data: parsed ?? {}
+        data: parsed ?? {},
+        governance: govResult.summary,
+        pricing_validator: {
+          ok: pricingFindings.length === 0,
+          mismatches: pricingFindings
+        }
       });
     } catch (err) {
       req.log.error({ err, section: section.key }, "Error generating upsell section");
@@ -49727,7 +50495,31 @@ router12.post("/openai/enhance-prompts-performance", async (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
-  const systemPrompt = `Tu es un expert en performance marketing e-commerce et analyse de donn\xE9es pour RoboNeo.com.
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? void 0);
+  const lockHeader = brandLockHeader(lock);
+  const profit = computeProfit(lock, {
+    aov: ctx.basket_target,
+    margin_percent: ctx.margin_percent,
+    repeat_purchase_rate: Number(req.body?.repeat_purchase_rate) || void 0,
+    avg_orders_per_year: Number(req.body?.avg_orders_per_year) || void 0,
+    cac: ctx.cac_target,
+    fixed_costs_monthly: Number(req.body?.fixed_costs_monthly) || void 0
+  });
+  const profitBlock = `
+
+\u2550\u2550\u2550 DYNAMIC PROFIT ENGINE \u2014 VALEURS CALCUL\xC9ES (NE PAS RECALCULER) \u2550\u2550\u2550
+${profit.formula_explanations.length > 0 ? profit.formula_explanations.map((l) => `  \u2022 ${l}`).join("\n") : "  (Inputs incomplets \u2014 la rubrique Profit doit signaler les manques sans inventer de chiffres)"}
+Valeurs verrouill\xE9es :
+  \u2022 AOV               = ${profit.aov ?? "n/a"}
+  \u2022 Profit par commande = ${profit.gross_profit_per_order ?? "n/a"}
+  \u2022 LTV               = ${profit.ltv ?? "n/a"}
+  \u2022 LTV / CAC         = ${profit.ltv_cac_ratio ?? "n/a"}
+  \u2022 Payback (orders)  = ${profit.payback_period_orders ?? "n/a"}
+  \u2022 Break-even / mois = ${profit.break_even_orders_monthly ?? "n/a"}
+  \u2022 CPA max dynamique = ${profit.max_cpa_dynamic ?? "n/a"}
+  \u2022 CPA cible dynamique = ${profit.target_cpa_dynamic ?? "n/a"}
+R\xC8GLE : Ces chiffres sont la SEULE source de v\xE9rit\xE9 financi\xE8re. Tout autre nombre que tu produis (ROAS, pr\xE9visions CA, etc.) doit \xEAtre coh\xE9rent avec eux. Tout chiffre absent doit \xEAtre marqu\xE9 "n/a" dans ta r\xE9ponse, jamais invent\xE9.`;
+  const systemPrompt = `${lockHeader}Tu es un expert en performance marketing e-commerce et analyse de donn\xE9es pour RoboNeo.com.${profitBlock}
 Ta mission: cr\xE9er des outils de tracking et d'optimisation PR\xC9CIS et ACTIONNABLES pour maximiser le ROI.
 
 ${marketCtx}
@@ -49961,6 +50753,8 @@ R\xE9ponds UNIQUEMENT avec un JSON valide:
           sendEvent9(res, { type: "chunk", key: section.key, content });
         }
       }
+      const govResult = runGovernancePass(fullContent, { res, sectionKey: section.key, lock });
+      fullContent = govResult.content;
       const parsed = parseJsonSafe9(fullContent);
       sendEvent9(res, {
         type: "section_done",
@@ -49968,7 +50762,9 @@ R\xE9ponds UNIQUEMENT avec un JSON valide:
         agent: section.agent,
         fullContent,
         data: parsed ?? {},
-        context: ctx
+        context: ctx,
+        profit_engine: profit,
+        governance: govResult.summary
       });
     } catch (err) {
       req.log.error({ err, section: section.key }, "Error generating performance section");

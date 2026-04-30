@@ -1,9 +1,11 @@
 import { Router, type IRouter } from "express";
 import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
 import { EnhancePromptsBody } from "@workspace/api-zod";
-import { buildSystemPrompt, buildNegativePrompt, reviewPromptQuality, type EnhancedBrief } from "../../lib/prompt-utils";
+import { buildSystemPrompt, buildNegativePrompt, brandLockHeader, reviewPromptQuality, type EnhancedBrief } from "../../lib/prompt-utils";
 import { buildLogoPrompt } from "../../prompts/modules/module-01-1-logo/prompt-builder";
 import { buildPalettePrompt } from "../../prompts/modules/module-01-2-palette/prompt-builder";
+import { buildBrandLock } from "../../governance";
+import { runGovernancePass, extractBriefInputFromBody } from "../../governance/sse-helper";
 import * as zod from "zod";
 
 const router: IRouter = Router();
@@ -90,7 +92,9 @@ router.post("/openai/enhance-prompts", async (req, res) => {
 
   const negativeBlock = buildNegativePrompt(sector, tone);
   const moduleLabel = "MODULE 01 — Brand Identity (Logo, Palette, Typographie, Charte Graphique)";
-  const systemPrompt = buildSystemPrompt(brief, moduleLabel);
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? undefined);
+  const lockHeader = brandLockHeader(lock);
+  const systemPrompt = `${lockHeader}${buildSystemPrompt(brief, moduleLabel)}`;
 
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
@@ -199,7 +203,10 @@ Commence directement par: "Rédige le contenu structuré de la charte graphique 
       let fullContent = "";
       const qwenStartedAt = Date.now();
 
-      const activeSystemPrompt = (section as { systemPrompt?: string }).systemPrompt ?? systemPrompt;
+      const baseSection = (section as { systemPrompt?: string }).systemPrompt;
+      const activeSystemPrompt = baseSection
+        ? `${lockHeader}${baseSection}`
+        : systemPrompt;
 
       const stream = await cerebrasStream({
         model: CEREBRAS_MODEL,
@@ -256,6 +263,14 @@ Commence directement par: "Rédige le contenu structuré de la charte graphique 
         }
       }
 
+      // ── Governance pass (Compliance + Voice + Fact Lock) ───────────────
+      const govResult = runGovernancePass(fullContent, {
+        res,
+        sectionKey: section.key,
+        lock,
+      });
+      fullContent = govResult.content;
+
       res.write(
         `data: ${JSON.stringify({
           type: "section_done",
@@ -263,6 +278,7 @@ Commence directement par: "Rédige le contenu structuré de la charte graphique 
           agent: section.agent,
           fullContent,
           review: reviewData,
+          governance: govResult.summary,
           metrics: {
             qwen_ms: qwenMs,
             qwen_output_tokens: qwenOutputTokens,

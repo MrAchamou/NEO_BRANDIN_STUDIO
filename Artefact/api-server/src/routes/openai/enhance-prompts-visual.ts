@@ -1,6 +1,8 @@
 import { Router, type IRouter } from "express";
 import { cerebrasStream, CEREBRAS_MODEL } from "../../lib/cerebras-client";
-import { buildSystemPrompt, buildNegativePrompt, reviewPromptQuality, type EnhancedBrief } from "../../lib/prompt-utils";
+import { buildSystemPrompt, buildNegativePrompt, brandLockHeader, reviewPromptQuality, type EnhancedBrief } from "../../lib/prompt-utils";
+import { buildBrandLock } from "../../governance";
+import { runGovernancePass, extractBriefInputFromBody } from "../../governance/sse-helper";
 
 const router: IRouter = Router();
 
@@ -375,7 +377,9 @@ Retourne UNIQUEMENT un JSON valide:
   const audienceNote = body.target_audience
     ? `\n\n⚠️ RÈGLE ANTI-BIAIS — REPRÉSENTATION DES PERSONNES:\n• Le sujet humain dans chaque visuel DOIT correspondre EXACTEMENT à la cible déclarée: "${body.target_audience}".\n• INTERDIT d'inventer ou d'imposer une ethnie, couleur de peau ou morphologie non mentionnée dans le brief.\n• Les profils génériques de la base sont IGNORÉS si une cible précise est fournie.\n• Toujours écrire explicitement la couleur de peau, la coiffure et le style culturel du sujet dans chaque prompt.`
     : "";
-  const systemPrompt = `${baseSysPrompt}${colorPriorityBlock}${audienceNote}
+  const lock = buildBrandLock(extractBriefInputFromBody(req.body) ?? undefined);
+  const lockHeader = brandLockHeader(lock);
+  const systemPrompt = `${lockHeader}${baseSysPrompt}${colorPriorityBlock}${audienceNote}
 
 IMPORTANT: Tu retournes UNIQUEMENT du JSON valide, sans aucun markdown, sans texte avant ou après le JSON.
 Chaque prompt visuel doit inclure un champ "negative_prompt" avec les éléments à éviter: "${negativePart}"`;
@@ -424,6 +428,8 @@ Chaque prompt visuel doit inclure un champ "negative_prompt" avec les éléments
       } catch {
         console.warn(`[Review] ${section.key} — review échoué, Cerebras conservé`);
       }
+      const govResult = runGovernancePass(reviewedContent, { res, sectionKey: section.key, lock });
+      reviewedContent = govResult.content;
       const parsed = parseJsonSafe(reviewedContent);
       sendEvent(res, {
         type: "section_done",
@@ -432,6 +438,7 @@ Chaque prompt visuel doit inclure un champ "negative_prompt" avec les éléments
         agent: reviewAgent,
         data: parsed ?? {},
         rawContent: reviewedContent,
+        governance: govResult.summary,
         carouselStyle: section.key === "carousel" ? carouselStyle : undefined,
       });
     } catch (err) {
